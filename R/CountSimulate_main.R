@@ -308,4 +308,3 @@ gg + geom_bar(stat = "identity", width=0.7) + theme(axis.text.x = element_text(s
   panel.grid.minor =  element_line(colour = "grey98", size = 0.5),
   panel.margin = unit(0.25, "lines")) + coord_flip() + scale_y_continuous(labels = scales::percent)
 dev.off()
-
