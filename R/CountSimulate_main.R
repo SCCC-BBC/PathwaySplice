@@ -1,16 +1,17 @@
 # test count simulator
 # use NBsim code from Xiaobei,
-#source("http://bioconductor.org/biocLite.R")
+source("http://bioconductor.org/biocLite.R")
 biocLite("goseq")
 library(tweeDEseqCountData)
 library(edgeR)
 library(goseq)
 library("DESeq2")
-source("/home/jamesban/Desktop/Projects/Research/Junctionbias/CountSimulator/AdaptedCodes_juncbias.R")
+#source("/home/jamesban/Desktop/Projects/Research/Junctionbias/CountSimulator/AdaptedCodes_juncbias.R")
+source("/home/aiminyan/Code/GOSJ/R/AdaptedCodes_juncbias.R")
 data(pickrell)
 
 pickrell = as.matrix(exprs(pickrell.eset))
-require(parallel) 
+require(parallel)
 library("ggplot2")
 
 ####################################
@@ -27,7 +28,7 @@ nPway = 1000
 Pway_max_size = 100
 Pway_min_size = 15
 grp = as.factor(rep(0:1, each=nSamp/2))
-data.sim = NBsim(foldDiff = 3, dataset = pickrell, nTags = nJunction, group = grp, verbose = TRUE, 
+data.sim = NBsim(foldDiff = 3, dataset = pickrell, nTags = nJunction, group = grp, verbose = TRUE,
                        add.outlier = F, outlierMech = "S", pOutlier = 0.2, drop.extreme.dispersion = 0.1
 )
 
@@ -77,7 +78,7 @@ rownames(gene.DE) = paste0("gene_", gene.uid)
 colnames(gene.DE) = c("DE", "Njunc_DE", "Njunc")
 gene.DE = data.frame(gene.DE)
 
-# plot bias evidence 
+# plot bias evidence
 gene.pwf = makespline(gene.DE[,3], gene.DE[,1])
 gene.DE.pwf = data.frame(DEgenes = gene.DE[,1], bias.data = gene.DE[,3], pwf = gene.pwf)
 rownames(gene.DE.pwf) = paste0("gene_",rownames(gene.DE.pwf))
@@ -90,12 +91,12 @@ goseq_wallenius = function(pwf, gene2cat){
   DE = rownames(pwf)[pwf$DEgenes == 1]
   num_de = length(DE)
   num_genes = nrow(pwf)
-  pvals = data.frame(category = cats, over_represented_pvalue = NA, 
-                     under_represented_pvalue = NA, stringsAsFactors = FALSE, 
+  pvals = data.frame(category = cats, over_represented_pvalue = NA,
+                     under_represented_pvalue = NA, stringsAsFactors = FALSE,
                      numDEInCat = NA, numInCat = NA)
   message("Calculating the p-values...")
   degenesnum = which(pwf$DEgenes == 1)
-  cat2genenum = relist(match(unlist(cat2gene), rownames(pwf)), 
+  cat2genenum = relist(match(unlist(cat2gene), rownames(pwf)),
                        cat2gene)
   alpha = sum(pwf$pwf)
   pvals[, 2:3] = t(sapply(cat2genenum, function(u) {
@@ -107,11 +108,11 @@ goseq_wallenius = function(pwf, gene2cat){
       weight = 1
     }
     c(dWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, num_de, weight) + pWNCHypergeo(
-      num_de_incat, num_incat, num_genes - num_incat, num_de, weight, lower.tail = FALSE), 
+      num_de_incat, num_incat, num_genes - num_incat, num_de, weight, lower.tail = FALSE),
       pWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, num_de, weight))
   }))
   degenesnum = which(pwf$DEgenes == 1)
-  cat2genenum = relist(match(unlist(cat2gene), rownames(pwf)), 
+  cat2genenum = relist(match(unlist(cat2gene), rownames(pwf)),
                        cat2gene)
   pvals[, 4:5] = t(sapply(cat2genenum, function(u) {
     c(sum(degenesnum %in% u), length(u))
@@ -126,8 +127,8 @@ goseq_sampling = function(pwf, gene2cat){
   DE = rownames(pwf)[pwf$DEgenes == 1]
   num_de = length(DE)
   num_genes = nrow(pwf)
-  pvals = data.frame(category = cats, over_represented_pvalue = NA, 
-                     under_represented_pvalue = NA, stringsAsFactors = FALSE, 
+  pvals = data.frame(category = cats, over_represented_pvalue = NA,
+                     under_represented_pvalue = NA, stringsAsFactors = FALSE,
                      numDEInCat = NA, numInCat = NA)
   num_DE_mask = rep(0, length(cats))
   a = table(unlist(gene2cat[DE], FALSE, FALSE))
@@ -138,19 +139,19 @@ goseq_sampling = function(pwf, gene2cat){
   message("Running the simulation...")
   lookup = matrix(0, nrow = repcnt, ncol = length(cats))
   for (i in 1:repcnt) {
-    a = table(as.character(unlist(gene2cat[order(runif(num_genes)^(1/pwf$pwf), 
+    a = table(as.character(unlist(gene2cat[order(runif(num_genes)^(1/pwf$pwf),
                                                  decreasing = TRUE)[1:num_de]], FALSE, FALSE)))
     lookup[i, match(names(a), cats)] = a
     pp(repcnt)
   }
   message("Calculating the p-values...")
-  pvals[, 2] = (colSums(lookup >= outer(rep(1, repcnt), 
+  pvals[, 2] = (colSums(lookup >= outer(rep(1, repcnt),
                                         num_DE_mask)) + 1)/(repcnt + 1)
-  pvals[, 3] = (colSums(lookup <= outer(rep(1, repcnt), 
+  pvals[, 3] = (colSums(lookup <= outer(rep(1, repcnt),
                                         num_DE_mask)) + 1)/(repcnt + 1)
-  
+
   degenesnum = which(pwf$DEgenes == 1)
-  cat2genenum = relist(match(unlist(cat2gene), rownames(pwf)), 
+  cat2genenum = relist(match(unlist(cat2gene), rownames(pwf)),
                        cat2gene)
   pvals[, 4:5] = t(sapply(cat2genenum, function(u) {
     c(sum(degenesnum %in% u), length(u))
@@ -166,7 +167,7 @@ reversemapping=function(map){
 }
 
 # randomly create a pathway datasets
-pway2gene = lapply(1:nPway,function(h)rownames(gene.DE)[sample(1:nrow(gene.DE), 
+pway2gene = lapply(1:nPway,function(h)rownames(gene.DE)[sample(1:nrow(gene.DE),
                                                                sample(Pway_min_size:Pway_max_size,1))])
 names(pway2gene) = paste0("Pathway_", 1:nPway)
 gene2pway = reversemapping(pway2gene)
@@ -206,11 +207,13 @@ gene.DE[match(pway2gene[["Pathway_48"]], rownames(gene.DE)),]
 #  2. assign junctions to genes with known database
 #  3. only simulate DE with sampling
 ###################################
-dir_juncs = "/home/jamesban/Desktop/Projects/Research/Junctionbias/CountSimulator/"
+#dir_juncs = "/home/jamesban/Desktop/Projects/Research/Junctionbias/CountSimulator/"
+
+dir_juncs = "/media/H_driver/2015/Nimer_Cheng/"
 data.gyjuncs = read.csv(paste0(dir_juncs, "6_Samples_Count_data.csv"), row.names = 1)
 
 # running paralell
-require(parallel) 
+require(parallel)
 Ncores = getOption("mc.cores", 10)
 
 # randomly select junctions from all junctions
@@ -301,9 +304,9 @@ top10.GO.sim$term <- factor(top10.GO.sim$term, levels = top10.GO.sim$term)
 
 pdf(file=paste0(dir_juncs,"/GO.BP.sim.100.pdf"), width=12, height=12)
 gg = ggplot(top10.GO.sim, aes(x=term,y=perc))
-gg + geom_bar(stat = "identity", width=0.7) + theme(axis.text.x = element_text(size=20), 
-  axis.text.y = element_text(size=20),  panel.background =  element_rect(fill = "white", colour = NA), 
-  panel.border = element_rect(fill = NA, colour="grey50"), 
+gg + geom_bar(stat = "identity", width=0.7) + theme(axis.text.x = element_text(size=20),
+  axis.text.y = element_text(size=20),  panel.background =  element_rect(fill = "white", colour = NA),
+  panel.border = element_rect(fill = NA, colour="grey50"),
   panel.grid.major =  element_line(colour = "grey90", size = 0.2),
   panel.grid.minor =  element_line(colour = "grey98", size = 0.5),
   panel.margin = unit(0.25, "lines")) + coord_flip() + scale_y_continuous(labels = scales::percent)
