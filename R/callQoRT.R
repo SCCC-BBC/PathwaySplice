@@ -1,4 +1,3 @@
-
 callQoRT<-function(cmd1, inputfile,outfile){
 cmd2=paste0(cmd1,inputfile,outfile,collapse = " ")
 print(cmd2)
