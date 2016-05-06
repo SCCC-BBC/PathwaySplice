@@ -1,7 +1,7 @@
-#' Title
+#' Use QoRTs to get the count of subffeatures in each gene
 #'
 #' @param cmd1
-#' @param inputfile
+#' @param inputfile:bam file, gene annotation file,
 #' @param outfile
 #'
 #' @return
@@ -17,5 +17,3 @@ cmd2=paste0(cmd1,inputfile,outfile,collapse = " ")
 print(cmd2)
 system(cmd2, intern = TRUE, ignore.stderr = TRUE)
 }
-
-
