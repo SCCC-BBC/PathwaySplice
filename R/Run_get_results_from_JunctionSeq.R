@@ -1,5 +1,16 @@
 
 #Use JunctionSeq to get analysis results
+#' Get analysis results using JunctionSeq
+#'
+#' @param dir.name
+#' @param file.sample
+#' @param file.count
+#' @param file.gff
+#'
+#' @return
+#' @export
+#'
+#' @examples
 GetResultsFromJunctionSeq<-function(dir.name,file.sample,file.count,file.gff){
 #Get sample file
 path.file.sample<-paste0(dir.name,file.sample)

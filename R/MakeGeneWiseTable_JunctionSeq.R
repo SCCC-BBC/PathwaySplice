@@ -1,3 +1,15 @@
+#' Title
+#'
+#' @param jscs
+#' @param gene.list
+#' @param FDR.threshold
+#' @param verbose
+#' @param debug.mode
+#'
+#' @return
+#' @export
+#'
+#' @examples
 makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE, debug.mode = FALSE){
   if(verbose) message("   Compiling data table. ",date())
 

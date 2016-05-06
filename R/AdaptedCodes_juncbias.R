@@ -1,7 +1,17 @@
 # codes for simulation and plot PWF
 #  simulation code from xiaobei
 #  PWF plot code from goseq
-getDataset <- function(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = TRUE) {  
+#' Simulation studies
+#'
+#' @param counts
+#' @param drop.extreme.dispersion
+#' @param drop.low.lambda
+#'
+#' @return
+#' @export
+#'
+#' @examples
+getDataset <- function(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = TRUE) {
   ## this function generates NB parameters from real dataset ##
   ## it is low-level function of NBsim ##
   d <- DGEList(counts)
@@ -15,7 +25,7 @@ getDataset <- function(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = 
   dispersion <- d$tagwise.dispersion
   AveLogCPM <- d$AveLogCPM
   if(is.numeric(drop.extreme.dispersion))
-  {   
+  {
     bad <- quantile(dispersion, 1-drop.extreme.dispersion, names = FALSE)
     ids <- dispersion <= bad
     AveLogCPM <- AveLogCPM[ids]
@@ -31,21 +41,21 @@ getDataset <- function(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = 
 
 NBsim <-
   function(dataset, group, nTags = 10000, nlibs = length(group), fix.dispersion = NA, lib.size = NULL, drop.low.lambda = TRUE, drop.extreme.dispersion = 0.1,  add.outlier = FALSE, outlierMech = c("S", "R", "M"), pOutlier = 0.1, min.factor = 1.5, max.factor = 10, pDiff=.1, pUp=.5, foldDiff=3, name = NULL, save.file = FALSE, file = NULL, only.add.outlier = FALSE, verbose=TRUE)
-    
-  {   
-    ## NBsim generate simulated count from the real dataset followed by the NB model ##		
+
+  {
+    ## NBsim generate simulated count from the real dataset followed by the NB model ##
     require(edgeR)
     group = as.factor(group)
-    
+
     sample.fun <- function(object)
     {
       ## it is low-level function of NBsim ##
-      ## it samples from the real dataset ## 
+      ## it samples from the real dataset ##
       nlibs <- object$nlibs
       nTags <- object$nTags
       AveLogCPM <-object$dataset$dataset.AveLogCPM
       dispersion <- object$dataset$dataset.dispersion
-      
+
       id_r <- sample(length(AveLogCPM), nTags, replace = TRUE)
       Lambda <- 2^(AveLogCPM[id_r])
       Lambda <- Lambda/sum(Lambda)
@@ -60,16 +70,16 @@ NBsim <-
       else Dispersion <- expandAsMatrix(Dispersion, dim = c(nTags, nlibs))
       object$Dispersion <- Dispersion
       object
-      
+
     }
     diff.fun <- function(object)
-    { 
-      
+    {
+
       ## it is low-level function of NBsim ##
-      ## it creates diff genes according to foldDiff ## 
+      ## it creates diff genes according to foldDiff ##
       group <- object$group
       pDiff <- object$pDiff
-      pUp <-  object$pUp 
+      pUp <-  object$pUp
       foldDiff <- object$foldDiff
       Lambda <- object$Lambda
       nTags <- object$nTags
@@ -78,7 +88,7 @@ NBsim <-
       if(length(ind)>0 & !foldDiff == 1 ) {
         fcDir <- sample(c(-1,1), length(ind), prob=c(1-pUp,pUp), replace=TRUE)
         Lambda[ind,g] <- Lambda[ind,g]*exp(log(foldDiff)/2*fcDir)
-        Lambda[ind,!g] <- Lambda[ind,!g]*exp(log(foldDiff)/2*(-fcDir)) 
+        Lambda[ind,!g] <- Lambda[ind,!g]*exp(log(foldDiff)/2*(-fcDir))
         #Lambda <- t(t(Lambda)/colSums(Lambda))
         object$Lambda <- Lambda
         object$indDE <- ind
@@ -95,44 +105,44 @@ NBsim <-
       object
     }
     sim.fun <- function(object)
-    {   
+    {
       ## it is low-level function of NBsim ##
-      ## it simulate counts using rnbinom ## 
+      ## it simulate counts using rnbinom ##
       Lambda <- object$Lambda
       Dispersion <- object$Dispersion
       nTags <- object$nTags
       nlibs <- object$nlibs
       lib.size <- object$lib.size
-      counts <- matrix(rnbinom(nTags*nlibs, mu = t(t(Lambda)*lib.size), size = 1/Dispersion), nrow = nTags, ncol = nlibs) 
+      counts <- matrix(rnbinom(nTags*nlibs, mu = t(t(Lambda)*lib.size), size = 1/Dispersion), nrow = nTags, ncol = nlibs)
       rownames(counts) <- paste("ids", 1:nTags, sep = "")
       object$counts <- counts
       object
     }
-    
+
     outlier.fun <- function(object, outlierMech, pOutlier, min.factor = 2, max.factor = 5)
-    {   
+    {
       ## it is low-level function of NBsim ##
-      ## it makes outlier ## 
+      ## it makes outlier ##
       outlierMech <- match.arg(outlierMech, c("S", "M", "R"))
       dim <- dim(object$counts)
       outlier.factor <- function() runif(1, min.factor, max.factor)
       countAddOut <- object$counts
       LambdaAddOut <- object$Lambda
-      DispersionAddOut <- object$Dispersion	
-      switch(outlierMech, 
+      DispersionAddOut <- object$Dispersion
+      switch(outlierMech,
              S = {
                mask_outlier <- expandAsMatrix(FALSE, dim = dim)
                id_r <- which(runif(dim[1]) < pOutlier)
                id_c <- sample(dim[2], length(id_r), replace = TRUE)
-               for(i in seq(id_r)) 
+               for(i in seq(id_r))
                  mask_outlier[id_r[i], id_c[i]] <- TRUE
                countAddOut[mask_outlier] <- sapply(countAddOut[mask_outlier], function(z) round(z*outlier.factor()))
-             }, 
-             R = {				   
+             },
+             R = {
                mask_outlier <- matrix(runif(dim[1]*dim[2]) < pOutlier, dim[1], dim[2])
                countAddOut[mask_outlier] <- sapply(countAddOut[mask_outlier], function(z) round(z*outlier.factor()))
              },
-             
+
              M = {
                mask_outlier <- matrix(runif(dim[1]*dim[2]) < pOutlier, dim[1], dim[2])
                LambdaAddOut[mask_outlier] <- sapply(LambdaAddOut[mask_outlier], function(z) z*outlier.factor())
@@ -152,117 +162,117 @@ NBsim <-
         if(any(o))
         {
           indDEupOutlier <- indDEupOutlier[!o]
-          indDEbothOutlier <- indDEupOutlier[o]	
-          indDEdownOutlier <- indDEdownOutlier[!q]	
-        }	
+          indDEbothOutlier <- indDEupOutlier[o]
+          indDEdownOutlier <- indDEdownOutlier[!q]
+        }
       }
       else
       {
         indDEupOutlier <- indDEdownOutlier <- indDEnoOutlier <- indNonDEOutlier <- indNonDEnoOutlier <- indDEbothOutlier <- NA
       }
-      out <- list(countAddOut = countAddOut, outlierMech = outlierMech, pOutlier = pOutlier, mask_outlier = mask_outlier, indDEupOutlier = indDEupOutlier, 
-                  indDEdownOutlier = indDEdownOutlier, indDEbothOutlier = indDEbothOutlier, indDEnoOutlier = indDEnoOutlier, indNonDEOutlier = indNonDEOutlier, 
-                  indNonDEnoOutlier = indNonDEnoOutlier, LambdaAddOut = LambdaAddOut, DispersionAddOut = DispersionAddOut) 
-      
+      out <- list(countAddOut = countAddOut, outlierMech = outlierMech, pOutlier = pOutlier, mask_outlier = mask_outlier, indDEupOutlier = indDEupOutlier,
+                  indDEdownOutlier = indDEdownOutlier, indDEbothOutlier = indDEbothOutlier, indDEnoOutlier = indDEnoOutlier, indNonDEOutlier = indNonDEOutlier,
+                  indNonDEnoOutlier = indNonDEnoOutlier, LambdaAddOut = LambdaAddOut, DispersionAddOut = DispersionAddOut)
+
     }
-    
+
     calProb <- function(x, l) round(1 -(1 - x)^(1/l), 2) ## calculate probability to make sure all the outlierMech produce the same amount of outliers ##
-    
-    
-    if(verbose) message("Preparing dataset.\n")	
+
+
+    if(verbose) message("Preparing dataset.\n")
     if(class(dataset) == "DGEList")
-    {   
+    {
       dat <- dataset
       dat[["R"]] <- dat[["S"]] <- dat[["M"]] <- dat[["pOutlier"]] <- dat[["outlierMech"]]<- NULL
     }
-    else if(is.character(dataset)) 
+    else if(is.character(dataset))
     {
       load(dataset)
       dat <- get(gsub("(\\.)(\\w+)", "", basename(dataset)))
       dat[["R"]] <- dat[["S"]] <- dat[["M"]] <- dat[["pOutlier"]] <- dat[["outlierMech"]]<- NULL
     }
-    else if(is.matrix(dataset)) 
-    { 
-      if(is.null(name)) name <- deparse(substitute(dataset))	
+    else if(is.matrix(dataset))
+    {
+      if(is.null(name)) name <- deparse(substitute(dataset))
       dataset <- getDataset(counts =dataset, drop.extreme.dispersion = drop.extreme.dispersion, drop.low.lambda = drop.low.lambda)
-      dat <- new("DGEList", list(dataset = dataset, nTags = nTags, lib.size = lib.size, nlibs = nlibs, group = group, design = model.matrix(~group), pDiff= pDiff, pUp = pUp, foldDiff = foldDiff, outlierMech = outlierMech, min.factor = min.factor, max.factor = max.factor, name = name))		
+      dat <- new("DGEList", list(dataset = dataset, nTags = nTags, lib.size = lib.size, nlibs = nlibs, group = group, design = model.matrix(~group), pDiff= pDiff, pUp = pUp, foldDiff = foldDiff, outlierMech = outlierMech, min.factor = min.factor, max.factor = max.factor, name = name))
     }
     else
       dat <- new("DGEList", list(dataset = dataset, nTags = nTags, lib.size = lib.size, nlibs = nlibs, group = group, design = model.matrix(~group), pDiff= pDiff, pUp = pUp, foldDiff = foldDiff, outlierMech = outlierMech, min.factor = min.factor, max.factor = max.factor, name = name))
-    
+
     if(!only.add.outlier)
     {
       if(is.null(lib.size))
         dat$lib.size <- runif(nlibs, min = 0.7*median(dat$dataset$dataset.lib.size), max = 1.3*median(dat$dataset$dataset.lib.size))
-      
+
       if(is.null(nTags))
-        dat$nTags <- dat$dataset$dataset.nTags 
-      if(verbose) message("Sampling.\n")	
+        dat$nTags <- dat$dataset$dataset.nTags
+      if(verbose) message("Sampling.\n")
       dat <- sample.fun(dat)
-      if(verbose) message("Calculating differential expression.\n")	
+      if(verbose) message("Calculating differential expression.\n")
       dat <- diff.fun(dat)
-      if(verbose) message("Simulating data.\n")	
+      if(verbose) message("Simulating data.\n")
       dat <- sim.fun(dat)
     }
     if(add.outlier){
       outlierMech <- match.arg(outlierMech,  c("S", "R", "M"), several.ok = TRUE)
       if(length(pOutlier)== 1 & length(outlierMech) > 1 & any(outlierMech == "S"))
-      { 
-        prob <- calProb(pOutlier, length(group))	
+      {
+        prob <- calProb(pOutlier, length(group))
         pOutlier <- rep(pOutlier, length = length(outlierMech))
-        pOutlier[!outlierMech == "S"] <- prob	
+        pOutlier[!outlierMech == "S"] <- prob
       }
       else if(!length(pOutlier) == length(outlierMech))
         stop("pOutlier is not equal to outlierMech")
-      if(verbose) message("Adding outliers.\n")	
+      if(verbose) message("Adding outliers.\n")
       dat[outlierMech] <- mapply(function(x, y) outlier.fun(dat, outlierMech = x, pOutlier = y, min.factor = min.factor, max.factor = max.factor), x = outlierMech, y = pOutlier, SIMPLIFY = FALSE)
       dat$pOutlier <- pOutlier
     }
-    
+
     if(save.file)
-    { 
-      
+    {
+
       ## save file for shiny app ##
       if(verbose) message("Saving file.\n")
-      if(is.null(file)) 
+      if(is.null(file))
       { g <- paste0("g", sum(levels(group)[1] == group), "v", sum(levels(group)[2] == group))
       f <- paste0("f", foldDiff)
-      if(add.outlier) o <- paste0("o", sprintf( "%02d",100*pOutlier[1L])) 
-      else o <- paste0("o", sprintf( "%02d", 0 ))  
+      if(add.outlier) o <- paste0("o", sprintf( "%02d",100*pOutlier[1L]))
+      else o <- paste0("o", sprintf( "%02d", 0 ))
       file <- paste0(dat$name, "/", g, f, o, ".Rdata")
-      dir.create(dat$name, showWarnings = FALSE)  
+      dir.create(dat$name, showWarnings = FALSE)
       }
       filenm <- eval(gsub("(\\.)(\\w+)", "", basename(file)))
       assign(filenm, dat)
-      save(list = filenm, file = file)		
+      save(list = filenm, file = file)
     }
-    dat 	
+    dat
   }
 
-plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.", 
-          ylab = "Proportion DE", ...) 
+plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.",
+          ylab = "Proportion DE", ...)
 {
   w = !is.na(pwf$bias.data)
   print(w)
   o = order(pwf$bias.data[w])
   print(o)
-  
+
   rang = max(pwf$pwf, na.rm = TRUE) - min(pwf$pwf, na.rm = TRUE)
-  if (rang == 0 & binsize == "auto") 
+  if (rang == 0 & binsize == "auto")
     binsize = 1000
   if (binsize == "auto") {
     binsize = max(1, min(100, floor(sum(w) * 0.08)))
     resid = rang
     oldwarn = options()$warn
     options(warn = -1)
-    while (binsize <= floor(sum(w) * 0.1) & resid/rang > 
+    while (binsize <= floor(sum(w) * 0.1) & resid/rang >
            0.001) {
       binsize = binsize + 100
       splitter = ceiling(1:length(pwf$DEgenes[w][o])/binsize)
       de = sapply(split(pwf$DEgenes[w][o], splitter), mean)
-      binlen = sapply(split(as.numeric(pwf$bias.data[w][o]), 
+      binlen = sapply(split(as.numeric(pwf$bias.data[w][o]),
                             splitter), mean)
-      resid = sum((de - approx(pwf$bias.data[w][o], pwf$pwf[w][o], 
+      resid = sum((de - approx(pwf$bias.data[w][o], pwf$pwf[w][o],
                                binlen)$y)^2)/length(binlen)
     }
     options(warn = oldwarn)
@@ -272,7 +282,7 @@ plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Bia
     print(splitter)
     de = sapply(split(pwf$DEgenes[w][o], splitter), mean)
     print(de)
-    binlen = sapply(split(as.numeric(pwf$bias.data[w][o]), 
+    binlen = sapply(split(as.numeric(pwf$bias.data[w][o]),
                           splitter), median)
     print(binlen)
   }
@@ -291,9 +301,9 @@ plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Bia
   else {
     plot(binlen, de, xlab = xlab, ylab = ylab, ...)
   }
-  lines(pwf$bias.data[w][o], pwf$pwf[w][o], col = pwf_col, 
+  lines(pwf$bias.data[w][o], pwf$pwf[w][o], col = pwf_col,
         lwd = pwf_lwd)
 
  return(de)
-  
+
 }

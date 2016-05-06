@@ -1,4 +1,16 @@
 # This function is to subset data set based on feature
+#' Title
+#'
+#' @param Data4Goterm
+#' @param ad
+#' @param sub_feature
+#' @param threshold
+#' @param file_prefix
+#'
+#' @return
+#' @export
+#'
+#' @examples
 GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(Data4Goterm,ad="GL",sub_feature=NULL,threshold,file_prefix){
 
   if(is.null(sub_feature)){Data4Goterm.sub_feature<-Data4Goterm}
