@@ -2,7 +2,7 @@
 % Please edit documentation in R/MakeGeneWiseTable_JunctionSeq.R
 \name{makeGeneWiseTable}
 \alias{makeGeneWiseTable}
-\title{Title}
+\title{This function is to generate the gene-based results}
 \usage{
 makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE,
   debug.mode = FALSE)
@@ -11,6 +11,6 @@ makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE,
 \item{debug.mode}{}
 }
 \description{
-Title
+This function is to generate the gene-based results
 }
 

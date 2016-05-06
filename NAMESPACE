@@ -2,6 +2,7 @@
 
 export(GetResultsFromJunctionSeq)
 export(GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene)
+export(NBsim)
 export(callQoRT)
 export(getDataset)
 export(makeGeneWiseTable)

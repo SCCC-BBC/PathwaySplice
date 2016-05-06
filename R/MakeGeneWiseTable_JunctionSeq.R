@@ -1,4 +1,4 @@
-#' Title
+#' This function is to generate the gene-based results
 #'
 #' @param jscs
 #' @param gene.list
