@@ -2,15 +2,17 @@
 % Please edit documentation in R/callQoRT.R
 \name{callQoRT}
 \alias{callQoRT}
-\title{Title}
+\title{Use QoRTs to get the count of subffeatures in each gene}
 \usage{
 callQoRT(cmd1, inputfile, outfile)
 }
 \arguments{
 \item{outfile}{}
+
+\item{inputfile:bam}{file, gene annotation file,}
 }
 \description{
-Title
+Use QoRTs to get the count of subffeatures in each gene
 }
 \examples{
 callQoRT("java -Xmx4000M -jar /home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/QoRTs.jar QC --singleEnded --noGzipOutput --maxReadLength 1000 --keepMultiMapped",
