@@ -1,7 +1,7 @@
 # codes for simulation and plot PWF
 #  simulation code from xiaobei
 #  PWF plot code from goseq
-#' Simulation studies
+#' Get data set for simulation studies
 #'
 #' @param counts
 #' @param drop.extreme.dispersion

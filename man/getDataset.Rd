@@ -2,7 +2,7 @@
 % Please edit documentation in R/AdaptedCodes_juncbias.R
 \name{getDataset}
 \alias{getDataset}
-\title{Simulation studies}
+\title{Get data set for simulation studies}
 \usage{
 getDataset(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = TRUE)
 }
@@ -10,6 +10,6 @@ getDataset(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = TRUE)
 \item{drop.low.lambda}{}
 }
 \description{
-Simulation studies
+Get data set for simulation studies
 }
 
