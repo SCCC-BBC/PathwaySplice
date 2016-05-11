@@ -1,9 +1,8 @@
-#############################################################################
-#Description: Attempts to fetch the categories specified for the given genes, genome and gene ID format
-#Notes: Relies on the bioconductor organism packages being installed for whatever genome you specify
-#Author: Matthew Young
-#Date Modified: 17/2/2015
-
+#'#############################################################################
+#'#Description: Attempts to fetch the categories specified for the given genes, genome and gene ID format
+#'#Notes: Relies on the bioconductor organism packages being installed for whatever genome you specify
+#'#Author: Matthew Young
+#'#Date Modified: 17/2/2015
 #' Title
 #'
 #' @param genes

@@ -2,7 +2,7 @@
 % Please edit documentation in R/GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene.R
 \name{GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene}
 \alias{GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene}
-\title{Title}
+\title{This function is to subset data set based on feature}
 \usage{
 GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(Data4Goterm,
   ad = "GL", sub_feature = NULL, threshold, file_prefix)
@@ -11,6 +11,6 @@ GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(Data4Goterm,
 \item{file_prefix}{}
 }
 \description{
-Title
+This function is to subset data set based on feature
 }
 

@@ -1,5 +1,5 @@
-# This function is to subset data set based on feature
-#' Title
+#'This function is to subset data set based on feature
+#'
 #'
 #' @param Data4Goterm
 #' @param ad
