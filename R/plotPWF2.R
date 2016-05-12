@@ -1,4 +1,3 @@
-
 #' Calculate PWF
 #'
 #' @param pwf

@@ -2,7 +2,10 @@
 % Please edit documentation in R/AdaptedCodes_juncbias.R
 \name{getDataset}
 \alias{getDataset}
-\title{Get data set for simulation studies}
+\title{codes for simulation and plot PWF
+simulation code from xiaobei
+PWF plot code from goseq
+Get data set for simulation studies}
 \usage{
 getDataset(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = TRUE)
 }
@@ -10,6 +13,9 @@ getDataset(counts, drop.extreme.dispersion = 0.1, drop.low.lambda = TRUE)
 \item{drop.low.lambda}{}
 }
 \description{
+codes for simulation and plot PWF
+simulation code from xiaobei
+PWF plot code from goseq
 Get data set for simulation studies
 }
 

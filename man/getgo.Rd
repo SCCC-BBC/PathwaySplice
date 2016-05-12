@@ -2,7 +2,12 @@
 % Please edit documentation in R/getgo2.R
 \name{getgo}
 \alias{getgo}
-\title{Title}
+\title{#############################################################################
+#Description: Attempts to fetch the categories specified for the given genes, genome and gene ID format
+#Notes: Relies on the bioconductor organism packages being installed for whatever genome you specify
+#Author: Matthew Young
+#Date Modified: 17/2/2015
+Title}
 \usage{
 getgo(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
 }
@@ -10,6 +15,11 @@ getgo(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
 \item{fetch.cats}{}
 }
 \description{
+#############################################################################
+#Description: Attempts to fetch the categories specified for the given genes, genome and gene ID format
+#Notes: Relies on the bioconductor organism packages being installed for whatever genome you specify
+#Author: Matthew Young
+#Date Modified: 17/2/2015
 Title
 }
 

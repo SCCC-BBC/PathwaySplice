@@ -1,6 +1,6 @@
-# codes for simulation and plot PWF
-#  simulation code from xiaobei
-#  PWF plot code from goseq
+#' codes for simulation and plot PWF
+#' simulation code from xiaobei
+#' PWF plot code from goseq
 #' Get data set for simulation studies
 #'
 #' @param counts
