@@ -2,32 +2,32 @@
 title: "GOSJ manual"
 author: "Aimin Yan"
 date: "May 13, 2016"
-output: word_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is the general introduction about using GOSJ package, for more details on using GOSJ please see <https://github.com/aiminy/GOSJ.git>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+GOSJ package is developed to correct the bias from the number of subfeatures of genes in differenetial expression and subsequenent analysis for RNA-Seq data. 
 
-```{r cars}
-summary(cars)
-```
+## Simulation studies
 
-## Including Plots
+We sample the mean of the number of splicing junction, and use this mean to simulate an array A including splicing junction numbers with certain amounts. we convert this number into an array AAA between 0 and 1. Use the median of AAA array as the probability for 1, we sample from [0,1] to get a list with certain length. This list is used as
+a gene set. For example, if this gene set has 30 genes, each gene has its splicing junction number, we will have 30 splicing junction number. After differential gene expression analysis, some genes are differentiallly expressed, and are labeled as 1,otherwise labeled as 0. Here we simulate two scenarios:
+Scenario1: the probability of being 1 is dependent on the median of AAA
+Scenario2: the probability of being 1 is not dependent on the median of AAA. The following plot shows the distribution of correlation coefficient between the probability of being 1 and the median number of splicing junctions for two scenarios:
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r pressure, echo=TRUE}
 library(GOSJ)
 re.random.DE2SJ<-SimulationSJ2DE(20,200,30)
 boxplot(re.random.DE2SJ)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Analysis on several real data sets
+
