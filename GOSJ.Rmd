@@ -30,7 +30,11 @@ boxplot(re.random.DE2SJ)
 ```
 
 ## Analysis on several real data sets
+<<<<<<< HEAD
 A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. Differential junction expression is determined using JunctionSeq. In this step, Ensemble-annotated junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential junction expression while the overall gene expression changes between two conditions are controlled.
+=======
+A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. Differential junction expression is determined using JunctionSeq. In this step, Ensemble-annotated junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential junction expression while the overall gene expression changes are controlled.    
+>>>>>>> 70041712827456c50c2a40d3e89cb076d1473e55
 ```{r callQoRT,echo=FALSE}
 
 ```
