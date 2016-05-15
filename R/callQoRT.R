@@ -1,4 +1,4 @@
-#' Use QoRTs to get the count of subffeatures in each gene
+#' @title Use QoRTs to get the count of subfeatures in each gene
 #'
 #' @param cmd1
 #' @param inputfile:bam file, gene annotation file,
