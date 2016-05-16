@@ -23,9 +23,15 @@ a gene set. For example, if this gene set has 30 genes, each gene has its splici
 * Scenario1: the probability of being 1 is dependent on the median of AAA
 * Scenario2: the probability of being 1 is not dependent on the median of AAA. 
 
-In each simulation,we generate 50 gene sets,and each gene set includes 30 gene.  
+In each simulation,we generate 50 gene sets,and each gene set includes 30 genes. For each set, we calculate the probability of differentially expressed genes and the median of splicing junction numbers of genes. Here we use $i$ indicats the number of gene sets in each simulation, so we can get:
 
-The following plot shows the distribution of correlation coefficient between the probability of being 1 and the median number of splicing junctions for two scenarios:
+The probabilities of differentially expressed genes of 50 gene sets:
+$P_1$,$P_2$,...,$P_i$,...,$P_{50}$
+
+The median of splicing junctions of 50 gene sets:
+$F_1$,$F_2$,...,$F_i$,...,$F_{50}$
+
+Based on this, the correlation coefficients between probabilites of differentially expressed genes and medians of splicing junction numbers of genes in each simulation can be obtained. We performed 100 simumations, correltion coefficients of 100 simulations are calcuated. The following plot shows the distribution of correlation coefficients between the probability of being 1 and the median number of splicing junctions in two scenarios for 100 simulations:
 
 
 ```{r pressure, echo=FALSE}
