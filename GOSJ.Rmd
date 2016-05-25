@@ -11,19 +11,18 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This is the general introduction about using GOSJ package, for more details on using GOSJ please see <https://github.com/aiminy/GOSJ.git>.
+This is a general introduction about using GOSJ package, for more details on using GOSJ please see <https://github.com/aiminy/GOSJ.git>.
 
 GOSJ package is developed to correct the bias from the number of subfeatures of genes in differenetial expression and subsequenent analysis for RNA-Seq data. 
 
 ## Simulation studies
-
-We sample the mean of the number of splicing junction, and use this mean to simulate an array A including splicing junction numbers with certain amounts. we convert this number into an array AAA between 0 and 1. Use the median of AAA array as the probability for being 1, we sample from [0,1] to get a list with certain length. This list is used as
+We attemp to use simulation to establish the relationship between the proportion of DE and the number of subfeatures of genes. In this simulation setting, we sample the mean of the number of splicing junction, and use this mean to simulate an array A including splicing junction numbers with certain amounts. we convert this number into an array AAA between 0 and 1. Use the median of AAA array as the probability for being 1, we sample from [0,1] to get a list with certain length. This list is used as
 a gene set. For example, if this gene set has 30 genes, each gene has its splicing junction number, we will have 30 splicing junction number. After differential gene expression analysis, some genes are differentiallly expressed, and are labeled as 1,otherwise labeled as 0. Here we simulate two scenarios:
 
 * Scenario1: the probability of being 1 is dependent on the median of AAA
 * Scenario2: the probability of being 1 is not dependent on the median of AAA. 
 
-In each simulation,we generate 50 gene sets,and each gene set includes 30 genes. For each set, we calculate the probability of differentially expressed genes and the median of splicing junction numbers of genes. Here we use $i$ indicats the number of gene sets in each simulation, so we can get:
+In each simulation,we generate 50 gene sets,and each gene set includes 30 genes. For each set, we calculate the probability of differentially expressed genes and the median of splicing junction numbers of genes. Here we use $i$ to indicat the number of gene sets in each simulation, so we can get:
 
 The probabilities of differentially expressed genes of 50 gene sets:
 $P_1$,$P_2$,...,$P_i$,...,$P_{50}$
@@ -33,17 +32,28 @@ $F_1$,$F_2$,...,$F_i$,...,$F_{50}$
 
 Based on this, the correlation coefficients between probabilites of differentially expressed genes and medians of splicing junction numbers of genes in each simulation can be obtained. We performed 100 simumations, correltion coefficients of 100 simulations are calcuated. The following plot shows the distribution of correlation coefficients between the probability of being 1 and the median number of splicing junctions in two scenarios for 100 simulations:
 
-
 ```{r pressure, echo=FALSE}
 library(GOSJ)
 re.random.DE2SJ<-SimulationSJ2DE(20,200,30)
 boxplot(re.random.DE2SJ)
 ```
 
+<!-- ## Genewise p-value calculation -->
+
 ## Analysis on several real data sets
-A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. Differential junction expression is determined using JunctionSeq. In this step, Ensemble-annotated junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential junction expression while the overall gene expression changes are controlled.    
+A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. We performed analysis based on 2 scenarios:
+
+In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number splicing junctions.
+
+In the second scenario, we apply JunctionSeq to subfeature-based counts to determine the $p$ value of differential usage of each subfeature of each gene, then calculate the genewise $p$ value based on the following method:
+
+let $p_{il}$ be the $p$ value for $l$
+subfeature(exon or splicing junction) of gene $i$, then gene wise $p$ value is calcualted using the following method:
+
+$$P(at\ least\ 1\ type\ I\ error\ among\ m\ tests)=\frac{\sum_{i=1}^M 1-(1-\theta)^{n_i}}{|{i: \exists p_{il} < \theta}|}$$
+
+Based on these genewsie p values to define the differentially expressed genes, then using this differnentially expressed genes list to identify the relationship between the propotion of DE and the possible bias factos such as gene length, number of exons and number splicing junctions. In this step, Ensemble-annotated exons and junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential exon and junction usage while the overall gene expression changes are controlled.    
+
 ```{r callQoRT,echo=FALSE}
 
 ```
-
-
