@@ -41,6 +41,7 @@ boxplot(re.random.DE2SJ)
 <!-- ## Genewise p-value calculation -->
 
 ## Analysis on several real data sets
+
 A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. We performed analysis based on 2 scenarios:
 
 In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number splicing junctions.

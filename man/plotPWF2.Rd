@@ -8,16 +8,31 @@ plotPWF2(pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2,
   xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
 
 plotPWF2(pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2,
-  xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
+xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
 }
 \arguments{
+\item{pwf}{probability weigth function}
+
+\item{binsize}{the number of gene in each bin(gene set)}
+
+\item{pwf_col}{the color for the fitted line of probability weigth function}
+
+\item{pwf_lwd}{the font for the fitted line of probability weigth function}
+
+\item{xlab}{the label for x-axis}
+
+\item{ylab}{the label for y-axis}
+
 \item{...}{}
 
 \item{...}{}
 }
 \description{
 Plot the probability Weighting Function
+}
+\examples{
 
-Calculate PWF
+
+
 }
 

@@ -1,17 +1,23 @@
-#' Calculate PWF
-#'
-#' @param pwf
-#' @param binsize
-#' @param pwf_col
-#' @param pwf_lwd
-#' @param xlab
-#' @param ylab
+#' @title Plot the probability Weighting Function
+#' @description
+#' @usage
+#' plotPWF2(pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2,
+#' xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
+#' @param pwf probability weigth function
+#' @param binsize the number of gene in each bin(gene set)
+#' @param pwf_col the color for the fitted line of probability weigth function
+#' @param pwf_lwd the font for the fitted line of probability weigth function
+#' @param xlab the label for x-axis
+#' @param ylab the label for y-axis
 #' @param ...
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#'
+#'
+#'
 plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.",
                     ylab = "Proportion DE", ...)
 {

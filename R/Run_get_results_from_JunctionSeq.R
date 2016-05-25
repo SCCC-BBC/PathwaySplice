@@ -30,3 +30,5 @@ jscs.2<-runJunctionSeqAnalyses(sample.files= countFiles,sample.names= decoder.by
 return(jscs.2)
 }
 
+
+
