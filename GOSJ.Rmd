@@ -11,9 +11,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This is a general introduction about using GOSJ package, for more details on using GOSJ please see <https://github.com/aiminy/GOSJ.git>.
+Motivation: Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. 
 
-GOSJ package is developed to correct the bias from the number of subfeatures of genes in differenetial expression and subsequenent analysis for RNA-Seq data. 
+Results: we demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we generated in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differential expressed genes through using differential usage of subfeatures(exons and/or splicing junctions) are biased by the number of subfeatures within gene, and subsequently lead to the bias in the subsequent Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. A R package(GOSJ) is also developed to address the issune for correcting. the bias from the number of subfeatures of genes in differenetial expression and subsequenent analysis for RNA-Seq data. This GOSJ package is available on <https://github.com/aiminy/GOSJ.git>.
+
 
 ## Simulation studies
 We attemp to use simulation to establish the relationship between the proportion of DE and the number of subfeatures of genes. In this simulation setting, we sample the mean of the number of splicing junction, and use this mean to simulate an array A including splicing junction numbers with certain amounts. we convert this number into an array AAA between 0 and 1. Use the median of AAA array as the probability for being 1, we sample from [0,1] to get a list with certain length. This list is used as
@@ -60,4 +61,3 @@ Based on these genewsie p values to define the differentially expressed genes, t
 ```{r callQoRT,echo=FALSE}
 
 ```
-
