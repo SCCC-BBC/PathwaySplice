@@ -38,6 +38,8 @@ re.random.DE2SJ<-SimulationSJ2DE(20,200,30)
 boxplot(re.random.DE2SJ)
 ```
 
+From the figure above, it is obvious:
+In Scenario1(Unrelated_SJ_DE), a gene is differentially expressed or not is not dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is closed to 0. In Scenario2(related_SJ_DE), a gene is differentially expressed or not is dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is far away from 0.
 <!-- ## Genewise p-value calculation -->
 
 ## Analysis on several real data sets
@@ -58,3 +60,4 @@ Based on these genewsie p values to define the differentially expressed genes, t
 ```{r callQoRT,echo=FALSE}
 
 ```
+

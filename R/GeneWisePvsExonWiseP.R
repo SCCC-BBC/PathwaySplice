@@ -53,13 +53,17 @@ GeneWisePvsExonWiseP<-function(subfeature_based_input_file,gene_based_input_file
 
   Re.DE.Jun.2<-Re.DE.Jun[-which(is.na(Re.DE.Jun[,8])),]
 
-
-  Re<-list(Re.DE.Jun.with.NA=Re.DE.Jun,Re.DE.Jun.without.NA=Re.DE.Jun.2)
-
-  n<-dim(Re[[2]])[1]
+  n<-dim(Re.DE.Jun.2)[1]
   ran.p<-runif(n)
 
-  boxplot(cbind(Re[[2]][,c(8,22,24)],ran.p))
+
+  Re<-list(Re.DE.Jun.with.NA=Re.DE.Jun,Re.DE.Jun.without.NA=cbind(Re.DE.Jun.2,ran.p))
+
+  #plot()
+
+  pairs(~padj+geneWisePadj+mostSigPadjust+numKnown+ran.p,data=Re[[2]][,c(8,22,24,26,33)],main="4 p values vs SJ")
+  #boxplot(cbind(Re[[2]][,c(8,22,24)],ran.p))
+
 
   Re
 

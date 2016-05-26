@@ -1,4 +1,3 @@
-#From DEXSeq:
 #' Title
 #'
 #' @param pvals
