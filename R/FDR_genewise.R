@@ -72,13 +72,13 @@ FDR_genewise <- function() {
   nn3=c(4,5,2,3)
   theta=c(0.1,0.2,0.3,0.4,0.005,0.3)
 
-  2*(1-(1-theta)^4)
-
-  3*(1-(1-theta)^5)
-
-  4*(1-(1-theta)^2)
-
-  5*(1-(1-theta)^3)
+  # 2*(1-(1-theta)^4)
+  #
+  # 3*(1-(1-theta)^5)
+  #
+  # 4*(1-(1-theta)^2)
+  #
+  # 5*(1-(1-theta)^3)
 
   numerator.test    = mapply(function(m, n) {
 

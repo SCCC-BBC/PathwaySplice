@@ -2,7 +2,7 @@
 title: "GOSJ manual"
 author: "Aimin Yan"
 date: "May 13, 2016"
-output: word_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -40,6 +40,9 @@ re.random.DE2SJ<-SimulationSJ2DE(20,200,30)
 boxplot(re.random.DE2SJ)
 ```
 
+From the figure above, it is obvious:
+In Scenario1(Unrelated_SJ_DE), a gene is differentially expressed or not is not dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is closed to 0. In Scenario2(related_SJ_DE), a gene is differentially expressed or not is dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is far away from 0.
+
 ## Analysis on several real data sets
 
 A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. Differential junction expression is determined using JunctionSeq. In this step, Ensemble-annotated junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential junction expression while the overall gene expression changes between two conditions are controlled.
@@ -49,3 +52,4 @@ A data set including 6 samples is used for developing this approach. This 6 samp
 ```{r callQoRT,echo=FALSE}
 
 ```
+

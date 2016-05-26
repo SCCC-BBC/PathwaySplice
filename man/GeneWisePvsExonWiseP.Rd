@@ -4,7 +4,7 @@
 \alias{GeneWisePvsExonWiseP}
 \title{Compare gene based p value with exon based p value}
 \usage{
-GeneWisePvsExonWiseP(input_data_set, gene_wise_p_c, feature_wise_p_c)
+GeneWisePvsExonWiseP(subfeature_based_input_file, gene_based_input_file)
 }
 \arguments{
 \item{input_data_set}{data set for all genes}
@@ -17,6 +17,15 @@ GeneWisePvsExonWiseP(input_data_set, gene_wise_p_c, feature_wise_p_c)
 
 load("/media/H_driver/2015/Nimer_Cheng/Data_set_two_methods.RData")
 GeneWisePvsExonWiseP(data.table.gene.based.all.jscs4,7,9)
+
+
+Re<-GeneWisePvsExonWiseP("/media/H_driver/2015/Nimer_Cheng/GeneWise_jscs3_all_with_anno_2_24_2016.csv",
+"/media/H_driver/2015/Nimer_Cheng/DE_cheng_output_sample1_DE.csv")
+
+
+
+
+
 
 }
 
