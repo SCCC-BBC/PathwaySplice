@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. 
 
 ## Results: 
-We demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we generated in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differential expressed genes through using differential usage of subfeatures(exons and/or splicing junctions) are biased by the number of subfeatures within gene, and subsequently lead to the bias in the subsequent Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. A R package(GOSJ) is also developed to address the issune for correcting. the bias from the number of subfeatures of genes in differenetial expression and subsequenent analysis for RNA-Seq data. This GOSJ package is available on <https://github.com/aiminy/GOSJ.git>.
+We demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we generated in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differential expressed genes through using differential usage of subfeatures(exons and/or splicing junctions) are biased by the number of subfeatures within gene, and subsequently lead to the bias in the subsequent Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. We suggest using an existing approach to adjust this bias. A R package(GOSJ) based on this approach is also developed to make this method be useful for other researchers. This GOSJ package is available on <https://github.com/aiminy/GOSJ.git>.
 
 ## Introduction
 
@@ -49,21 +49,22 @@ In Scenario1(Unrelated_SJ_DE), a gene is differentially expressed or not is not 
 
 ## Generate random data set based on the data set from blood cancer. 
 
-We have 13000 gene, each have there speficif numern features, in this smualrion, we fix the numer of suaberfeature for each gene as the real data, and do the following simlmaulation:
+We have 13000 gene, each gene has certain number of subfeatures, in this smulation setting, we fix the number of  of subfeatures for each gene as the real data, and perform the following permutations:
 
 first , we permutate sample label
 
-second, we permuatte maping count 
+second, we permutate maping count 
 
-By this way, we attemp to identify the same set of GO and KEGG. If there are hight consistencies between the resutls from ramdom fdtae ans dthat of real data set, this indicate the number of subfeatures of genes have cause bias on gene set enrichment analysis.
+By this way, we attemp to identify the same enriched gene sets and pathways of GO and KEGG. If there are high consistencies between the resutls from ramdom data sets and that of real data sets, this indicate that the number of subfeatures of genes has cause bias on gene set enrichment analysis.
 
 
 ## Analysis on several real data sets
 
-#. Reanalysis for a  
+#. Reanalysis for a data set in Myelodysplastic syndromes(MDS) study
 
 
-#. Analsysis for a data aset we genarated 
+#. Analsysis for a data aset we obtained in blood cancer study
+
 A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. We performed analysis based on 2 scenarios:
 
 In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number splicing junctions.
