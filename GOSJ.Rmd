@@ -19,7 +19,7 @@ We demonstrate this bias using published data from a study of differential splic
 
 ## RESULTS AND DISCUSSIONS
 
-## Simulation studies
+## Simulation studies based on a real data
 We attemp to use simulation to establish the relationship between the proportion of DE and the number of subfeatures of genes. In this simulation setting, we sample the mean of the number of splicing junction, and use this mean to simulate an array A including splicing junction numbers with certain amounts. we convert this number into an array AAA between 0 and 1. Use the median of AAA array as the probability for being 1, we sample from [0,1] to get a list with certain length. This list is used as
 a gene set. For example, if this gene set has 30 genes, each gene has its splicing junction number, we will have 30 splicing junction number. After differential gene expression analysis, some genes are differentiallly expressed, and are labeled as 1,otherwise labeled as 0. Here we simulate two scenarios:
 
@@ -45,6 +45,18 @@ boxplot(re.random.DE2SJ)
 From the figure above, it is obvious:
 In Scenario1(Unrelated_SJ_DE), a gene is differentially expressed or not is not dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is closed to 0. In Scenario2(related_SJ_DE), a gene is differentially expressed or not is dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is far away from 0.
 <!-- ## Genewise p-value calculation -->
+
+
+## Generate random data set based on the data set from blood cancer. 
+
+We have 13000 gene, each have there speficif numern features, in this smualrion, we fix the numer of suaberfeature for each gene as the real data, and do the following simlmaulation:
+
+first , we permutate sample label
+
+second, we permuatte maping count 
+
+By this way, we attemp to identify the same set of GO and KEGG. If there are hight consistencies between the resutls from ramdom fdtae ans dthat of real data set, this indicate the number of subfeatures of genes have cause bias on gene set enrichment analysis.
+
 
 ## Analysis on several real data sets
 
