@@ -10,6 +10,18 @@
 #' @export
 #'
 #' @examples
+#'
+#' load("Re_Run_test_GOSJ.RData")
+#'
+#' re.gene.based<-makeGeneWiseTable(Re,gene.list=unique(as.character(fData(Re)$geneID)))
+#' dim(pData(re.gene.based))
+#' no.testable.index<-which(as.character(pData(re.gene.based)$mostSigID)=="character(0)")
+#' re.gene.based.testable<-pData(re.gene.based)[-no.testable.index,]
+#' dim(re.gene.based.testable)
+#'
+#' cor(as.numeric(re.gene.based.testable$numKnown),
+#' as.numeric(re.gene.based.testable$mostSigPadjust))
+#'
 makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE, debug.mode = FALSE){
   if(verbose) message("   Compiling data table. ",date())
 

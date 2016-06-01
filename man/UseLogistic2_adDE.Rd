@@ -6,18 +6,13 @@
 \usage{
 UseLogistic2_adDE(input_file)
 }
-\arguments{
-\item{input_file}{}
-}
 \description{
 Title
 }
 \examples{
 
-
-load("")
-UseLogistic2_adDE("http://www.ats.ucla.edu/stat/data/binary.csv")
-UseLogistic2_adDE("/media/H_driver/2015/Nimer_Cheng/GeneWise_jscs3_all_with_anno_2_24_2016.csv")
+UseLogistic2_adDE("/Volumes/Bioinformatics$/2015/Nimer_Cheng/
+GeneWise_jscs3_all_with_anno_2_24_2016.csv")
 
 
 }
