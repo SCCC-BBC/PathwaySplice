@@ -4,3 +4,6 @@
 # library(biomaRt)
 # install.packages("roxygen2")
 # library(roxygen2)
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("JunctionSeq")
+#library(JunctionSeq)
