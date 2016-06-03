@@ -21,12 +21,20 @@
 #' head(fData(Re))
 #' save(Re,file="Re_Run_test_GOSJ.RData")
 #'
-#' dir.name.PJ="/Volumes/Bioinformatics$/PJ/"
+#' dir.name.PJ="/media/H_driver/PJ/"
 #' file.sample.PJ="decoder.bySample.rtf"
 #' file.count.PJ="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 #'
-#' paste0(dir.name,file.gff)
-#' Re<-GetResultsFromJunctionSeq(dir.name.PJ,file.sample.PJ,file.count.PJ,file.gff)
+#' file.gff=paste0("/media/H_driver/2015/Nimer_Cheng/",file.gff)
+#' Re.PJ<-GetResultsFromJunctionSeq(dir.name.PJ,file.sample.PJ,file.count.PJ,file.gff)
+#'
+#' save(Re.PJ,file="/media/H_driver/PJ/PJ_jscs.RData")
+#'
+#'
+#'buildAllPlots(jscs=jscs,outfile.prefix="./plots_based_on_DE_splice_site_gene1/",
+#'gene.list=gene.based.de.splice.site[1],use.plotting.device="png",plot.gene.level.expression=TRUE,sequencing.type="single-end");
+#'
+#'
 #'
 #'
 #'
@@ -44,7 +52,8 @@ countFiles<-paste0(path.file.count)
 print(countFiles)
 
 #Get annotation file
-path.file.gff<-paste0(dir.name,file.gff)
+#path.file.gff<-paste0(dir.name,file.gff)
+path.file.gff<-file.gff
 
 print(path.file.gff)
 
