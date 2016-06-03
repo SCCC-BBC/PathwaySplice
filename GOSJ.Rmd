@@ -85,10 +85,10 @@ $$P(at\ least\ 1\ type\ I\ error\ among\ m\ tests)=\frac{\sum_{i=1}^M 1-(1-\thet
 
 Based on these genewsie p values, we set 0.05 as threshold to define differentlly expressed gene list. We firstly applied logistic regression to identify the relatioship between the differentlly expressed gene list and possible bias factors such as the number splicing junction and exons.
 
-```{r UseLogistic2_adDE,echo=TRUE}
-library(GOSJ)
-UseLogistic2_adDE("/Volumes/Bioinformatics$/2015/Nimer_Cheng/GeneWise_jscs3_all_with_anno_2_24_2016.csv")
-```
+<!-- ```{r UseLogistic2_adDE,echo=TRUE} -->
+<!-- library(GOSJ) -->
+<!-- UseLogistic2_adDE("/Volumes/Bioinformatics$/2015/Nimer_Cheng/GeneWise_jscs3_all_with_anno_2_24_2016.csv") -->
+<!-- ``` -->
 
 Secondly, we use these differnentially expressed gene list to identify the relationship between the propotion of DE in gene sets and the possible bias factos such as gene length, number of exons and number splicing junctions. 
 
