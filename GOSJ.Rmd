@@ -33,7 +33,7 @@ Based on the usage of exons and splicing junctions, differential usage between t
 
 There are several previous studies that showed using RNA-Seq data to study differentially expressed genes and subsequent gene sets or pathways analysis could be biased by read counts of transcripts and length of transcripts. Several methods are also developed to correct these biases either in the step of identifing differentially genes or in the step of performing gene sets enrichment analysis[@Gao2011]. A well known R package for correcting bias in gene set enrichment analysis, GoSeq, is available[@Young2010]. A logistic regression based approach is also developed for adjusting length bias of transcirpt in Gene Ontology enrichment analysis[@Mi2012].
 
-Similar situations are also observed in analyzing genome-wide methylation data. Several studies found that number of methylation within genes could cause a bias to identify diffenertially methylated genes.  
+Similar situations are also observed in analyzing genome-wide methylation data. Several studies found that number of methylation within genes could cause a bias to identify diffenertially methylated genes. An R package is also available for correcting this bias[@Phipson2016].  
 
 However, bias on identifying differentilly expressed genes due to different gene structure and its corrections have not been addressed in detail. In this paper, we explore to identify the bias factor on RNA-Seq data related to gene structure, we demonstrate that by identifying right bais factors could lead to the better adjustment on DE analysis and the following gene GO term and pathway enrichment analysis. A R package based on this analysis procedure is also developed.
 
