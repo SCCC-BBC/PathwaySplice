@@ -12,14 +12,23 @@
 #' @examples
 #'
 #' load("/Volumes/Bioinformatics\$/2015/Nimer_Cheng/1_29_2016.RData")
+#'
 #' dir.name="/Volumes/Bioinformatics$/2015/Nimer_Cheng/"
 #' file.sample="decoder.bySample.txt"
 #' file.count="_junction_seq_new_gtf_7/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 #' file.gff="Mus_musculus.GRCm38.83.JunctionSeq.flat.gff"
 #' Re<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 #' head(fData(Re))
-#'
 #' save(Re,file="Re_Run_test_GOSJ.RData")
+#'
+#' dir.name.PJ="/Volumes/Bioinformatics$/PJ/"
+#' file.sample.PJ="decoder.bySample.rtf"
+#' file.count.PJ="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+#'
+#' paste0(dir.name,file.gff)
+#' Re<-GetResultsFromJunctionSeq(dir.name.PJ,file.sample.PJ,file.count.PJ,file.gff)
+#'
+#'
 #'
 GetResultsFromJunctionSeq<-function(dir.name,file.sample,file.count,file.gff){
 #Get sample file

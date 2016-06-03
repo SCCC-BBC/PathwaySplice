@@ -23,11 +23,11 @@ Several methods have been developed to study alternative splicing. One of these 
 
 $$Usage\ of\ exon\ or\ splicing\ junction\ i=\frac{counts\ of\ exon\ or\ splicing\ junction \ i }{counts\ of\ other\ exons\ and\ splicing\ junctions\ excluding\ exon\ or\ splicing\ junction \ i}$$
 
-![Bias from gene structure](/Users/axy148/Desktop/BiasFromGeneStructure.png)
+![Bias from gene structure](/Users/axy148/GOSJ/Figure/BiasFromGeneStructure.png)
 
 Based on the relative usage of exons and splicing junctions, differential usage between two conditions are identified. The differentially expressed genes are derived from the differential usage of exons and splicing junctions within genes, subsequent gene sets or/and pathway analysis are performed using this derived differentlly expressed genes. It is obserserved that identifying differentially expressed genes using this approach is biased by the number of exons and splicing junctions.
 
-There are several previous studies that showed using RNA-Seq data to study differentially expressed genes and subsequent gene sets or pathways analysis could be biased by read counts of transcripts and length of transcripts. Several methods are also developed to correct these biases either in the step of identifing differentially genes or in the step of performing gene sets enrichment analysis. A well known R package for correcting bias in gene set enrichment analysis, GoSeq, is available. 
+There are several previous studies that showed using RNA-Seq data to study differentially expressed genes and subsequent gene sets or pathways analysis could be biased by read counts of transcripts and length of transcripts. Several methods are also developed to correct these biases either in the step of identifing differentially genes or in the step of performing gene sets enrichment analysis[@Gao2011]. A well known R package for correcting bias in gene set enrichment analysis, GoSeq, is available. A logistic regression based approach is also developed for adjusting length bias of transcirpt in Gene Ontology enrichment analysis[@Mi2012].
 
 Similar situations are also observed in analyzing genome-wide methylation data. Several studies found that number of methylation within genes could cause a bias to identify diffenertially methylated genes.  
 
@@ -65,7 +65,7 @@ However, bias on identifying differentilly expressed genes due to different gene
 
 ## Analysis on several real data sets
 
-![working flow](/Users/axy148/Desktop/working_flow.png)
+![working flow](/Users/axy148/GOSJ/Figure/working_flow.png)
 
 #. Reanalysis for a data set in Myelodysplastic syndromes(MDS) study
 
@@ -74,7 +74,7 @@ However, bias on identifying differentilly expressed genes due to different gene
 
 A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. We performed analysis based on 2 scenarios:
 
-In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number splicing junctions.
+In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number of splicing junctions.
 
 In the second scenario,Ensemble-annotated exons and junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential exon and junction usage while the overall gene expression changes are controlled. In this step,the $p$ value of differential usage of each subfeature of each gene are determined,and used to calculate the genewise $p$ value based on the following method described in DEXSeq R package[@Anders2012]:
 
@@ -96,9 +96,9 @@ Secondly, we use these differnentially expressed gene list to identify the relat
 
 ```
 
-![Bias from sj and GL](/Users/axy148/Desktop/sjvsGL.png)
+![Bias from sj and GL](/Users/axy148/GOSJ/Figure/sjvsGL.png)
 
-![Bias from sj and exons](/Users/axy148/Desktop/sjvsexons.png)
+![Bias from sj and exons](/Users/axy148/GOSJ/Figure/sjvsexons.png)
 
 
 + Correction for GO term enrichment analysis
