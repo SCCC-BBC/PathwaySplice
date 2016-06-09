@@ -11,48 +11,8 @@
 #'
 #' @examples
 #'
-#' load("Re_Run_test_GOSJ.RData")
-#'
-#' re.gene.based<-makeGeneWiseTable(Re,gene.list=unique(as.character(fData(Re)$geneID)))
-#' dim(pData(re.gene.based))
-#' no.testable.index<-which(as.character(pData(re.gene.based)$mostSigID)=="character(0)")
-#' re.gene.based.testable<-pData(re.gene.based)[-no.testable.index,]
-#' dim(re.gene.based.testable)
-#'
-#' cor(as.numeric(re.gene.based.testable$numKnown),
-#' as.numeric(re.gene.based.testable$mostSigPadjust))
-#'
-#' Generate genewise table for PJ data
+#' # Generate genewise table for PJ data
 #' re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID)))
-#'
-#' no.PJ.testable.index<-which(as.character(pData(re.PJ.gene.based)$mostSigID)=="character(0)")
-#' re.PJ.gene.based.testable<-pData(re.PJ.gene.based)[-no.PJ.testable.index,]
-#' dim(re.PJ.gene.based.testable)
-#'
-#' cor(as.numeric(re.PJ.gene.based.testable$numKnown),
-#' as.numeric(re.PJ.gene.based.testable$mostSigPadjust))
-#'
-#' head(re.PJ.gene.based.testable)
-#'
-#' table.gene.based.all.3<-re.PJ.gene.based.testable
-#' x <- vapply(table.gene.based.all.3$mostSigID, length, 1L)          ## How many items per list element
-#' table.gene.based.all.3<- table.gene.based.all.3[rep(rownames(table.gene.based.all.3), x), ]   ## Expand the data frame
-#' table.gene.based.all.3$mostSigID <- unlist(table.gene.based.all.3$mostSigID, use.names = FALSE)  ## Replace w
-#' dim(table.gene.based.all.3)
-#'
-#'
-#' mart = useEnsembl(biomart = "ENSEMBL_MART_ENSEMBL", host="uswest.ensembl.org", dataset="mmusculus_gene_ensembl")
-#' scs.ensembl.gene.is.2.gene.symbol<-getBM(attributes=c("mgi_symbol"), filters="ensembl_gene_id", values=table.gene.based.all.3$geneID, mart=mart)
-#' jscs.ensembl.gene.is.2.gene.symbol.plus.ensembl.gene.id<-cbind(scs.ensembl.gene.is.2.gene.symbol,gene.based.de.splice.site)
-#'
-#' write.csv(table.gene.based.all.3,file = "/media/H_driver/PJ/GeneWise_Re_2.csv")
-#'
-#' buildAllPlots(jscs=Re.PJ,outfile.prefix="/media/H_driver/PJ/plots_based_on_mostSigGene/",
-#' gene.list="ENSMUSG00000058407",
-#' use.plotting.device="png",
-#' plot.gene.level.expression=TRUE,
-#' sequencing.type="single-end")
-#'
 #'
 makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE, debug.mode = FALSE){
   if(verbose) message("   Compiling data table. ",date())

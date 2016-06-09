@@ -14,8 +14,8 @@ Get analysis results using JunctionSeq
 }
 \examples{
 
+# For Guoyan Project
 load("/Volumes/Bioinformatics\\$/2015/Nimer_Cheng/1_29_2016.RData")
-
 dir.name="/Volumes/Bioinformatics$/2015/Nimer_Cheng/"
 file.sample="decoder.bySample.txt"
 file.count="_junction_seq_new_gtf_7/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
@@ -24,6 +24,7 @@ Re<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 head(fData(Re))
 save(Re,file="Re_Run_test_GOSJ.RData")
 
+# For PJ project
 dir.name.PJ="/media/H_driver/PJ/"
 file.sample.PJ="decoder.bySample.rtf"
 file.count.PJ="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
@@ -32,8 +33,6 @@ file.gff=paste0("/media/H_driver/2015/Nimer_Cheng/",file.gff)
 Re.PJ<-GetResultsFromJunctionSeq(dir.name.PJ,file.sample.PJ,file.count.PJ,file.gff)
 
 save(Re.PJ,file="/media/H_driver/PJ/PJ_jscs.RData")
-
-
 buildAllPlots(jscs=jscs,outfile.prefix="./plots_based_on_DE_splice_site_gene1/",
 gene.list=gene.based.de.splice.site[1],use.plotting.device="png",plot.gene.level.expression=TRUE,sequencing.type="single-end");
 

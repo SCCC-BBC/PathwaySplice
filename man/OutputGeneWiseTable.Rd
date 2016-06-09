@@ -4,12 +4,20 @@
 \alias{OutputGeneWiseTable}
 \title{Title}
 \usage{
-OutputGeneWiseTable(re.PJ.gene.based, output_file)
+OutputGeneWiseTable(re.PJ.gene.based, gene.model, output_file)
 }
 \arguments{
 \item{output_file}{}
 }
 \description{
 Title
+}
+\examples{
+
+data(gene.model)
+
+OutputGeneWiseTable(re.PJ.gene.based,gene.model,output_file="/media/H_driver/PJ/GeneWise_Re_annotated_using_new_annotation_3.csv")
+
+
 }
 
