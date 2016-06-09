@@ -83,7 +83,7 @@ In the first scenario, we use gene-based counts to identify differentially expre
 In the second scenario,Ensemble-annotated exons and junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential exon and junction usage while the overall gene expression changes are controlled. In this step,the $p$ value of differential usage of each subfeature of each gene are determined,and used to calculate the genewise $p$ value based on the following method described in DEXSeq R package[@Anders2012]:
 
 let $p_{il}$ be the $p$ value for $l$
-subfeature(exon or splicing junction) of gene $i$, then gene wise $p$ value is calcualted using the following method:
+subfeature(exon or splicing junction) of gene $i$, then genewise $p$ value is calcualted using the following method:
 
 $$P(at\ least\ 1\ type\ I\ error\ among\ m\ tests)=\frac{\sum_{i=1}^M 1-(1-\theta)^{n_i}}{|{i: \exists p_{il} < \theta}|}$$
 
