@@ -1,6 +1,6 @@
 ---
 title: 'GOSJ: An R package for adjusting bias from gene structure on identifying differentially
-  expressed genes in RNA-Seq data'
+  expressed genes in RNA-Seq data analysis'
 author: "Aimin Yan"
 date: "May 13, 2016"
 output: pdf_document
@@ -12,24 +12,28 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Motivation: 
-Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. There are several studies that researchers attempt to undertand alternative splicing events by performing differential exons or/and splicing junctions usage analysis. In these analysis, the differentilly expressed gene are derived based on differential exon or/and splicing junction usage analysis, then subsequent gene set or/and pathway analysis are perform based on differentlly expressed gene list. However, it is observed that the derived differentiall expressed gene list based on differentiall exon or/and splicing junction analysis is biased by the numer of exon or/ and splicing junction with gene,and cause further bias in subsequent get set and pathway analysis.    
+Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. There are several studies that researchers attempt to undertand alternative splicing events by performing differential exons or/and splicing junctions usage analysis. In these analysis, the differentially expressed gene are derived based on differential exon or/and splicing junction usage analysis, then subsequent gene set or/and pathway analysis are performed based on differentlly expressed gene list. However, it is observed that the derived differentially expressed gene list from differential exon or/and splicing junction analysis is biased by the number of exons or/ and splicing junctions within gene, and cause further bias in subsequent get set and pathway analysis.    
 
 ## Results: 
-We demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we obtained in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differential expressed genes through using differential usage of subfeatures(exons and/or splicing junctions) are biased by the number of subfeatures within gene, and subsequently lead to the bias in the subsequent Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. We develop an approach to adjust this bias. A R package(GOSJ) based on this approach is also implemented to make this method be available for other researchers. This GOSJ package is accessable on <https://github.com/aiminy/GOSJ.git>.
+We demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we obtained in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differentially expressed genes through using differential usage of gene features(exons and/or splicing junctions) are biased by the number of features within gene, and subsequently lead to the bias in following Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. We develop an approach to adjust this bias. A R package(GOSJ) based on this approach is also implemented to make this method be available for other researchers. This GOSJ package is accessable on <https://github.com/aiminy/GOSJ.git>.
 
 ## Introduction
-RNA-Seq data has been extensively used to measure expression of transcripts, and to investigate alternative splicing,allele specific expression and RNA editing.
-Several methods have been developed to study alternative splicing. One of these methods is to focus on studying differential exons or/and splicing junction usage to understand alternative splicing. In these studies, exons and splicing junctions are annotated based on annotated gene model(see the following Figure), then the counts mapped to these regions are obtained. Based on these counts in exons and splicing junctions, and usage of these exons and splicing junctions are calcualted using the following method:
+RNA-Seq data has been extensively used to measure expression of transcripts, and to investigate alternative splicing, allele specific expression and RNA editing.
+Several methods have been developed to study alternative splicing. One of these methods is to focus on studying differential feature(exons or/and splicing junction) usage to understand alternative splicing. In these studies, the counts of features are obtained using the annotated gene model(see the following Figure), and are used to calculte usage of these features through the following method:
 
-$$Usage\ of\ exon\ or\ splicing\ junction\ i=\frac{counts\ of\ exon\ or\ splicing\ junction \ i }{counts\ of\ other\ exons\ and\ splicing\ junctions\ excluding\ exon\ or\ splicing\ junction \ i}$$
+$$
+\begin{aligned}
+Usage\ of\ feature\ i=\frac{counts\ of\ feature\ i}{counts\ of\ other\ features \ excluding\ feature\ i}
+\end{aligned}
+$$
 
 ![Bias from gene structure](/Users/axy148/GOSJ/Figure/BiasFromGeneStructure.png)
 
-Based on the relative usage of exons and splicing junctions, differential usage between two conditions are identified. The differentially expressed genes are derived from the differential usage of exons and splicing junctions within genes, subsequent gene sets or/and pathway analysis are performed using this derived differentlly expressed genes. It is obserserved that identifying differentially expressed genes using this approach is biased by the number of exons and splicing junctions.
+Based on the usage of exons and splicing junctions, differential usage between two conditions are identified. The differentially expressed genes are derived from the differential usage of exons and splicing junctions within genes, subsequent gene sets or/and pathway analysis are performed using this derived differentlly expressed genes. It is obserserved that identifying differentially expressed genes using this approach is biased by the number of exons and splicing junctions.
 
-There are several previous studies that showed using RNA-Seq data to study differentially expressed genes and subsequent gene sets or pathways analysis could be biased by read counts of transcripts and length of transcripts. Several methods are also developed to correct these biases either in the step of identifing differentially genes or in the step of performing gene sets enrichment analysis[@Gao2011]. A well known R package for correcting bias in gene set enrichment analysis, GoSeq, is available. A logistic regression based approach is also developed for adjusting length bias of transcirpt in Gene Ontology enrichment analysis[@Mi2012].
+There are several previous studies that showed using RNA-Seq data to study differentially expressed genes and subsequent gene sets or pathways analysis could be biased by read counts of transcripts and length of transcripts. Several methods are also developed to correct these biases either in the step of identifing differentially genes or in the step of performing gene sets enrichment analysis[@Gao2011]. A well known R package for correcting bias in gene set enrichment analysis, GoSeq, is available[@Young2010]. A logistic regression based approach is also developed for adjusting length bias of transcirpt in Gene Ontology enrichment analysis[@Mi2012].
 
-Similar situations are also observed in analyzing genome-wide methylation data. Several studies found that number of methylation within genes could cause a bias to identify diffenertially methylated genes.  
+Similar situations are also observed in analyzing genome-wide methylation data. Several studies found that number of methylation within genes could cause a bias to identify diffenertially methylated genes. An R package is also available for correcting this bias[@Phipson2016].  
 
 However, bias on identifying differentilly expressed genes due to different gene structure and its corrections have not been addressed in detail. In this paper, we explore to identify the bias factor on RNA-Seq data related to gene structure, we demonstrate that by identifying right bais factors could lead to the better adjustment on DE analysis and the following gene GO term and pathway enrichment analysis. A R package based on this analysis procedure is also developed.
 
@@ -120,6 +124,6 @@ Using the idea in [@Geeleher2013], we explore to fix gene structure in the data 
 By this way, we explore to identify the same enriched gene sets and pathways of GO and KEGG. If there are high consistencies between the resutls from permutated data sets and that of real data sets, this indicates that the number of subfeatures of genes biases gene set or/and pathway analysis.
 
 ## Conclusion
-In summary, our work identified the potential bias in RNA-Seq data analysis when using differential exons or/and splicing junction usage to represent differential expressed gene, and using these differential expressed genes to perform subsequent gene set and pathway analysis. We futher sugguested a bias correct approach that could provide a more accutate gene set and pathway analsis. We also implemented this method into a R package, and we believe that this R packcage could help other researchers to perform similar type of RNA-Seq data analysis.
+In summary, our work identified the potential bias in RNA-Seq data analysis when using differential exons or/and splicing junction usage to represent differential expressed gene, and using these differential expressed genes to perform subsequent gene set and pathway analysis. We futher sugguest a bias correction approach that could provide a more accutate gene set and pathway analsis. We implemented this method into an R package, and we believe that this R packcage could help other researchers when they perform similar type of RNA-Seq data analysis.
 
 ##Reference
