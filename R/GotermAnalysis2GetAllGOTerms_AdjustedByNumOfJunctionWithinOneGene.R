@@ -11,7 +11,17 @@
 #' @export
 #'
 #' @examples
-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(Data4Goterm,ad="GL",sub_feature=NULL,threshold,file_prefix){
+#'
+#'
+#' Re.Go.adjusted.by.number.junction.2<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
+#' re.PJ.gene.based,ad="J","J",0.05,"Splice_junction_based")
+#'
+#' data.pwf2.SJs<-plotPWF2(Re.Go.adjusted.by.number.junction.2[[2]],binsize=30,xlab = "Number of SJs(<binsize> gene bins)")
+#'
+#'
+GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,file_prefix){
+
+  Data4Goterm<-pData(re.gene.based)
 
   if(is.null(sub_feature)){Data4Goterm.sub_feature<-Data4Goterm}
   else{Data4Goterm.sub_feature<-Data4Goterm[grep(sub_feature,Data4Goterm[,8]),]}
@@ -56,8 +66,7 @@ else
 pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
 }
 
-
-  GO.wall.DE_interest=goseq(pwf.DE_interest,"mm10","ensGene")
+  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene")
   enriched.GO.DE_interest=GO.wall.DE_interest[p.adjust(GO.wall.DE_interest$over_represented_pvalue,method="BH")<threshold,]
   re<-list()
 

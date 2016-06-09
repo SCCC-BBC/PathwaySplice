@@ -4,7 +4,8 @@
 \alias{GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene}
 \title{This function is to subset data set based on feature}
 \usage{
-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(Data4Goterm,
+
+  GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(re.gene.based,
   ad = "GL", sub_feature = NULL, threshold, file_prefix)
 }
 \arguments{
@@ -12,5 +13,15 @@ GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(Data4Goterm,
 }
 \description{
 This function is to subset data set based on feature
+}
+\examples{
+
+
+Re.Go.adjusted.by.number.junction.2<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
+re.PJ.gene.based,ad="J","J",0.05,"Splice_junction_based")
+
+data.pwf2.SJs<-plotPWF2(Re.Go.adjusted.by.number.junction.2[[2]],binsize=30,xlab = "Number of SJs(<binsize> gene bins)")
+
+
 }
 

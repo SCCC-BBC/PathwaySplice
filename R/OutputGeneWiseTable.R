@@ -7,7 +7,13 @@
 #' @export
 #'
 #' @examples
-OutputGeneWiseTable <- function(re.PJ.gene.based,output_file) {
+#'
+#' data(gene.model)
+#'
+#' OutputGeneWiseTable(re.PJ.gene.based,gene.model,output_file="/media/H_driver/PJ/GeneWise_Re_annotated_using_new_annotation_3.csv")
+#'
+#'
+OutputGeneWiseTable <- function(re.PJ.gene.based,gene.model,output_file) {
 
    no.PJ.testable.index<-which(as.character(pData(re.PJ.gene.based)$mostSigID)=="character(0)")
    re.PJ.gene.based.testable<-pData(re.PJ.gene.based)[-no.PJ.testable.index,]
@@ -16,17 +22,16 @@ OutputGeneWiseTable <- function(re.PJ.gene.based,output_file) {
    cor(as.numeric(re.PJ.gene.based.testable$numKnown),
    as.numeric(re.PJ.gene.based.testable$mostSigPadjust))
 
-  #head(re.PJ.gene.based.testable)
-
   table.gene.based.all.3<-re.PJ.gene.based.testable
   x <- vapply(table.gene.based.all.3$mostSigID, length, 1L) ## How many items per list element
   table.gene.based.all.3<- table.gene.based.all.3[rep(rownames(table.gene.based.all.3), x), ] ## Expand the data frame
   table.gene.based.all.3$mostSigID <- unlist(table.gene.based.all.3$mostSigID, use.names = FALSE)  ## Replace w
-  #dim(table.gene.based.all.3)
 
-  #mart = useEnsembl(biomart = "ENSEMBL_MART_ENSEMBL", host="uswest.ensembl.org", dataset="mmusculus_gene_ensembl")
-  #scs.ensembl.gene.is.2.gene.symbol<-getBM(attributes=c("mgi_symbol"), filters="ensembl_gene_id", values=table.gene.based.all.3$geneID, mart=mart)
-  #jscs.ensembl.gene.is.2.gene.symbol.plus.ensembl.gene.id<-cbind(scs.ensembl.gene.is.2.gene.symbol,gene.based.de.splice.site)
-  write.csv(table.gene.based.all.3,file = output_file)
+  gene.annotation.4.geneID<-do.call(rbind,lapply(table.gene.based.all.3[,1],GenerateGeneAnno,gene.model))
+
+  table.gene.based.all.4<-merge(gene.annotation.4.geneID,table.gene.based.all.3,by="geneID")
+
+  write.csv(table.gene.based.all.4,file = output_file)
 
 }
+
