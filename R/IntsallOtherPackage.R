@@ -1,10 +1,12 @@
+# installed.packages()
 # install.packages("RCurl")
 # source("http://bioconductor.org/biocLite.R")
+# source("https://bioconductor.org/biocLite.R")
+
 # biocLite("biomaRt")
 # library(biomaRt)
 # install.packages("roxygen2")
 # library(roxygen2)
-# source("https://bioconductor.org/biocLite.R")
 # biocLite("JunctionSeq")
 # library(JunctionSeq)
 # biocLite("goseq")
@@ -12,6 +14,8 @@
 # biocLite("org.Mm.eg.db")
 # library(org.Mm.eg.db)
 # require(GO.db)
+# install.packages("GSA")
+# library(GSA)
 
 
 gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)

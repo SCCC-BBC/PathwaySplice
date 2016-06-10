@@ -7,6 +7,8 @@
 #' @export
 #'
 #' @examples
+#' gene.2.cat.hallmark<-gene2cat2("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt")
+#'
 gene2cat2 <- function(gmt_input_file) {
 
   re<-GSA.read.gmt(gmt_input_file)

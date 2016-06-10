@@ -1,33 +1,55 @@
 #' goseq2
 #'
-#' @param pwf
-#' @param genome
-#' @param id
-#' @param gene2cat
-#' @param test.cats
-#' @param method
-#' @param repcnt
-#' @param use_genes_without_cat
+#' Modifying goseq to generate GO term with the listed DEgene
+#'
+#' @param pwf: probability weight function
+#' @param genome: genome you use
+#' @param id: which gene id
+#' @param gene2cat: a list with gene as name and category as value
+#' @param test.cats: the category you choose
+#' @param method: which method for calculting overpresentation p-value
+#' @param repcnt: the number of replications
+#' @param use_genes_without_cat: whether using genes without category or not
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' test.goseq2<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model)
 #'
-#'sink("test_out.txt")
-#' test.goseq2<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+#' test.goseq33<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+#' outputfile="/media/H_driver/PJ/GO_term_adjusted_by_SJ_2.xls")
 #'
-#' test.goseq3<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+#' test.goseq44<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+#' outputfile="GO_term_adjusted_by_SJ_3.xls")
 #'
-#' test.goseq4<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+#' sink("output_dhyper.txt")
+#' test.goseq44<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+#' outputfile="GO_term_adjusted_by_SJ_4.xls")
+#' sink()
 #'
-#' test.goseq5<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+#' sink("output_dhyper_use_all.txt")
+#' test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+#' outputfile="GO_term_adjusted_by_SJ_use_all.xls")
+#' sink()
 #'
-#' test.goseq6<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+#' test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,gene2cat=gene.2.cat.hallmark,
+#' outputfile="GO_term_adjusted_by_SJ_use_hallmark.xls")
 #'
-#'sink()
+#' test.goseq.hallmark<-goseq(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene2cat=gene.2.cat.hallmark)
 #'
-goseq2=function(pwf,genome,id,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE){
+#'
+#' human.sample.data<-read.table("/media/H_driver/DataSet_SJ/GSE66793_cmp1-3-geo-juncs.tsv",sep="\t",header=TRUE)
+#'
+#'
+#' human.sample.data$gene_id
+#' which(human.sample.data$gene_id %in% names(gene.2.cat.hallmark))
+#'
+#' which(rownames(Re.Go.adjusted.by.number.junction.2[[2]]) %in% names(gene.2.cat.hallmark))
+#'
+#'  reversemapping(gene.2.cat.hallmark)
+#'
+goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE,outputfile){
   ################# Input pre-processing and validation ###################
   #Do some validation of input variables
   if(any(!test.cats%in%c("GO:CC","GO:BP","GO:MF","KEGG"))){
@@ -128,7 +150,7 @@ goseq2=function(pwf,genome,id,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF")
     message(paste("For",unknown_go_terms,"genes, we could not find any categories. These genes will be excluded."))
     message("To force their use, please run with use_genes_without_cat=TRUE (see documentation).")
     message("This was the default behavior for version 1.15.1 and earlier.")
-    pwf=pwf[rownames(pwf) %in% names(gene2cat),]
+    #pwf=pwf[rownames(pwf) %in% names(gene2cat),]
   }
   #A few variables are always useful so calculate them
   cats=names(cat2gene)
@@ -170,34 +192,35 @@ goseq2=function(pwf,genome,id,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF")
     message("Calculating the p-values...")
     #All these things are just to make stuff run faster, mostly because comparison of integers is faster than string comparison
 
-    print(pwf$DEgenes)
+    #print(pwf$DEgenes)
 
     degenesnum=which(pwf$DEgenes==1)
 
-    print(rownames(pwf)[degenesnum])
+    #print(rownames(pwf)[degenesnum])
 
      #Turn all genes into a reference to the pwf object
     cat2genenum=relist(match(unlist(cat2gene),rownames(pwf)),cat2gene)
     #This value is used in every calculation, by storing it we need only calculate it once
     alpha=sum(pwf$pwf)
 
+
     #Each category will have a different weighting so needs its own test
     pvals[,2:3]=t(sapply(cat2genenum,function(u){
-      #The number of DE genes in this category
 
+     #The number of DE genes in this category
       num_de_incat=sum(degenesnum%in%u)
 
-      #cat(num_de_incat,"\n")
       #The total number of genes in this category
-
       num_incat=length(u)
-      cat(num_de_incat,"\t",num_incat,"\n")
 
       #This is just a quick way of calculating weight=avg(PWF within category)/avg(PWF outside of category)
       avg_weight=mean(pwf$pwf[u])
       weight=(avg_weight*(num_genes-num_incat))/(alpha-num_incat*avg_weight)
       if(num_incat==num_genes){ weight=1 } #case for the root GO terms
       #Now calculate the sum of the tails of the Wallenius distribution (the p-values)
+
+      cat(num_de_incat,"\t",num_incat,"\t",num_genes,"\t",num_de,"\t",weight,"\n")
+
       c(dWNCHypergeo(num_de_incat,num_incat,num_genes-num_incat,num_de,weight)
         +pWNCHypergeo(num_de_incat,num_incat,num_genes-num_incat,num_de,weight,lower.tail=FALSE),
         pWNCHypergeo(num_de_incat,num_incat,num_genes-num_incat,num_de,weight))
@@ -224,20 +247,9 @@ goseq2=function(pwf,genome,id,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF")
   #Populate the count columns...
   degenesnum=which(pwf$DEgenes==1)
 
-  #print(degenesnum)
-
   cat2genenum=relist(match(unlist(cat2gene),rownames(pwf)),cat2gene)
 
-  cat("cat2genenum","\n")
-  print(cat2genenum)
-
-
   cat2degenenum=relist(match(unlist(cat2gene),rownames(pwf)[degenesnum]),cat2gene)
-
-  #cat2degenename=relist(unlist(cat2degenenum)[-which(is.na(unlist(cat2degenenum)))],cat2degenenum)
-
-  #cat("cat2degenename","\n")
-  #print(cat2degenename)
 
   pvals[,4:5]=t(sapply(cat2genenum,function(u){
     c(sum(degenesnum%in%u),length(u))
@@ -248,20 +260,21 @@ goseq2=function(pwf,genome,id,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF")
     c(rownames(pwf)[u[-which(is.na(u))]])
   },pwf)
 
-  pvals.6
+  pvals.6.gene.symbol<-sapply(pvals.6,function(u,gene.model){
+    gene.model[match(u,as.character(gene.model[,3])),1]
+  },gene.model)
+
 
   pvals.6.df<-list_to_df(pvals.6)
 
-  colnames(pvals.6.df)=c("category","DEgene")
+  pvals.6.gene.symbol.df<-list_to_df(pvals.6.gene.symbol)
 
-  # # pvals[,6]=t(sapply(cat2degenenum,function(u,pwf){
-  # #   #c(sum(degenesnum%in%u),length(u))
-  # #   list(c(rownames(pwf)[u[-which(is.na(u))]]))
-  # #   },pwf))
+  colnames(pvals.6.df)=c("category","DEgene_ID")
+
+  colnames(pvals.6.gene.symbol.df)=c("category","DEgene_symbol")
 
   #Finally, sort by p-value
   pvals=pvals[order(pvals$over_represented_pvalue),]
-
 
   # Supplement the table with the GO term name and ontology group
   # but only if the enrichment categories are actually GO terms
@@ -274,8 +287,17 @@ goseq2=function(pwf,genome,id,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF")
   # And return
   pvals.2<-merge(pvals,pvals.6.df,by="category",sort = FALSE)
 
-  cat(dim(pvals.2),"\n")
+  pvals.3<-merge(pvals.2,pvals.6.gene.symbol.df,by="category",sort = FALSE)
 
-  return(pvals.2)
+  dataset2<-pvals.3
+
+  dataset2[sapply(dataset2, is.list)] <-
+    sapply(dataset2[sapply(dataset2, is.list)],
+           function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
+
+
+  write.table(dataset2,row.names = FALSE,outputfile, quote=FALSE, sep="\t")
+
+  return(pvals.3)
 
 }
