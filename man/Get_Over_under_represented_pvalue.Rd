@@ -2,7 +2,7 @@
 % Please edit documentation in R/Get_Over_under_represented_pvalue.R
 \name{Get_Over_under_represented_pvalue}
 \alias{Get_Over_under_represented_pvalue}
-\title{Title}
+\title{calculate the p-value for GO terms}
 \usage{
 Get_Over_under_represented_pvalue(num_de_incat, num_incat, num_genes, num_de,
   weight)
@@ -11,15 +11,18 @@ Get_Over_under_represented_pvalue(num_de_incat, num_incat, num_genes, num_de,
 \item{weight}{}
 }
 \description{
-Title
+calculate the p-value for GO terms
 }
 \examples{
 
 28 	 186 	 1852 	 125 	 1.03043
 
+use the gene pooled from all GO terms
 Get_Over_under_represented_pvalue(28,186,1852,125,1.03043)
 
-Get_Over_under_represented_pvalue(28,186,1840,125,1.080766)
+use the genes that have matched GO terms
+
+Get_Over_under_represented_pvalue(28,186,1840,125,1.026767)
 
 }
 

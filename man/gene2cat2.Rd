@@ -14,4 +14,8 @@ gene2cat2(gmt_input_file)
 Read gmt file, and convert this gmt file to a list with the name of each element being gene name
 and each element being the pathways that this gene corresponds to
 }
+\examples{
+gene.2.cat.hallmark<-gene2cat2("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt")
+
+}
 

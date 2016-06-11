@@ -16,7 +16,5 @@
 # require(GO.db)
 # install.packages("GSA")
 # library(GSA)
-
-
-gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)
-save(gene.model,file="~/GOSJ/data/gene.model.RData")
+# gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)
+# save(gene.model,file="~/GOSJ/data/gene.model.RData")

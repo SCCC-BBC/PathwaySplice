@@ -47,6 +47,28 @@ test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",g
 outputfile="GO_term_adjusted_by_SJ_use_all.xls")
 sink()
 
+test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,gene2cat=gene.2.cat.hallmark,
+outputfile="GO_term_adjusted_by_SJ_use_hallmark.xls")
+
+test.goseq.hallmark<-goseq(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene2cat=gene.2.cat.hallmark)
+
+Get another data set from human
+
+Leukemia. 2015 May;29(5):1092-103. doi: 10.1038/leu.2014.331. Epub 2014 Nov 27.
+Disruption of SF3B1 results in deregulated expression and splicing of key genes and pathways
+ in myelodysplastic syndrome hematopoietic stem and progenitor cells.
+Dolatshad H1, Pellagatti A1, Fernandez-Mercado M1, Yip BH1, Malcovati L2, Attwood M1, Przychodzen B3, Sahgal N4, Kanapin AA5, Lockstone H4, Scifo L1, Vandenberghe P6, Papaemmanuil E7, Smith CW8, Campbell PJ7, Ogawa S9, Maciejewski JP3, Cazzola M2, Savage KI10, Boultwood J1.
+Author information
+
+human.sample.data<-read.table("/media/H_driver/DataSet_SJ/GSE66793_cmp1-3-geo-juncs.tsv",sep="\\t",header=TRUE)
+
+
+human.sample.data$gene_id
+which(human.sample.data$gene_id \%in\% names(gene.2.cat.hallmark))
+
+which(rownames(Re.Go.adjusted.by.number.junction.2[[2]]) \%in\% names(gene.2.cat.hallmark))
+
+ reversemapping(gene.2.cat.hallmark)
 
 }
 
