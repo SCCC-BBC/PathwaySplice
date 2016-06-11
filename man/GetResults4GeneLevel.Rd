@@ -26,9 +26,5 @@ file.sample.PJ.gene="decoder.bySample.rtf"
 file.count.PJ.gene="/QC.geneCounts.formatted.for.DESeq.txt"
 
 Re.PJ.gene<-GetResults4GeneLevel(dir.name.PJ.gene,file.sample.PJ.gene,file.count.PJ.gene)
-
-
-
-
 }
 
