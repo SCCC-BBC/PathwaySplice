@@ -17,12 +17,8 @@
 #' file.count.PJ.gene="/QC.geneCounts.formatted.for.DESeq.txt"
 #'
 #' Re.PJ.gene<-GetResults4GeneLevel(dir.name.PJ.gene,file.sample.PJ.gene,file.count.PJ.gene)
-#'
-#'
-#'
-#'
+
 GetResults4GeneLevel<-function(dir.name,file.sample,file.count){
-  #Get sample file
 
   suppressPackageStartupMessages(library(DESeq2))
 
@@ -42,31 +38,11 @@ GetResults4GeneLevel<-function(dir.name,file.sample,file.count){
 
   print(sampleTable)
 
-  #Get count file
-  #path.file.count<-paste0(dir.name,decoder.bySample$sample.ID,file.count)
-  #countFiles<-paste0(path.file.count)
-
-  #print(countFiles)
-
-  #Get annotation file
-  #path.file.gff<-paste0(dir.name,file.gff)
-  #path.file.gff<-file.gff
-
-  #print(path.file.gff)
-
-  # #Analysis
-  # sampleTable <- data.frame(sampleName = sampleName,
-  #                           fileName = sampleFiles,
-  #                           condition = sampleCondition);
-
-
   dds <-  DESeqDataSetFromHTSeqCount(sampleTable = sampleTable,directory = directory,design = ~ condition)
-
-
-  print(dds)
 
   dds2 <- DESeq(dds);
   res <- results(dds2);
+
   return(res)
 
 }
