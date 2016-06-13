@@ -25,6 +25,8 @@ test.goseq4<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
 
 test.goseq5<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
 
+test.goseq6<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+
 sink()
 
 }
