@@ -60,7 +60,7 @@ GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.g
   All.gene.id.index.2<-All.gene.id.index[which(names(All.gene.id.index) %in% c(names.4.matched.gene))]
 
   print(length(All.gene.id.index.2))
-
+  print(All.gene.id.index.2)
 
 if(ad=="GL"){
 pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
