@@ -80,6 +80,24 @@ A data set including 6 samples is used for developing this approach. This 6 samp
 
 In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number of splicing junctions.
 
+```{r GOSJ, echo=FALSE}
+library(GOSJ)
+library(Biobase)
+library(goseq)
+library(org.Mm.eg.db)
+library(VennDiagram)
+
+load("/media/H_driver/PJ/PJ_jscs.RData")
+re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID)))
+dir.name.PJ.gene="/media/H_driver/PJ/"
+file.sample.PJ.gene="decoder.bySample.rtf"
+file.count.PJ.gene="/QC.geneCounts.formatted.for.DESeq.txt"
+Re.PJ.gene<-GetResults4GeneLevel(dir.name.PJ.gene,file.sample.PJ.gene,file.count.PJ.gene)
+re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID)))
+Gene.based.DE.feature.based.DE<-CompareDEfromGeneWithDEfromFeatures(Re.PJ.gene,re.PJ.gene.based,"/media/H_driver/PJ/gene_feature_DE_2.tiff")
+plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneGL)
+```
+
 In the second scenario,Ensemble-annotated exons and junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential exon and junction usage while the overall gene expression changes are controlled. In this step,the $p$ value of differential usage of each subfeature of each gene are determined,and used to calculate the genewise $p$ value based on the following method described in DEXSeq R package[@Anders2012]:
 
 let $p_{il}$ be the $p$ value for $l$
