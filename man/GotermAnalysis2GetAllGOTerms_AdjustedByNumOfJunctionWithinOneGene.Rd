@@ -6,7 +6,7 @@
 \usage{
 
   GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(re.gene.based,
-  ad = "GL", sub_feature = NULL, threshold, file_prefix)
+  ad = "GL", sub_feature = NULL, threshold, file_prefix, gene_model)
 }
 \arguments{
 \item{file_prefix}{}
@@ -21,6 +21,10 @@ Re.Go.adjusted.by.number.junction.2<-GotermAnalysis2GetAllGOTerms_AdjustedByNumO
 re.PJ.gene.based,ad="J","J",0.05,"Splice_junction_based")
 
 data.pwf2.SJs<-plotPWF2(Re.Go.adjusted.by.number.junction.2[[2]],binsize=30,xlab = "Number of SJs(<binsize> gene bins)")
+
+Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
+re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
+
 
 
 }

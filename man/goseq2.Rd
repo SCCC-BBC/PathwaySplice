@@ -4,30 +4,76 @@
 \alias{goseq2}
 \title{goseq2}
 \usage{
-goseq2(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC", "GO:BP",
-  "GO:MF"), method = "Wallenius", repcnt = 2000,
-  use_genes_without_cat = FALSE)
+goseq2(pwf, genome, id, gene.model, gene2cat = NULL, test.cats = c("GO:CC",
+  "GO:BP", "GO:MF"), method = "Wallenius", repcnt = 2000,
+  use_genes_without_cat = FALSE, outputfile)
 }
 \arguments{
-\item{use_genes_without_cat}{}
+\item{pwf:}{probability weight function}
+
+\item{genome:}{genome you use}
+
+\item{id:}{which gene id}
+
+\item{gene2cat:}{a list with gene as name and category as value}
+
+\item{test.cats:}{the category you choose}
+
+\item{method:}{which method for calculting overpresentation p-value}
+
+\item{repcnt:}{the number of replications}
+
+\item{use_genes_without_cat:}{whether using genes without category or not}
 }
 \description{
-goseq2
+Modifying goseq to generate GO term with the listed DEgene
 }
 \examples{
+test.goseq2<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model)
 
-sink("test_out.txt")
-test.goseq2<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+test.goseq33<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+outputfile="/media/H_driver/PJ/GO_term_adjusted_by_SJ_2.xls")
 
-test.goseq3<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+test.goseq44<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+outputfile="GO_term_adjusted_by_SJ_3.xls")
 
-test.goseq4<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
+sink("output_dhyper.txt")
+test.goseq44<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+outputfile="GO_term_adjusted_by_SJ_4.xls")
+sink()
 
-test.goseq5<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
-
+<<<<<<< HEAD
 test.goseq6<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
 
+=======
+sink("output_dhyper_use_all.txt")
+test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
+outputfile="GO_term_adjusted_by_SJ_use_all.xls")
+>>>>>>> 8c4b40d47da31303e8d466633869d658b1123b51
 sink()
+
+test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,gene2cat=gene.2.cat.hallmark,
+outputfile="GO_term_adjusted_by_SJ_use_hallmark.xls")
+
+test.goseq.hallmark<-goseq(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene2cat=gene.2.cat.hallmark)
+
+Get another data set from human
+
+Leukemia. 2015 May;29(5):1092-103. doi: 10.1038/leu.2014.331. Epub 2014 Nov 27.
+Disruption of SF3B1 results in deregulated expression and splicing of key genes and pathways
+ in myelodysplastic syndrome hematopoietic stem and progenitor cells.
+Dolatshad H1, Pellagatti A1, Fernandez-Mercado M1, Yip BH1, Malcovati L2, Attwood M1, Przychodzen B3, Sahgal N4, Kanapin AA5, Lockstone H4, Scifo L1, Vandenberghe P6, Papaemmanuil E7, Smith CW8, Campbell PJ7, Ogawa S9, Maciejewski JP3, Cazzola M2, Savage KI10, Boultwood J1.
+Author information
+
+human.sample.data<-read.table("/media/H_driver/DataSet_SJ/GSE66793_cmp1-3-geo-juncs.tsv",sep="\\t",header=TRUE)
+
+
+human.sample.data$gene_id
+which(human.sample.data$gene_id \%in\% names(gene.2.cat.hallmark))
+
+which(rownames(Re.Go.adjusted.by.number.junction.2[[2]]) \%in\% names(gene.2.cat.hallmark))
+
+ reversemapping(gene.2.cat.hallmark)
 
 }
 

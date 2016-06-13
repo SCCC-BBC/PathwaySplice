@@ -35,8 +35,7 @@
 #' gene.list=gene.based.de.splice.site[1],use.plotting.device="png",plot.gene.level.expression=TRUE,sequencing.type="single-end");
 #'
 #'
-#'
-#'
+#
 #'
 GetResultsFromJunctionSeq<-function(dir.name,file.sample,file.count,file.gff){
 #Get sample file

@@ -8,6 +8,14 @@
 #' @export
 #'
 #' @examples
+#'
+#' gene.2.cat.hallmark<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
+#' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
+#'
+#' gene.2.cat.hallmark<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
+#' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+#'
+#'
 Gmt2GeneCat <- function(gmt_input_file,gene_anno_file) {
 
   gene.2.cat.gmt<-gene2cat2(gmt_input_file)

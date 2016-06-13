@@ -14,4 +14,14 @@ Gmt2GeneCat(gmt_input_file, gene_anno_file)
 Read a gmt file, return a list with the name of element being a gene id based on gene_anno_file, and each element
 being the pathways that this gene corresponds to
 }
+\examples{
+
+gene.2.cat.hallmark<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
+"/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
+
+gene.2.cat.hallmark<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
+"/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+
+
+}
 

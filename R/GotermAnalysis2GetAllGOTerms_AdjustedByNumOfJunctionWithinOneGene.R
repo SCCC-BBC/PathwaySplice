@@ -18,8 +18,12 @@
 #'
 #' data.pwf2.SJs<-plotPWF2(Re.Go.adjusted.by.number.junction.2[[2]],binsize=30,xlab = "Number of SJs(<binsize> gene bins)")
 #'
+#' Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
+#' re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
 #'
-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,file_prefix){
+#'
+#'
+GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,file_prefix,gene_model){
 
   Data4Goterm<-pData(re.gene.based)
 
@@ -56,7 +60,7 @@ GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.g
   All.gene.id.index.2<-All.gene.id.index[which(names(All.gene.id.index) %in% c(names.4.matched.gene))]
 
   print(length(All.gene.id.index.2))
-
+  print(All.gene.id.index.2)
 
 if(ad=="GL"){
 pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
@@ -66,7 +70,7 @@ else
 pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
 }
 
-  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene")
+  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model,outputfile=file_prefix)
   enriched.GO.DE_interest=GO.wall.DE_interest[p.adjust(GO.wall.DE_interest$over_represented_pvalue,method="BH")<threshold,]
   re<-list()
 
