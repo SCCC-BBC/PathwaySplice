@@ -56,6 +56,23 @@
 #'
 #'  reversemapping(gene.2.cat.hallmark)
 #'
+#' data(gene.model)
+#'  gene_model<-gene.model
+#' GO.wall.DE_interest.geneGL=goseq2(Gene.based.DE.feature.based.DE$pwfGeneGL,"mm10","ensGene",gene.model=gene_model,outputfile="/media/H_driver
+#' /PJ/geneGL.xls")
+#'
+#' GO.wall.DE_interes.geneFT=goseq2(Gene.based.DE.feature.based.DE$pwfGeneFeature,"mm10","ensGene",gene.model=gene_model,outputfile="/medai/H_driver/
+#' PJ/geneFT.xls")
+#'
+#' #GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model,outputfile=file_prefix)
+#'
+#' GO.wall.DE_interest.FtFT=goseq2(Gene.based.DE.feature.based.DE$pwfFeatureFeature,"mm10","ensGene",gene.model=gene_model,outputfile="/media/H_driver/
+#' PJ/FeatureFT.xls")
+#'
+#'
+#'
+#'
+#'
 goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE,outputfile){
   ################# Input pre-processing and validation ###################
   #Do some validation of input variables

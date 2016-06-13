@@ -16,19 +16,19 @@
 #'
 #' @examples
 #'
-#' pdf("~/GOSJ/Figure/pwfGeneGL.pdf")
+#' png("~/GOSJ/Figure/pwfGeneGL.tiff")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneGL)
 #' dev.off()
 #'
-#' pdf("~/GOSJ/Figure/pwfGeneFeature.pdf")
+#' png("~/GOSJ/Figure/pwfGeneFeature.tiff")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneFeature)
 #' dev.off()
 #'
-#' pdf("~/GOSJ/Figure/pwfFeatureGL.pdf")
+#' png("~/GOSJ/Figure/pwfFeatureGL.tiff")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfFeatureGL)
 #' dev.off()
 #'
-#' pdf("~/GOSJ/Figure/pwFeatureFeature.pdf")
+#' png("~/GOSJ/Figure/pwFeatureFeature.tiff")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfFeatureFeature)
 #' dev.off()
 #'

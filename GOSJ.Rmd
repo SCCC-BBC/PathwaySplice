@@ -3,13 +3,13 @@ title: 'GOSJ: An R package for adjusting bias from gene structure on identifying
   expressed genes in RNA-Seq data analysis'
 author: "Aimin Yan"
 date: "May 13, 2016"
-output: html_document
+output: pdf_document
 bibliography: Splicing-network.bib
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache=TRUE)
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ## Motivation: 
@@ -28,7 +28,7 @@ Usage\ of\ feature\ i=\frac{counts\ of\ feature\ i}{counts\ of\ other\ features 
 \end{aligned}
 $$
 
-![Bias from gene structure](/Users/axy148/GOSJ/Figure/BiasFromGeneStructure.png)
+![Bias from gene structure](/home/aiminyan/GOSJ/Figure/BiasFromGeneStructure.png)
 
 Based on the usage of exons and splicing junctions, differential usage between two conditions are identified. The differentially expressed genes are derived from the differential usage of exons and splicing junctions within genes, subsequent gene sets or/and pathway analysis are performed using this derived differentlly expressed genes. It is obserserved that identifying differentially expressed genes using this approach is biased by the number of exons and splicing junctions.
 
@@ -70,7 +70,7 @@ However, bias on identifying differentilly expressed genes due to different gene
 
 ## Analysis on several real data sets
 
-![working flow](/Users/axy148/GOSJ/Figure/working_flow.png)
+![working flow](/home/aiminyan/GOSJ/Figure/working_flow.png)
 
 #. Reanalysis for a data set in Myelodysplastic syndromes(MDS) study
 
@@ -81,17 +81,12 @@ A data set including 6 samples is used for developing this approach. This 6 samp
 
 In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number of splicing junctions.
 
-gene_feature_DE.tiff  pwFeatureFeature.pdf  pwfFeatureGL.pdf  pwfGeneFeature.pdf  pwfGeneGL.pdf
+![gene_feature](/home/aiminyan/GOSJ/Figure/gene_feature_DE.tiff)
 
-[gene_feature](/home/aiminyan/GOSJ/Figure/gene_feature_DE.tiff)
+![GeneGL](/home/aiminyan/GOSJ/Figure/pwfGeneGL.tiff)
 
-![working flow](/Users/axy148/GOSJ/Figure/working_flow.png)
+![GeneFeature](/home/aiminyan/GOSJ/Figure/pwfGeneFeature.tiff)
 
-![working flow](/Users/axy148/GOSJ/Figure/working_flow.png)
-
-![working flow](/Users/axy148/GOSJ/Figure/working_flow.png)
-
-![working flow](/Users/axy148/GOSJ/Figure/working_flow.png)
 
 <!-- ```{r GOSJ, echo=FALSE} -->
 <!-- library(GOSJ) -->
@@ -131,9 +126,14 @@ Secondly, we use these differnentially expressed gene list to identify the relat
 
 ```
 
-![Bias from sj and GL](/Users/axy148/GOSJ/Figure/sjvsGL.png)
+![FeatureGL](/home/aiminyan/GOSJ/Figure/pwfFeatureGL.tiff)
 
-![Bias from sj and exons](/Users/axy148/GOSJ/Figure/sjvsexons.png)
+![FeatureFeature](/home/aiminyan/GOSJ/Figure/pwFeatureFeature.tiff)
+
+
+![Bias from sj and GL](/home/aiminyan/GOSJ/Figure/sjvsGL.png)
+
+![Bias from sj and exons](/home/aiminyan/GOSJ/Figure/sjvsexons.png)
 
 
 + Correction for GO term enrichment analysis
