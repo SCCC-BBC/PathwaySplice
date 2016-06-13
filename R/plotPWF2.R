@@ -16,22 +16,21 @@
 #'
 #' @examples
 #'
-#' Gene.based.DE.feature.based.DE
-#'
-#' pdf("/media/H_driver/PJ/pwfGeneGL.pdf")
+#' pdf("~/GOSJ/Figure/pwfGeneGL.pdf")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneGL)
-#'"
-#' pdf(""/media/H_driver/PJ/gene_feature_DE_2.tiff")
-#'")
+#' dev.off()
+#'
+#' pdf("~/GOSJ/Figure/pwfGeneFeature.pdf")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneFeature)
+#' dev.off()
 #'
-#' pdf(""/media/H_driver/PJ/gene_feature_DE_2.tiff")
-#'")
+#' pdf("~/GOSJ/Figure/pwfFeatureGL.pdf")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfFeatureGL)
+#' dev.off()
 #'
-#' pdf(""/media/H_driver/PJ/gene_feature_DE_2.tiff")
-#'")
+#' pdf("~/GOSJ/Figure/pwFeatureFeature.pdf")
 #' plotPWF2(Gene.based.DE.feature.based.DE$pwfFeatureFeature)
+#' dev.off()
 #'
 #'
 plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.",
