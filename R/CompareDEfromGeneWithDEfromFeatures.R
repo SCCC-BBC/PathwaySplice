@@ -23,12 +23,38 @@ no.re.testable.index<-which(as.character(re$mostSigID)=="character(0)")
 
 re2<-re[-no.re.testable.index,]
 
-
 gene.based.DE<-re2[which(re2$padj<0.05),]$geneID
 
 feature.based.DE<-re2[which(re2$geneWisePadj<0.05),]$geneID
 
-Re3<-list(GeneBased=gene.based.DE,FeatureBased=feature.based.DE)
+
+all.gene.index<-rep(0,length(re2$geneID))
+
+names(all.gene.index)<-re2$geneID
+
+all.gene.index.gene.based<-all.gene.index
+all.gene.index.gene.based[which(names(all.gene.index.gene.based) %in% gene.based.DE)]=1
+
+exonplussj=re2$numExons+re2$numKnown
+
+pwf.DE_interest.gene.based.using.gene.length=nullp(all.gene.index.gene.based,"mm10","ensGene",plot.fit = FALSE)
+
+pwf.DE_interest.gene.based.using.exonplussj=nullp(all.gene.index.gene.based,"mm10","ensGene",bias.data = exonplussj,
+                                                  plot.fit = FALSE)
+
+
+all.gene.index.feature.based<-all.gene.index
+all.gene.index.feature.based[which(names(all.gene.index.feature.based) %in% feature.based.DE)]=1
+
+pwf.DE_interest.feature.based.using.gene.length=nullp(all.gene.index.feature.based,"mm10","ensGene",plot.fit = FALSE)
+
+pwf.DE_interest.feature.based.using.exonplussj=nullp(all.gene.index.feature.based,"mm10","ensGene",bias.data = exonplussj,
+                                                  plot.fit = FALSE)
+
+
+Re3<-list(GeneBased=gene.based.DE,FeatureBased=feature.based.DE,GenePlusFeature=re2,pwfGeneGL=pwf.DE_interest.gene.based.using.gene.length,
+          pwfGeneFeature=pwf.DE_interest.gene.based.using.exonplussj,pwfFeatureGL=pwf.DE_interest.feature.based.using.gene.length,
+          pwfFeatureFeature=pwf.DE_interest.feature.based.using.exonplussj)
 
 venn.plot <- venn.diagram(
   x = Re3[c(1,2)],
@@ -55,4 +81,3 @@ venn.plot <- venn.diagram(
 return(Re3)
 
 }
-

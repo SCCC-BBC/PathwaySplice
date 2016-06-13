@@ -19,7 +19,7 @@ This function compares gene-based DE with feature-based DE
 }
 \examples{
 
-Gene.based.DE.feature.based.DE<-CompareDEfromGeneWithDEfromFeatures(Re.PJ.gene,re.PJ.gene.based,"/media/H_driver/PJ/gene_feature_DE.tiff")
+Gene.based.DE.feature.based.DE<-CompareDEfromGeneWithDEfromFeatures(Re.PJ.gene,re.PJ.gene.based,"/media/H_driver/PJ/gene_feature_DE_2.tiff")
 
 }
 
