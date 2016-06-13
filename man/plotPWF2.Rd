@@ -30,9 +30,4 @@ xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
 \description{
 Plot the probability Weighting Function
 }
-\examples{
-
-
-
-}
 
