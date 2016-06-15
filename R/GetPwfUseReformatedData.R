@@ -1,6 +1,6 @@
 #' GetPwfUseReformatedData
 #'
-#' Use reformated data to calcuate probability weight function
+#' Use reformated data to calculate probability weight function
 #'
 #' @param re.gene.based
 #' @param ad
@@ -32,14 +32,14 @@ GetPwfUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,thresho
   gene.DE_interest<-as.integer(which( All.gene.id.based.on.sub_feature %in% All.genes.based.on.Sig.sub_feature ))
 
   All.gene.id.index[gene.DE_interest]<-1
-  print(length(All.gene.id.index))
+  #print(length(All.gene.id.index))
 
   gene.with.matched.junction<-which(Data4Goterm.sub_feature.geneID.NumOfJunctions[,1] %in% c(names(All.gene.id.index)))
   num.junction.4.matched.gene<-as.numeric(Data4Goterm.sub_feature.geneID.NumOfJunctions[gene.with.matched.junction,2])
 
   All.gene.id.index.2<-All.gene.id.index
 
-  print(All.gene.id.index.2)
+  #print(All.gene.id.index.2)
 
   if(ad=="GL"){
     pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
