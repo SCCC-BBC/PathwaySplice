@@ -26,12 +26,12 @@ Gmt2GeneCat <- function(gmt_input_file,gene_anno_file) {
   names.gene.gmt<-as.data.frame(names(gene.2.cat.gmt))
   colnames(names.gene.gmt)<-"gene_id"
 
-  human.gene.ID.conversion<-read.csv(gene_anno_file)
-  names.gene.gmt.2<-match(names.gene.gmt$gene_id,human.gene.ID.conversion$gene_id)
-  human.gene.ID.conversion.2<-human.gene.ID.conversion[names.gene.gmt.2,]
+  gene.ID.conversion<-read.csv(gene_anno_file)
+  names.gene.gmt.2<-match(names.gene.gmt$gene_id,gene.ID.conversion$gene_id)
+  gene.ID.conversion.2<-gene.ID.conversion[names.gene.gmt.2,]
   gene.2.cat.gmt.2<-gene.2.cat.gmt
 
-  names(gene.2.cat.gmt.2)<-human.gene.ID.conversion.2[,3]
+  names(gene.2.cat.gmt.2)<-gene.ID.conversion.2[,3]
 
   gene.2.cat.gmt.2
 }
