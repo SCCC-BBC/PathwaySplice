@@ -2,7 +2,7 @@
 % Please edit documentation in R/GetPwfUseReformatedData.R
 \name{GetPwfUseReformatedData}
 \alias{GetPwfUseReformatedData}
-\title{GotermAnalysisUseReformatedData}
+\title{GetPwfUseReformatedData}
 \usage{
 GetPwfUseReformatedData(re.gene.based, ad = "GL", sub_feature = NULL,
   threshold)
@@ -11,13 +11,10 @@ GetPwfUseReformatedData(re.gene.based, ad = "GL", sub_feature = NULL,
 \item{threshold}{}
 }
 \description{
-GotermAnalysisUseReformatedData
+Use reformated data to calcuate probability weight function
 }
 \examples{
-
 Re.pwf.exon.sj<-GetPwfUseReformatedData(ReformatData(re.PJ.gene.based),ad="exon_SJ",sub_feature=NULL,0.05)
-
-
 
 }
 
