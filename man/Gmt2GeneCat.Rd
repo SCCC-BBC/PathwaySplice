@@ -2,8 +2,7 @@
 % Please edit documentation in R/Gmt2GeneCat.R
 \name{Gmt2GeneCat}
 \alias{Gmt2GeneCat}
-\title{Read a gmt file, return a list with the name of element being a gene id based on gene_anno_file, and each element
-being the pathways that this gene corresponds to}
+\title{Gmt2GeneCat}
 \usage{
 Gmt2GeneCat(gmt_input_file, gene_anno_file)
 }
@@ -11,31 +10,16 @@ Gmt2GeneCat(gmt_input_file, gene_anno_file)
 \item{based_by}{}
 }
 \description{
-Read a gmt file, return a list with the name of element being a gene id based on gene_anno_file, and each element
+Read a gmt file, and return a list with the name of element being a gene id based on gene_anno_file, and each element
 being the pathways that this gene corresponds to
 }
 \examples{
-
-gene.2.cat.hallmark<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
-"/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
-
-gene.2.cat.hallmark<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
-"/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
-
 
 gene.2.cat.cp.mouse<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c2.cp.Mouse.v5.1.symbols.gmt",
 "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
 
 gene.2.cat.tft.mouse<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.Mouse.v5.1.symbols.gmt",
 "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
-
-
-
-
-
-
-
-
 
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/gene2cat.R
 \name{gene2cat}
 \alias{gene2cat}
-\title{Given a gene name and the object built from reading Gmt file, and find the pathways that this gene corresponds to}
+\title{gene2cat}
 \usage{
 gene2cat(gene_name, re)
 }
@@ -11,5 +11,9 @@ gene2cat(gene_name, re)
 }
 \description{
 Given a gene name and the object built from reading Gmt file, and find the pathways that this gene corresponds to
+}
+\examples{
+
+
 }
 

@@ -2,8 +2,7 @@
 % Please edit documentation in R/gene2cat2.R
 \name{gene2cat2}
 \alias{gene2cat2}
-\title{Read gmt file, and convert this gmt file to a list with the name of each element being gene name
-and each element being the pathways that this gene corresponds to}
+\title{gene2cat2}
 \usage{
 gene2cat2(gmt_input_file)
 }
@@ -11,10 +10,11 @@ gene2cat2(gmt_input_file)
 \item{gmt_input_file}{}
 }
 \description{
-Read gmt file, and convert this gmt file to a list with the name of each element being gene name
+gene2cat2 is called in Gmt2GeneCat to convert a gmt file to a list with the name of each element being gene name
 and each element being the pathways that this gene corresponds to
 }
 \examples{
+
 gene.2.cat.hallmark<-gene2cat2("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt")
 
 }

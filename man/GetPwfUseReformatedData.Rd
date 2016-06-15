@@ -11,7 +11,7 @@ GetPwfUseReformatedData(re.gene.based, ad = "GL", sub_feature = NULL,
 \item{threshold}{}
 }
 \description{
-Use reformated data to calcuate probability weight function
+Use reformated data to calculate probability weight function
 }
 \examples{
 Re.pwf.exon.sj<-GetPwfUseReformatedData(ReformatData(re.PJ.gene.based),ad="exon_SJ",sub_feature=NULL,0.05)
