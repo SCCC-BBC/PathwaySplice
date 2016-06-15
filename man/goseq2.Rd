@@ -6,7 +6,7 @@
 \usage{
 goseq2(pwf, genome, id, gene.model, gene2cat = NULL, test.cats = c("GO:CC",
   "GO:BP", "GO:MF"), method = "Wallenius", repcnt = 2000,
-  use_genes_without_cat = FALSE, outputfile)
+  use_genes_without_cat = FALSE)
 }
 \arguments{
 \item{pwf:}{probability weight function}
@@ -42,14 +42,9 @@ test.goseq44<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",g
 outputfile="GO_term_adjusted_by_SJ_4.xls")
 sink()
 
-<<<<<<< HEAD
-test.goseq6<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene")
-
-=======
 sink("output_dhyper_use_all.txt")
 test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,
 outputfile="GO_term_adjusted_by_SJ_use_all.xls")
->>>>>>> 8c4b40d47da31303e8d466633869d658b1123b51
 sink()
 
 test.goseq55<-goseq2(Re.Go.adjusted.by.number.junction.2[[2]],"mm10","ensGene",gene.model,gene2cat=gene.2.cat.hallmark,
@@ -74,6 +69,23 @@ which(human.sample.data$gene_id \%in\% names(gene.2.cat.hallmark))
 which(rownames(Re.Go.adjusted.by.number.junction.2[[2]]) \%in\% names(gene.2.cat.hallmark))
 
  reversemapping(gene.2.cat.hallmark)
+
+data(gene.model)
+ gene_model<-gene.model
+GO.wall.DE_interest.geneGL=goseq2(Gene.based.DE.feature.based.DE$pwfGeneGL,"mm10","ensGene",gene.model=gene_model,outputfile="/media/H_driver
+/PJ/geneGL.xls")
+
+GO.wall.DE_interes.geneFT=goseq2(Gene.based.DE.feature.based.DE$pwfGeneFeature,"mm10","ensGene",gene.model=gene_model,outputfile="/medai/H_driver/
+PJ/geneFT.xls")
+
+#GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model,outputfile=file_prefix)
+
+GO.wall.DE_interest.FtFT=goseq2(Gene.based.DE.feature.based.DE$pwfFeatureFeature,"mm10","ensGene",gene.model=gene_model,outputfile="/media/H_driver/
+PJ/FeatureFT.xls")
+
+
+
+
 
 }
 

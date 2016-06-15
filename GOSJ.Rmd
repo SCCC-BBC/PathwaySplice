@@ -3,8 +3,10 @@ title: 'GOSJ: An R package for adjusting bias from gene structure on identifying
   expressed genes in RNA-Seq data analysis'
 author: "Aimin Yan"
 date: "May 13, 2016"
-output: pdf_document
+output: html_document
 bibliography: Splicing-network.bib
+pandoc_args: --natbib
+biblio-style: plain
 ---
 
 ```{r setup, include=FALSE}
@@ -157,4 +159,4 @@ By this way, we explore to identify the same enriched gene sets and pathways of 
 ## Conclusion
 In summary, our work identified the potential bias in RNA-Seq data analysis when using differential exons or/and splicing junction usage to represent differential expressed gene, and using these differential expressed genes to perform subsequent gene set and pathway analysis. We futher sugguest a bias correction approach that could provide a more accutate gene set and pathway analsis. We implemented this method into an R package, and we believe that this R packcage could help other researchers when they perform similar type of RNA-Seq data analysis.
 
-##Reference
+## Reference

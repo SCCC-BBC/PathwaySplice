@@ -73,7 +73,7 @@
 #'
 #'
 #'
-goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE,outputfile){
+goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE){
   ################# Input pre-processing and validation ###################
   #Do some validation of input variables
   if(any(!test.cats%in%c("GO:CC","GO:BP","GO:MF","KEGG"))){
@@ -174,7 +174,7 @@ goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:B
     message(paste("For",unknown_go_terms,"genes, we could not find any categories. These genes will be excluded."))
     message("To force their use, please run with use_genes_without_cat=TRUE (see documentation).")
     message("This was the default behavior for version 1.15.1 and earlier.")
-    #pwf=pwf[rownames(pwf) %in% names(gene2cat),]
+    pwf=pwf[rownames(pwf) %in% names(gene2cat),]
   }
   #A few variables are always useful so calculate them
   cats=names(cat2gene)
@@ -312,15 +312,6 @@ goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:B
   pvals.2<-merge(pvals,pvals.6.df,by="category",sort = FALSE)
 
   pvals.3<-merge(pvals.2,pvals.6.gene.symbol.df,by="category",sort = FALSE)
-
-  dataset2<-pvals.3
-
-  dataset2[sapply(dataset2, is.list)] <-
-    sapply(dataset2[sapply(dataset2, is.list)],
-           function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
-
-
-  write.table(dataset2,row.names = FALSE,outputfile, quote=FALSE, sep="\t")
 
   return(pvals.3)
 

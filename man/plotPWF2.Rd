@@ -30,4 +30,24 @@ xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
 \description{
 Plot the probability Weighting Function
 }
+\examples{
+
+png("~/GOSJ/Figure/pwfGeneGL.tiff")
+plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneGL)
+dev.off()
+
+png("~/GOSJ/Figure/pwfGeneFeature.tiff")
+plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneFeature)
+dev.off()
+
+png("~/GOSJ/Figure/pwfFeatureGL.tiff")
+plotPWF2(Gene.based.DE.feature.based.DE$pwfFeatureGL)
+dev.off()
+
+png("~/GOSJ/Figure/pwFeatureFeature.tiff")
+plotPWF2(Gene.based.DE.feature.based.DE$pwfFeatureFeature)
+dev.off()
+
+
+}
 
