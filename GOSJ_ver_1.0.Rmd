@@ -1,0 +1,173 @@
+---
+title: 'GOSJ: An R package for adjusting bias from gene structure on identifying differentially
+  expressed genes in RNA-Seq data analysis'
+author: "Aimin Yan"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: pdf_document
+bibliography: Splicing-network.bib
+pandoc_args: --natbib
+biblio-style: plain
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+## Motivation: 
+Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. There are several studies that researchers attempt to undertand alternative splicing events by performing differential exons or/and splicing junctions usage analysis. In these analysis, the differentially expressed genes are derived based on differential exon or/and splicing junction usage analysis, then subsequent gene set or/and pathway analysis are performed based on differentlly expressed gene list. However, it is observed that the derived differentially expressed gene list from differential exon or/and splicing junction analysis is biased by the number of exons or/and splicing junctions within gene, and lead to further bias in subsequent get set and pathway analysis.    
+
+## Results: 
+We demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we obtained in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differentially expressed genes through using differential usage of gene features(exons and/or splicing junctions) are biased by the number of features within gene, and subsequently lead to the bias in following Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. We develop an approach to adjust this bias. A R package(GOSJ) based on this approach is also implemented to make this method be available for other researchers. This GOSJ package is accessable on <https://github.com/aiminy/GOSJ.git>.
+
+## Introduction
+
+(1) splicing, rnaseq, pathway analysis
+
+RNA-Seq data has been extensively used to measure expression of transcripts, and to investigate alternative splicing, allele specific expression and RNA editing.Several methods have been developed to study alternative splicing. One of these methods is to focus on studying differential feature(exons or/and splicing junction) usage to understand alternative splicing.
+
+(2) challenges
+each gene has diff number of sub feature, typical approach, how results are biased 
+
+(3) our contribution 
+
+We develop an R Package to adjuste this bias, extend this R pack to process different pathwya analysis.
+In these studies, the counts of features are obtained using the annotated gene model(see the following Figure), and are used to calculte usage of these features through the following method:
+
+<!-- $$ -->
+<!-- \begin{aligned} -->
+<!-- Usage\ of\ feature\ i=\frac{counts\ of\ feature\ i}{counts\ of\ other\ features \ excluding\ feature\ i} -->
+<!-- \end{aligned} -->
+<!-- $$ -->
+
+<!-- ![Bias from gene structure](/home/aiminyan/GOSJ/Figure/BiasFromGeneStructure.png) -->
+
+Based on the usage of exons and splicing junctions, differential usage between two conditions are identified. The differentially expressed genes are derived from the differential usage of exons and splicing junctions within genes, subsequent gene sets or/and pathway analysis are performed using this derived differentlly expressed genes. It is obserserved that identifying differentially expressed genes using this approach is biased by the number of exons and splicing junctions.
+
+There are several previous studies that showed using RNA-Seq data to study differentially expressed genes and subsequent gene sets or pathways analysis could be biased by read counts of transcripts and length of transcripts. Several methods are also developed to correct these biases either in the step of identifing differentially genes or in the step of performing gene sets enrichment analysis[@Gao2011]. A well known R package for correcting bias in gene set enrichment analysis, GoSeq, is available[@Young2010]. A logistic regression based approach is also developed for adjusting length bias of transcirpt in Gene Ontology enrichment analysis[@Mi2012].
+
+Similar situations are also observed in analyzing genome-wide methylation data. Several studies found that number of methylation within genes could cause a bias to identify diffenertially methylated genes. An R package is also available for correcting this bias[@Phipson2016].  
+
+However, bias on identifying differentilly expressed genes due to different gene structure and its corrections have not been addressed in detail. In this paper, we explore to identify the bias factor on RNA-Seq data related to gene structure, we demonstrate that by identifying right bais factors could lead to the better adjustment on DE analysis and the following gene GO term and pathway enrichment analysis. A R package based on this analysis procedure is also developed.
+
+
+## RESULTS AND DISCUSSIONS
+
+<!-- ## Simulation studies based on a real data -->
+<!-- We attemp to use simulation to establish the relationship between the proportion of DE and the number of subfeatures of genes. In this simulation setting, we sample the mean of the number of splicing junction, and use this mean to simulate an array A including splicing junction numbers with certain amounts. we convert this number into an array AAA between 0 and 1. Use the median of AAA array as the probability for being 1, we sample from [0,1] to get a list with certain length. This list is used as -->
+<!-- a gene set. For example, if this gene set has 30 genes, each gene has its splicing junction number, we will have 30 splicing junction number. After differential gene expression analysis, some genes are differentiallly expressed, and are labeled as 1,otherwise labeled as 0. Here we simulate two scenarios: -->
+
+<!-- * Scenario1: the probability of being 1 is dependent on the median of AAA -->
+<!-- * Scenario2: the probability of being 1 is not dependent on the median of AAA.  -->
+
+<!-- In each simulation,we generate 50 gene sets,and each gene set includes 30 genes. For each set, we calculate the probability of differentially expressed genes and the median of splicing junction numbers of genes. Here we use $i$ to indicat the number of gene sets in each simulation, so we can get: -->
+
+<!-- The probabilities of differentially expressed genes of 50 gene sets: -->
+<!-- $P_1$,$P_2$,...,$P_i$,...,$P_{50}$ -->
+
+<!-- The median of splicing junctions of 50 gene sets: -->
+<!-- $F_1$,$F_2$,...,$F_i$,...,$F_{50}$ -->
+
+<!-- Based on this, the correlation coefficients between probabilites of differentially expressed genes and medians of splicing junction numbers of genes in each simulation can be obtained. We performed 100 simumations, correltion coefficients of 100 simulations are calcuated. The following plot shows the distribution of correlation coefficients between the probability of being 1 and the median number of splicing junctions in two scenarios for 100 simulations: -->
+
+<!-- ```{r pressure, echo=FALSE} -->
+<!-- library(GOSJ) -->
+<!-- re.random.DE2SJ<-SimulationSJ2DE(20,200,30) -->
+<!-- boxplot(re.random.DE2SJ) -->
+<!-- ``` -->
+
+<!-- From the figure above, it is obvious: -->
+<!-- In Scenario1(Unrelated_SJ_DE), a gene is differentially expressed or not is not dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is closed to 0. In Scenario2(related_SJ_DE), a gene is differentially expressed or not is dependent on the number of splicing junctions, so the average correlation coefficients between the probability of being 1 and the median number of splicing junctions in this scenario is far away from 0. -->
+<!-- <!-- ## Genewise p-value calculation -->
+
+## Analysis on several real data sets
+scope of problem - when performing pathway analysis for differential exon usage results, how to adjust for bias from number of exons
+<!-- ![working flow](/home/aiminyan/GOSJ/Figure/working_flow.png) -->
+
+#. Reanalysis for a data set in Myelodysplastic syndromes(MDS) study
+
+
+#. Analsysis for a data aset we obtained in blood cancer study
+
+A data set including 6 samples is used for developing this approach. This 6 samples belong to two conditions, and there are 3 samples in each condition. The reads in each sample is aligned to the mouse mm10 reference genome using Tophat. Gene models is based on UCSC mm10 refSeq. We performed analysis based on 2 scenarios:
+
+In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number of splicing junctions.
+
+<!-- ![gene_feature](/home/aiminyan/GOSJ/Figure/gene_feature_DE.tiff) -->
+
+<!-- ![GeneGL](/home/aiminyan/GOSJ/Figure/pwfGeneGL.tiff) -->
+
+<!-- ![GeneFeature](/home/aiminyan/GOSJ/Figure/pwfGeneFeature.tiff) -->
+
+<!-- ```{r GOSJ, echo=FALSE} -->
+<!-- library(GOSJ) -->
+<!-- library(Biobase) -->
+<!-- library(goseq) -->
+<!-- library(org.Mm.eg.db) -->
+<!-- library(VennDiagram) -->
+
+<!-- load("/media/H_driver/PJ/PJ_jscs.RData") -->
+<!-- normaCounts<-Re.PJ@plottingEstimates$normCounts -->
+<!-- write.table(normaCounts,file="PJ_normalized_count.csv",row.names = TRUE,quote=FALSE,sep=",") -->
+<!-- re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID))) -->
+<!-- dir.name.PJ.gene="/media/H_driver/PJ/" -->
+<!-- file.sample.PJ.gene="decoder.bySample.rtf" -->
+<!-- file.count.PJ.gene="/QC.geneCounts.formatted.for.DESeq.txt" -->
+<!-- Re.PJ.gene<-GetResults4GeneLevel(dir.name.PJ.gene,file.sample.PJ.gene,file.count.PJ.gene) -->
+<!-- re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID))) -->
+<!-- Gene.based.DE.feature.based.DE<-CompareDEfromGeneWithDEfromFeatures(Re.PJ.gene,re.PJ.gene.based,"/media/H_driver/PJ/gene_feature_DE_2.tiff")
+-->
+<!-- plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneGL) -->
+<!-- ``` -->
+
+In the second scenario,Ensemble-annotated exons and junction-spanning read counts are calculated, and a negative binomial model is applied to these counts to identify differential exon and junction usage while the overall gene expression changes are controlled. In this step,the $p$ value of differential usage of each subfeature of each gene are determined,and used to calculate the genewise $p$ value based on the following method described in DEXSeq R package[@Anders2012]:
+
+let $p_{il}$ be the $p$ value for $l$
+subfeature(exon or splicing junction) of gene $i$, then genewise $p$ value is calcualted using the following method:
+
+<!-- $$P(at\ least\ 1\ type\ I\ error\ among\ m\ tests)=\frac{\sum_{i=1}^M 1-(1-\theta)^{n_i}}{|{i: \exists p_{il} < \theta}|}$$ -->
+
+Based on these genewsie p values, we set 0.05 as threshold to define differentlly expressed gene list. We firstly applied logistic regression to identify the relatioship between the differentlly expressed gene list and possible bias factors such as the number splicing junction and exons.
+
+<!-- ```{r UseLogistic2_adDE,echo=TRUE} -->
+<!-- library(GOSJ) -->
+<!-- UseLogistic2_adDE("/Volumes/Bioinformatics$/2015/Nimer_Cheng/GeneWise_jscs3_all_with_anno_2_24_2016.csv") -->
+<!-- ``` -->
+
+Secondly, we use these differnentially expressed gene list to identify the relationship between the propotion of DE in gene sets and the possible bias factos such as gene length, number of exons and number splicing junctions. 
+
+```{r callQoRT,echo=FALSE}
+
+```
+
+<!-- ![FeatureGL](/home/aiminyan/GOSJ/Figure/pwfFeatureGL.tiff) -->
+
+<!-- ![FeatureFeature](/home/aiminyan/GOSJ/Figure/pwFeatureFeature.tiff) -->
+
+
+<!-- ![Bias from sj and GL](/home/aiminyan/GOSJ/Figure/sjvsGL.png) -->
+
+<!-- ![Bias from sj and exons](/home/aiminyan/GOSJ/Figure/sjvsexons.png) -->
+
+
++ Correction for GO term enrichment analysis
+
++ Correction for KEGG pawhay anlaysis.
+
++ Correction for hallmark gene sets
+
+
+## Generate permutated data set based on the data set from blood cancer. 
+
+Using the idea in [@Geeleher2013], we explore to fix gene structure in the data set in blood cancer, and use permutation to generate more data sets to demostrate the bias from gene structure. We have about 13000 genes, each gene has certain number of subfeatures, in this permutation setting, we fix the number of subfeatures for each gene as the real data, and perform the following permutations:
+
++ Permutating sample label
+
++ Permutating mapping counts 
+
+By this way, we explore to identify the same enriched gene sets and pathways of GO and KEGG. If there are high consistencies between the resutls from permutated data sets and that of real data sets, this indicates that the number of subfeatures of genes biases gene set or/and pathway analysis.
+
+## Conclusion
+In summary, our work identified the potential bias in RNA-Seq data analysis when using differential exons or/and splicing junction usage to represent differential expressed gene, and using these differential expressed genes to perform subsequent gene set and pathway analysis. We futher sugguest a bias correction approach that could provide a more accutate gene set and pathway analsis. We implemented this method into an R package, and we believe that this R packcage could help other researchers when they perform similar type of RNA-Seq data analysis.
+
+## Reference
