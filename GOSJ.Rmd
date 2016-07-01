@@ -3,7 +3,7 @@ title: 'GOSJ: An R package for adjusting bias from gene structure on identifying
   expressed genes in RNA-Seq data analysis'
 author: "Aimin Yan"
 date: "May 13, 2016"
-output: html_document
+output: pdf_document
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(cache = TRUE)
 ```
 
 ## Motivation: 
-Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. There are several studies that researchers attempt to undertand alternative splicing events by performing differential exons or/and splicing junctions usage analysis. In these analysis, the differentially expressed gene are derived based on differential exon or/and splicing junction usage analysis, then subsequent gene set or/and pathway analysis are performed based on differentlly expressed gene list. However, it is observed that the derived differentially expressed gene list from differential exon or/and splicing junction analysis is biased by the number of exons or/ and splicing junctions within gene, and cause further bias in subsequent get set and pathway analysis.    
+Differential exons or splicing junctions usage analysis is very helpful for detecting alternative splicing events. There are several studies that researchers attempt to undertand alternative splicing events by performing differential exons or/and splicing junctions usage analysis. In these analysis, the differentially expressed genes are derived based on differential exon or/and splicing junction usage analysis, then subsequent gene set or/and pathway analysis are performed based on differentlly expressed gene list. However, it is observed that the derived differentially expressed gene list from differential exon or/and splicing junction analysis is biased by the number of exons or/and splicing junctions within gene, and lead to further bias in subsequent get set and pathway analysis.    
 
 ## Results: 
 We demonstrate this bias using published data from a study of differential splicing junction usage in Myelodysplastic syndromes(MDS) and a data set that we obtained in a study of differential exons and splicing junctions usage in blood cancer. We show that the identified differentially expressed genes through using differential usage of gene features(exons and/or splicing junctions) are biased by the number of features within gene, and subsequently lead to the bias in following Gene Ontology(GO) and Kyoto Encyclopedia of Genes and Genomes(KEGG) enrichment analysis. We develop an approach to adjust this bias. A R package(GOSJ) based on this approach is also implemented to make this method be available for other researchers. This GOSJ package is accessable on <https://github.com/aiminy/GOSJ.git>.
@@ -83,12 +83,11 @@ A data set including 6 samples is used for developing this approach. This 6 samp
 
 In the first scenario, we use gene-based counts to identify differentially expressed genes, then using this differnentially expressed gene list to identify the relationship between the proportion of DE and the possible bias factos such as gene length, number of exons and number of splicing junctions.
 
-![gene_feature](/home/aiminyan/GOSJ/Figure/gene_feature_DE.tiff)
+<!-- ![gene_feature](/home/aiminyan/GOSJ/Figure/gene_feature_DE.tiff) -->
 
 ![GeneGL](/home/aiminyan/GOSJ/Figure/pwfGeneGL.tiff)
 
 ![GeneFeature](/home/aiminyan/GOSJ/Figure/pwfGeneFeature.tiff)
-
 
 <!-- ```{r GOSJ, echo=FALSE} -->
 <!-- library(GOSJ) -->
@@ -98,13 +97,16 @@ In the first scenario, we use gene-based counts to identify differentially expre
 <!-- library(VennDiagram) -->
 
 <!-- load("/media/H_driver/PJ/PJ_jscs.RData") -->
+<!-- normaCounts<-Re.PJ@plottingEstimates$normCounts -->
+<!-- write.table(normaCounts,file="PJ_normalized_count.csv",row.names = TRUE,quote=FALSE,sep=",") -->
 <!-- re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID))) -->
 <!-- dir.name.PJ.gene="/media/H_driver/PJ/" -->
 <!-- file.sample.PJ.gene="decoder.bySample.rtf" -->
 <!-- file.count.PJ.gene="/QC.geneCounts.formatted.for.DESeq.txt" -->
 <!-- Re.PJ.gene<-GetResults4GeneLevel(dir.name.PJ.gene,file.sample.PJ.gene,file.count.PJ.gene) -->
 <!-- re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID))) -->
-<!-- Gene.based.DE.feature.based.DE<-CompareDEfromGeneWithDEfromFeatures(Re.PJ.gene,re.PJ.gene.based,"/media/H_driver/PJ/gene_feature_DE_2.tiff") -->
+<!-- Gene.based.DE.feature.based.DE<-CompareDEfromGeneWithDEfromFeatures(Re.PJ.gene,re.PJ.gene.based,"/media/H_driver/PJ/gene_feature_DE_2.tiff")
+-->
 <!-- plotPWF2(Gene.based.DE.feature.based.DE$pwfGeneGL) -->
 <!-- ``` -->
 
