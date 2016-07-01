@@ -1,0 +1,392 @@
+---
+title: 'Report for the data analysis of PJ project'
+author: "Aimin Yan"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+# This is a summary for the analysis of PJ project
+
+# set up runing environment
+
+Load required library
+```{r add_library, message=F, warning=F,results='hide',echo=TRUE} 
+library(JunctionSeq)
+library(GOSJ)
+library(Biobase)
+library(goseq)
+library(org.Mm.eg.db)
+library(VennDiagram)
+library(GSA)
+library(GO.db)
+library(ggplot2)
+library(gdata)
+```
+
+```{r input: dir and files,message=F, warning=F,results='hide',echo=TRUE}
+#set up input file path
+input.dir.name="/media/H_driver/PJ/"
+QoRTs.dir="/home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/"
+gtf.file.dir="/media/aiminyan/DATA/mus_musculus/"
+gff.file.dir="/media/H_driver/2015/Nimer_Cheng/"
+canonical.tft.gmt.file.dir="/media/H_driver/Annotation/MsigDB/"
+go.file.dir="/media/H_driver/Annotation/GO_gene_mouse/"
+gene.annotation.file.dir="/media/H_driver/Annotation/mm10/"
+
+#load gene model
+data(gene.model)
+
+#set up QoRTs EXE
+QoRTs.exe=paste0(QoRTs.dir,"QoRTs.jar")
+
+#set up input files
+gtf.file=paste0(gtf.file.dir,"Mus_musculus.GRCm38.83.processed.sorted.gtf")
+decode.file="decoder.bySample.rtf"
+gene.count.file="/QC.geneCounts.formatted.for.DESeq.txt"
+
+canonical.path.gmt.file=paste0(canonical.tft.gmt.file.dir,"c2.cp.Mouse.v5.1.symbols.gmt")
+tft.gmt.file=paste0(canonical.tft.gmt.file.dir,"c3.tft.Mouse.v5.1.symbols.gmt")
+go.mouse.file=paste0(go.file.dir,"gene_GO.mgi")
+gene.annotation.file=paste0(gene.annotation.file.dir,"genes_table_02052016.csv")
+
+sj.exon.count.file="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+gff.file=paste0(gff.file.dir,"Mus_musculus.GRCm38.83.JunctionSeq.flat.gff")
+junctionSeq.output.save="PJ_jscs.RData"
+junctionSeq.output.save.history="PJ_jscs.Rhistory"
+```
+
+```{r output: dir and files,message=F, warning=F,results='hide',echo=TRUE}
+#set up the path for output files
+output.dir.name="/media/H_driver/PJ/Results/"
+
+output.dir.name.new="/media/H_driver/PJ/Results/Feature_GeneWise_rMAT/"
+output.dir.name.rMAT_SE_based="/media/H_driver/PJ/Results/Feature_GeneWise_rMAT_SE_based/"
+
+#set up output files for gene based
+gene.based.ad.by.GL.GO.output.file=paste0(output.dir.name,"geneGL_rm_non_coding.xls")
+gene.based.ad.by.GL.ca.path.output.file=paste0(output.dir.name,"geneGL_rm_non_coding_Cp.xls")
+gene.based.ad.by.GL.tft.output.file=paste0(output.dir.name,"geneGL_rm_non_coding_tft.xls")
+
+#set up output file for feature based
+feature.based.ad.by.SJ.GO.output.file=paste0(output.dir.name,"GO_use_all_gene.xls")
+feature.based.ad.by.SJ.ca.path.output.file=paste0(output.dir.name,"Canonical_path_use_all_gene.xls")
+feature.based.ad.by.SJ.tft.output.file=paste0(output.dir.name,"Transcription_factor_targets_use_all_gene.xls")
+Output_DE_gene_file_feature_gene_based=paste0(output.dir.name,"DE_genes_based_on_features_gene_based.xls")
+Output_DE_gene_file_feature_all_feature_based=paste0(output.dir.name,"DE_genes_based_on_features_all_feature_based.xls")
+
+Output_GO_use_DE_gene_use_FC_p_of_feature=paste0(output.dir.name,"GO_term_use_DE_gene_based_on_FC_p_feature.xls")
+redefined.feature.based.ad.by.SJ.ca.path.output.file=paste0(output.dir.name,"Ca_path_use_DE_gene_based_on_FC_p_feature.xls")
+redefined.feature.based.ad.by.SJ.tft.output.file=paste0(output.dir.name,"Tft_use_DE_gene_based_on_FC_p_feature.xls")
+
+Output_GO_use_DE_gene_use_FC_p_of_feature_058=paste0(output.dir.name,"GO_term_use_DE_gene_based_on_FC_p_feature_058.xls")
+
+Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058=paste0(output.dir.name,"GO_term_BP_use_DE_gene_based_on_FC_p_feature_058.xls")
+Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_2=paste0(output.dir.name,"GO_term_BP_use_DE_gene_based_on_FC_p_feature_058_2.xls")
+Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_3=paste0(output.dir.name,"GO_term_BP_use_DE_gene_based_on_FC_p_feature_058_3.xls")
+Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_4=paste0(output.dir.name,"GO_term_BP_use_DE_gene_based_on_FC_p_feature_058_4.xls")
+
+redefined.feature.based.ad.by.SJ.ca.path.output.file_058=paste0(output.dir.name,"Ca_path_use_DE_gene_based_on_FC_p_feature_058.xls")
+redefined.feature.based.ad.by.SJ.tft.output.file_058=paste0(output.dir.name,"Tft_use_DE_gene_based_on_FC_p_feature_058.xls")
+outputfile_LabelGeneBasedFeature=paste0(output.dir.name,"Label_gene_by_features.xls")
+outputfile_DGE_FC_P_geneWise=paste0(output.dir.name,"DGE_overlap_check.tiff")
+
+outputfile_DGE_2_FC_P_geneWise=paste0(output.dir.name,"DGE_overlap_check_defined_by_2_FC.tiff")
+
+
+Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_2_rMAT=paste0(output.dir.name,"GO_term_BP_use_DE_gene_based_on_FC_p_feature_058_4_rMAT.xls")
+
+Output_GO_BP_feature.gene.rMAT=paste0(output.dir.name,"GO_term_BP_feature_gene_rMAT.xls")
+Output_GO_BP_gene=paste0(output.dir.name,"GO_term_BP_gene_only.xls")
+Output_GO_BP_feature=paste0(output.dir.name,"GO_term_BP_feature_only.xls")
+Output_GO_BP_feature_gene=paste0(output.dir.name,"GO_term_BP_feature_gene.xls")
+Output_GO_BP_feature_gene_redefined=paste0(output.dir.name,"GO_term_BP_feature_gene_redefined.xls")
+
+Output_GO_BP_feature.gene.rMAT.2.FC=paste0(output.dir.name,"GO_term_BP_feature_gene_rMAT_2FC.xls")
+
+```
+
+# Get counts for gene, exon and splicing junctions
+
+4 BAM files(2 BAM files within each condition(WT vs KO)) are generated by aliging FASTQ files to the GRCm38/mm10 build of the Mus musculus genome with STAR aligner. Gene-wise counts were obtained with callQoRT function in GOSJ R package:
+```{r callQoRT,eval=FALSE,echo=TRUE}
+
+file.name=dir(input.dir.name,recursive = TRUE,pattern="sorted.bam")
+file.name.whole<-paste0(input.dir.name,file.name)
+file.name.selected<-file.name.whole[c(5,3,9)]
+file.name.selected.2<-as.list(file.name.selected)
+names(file.name.selected.2)=sapply(strsplit(file.name.selected,split="\\/"),"[[",6)
+cmd1=paste0("java -Xmx4000M -jar ",QoRTs.exe," QC --noGzipOutput")
+
+re.out<-lapply(file.name.selected.2,callQoRT,gtf_file=gtf.file,runing_cmd=cmd1)
+```
+
+# Gene based analysis
+
+Use gene based count, overall differential gene expression is analyzed with GetResults4GeneLevel function in GOSJ R package: 
+```{r gene_level_analysis, message=F, warning=F,results='hide',echo=TRUE} 
+Re.PJ.gene<-GetResults4GeneLevel(input.dir.name,decode.file,gene.count.file)
+```
+
+Show the results for differentially expressed genes:
+```{r gene_level_resuls,message=F, warning=F,results='asis',echo=TRUE}
+knitr::kable(head(Re.PJ.gene))
+
+head(Re.PJ.gene)
+length(which(Re.PJ.gene$padj<0.05&abs(Re.PJ.gene$log2FoldChange)>0.5))
+
+```
+
+Collect all geneIDs from GO, canonical pathway and transcription factor target
+```{r geneID_collection,eval=T,message=F, warning=F,results='hide',echo=TRUE,cache=TRUE}
+gene.id.all<-CombineCpTftGoGeneID(canonical.path.gmt.file,tft.gmt.file,go.mouse.file,gene.annotation.file)
+index.cp.tft.co.gene<-match(gene.id.all,rownames(Re.PJ.gene))
+index.cp.tft.co.gene.2<-index.cp.tft.co.gene[-which(is.na(index.cp.tft.co.gene))]
+Re.PJ.gene.rm.non.coding<-Re.PJ.gene[index.cp.tft.co.gene.2,]
+```
+
+Show the results for differentially expressed genes:
+```{r show_gene_after_rm_non_coding,eval=T,message=F, warning=F,results='asis',echo=TRUE}
+knitr::kable(head(Re.PJ.gene.rm.non.coding))
+```
+To perform GO and pathway analysis based on differentially expressed genes:
+```{r GO results from gene, eval=T,message=F,warning=F,results='hide',echo=TRUE,cache=TRUE}
+
+Gene.non.coding.GO<-GeneBasedAnalysis(Re.PJ.gene.rm.non.coding,gene.model,gene.based.ad.by.GL.GO.output.file)
+
+gene.2.cat.cp.mouse<-Gmt2GeneCat(canonical.path.gmt.file,gene.annotation.file)
+gene.2.cat.tft.mouse<-Gmt2GeneCat(tft.gmt.file,gene.annotation.file)
+
+RE.cp.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,
+                              Output_file=gene.based.ad.by.GL.ca.path.output.file)
+
+RE.cft.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,
+                               Output_file=gene.based.ad.by.GL.tft.output.file)
+
+```
+
+# Analysis based on exons and splicing junction counts
+
+For differential exon and splicing usage analysis, the count file for exons and splicing junctions are used as input to get differential
+usage results with GetResultsFromJunctionSeq function in GOSJ R package:
+```{r GetResultsFromJunctionSeq,eval=T,echo=TRUE,cache=TRUE}
+
+decoder <- read.table(paste0(input.dir.name,decode.file),header=TRUE,stringsAsFactors=FALSE)
+countFiles <- paste0(input.dir.name,decoder$sample.ID,"/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt")
+design <- data.frame(condition = factor(decoder$group.ID))
+
+jscs.counts = readJunctionSeqCounts(countfiles = countFiles,samplenames = decoder$sample.ID,design = design,flat.gff.file = gff.file)
+
+
+Re.PJ<-GetResultsFromJunctionSeq(input.dir.name,decode.file,sj.exon.count.file,gff.file)
+
+
+
+```
+
+From the resutls of differential exons and splicing junctions usage(Re.PJ), we generate genewise results using makeGeneWiseTable function
+in GOSJ R package:
+```{r makeGeneWiseTable,eval=TRUE,echo=TRUE,cache=TRUE}
+#load(paste0(input.dir.name,junctionSeq.output.save))
+re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID)))
+```
+To show some results of genewise resutls:
+```{r genewise results, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE}
+knitr::kable(head(pData(re.PJ.gene.based)))
+```
+
+Use genewise results to perform GO and pathway analysis
+```{r cp_and_cft,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+RE.exon.sj.all.gene<-OutputGOBasedDEfromFeatures2(re.PJ.gene.based,gene.model,feature.based.ad.by.SJ.GO.output.file)
+Re.pwf.exon.sj<-GetPwfUseReformatedData(ReformatData(re.PJ.gene.based),ad="exon_SJ",sub_feature=NULL,0.05)
+RE.cp<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,Output_file=feature.based.ad.by.SJ.ca.path.output.file)
+RE.cft<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file=feature.based.ad.by.SJ.tft.output.file)
+```
+
+Draw bar plot for GO term analysis
+```{r bar_plot,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+x=RE.exon.sj.all.gene[1:10,1:7]
+x$term <- factor(x$term,levels = x$term[order(x$over_represented_pvalue_adjusted,decreasing = TRUE)])
+Function<-x$term
+negative_log10p=-log10(x$over_represented_pvalue_adjusted)
+ggplot(x, aes(x=Function, y=negative_log10p,fill=factor(x$category)))+geom_bar(stat="identity")+geom_hline(yintercept = -log10(0.05))+coord_flip()
+```
+
+# Analysis using the redefined DE gene list based on Fold change and p-value of features
+
+Redefine DE genes based on features
+```{r output_DE_genes_from_feature,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+head(Re.pwf.exon.sj)
+dim(Re.pwf.exon.sj)
+re.PJ.gene.based.feature<-ReformatData(re.PJ.gene.based)
+DE.gene.ensembl_gene_id<-rownames(Re.pwf.exon.sj[which(Re.pwf.exon.sj$DEgenes==1),])
+index.DE<-which(gene.model$ensembl_gene_id %in% DE.gene.ensembl_gene_id)
+DE.gene.from.feature<-gene.model[index.DE,c(1,3)]
+colnames(DE.gene.from.feature)<-c("geneSymbol","geneID")
+
+re.PJ.gene.based.feature.DE<-merge(re.PJ.gene.based.feature,DE.gene.from.feature,by="geneID")
+
+table.based.RE.PJ<-fData(Re.PJ)
+
+names(table.based.RE.PJ)
+
+head(fData(Re.PJ)$testable & (! is.na(fData(Re.PJ)$pvalue)))
+
+rep(NA,nrow(fData(Re.PJ)))
+
+padjusfilter<-p.adjust(fData(Re.PJ)$pvalue[fData(Re.PJ)$testable] , method = "BH")
+
+head(cbind(fData(Re.PJ)$padjust_noFilter[fData(Re.PJ)$testable],padjusfilter))
+
+re.PJ.based.feature.DE<-merge(table.based.RE.PJ,DE.gene.from.feature,by="geneID")
+
+dataset2<- re.PJ.gene.based.feature.DE
+  dataset2[sapply(dataset2, is.list)] <-
+    sapply(dataset2[sapply(dataset2, is.list)],
+           function(x)sapply(x, function(y) paste(unlist(y),collapse=", ")))
+           
+  write.table(dataset2[order(dataset2$geneWisePadj),],file=Output_DE_gene_file_feature_gene_based,row.names = FALSE,quote=FALSE,sep="\t")
+
+  dataset3<- re.PJ.based.feature.DE
+
+  dataset3[sapply(dataset3, is.list)] <-
+    sapply(dataset3[sapply(dataset3, is.list)],
+           function(x)sapply(x, function(y) paste(unlist(y),collapse=", ")))
+  
+  head(table.based.RE.PJ)
+  
+  grep("ENSMUSG00000026563",as.character(table.based.RE.PJ$geneID))
+  
+table.based.RE.PJ[grep("ENSMUSG00000026563",as.character(table.based.RE.PJ$geneID)),]
+           
+  gene.ENSMUSG00000000693<-table.based.RE.PJ[grep("ENSMUSG00000000693",as.character(table.based.RE.PJ$geneID)),c(1,2,11,12,19,20)]
+  
+  head(cbind(gene.ENSMUSG00000000693,p.adjust(gene.ENSMUSG00000000693$pvalue,method="fdr")))
+  
+  dim(gene.ENSMUSG00000000693)
+
+  write.table(dataset3[order(dataset3$geneWisePadj),],file=Output_DE_gene_file_feature_all_feature_based,row.names = FALSE,quote=FALSE,sep="\t")
+
+```
+
+```{r genewiseFDR,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+gene.1<-table.based.RE.PJ[which(table.based.RE.PJ[,1]=="ENSMUSG00000026563+ENSMUSG00000040596+ENSMUSG00000089853+ENSMUSG00000103400"),]
+
+data.perGene.1<-JS.perGeneQValue(table.based.RE.PJ$pvalue,table.based.RE.PJ$testable,table.based.RE.PJ$geneID,method = JS.perGeneQValueExact)
+
+head(data.perGene.1)
+length(data.perGene.1)
+
+table.based.RE.PJ[which(table.based.RE.PJ[,1]=="ENSMUSG00000000001"),]
+```
+
+To use the DE genes defined by fold change and  p-value of each feature
+```{r DE_gene_feature eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,1,0.05,outputfile_DGE_FC_P_geneWise)
+
+#grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
+R_GO_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_2)
+
+R_GO_term_FC_p_feature_geneWise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_3)
+
+R_GO_term_FC_p_feature_FeatureGeneWise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_4)
+
+RE.cp.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,Output_file=redefined.feature.based.ad.by.SJ.ca.path.output.file)
+
+RE.cft.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file=redefined.feature.based.ad.by.SJ.tft.output.file)
+
+```
+
+To use the DE genes defined by fold change and  p-value of each feature
+```{r DE_gene_feature_new_cutoff, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+
+LabelGenesWithFeature<-LabelGeneBasedFeature(Re.PJ,0.58,0.5,outputfile_LabelGeneBasedFeature)
+
+Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based)
+
+#grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
+
+R_GO_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_use_DE_gene_use_FC_p_of_feature_058)
+
+RE.cp.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,Output_file=redefined.feature.based.ad.by.SJ.ca.path.output.file_058)
+
+RE.cft.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file=redefined.feature.based.ad.by.SJ.tft.output.file_058)
+
+```
+
+To use the DE genes defined by fold change and  p-value of each feature, and use GO:BP only to perform enrichment analysis
+```{r DE_gene_feature_GO_BP_only, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+
+Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based)
+
+#grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
+
+R_GO_BP_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058)
+unique(unlist(R_GO_BP_term_FC_p_feature[[1]]$DEgene_symbol))
+```
+
+```{r read_PJ_data, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+GO.rMAT<-read.xls("/media/H_driver/PJ/rMAT/pHamard_MATS-selected-re-run-exon-centric/pHamard_MATS-selected-re-run-exon-centric/MATS-1-20-inclusion-all-GO_Biological_Process_2015_table.xlsx")
+length(unique(unlist(strsplit(GO.rMAT$Genes,split=";"))))
+```
+
+To use the DE genes defined by fold change and  p-value of each feature,geneWiseFDR and rMAT
+
+```{r DE_gene_feature_geneWise_rMAT eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,0.58,0.05,outputfile_DGE_FC_P_geneWise)
+
+#grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
+R_GO_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_2)
+
+R_GO_term_FC_p_feature_geneWise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_3)
+
+R_GO_term_FC_p_feature_FeatureGeneWise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_4)
+
+RE.cp.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,Output_file=redefined.feature.based.ad.by.SJ.ca.path.output.file)
+
+RE.cft.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file=redefined.feature.based.ad.by.SJ.tft.output.file)
+
+
+R_GO_term.feature.genewise.rMAT<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"FeatureGeneWiseRMAT",gene.model,Output_GO_BP_feature.gene.rMAT)
+
+R_GO_term.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"GeneWise",gene.model,Output_GO_BP_gene)
+
+R_GO_term.feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"Feature",gene.model,Output_GO_BP_feature)
+
+R_GO_term.feature.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"FeatureGeneWise",gene.model,Output_GO_BP_feature_gene)
+
+```
+
+To use the DE genes defined by 2 fold change and p-value of each feature,geneWiseFDR and rMAT
+
+```{r DE_gene_feature_geneWise_rMAT_2_fold_change eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+Re.PJ.selected.feature.2.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,1,0.05,outputfile_DGE_2_FC_P_geneWise)
+
+# #grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
+# R_GO_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_2)
+# 
+# R_GO_term_FC_p_feature_geneWise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_3)
+# 
+# R_GO_term_FC_p_feature_FeatureGeneWise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_4)
+# 
+# RE.cp.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,Output_file=redefined.feature.based.ad.by.SJ.ca.path.output.file)
+# 
+# RE.cft.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file=redefined.feature.based.ad.by.SJ.tft.output.file)
+
+R_GO_term.feature.genewise.rMAT.2.FC<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.2.FC.p[[1]],"FeatureGeneWiseRMAT",gene.model,Output_GO_BP_feature.gene.rMAT.2.FC)
+
+R_GO_term.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"GeneWise",gene.model,Output_GO_BP_gene)
+
+R_GO_term.feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"Feature",gene.model,Output_GO_BP_feature)
+
+R_GO_term.feature.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"FeatureGeneWise",gene.model,Output_GO_BP_feature_gene)
+
+R_GO_term.feature.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p[[1]],"FeatureGeneWise",gene.model,Output_GO_BP_feature_gene_redefined)
+
+```
+
+
+To save all results we got so far
+```{r save_all eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+savehistory(file=paste0(input.dir.name,"re_save_",junctionSeq.output.save.history))
+save.image(file=paste0(input.dir.name,"re_save_",junctionSeq.output.save))
+```
