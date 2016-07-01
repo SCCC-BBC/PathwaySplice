@@ -14,15 +14,8 @@ Reformat genewised results from JunctionSeq, and use this one to get enriched GO
 }
 \examples{
 
-
-RE.exon.sj<-OutputGOBasedDEfromFeatures(re.PJ.gene.based,gene.model,"GO_exon_sj_3.xls")
-
-sink("test.txt")
 RE.exon.sj.all.gene<-OutputGOBasedDEfromFeatures2(re.PJ.gene.based,gene.model,"GO_exon_sj_use_all_gene.xls")
-sink()
 
-re2<-ReformatData(re.PJ.gene.based)
-Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseReformatedData(re2,ad="exon_SJ",sub_feature=NULL,0.05,gene_model=gene.model)
 
 
 }

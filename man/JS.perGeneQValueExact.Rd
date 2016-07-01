@@ -2,20 +2,20 @@
 % Please edit documentation in R/JS.perGeneQValueExact.R
 \name{JS.perGeneQValueExact}
 \alias{JS.perGeneQValueExact}
-\title{Title}
+\title{JS.perGeneQValueExact}
 \usage{
 JS.perGeneQValueExact(pGene, theta, geneSplit)
 }
 \arguments{
-\item{geneSplit}{}
+\item{pGene:p}{value}
+
+\item{geneSplit:split}{}
 }
 \description{
-Title
+Exact computation - see methods part of the paper
 }
 \examples{
-source("https://bioconductor.org/biocLite.R")
-biocLite("Biobase")
-library(Biobase)
+
 
 }
 

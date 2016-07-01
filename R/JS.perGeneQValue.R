@@ -1,4 +1,4 @@
-#' Title
+#' JS.perGeneQValue
 #'
 #' @param pvals
 #' @param wTest
@@ -10,19 +10,25 @@
 #'
 #' @examples
 #'
-#' gene.1<-results.with.count.data.2[which(results.with.count.data.2[,1]=="ENSMUSG00000000028+ENSMUSG00000005262"),]
+
+#'data.perGeneQ.use.large.FC.featutre<-JS.perGeneQValue(Re.PJ.selected$pvalue,
+#'Re.PJ.selected$testable,Re.PJ.selected$geneID,method = JS.perGeneQValueExact)
 #'
-#' results.with.count.data.2[which(results.with.count.data.2[,1]=="ENSMUSG00000000028+ENSMUSG00000005262"),]
+#'length(unique(as.character(Re.PJ.selected$geneID)))
 #'
-#' sink("output.txt")
-#' data.perGene<-JS.perGeneQValue(results.with.count.data.2$pvalue,results.with.count.data.2$testable,results.with.count.data.2$geneID,method = JS.perGeneQValueExact)
-#' sink()
-#' length(data.perGene)
+#'head(Re.PJ.selected)
 #'
 #'
-#' data.perGene.1<-JS.perGeneQValue(gene.1$pvalue,gene.1$testable,gene.1$geneID,method = JS.perGeneQValueExact)
-#' length(data.perGene.1)
+#'data.perGeneQ.use.large.FC.featutre.2<-list_to_df(data.perGeneQ.use.large.FC.featutre)
+#'colnames(data.perGeneQ.use.large.FC.featutre.2)<-c("geneID","geneWisePadj_FC")
 #'
+#'Re.PJ.selected.2<-merge(Re.PJ.selected,data.perGeneQ.use.large.FC.featutre.2,by="geneID")
+#'
+#'
+#'head(Re.PJ.selected.2)
+#'
+#'re.PJ.gene.based.selected<-merge(pData(re.PJ.gene.based),data.perGeneQ.use.large.FC.featutre.2,by="geneID")
+
 JS.perGeneQValue = function(pvals, wTest, geneID, method = JS.perGeneQValueExact) {
 
   ## use only those exons that were testable

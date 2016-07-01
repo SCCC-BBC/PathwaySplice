@@ -17,6 +17,14 @@
 #' RE.cft<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file="C_tft.xls")
 #'
 #'
+#' RE.cp.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,
+#' Output_file="/media/H_driver/PJ/geneGL_rm_non_coding_Cp.xls")
+#'
+#' RE.cft.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,
+#' Output_file="/media/H_driver/PJ/geneGL_rm_non_coding_tft.xls")
+#'
+#'
+
 OutputCatBasedPwf<-function(Re.pwf.exon.sj,gene_model,gene_2_cat,Output_file){
 
   Re<-goseq2(Re.pwf.exon.sj,"mm10","ensGene",gene.model=gene_model,gene2cat=gene_2_cat,use_genes_without_cat=TRUE)

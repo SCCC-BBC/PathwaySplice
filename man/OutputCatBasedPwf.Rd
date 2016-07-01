@@ -19,5 +19,12 @@ RE.cp<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.
 RE.cft<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file="C_tft.xls")
 
 
+RE.cp.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,
+Output_file="/media/H_driver/PJ/geneGL_rm_non_coding_Cp.xls")
+
+RE.cft.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,
+Output_file="/media/H_driver/PJ/geneGL_rm_non_coding_tft.xls")
+
+
 }
 

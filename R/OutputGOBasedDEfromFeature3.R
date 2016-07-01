@@ -1,4 +1,4 @@
-#' OutputGOBasedDEfromFeatures2
+#' OutputGOBasedDEfromFeatures3
 #'
 #' Reformat genewised results from JunctionSeq, and use this one to get enriched GO terms
 #'
@@ -11,15 +11,17 @@
 #'
 #' @examples
 #'
-#' RE.exon.sj.all.gene<-OutputGOBasedDEfromFeatures2(re.PJ.gene.based,gene.model,"GO_exon_sj_use_all_gene.xls")
+#' RE.exon.sj.all.gene<-OutputGOBasedDEfromFeatures3(re.PJ.gene.based,gene.model,"GO_exon_sj_use_all_gene.xls")
 #'
 #'
 #'
-OutputGOBasedDEfromFeatures2<-function(re.PJ.gene.based,gene.model,Output_file){
+OutputGOBasedDEfromFeatures3<-function(re.PJ.gene.based,DE_type,gene.model,Output_file_dir){
 
-  re2<-ReformatData(re.PJ.gene.based)
+  #re2<-ReformatDataUseTable(re.PJ.gene.based)
 
-  Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseReformatedData(re2,ad="exon_SJ",sub_feature=NULL,0.05,gene_model=gene.model)
+  re2<-re.PJ.gene.based
+
+  Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseFeatureDefineDE(re2,ad="exon_SJ",sub_feature=NULL,DE_define=DE_type,gene_model=gene.model)
 
   head(Re.Go.adjusted.by.exon.SJ[[1]])
 
@@ -40,8 +42,8 @@ OutputGOBasedDEfromFeatures2<-function(re.PJ.gene.based,gene.model,Output_file){
     sapply(dataset2[sapply(dataset2, is.list)],
            function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
 
-  write.table(dataset2,file=Output_file,row.names = FALSE,quote=FALSE,sep="\t")
+  write.table(dataset2,file=paste0(Output_file_dir,"/",DE_type,".xls"),row.names = FALSE,quote=FALSE,sep="\t")
 
-  return(dataset2)
+  return(Re.Go.adjusted.by.exon.SJ)
 
 }

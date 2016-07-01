@@ -24,7 +24,7 @@ GetResults4GeneLevel<-function(dir.name,file.sample,file.count){
 
   path.file.sample<-paste0(dir.name,file.sample)
   decoder.bySample<-read.table(path.file.sample,header=T,stringsAsFactors = F)
-  print(decoder.bySample)
+  #print(decoder.bySample)
 
   sampleCondition <- decoder.bySample$group.ID;
   sampleName <- decoder.bySample$sample.ID;
@@ -36,7 +36,7 @@ GetResults4GeneLevel<-function(dir.name,file.sample,file.count){
 
   sampleTable <- data.frame(sampleName = sampleName,fileName = sampleFiles,condition = sampleCondition);
 
-  print(sampleTable)
+  #print(sampleTable)
 
   dds <-  DESeqDataSetFromHTSeqCount(sampleTable = sampleTable,directory = directory,design = ~ condition)
 

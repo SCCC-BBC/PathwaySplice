@@ -1,4 +1,4 @@
-#Use JunctionSeq to get analysis results
+#  GetResultsFromJunctionSeq
 #' Get analysis results using JunctionSeq
 #'
 #' @param dir.name

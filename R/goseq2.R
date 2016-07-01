@@ -24,6 +24,9 @@
 #'
 #' GO.wall.DE_interest.FtFT=goseq2(Gene.based.DE.feature.based.DE$pwfFeatureFeature,"mm10","ensGene",gene.model=gene_model)
 #'
+#'
+#'
+#'
 goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE){
   ################# Input pre-processing and validation ###################
   #Do some validation of input variables

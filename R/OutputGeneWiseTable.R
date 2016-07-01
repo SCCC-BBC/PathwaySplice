@@ -13,6 +13,9 @@
 #' OutputGeneWiseTable(re.PJ.gene.based,gene.model,output_file="/media/H_driver/PJ/GeneWise_Re_annotated_using_new_annotation_3.csv")
 #'
 #' OutputGeneWiseTable(re.PJ.gene.based,gene.model,output_file="/media/H_driver/PJ/GeneWise_Re_annotated_using_new_annotation_4.csv")
+#'
+#' OutputGeneWiseTable(re.PJ.gene.based,gene.model,output_file="/media/H_driver/PJ/GeneWise_41540.csv")
+#'
 #' OutputGeneWiseTable(Re.PJ,output_file="/media/H_driver/PJ/AllFeature_Based.csv")
 #' write.table(fData(Re.PJ),row.names = FALSE,file="/media/H_driver/PJ/AllFeature_Based.csv", quote=FALSE, sep="\t")
 #'
