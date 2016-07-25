@@ -9,18 +9,24 @@
 #'
 #' @examples
 #'
-#' dir.name="/media/H_driver/PJ/"
+#' dir.name="/media/H_driver/Aimin_project/GOSJ_example_data/"
+#' dir.name="/media/H_driver/Aimin_project/GOSJ_STAR_Bam/"
 #'
 #' file.name=dir(dir.name,recursive = TRUE,pattern="sorted.bam")
 #' file.name.whole<-paste0(dir.name,file.name)
-#' file.name.selected<-file.name.whole[c(5,3,9)]
+#' file.name.selected<-file.name.whole
 #' file.name.selected.2<-as.list(file.name.selected)
 #' names(file.name.selected.2)=sapply(strsplit(file.name.selected,split="\\/"),"[[",6)
 #'
-#' cmd1="java -Xmx4000M -jar /home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/QoRTs.jar QC --noGzipOutput"
-#' gtf1="/media/aiminyan/DATA/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf"
+#' file.name.selected.3<-file.name.selected.2[-c(1,3)]
 #'
-#' re.out<-lapply(file.name.selected.2,callQoRT,gtf_file=gtf1,runing_cmd=cmd1)
+#' cmd1="java -Xmx4000M -jar /home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/QoRTs.jar QC --noGzipOutput --keepMultiMapped"
+#'
+#' cmd2="java -Xmx5000M -jar /home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/QoRTs.jar QC --noGzipOutput"
+#'
+#' gtf1="/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.2.gtf"
+#'
+#' re.out<-lapply(file.name.selected.3,callQoRT,gtf_file=gtf1,runing_cmd=cmd2)
 #'
 
 callQoRT<-function(input_file,runing_cmd,gtf_file){

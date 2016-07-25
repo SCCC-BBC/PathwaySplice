@@ -18,8 +18,7 @@
 #' sink()
 #'
 #'
-ProcessOutputFilesFrom_rMATS<-function(dir.name,input.file.pattern){
-
+ProcessOutputFilesFrom_rMATS<-function(dir.name,input.file.pattern,De_defined_by_what){
 
   ProcessOutputFilesFrom_rMATS_read<-function(input_file){
 
@@ -36,6 +35,8 @@ ProcessOutputFilesFrom_rMATS<-function(dir.name,input.file.pattern){
 
   re.out<-lapply(file.name.2,ProcessOutputFilesFrom_rMATS_read)
 
+  #Define DE by FDR
+  if(De_defined_by_what=="FDR"){
   re.out.2<-do.call(c,lapply(re.out, function(u){
     x<-as.character(u[which(u$FDR<0.05),]$GeneID)
     x
@@ -43,8 +44,17 @@ ProcessOutputFilesFrom_rMATS<-function(dir.name,input.file.pattern){
     #colnames(x)<-colnames(Data4Goterm)
     #x
   }))
+  }else if(De_defined_by_what=="P_and_inclusion"){
+    re.out.2<-do.call(c,lapply(re.out, function(u){
+      x<-as.character(u[which(u$PValue<0.05&abs(u$IncLevelDifference)>0.20),]$GeneID)
+      x
+      #x<-as.data.frame(t(x))
+      #colnames(x)<-colnames(Data4Goterm)
+      #x
+    }))
+    }
 
-  print(names((re.out.2)))
+# print(names((re.out.2)))
 
   n1=length(re.out.2[grep("A3SS.MATS.ReadsOnTargetAndJunctionCounts",names(re.out.2))])
   n2=length(re.out.2[grep("A5SS.MATS.ReadsOnTargetAndJunctionCounts",names(re.out.2))])

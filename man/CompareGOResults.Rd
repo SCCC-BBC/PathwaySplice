@@ -10,7 +10,7 @@ CompareGOResults(Gene.based.DE.feature.based.DE, gene_model)
 \item{gene_model}{}
 }
 \description{
-This function is used to identify differences on enriched GO terms bewteen gene based analyhsis and feature based analysis
+CompareGOResults
 }
 \examples{
 

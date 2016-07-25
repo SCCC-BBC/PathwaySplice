@@ -42,12 +42,14 @@ OutputCatBasedPwf<-function(Re.pwf.exon.sj,gene_model,gene_2_cat,Output_file){
 
   dataset2<- Re.select.with.adjP
 
+  Re2<-list(EnrichedGO=Re,SelectedEnrichedGO=dataset2)
+
   dataset2[sapply(dataset2, is.list)] <-
     sapply(dataset2[sapply(dataset2, is.list)],
            function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
 
   write.table(dataset2,file=Output_file,row.names = FALSE,quote=FALSE,sep="\t")
 
-  return(Re)
+  return(Re2)
 
 }

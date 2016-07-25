@@ -169,18 +169,12 @@ goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:B
   if(method=="Wallenius"){
     message("Calculating the p-values...")
     #All these things are just to make stuff run faster, mostly because comparison of integers is faster than string comparison
-
-    #print(pwf$DEgenes)
-
     degenesnum=which(pwf$DEgenes==1)
+    #Turn all genes into a reference to the pwf object
 
-    #print(rownames(pwf)[degenesnum])
-
-     #Turn all genes into a reference to the pwf object
     cat2genenum=relist(match(unlist(cat2gene),rownames(pwf)),cat2gene)
     #This value is used in every calculation, by storing it we need only calculate it once
     alpha=sum(pwf$pwf)
-
 
     #Each category will have a different weighting so needs its own test
     pvals[,2:3]=t(sapply(cat2genenum,function(u){
@@ -203,8 +197,6 @@ goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:B
         +pWNCHypergeo(num_de_incat,num_incat,num_genes-num_incat,num_de,weight,lower.tail=FALSE),
         pWNCHypergeo(num_de_incat,num_incat,num_genes-num_incat,num_de,weight))
     }))
-
-
     }
   if(method=="Hypergeometric"){
     message("Calculating the p-values...")
@@ -222,33 +214,78 @@ goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:B
       c(dhyper(num_de_incat,num_incat,num_genes-num_incat,num_de)+phyper(num_de_incat,num_incat,num_genes-num_incat,num_de,lower.tail=FALSE),phyper(num_de_incat,num_incat,num_genes-num_incat,num_de))
     }))
   }
+
   #Populate the count columns...
   degenesnum=which(pwf$DEgenes==1)
-
   cat2genenum=relist(match(unlist(cat2gene),rownames(pwf)),cat2gene)
-
-  cat2degenenum=relist(match(unlist(cat2gene),rownames(pwf)[degenesnum]),cat2gene)
-
   pvals[,4:5]=t(sapply(cat2genenum,function(u){
     c(sum(degenesnum%in%u),length(u))
   }))
 
-  pvals.6<-sapply(cat2degenenum,function(u,pwf){
+  #Got the name of DE gene in each GO
+  #print(head(cat2gene))
+
+  DE_pwf=rownames(pwf[degenesnum,])
+
+  #cat2degenenum=relist(match(unlist(cat2gene),rownames(pwf[degenesnum,])),cat2gene)
+  #print(cat2degenenum)
+
+  pvals.6<-sapply(cat2gene,function(u,DE_pwf){
     #c(sum(degenesnum%in%u),length(u))
-    c(rownames(pwf)[u[-which(is.na(u))]])
-  },pwf)
+    #c(rownames(pwf)[u[-which(is.na(u))]])
+    x<-u[which(u %in% DE_pwf)]
+    x
+  },DE_pwf)
+
+  #cat("After matching\n")
+
+  #cat("DE_ensemble\n")
+
+  #print(unique(as.character(unlist2(pvals.6))))
+  #cat(length(unique(as.character(unlist2(pvals.6)))),"\n")
 
   pvals.6.gene.symbol<-sapply(pvals.6,function(u,gene.model){
-    gene.model[match(u,as.character(gene.model[,3])),1]
-  },gene.model)
+    y<-gene.model[which(as.character(gene.model[,3]) %in% u),1]
+    y
+    },gene.model)
 
+  #cat("DE_symbol\n")
+  #print(unique(as.character(unlist2(pvals.6.gene.symbol))))
+  #cat(length(unique(as.character(unlist2(pvals.6.gene.symbol)))),"\n")
 
+  #Convert list to data frame
   pvals.6.df<-list_to_df(pvals.6)
+  #cat("pvals_6_df","\n")
+  #cat(dim(pvals.6.df)[1],"\n")
 
   pvals.6.gene.symbol.df<-list_to_df(pvals.6.gene.symbol)
+  #cat("pvals_6_gene_symbol_df","\n")
+  #cat(dim(pvals.6.gene.symbol.df)[1],"\n")
+
+  #cat(length(unique(as.character(pvals.6.gene.symbol.df[,2]))),"\n")
+  #print(unique(as.character(pvals.6.gene.symbol.df[,2])))
+
+  dataset2<- pvals.6.gene.symbol.df
+  dataset2[sapply(dataset2, is.list)] <-
+    sapply(dataset2[sapply(dataset2, is.list)],
+           function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
+
+  #print(dataset2)
+  #df_args <- c(pvals.6.gene.symbol.df[,2], sep=",")
+  #df_args.data<-do.call(paste, df_args)
+
+  #print(class(dataset2))
+  #cat(dim(dataset2),"\n")
+
+  temp.gene.name=unique(apply(dataset2[,2],1,c))
+  temp.gene.name.2=unique(trim(unlist(strsplit(temp.gene.name,split=","))))
+  #print(class(temp.gene.name.2))
+
+  #cat(length(temp.gene.name.2),"\n")
+  #print(temp.gene.name.2)
+  DE_from_GO<-temp.gene.name.2
 
   colnames(pvals.6.df)=c("category","DEgene_ID")
-
   colnames(pvals.6.gene.symbol.df)=c("category","DEgene_symbol")
 
   #Finally, sort by p-value
@@ -267,6 +304,8 @@ goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:B
 
   pvals.3<-merge(pvals.2,pvals.6.gene.symbol.df,by="category",sort = FALSE)
 
-  return(pvals.3)
+  pvals.4<-list(GO=pvals.3,DE_GO=DE_from_GO)
+
+  return(pvals.4)
 
 }

@@ -30,7 +30,6 @@ Combine3Re <- function(Re.PJ, re.PJ.gene.based, re.rMAT,gene.model, Output_files
 
   DE_type<-c("Feature","GeneWise","rMAT","FeatureGeneWise","FeaturerMAT","GeneWiserMAT","FeatureGeneWiseRMAT")
 
-
   Re.combine.1<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.2.FC.p[[1]],"Feature",gene.model,Output_files_dir)
   Re.combine.2<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.2.FC.p[[1]],"GeneWise",gene.model,Output_files_dir)
   Re.combine.3<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.2.FC.p[[1]],"rMAT",gene.model,Output_files_dir)
@@ -39,13 +38,15 @@ Combine3Re <- function(Re.PJ, re.PJ.gene.based, re.rMAT,gene.model, Output_files
   Re.combine.6<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.2.FC.p[[1]],"GeneWiserMAT",gene.model,Output_files_dir)
   Re.combine.7<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.2.FC.p[[1]],"FeatureGeneWiseRMAT",gene.model,Output_files_dir)
 
-  Re.combine<-list(Feature=Re.combine.1,
-                   GeneWise=Re.combine.2,
-                   rMAT=Re.combine.3,
-                   FeatureGeneWise=Re.combine.4,
-                   FeaturerMAT=Re.combine.5,
-                   GeneWiserMAT=Re.combine.6,
-                   FeatureGeneWiseRMAT=Re.combine.7)
+  #Re.combine<-list(rMAT=Re.combine.3)
+
+   Re.combine<-list(Feature=Re.combine.1,
+                    GeneWise=Re.combine.2,
+                    rMAT=Re.combine.3,
+                    FeatureGeneWise=Re.combine.4,
+                    FeaturerMAT=Re.combine.5,
+                    GeneWiserMAT=Re.combine.6,
+                    FeatureGeneWiseRMAT=Re.combine.7)
 
   return(Re.combine)
 

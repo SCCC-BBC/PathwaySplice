@@ -23,7 +23,7 @@ OutputGOBasedDEfromFeatures3<-function(re.PJ.gene.based,DE_type,gene.model,Outpu
 
   Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseFeatureDefineDE(re2,ad="exon_SJ",sub_feature=NULL,DE_define=DE_type,gene_model=gene.model)
 
-  head(Re.Go.adjusted.by.exon.SJ[[1]])
+  #head(Re.Go.adjusted.by.exon.SJ[[1]])
 
   #select GO term(10<=numInCat<=300 and BP only)
 
@@ -43,6 +43,8 @@ OutputGOBasedDEfromFeatures3<-function(re.PJ.gene.based,DE_type,gene.model,Outpu
            function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
 
   write.table(dataset2,file=paste0(Output_file_dir,"/",DE_type,".xls"),row.names = FALSE,quote=FALSE,sep="\t")
+
+  write.table(Re.Go.adjusted.by.exon.SJ[[2]],file=paste0(Output_file_dir,"/",DE_type,"pwf.xls"),row.names = T,quote=FALSE,sep="\t")
 
   return(Re.Go.adjusted.by.exon.SJ)
 

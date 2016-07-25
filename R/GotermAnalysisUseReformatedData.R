@@ -21,7 +21,7 @@
 #' Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
 #' re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
 #'
-GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,gene_model){
+GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model){
 
   #Data4Goterm<-pData(re.gene.based)
 
@@ -65,14 +65,14 @@ GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL
   print(All.gene.id.index.2)
 
   if(ad=="GL"){
-    pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
+    pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,plot.fit = FALSE)
   }
   else
   {
-    pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
+    pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
   }
 
-  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model,use_genes_without_cat=TRUE)
+  GO.wall.DE_interest=goseq2(pwf.DE_interest,genomeID,geneID,gene.model=gene_model,use_genes_without_cat=TRUE)
 
   #GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model)
   enriched.GO.DE_interest=GO.wall.DE_interest[p.adjust(GO.wall.DE_interest$over_represented_pvalue,method="BH")<threshold,]

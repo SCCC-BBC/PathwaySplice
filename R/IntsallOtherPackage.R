@@ -12,6 +12,9 @@
 # library(goseq)
 # biocLite("org.Mm.eg.db")
 # library(org.Mm.eg.db)
+# biocLite("org.Hs.eg.db")
+# library(org.Hs.eg.db)
+
 # require(GO.db)
 # biocLite("geneLenDataBase")
 # install.packages("geneLenDataBase")
@@ -20,6 +23,15 @@
 # library(GSA)
 # install.packages("VennDiagram")
 # library(VennDiagram)
+# install.packages("openssl")
+# biocLite("cummeRbund")
+# library(cummeRbund)
+# install.packages("popbio")
+# library(popbio)
 
 # gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)
 # save(gene.model,file="~/GOSJ/data/gene.model.RData")
+
+# gene.model.hg38<-read.table("/media/H_driver/Annotation/hg38/genes_table_02092016.csv",header = TRUE, sep = ",", as.is=TRUE)
+# save(gene.model.hg38,file="~/GOSJ/data/gene.model.hg38.RData")
+

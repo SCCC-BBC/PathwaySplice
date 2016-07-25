@@ -19,7 +19,9 @@ OutputGOBasedDEfromFeatures2<-function(re.PJ.gene.based,gene.model,Output_file){
 
   re2<-ReformatData(re.PJ.gene.based)
 
-  Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseReformatedData(re2,ad="exon_SJ",sub_feature=NULL,0.05,gene_model=gene.model)
+  Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseReformatedData(re2,ad="exon_SJ",sub_feature=NULL,0.05,"hg19","ensGene",gene_model=gene.model)
+
+  Re<-Re.Go.adjusted.by.exon.SJ
 
   head(Re.Go.adjusted.by.exon.SJ[[1]])
 
@@ -40,8 +42,10 @@ OutputGOBasedDEfromFeatures2<-function(re.PJ.gene.based,gene.model,Output_file){
     sapply(dataset2[sapply(dataset2, is.list)],
            function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
 
+  Re2<-list(EnrichedGO=Re[[1]],Pwf=Re[[2]],SelectedEnrichedGO=dataset2)
+
   write.table(dataset2,file=Output_file,row.names = FALSE,quote=FALSE,sep="\t")
 
-  return(dataset2)
+  return(Re2)
 
 }

@@ -13,7 +13,8 @@ UseLogistic2CKBias(jscs_object)
 Title
 }
 \examples{
-
+re.PJ.gene.based.testable.reformat<-ReformatData(re.PJ.gene.based)
+UseLogistic2CKBias(re.PJ.gene.based.testable.reformat)
 
 }
 

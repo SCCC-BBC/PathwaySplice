@@ -15,6 +15,7 @@
 #' head(Re.PJ.selected.feature.FC.p)
 #' length(which(Re.PJ.selected.feature.FC.p$DE_or_not==1))
 #'
+#' Re.PJ.selected.feature.FC.p.check<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,"SE",2,0.05,outputfile_DGE_FC_P_geneWise)
 
 Select_DE_gene_basd_on_Feature<-function(Re.PJ,re.PJ.gene.based,re.rMAT,splicing_type,cutoff_FC,cutoff_P_value,venn_output){
 
@@ -42,9 +43,8 @@ Select_DE_gene_basd_on_Feature<-function(Re.PJ,re.PJ.gene.based,re.rMAT,splicing
   if(splicing_type=="All_5_Types"){
     cat(length(DE.gene.based.on.FC.p.of.feature),"\t",length(DE.gene.based.on.geneWise.p.only),"\t",
         length(re.rMAT$ReadsOnTargetAndJunctionCounts),"\n")
-  DE.gene.rMAT<-re.rMAT$ReadsOnTargetAndJunctionCounts
+        DE.gene.rMAT<-re.rMAT$ReadsOnTargetAndJunctionCounts
   }else if(splicing_type=="SE"){
-
     cat(length(DE.gene.based.on.FC.p.of.feature),"\t",length(DE.gene.based.on.geneWise.p.only),"\t",
         length(re.rMAT$SEReadsOnTargetAndJunctionCounts),"\n")
       DE.gene.rMAT<-re.rMAT$SEReadsOnTargetAndJunctionCounts

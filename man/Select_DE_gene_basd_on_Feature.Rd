@@ -20,5 +20,6 @@ dim(Re.PJ.selected.feature.FC.p)
 head(Re.PJ.selected.feature.FC.p)
 length(which(Re.PJ.selected.feature.FC.p$DE_or_not==1))
 
+Re.PJ.selected.feature.FC.p.check<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,"SE",2,0.05,outputfile_DGE_FC_P_geneWise)
 }
 

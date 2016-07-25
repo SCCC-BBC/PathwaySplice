@@ -1,11 +1,15 @@
 ---
-title: 'Report for the data analysis of PJ project'
+title: "Summary report for the data analysis of PJ project"
 author: "Aimin Yan"
-date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
-# This is a summary for the analysis of PJ project
+# Time for generating this report
+
+```{r starting_time,eval=TRUE,message=F, warning=F,results='asis',echo=FALSE}
+time.string = gsub(":", "-", gsub(" ", "_", as.character(Sys.time())))
+time.string
+```
 
 # set up runing environment
 
@@ -21,10 +25,17 @@ library(GSA)
 library(GO.db)
 library(ggplot2)
 library(gdata)
+library(popbio)
 ```
 
-```{r input: dir and files,message=F, warning=F,results='hide',echo=TRUE}
+```{r load_data, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE}
+#load("/media/H_driver/PJ/re_save_2016-07-05 17:55:10_PJ_jscs.RData")
+load("/media/H_driver/PJ/JunctionRe.RData")
+```
+
+```{r input: dir and files, eval=TRUE, message=F, warning=F,results='hide',echo=TRUE}
 #set up input file path
+
 input.dir.name="/media/H_driver/PJ/"
 QoRTs.dir="/home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/"
 gtf.file.dir="/media/aiminyan/DATA/mus_musculus/"
@@ -59,8 +70,11 @@ junctionSeq.output.save.history="PJ_jscs.Rhistory"
 #set up the path for output files
 output.dir.name="/media/H_driver/PJ/Results/"
 
+
 output.dir.name.new="/media/H_driver/PJ/Results/Feature_GeneWise_rMAT/"
-output.dir.name.rMAT_SE_based="/media/H_driver/PJ/Results/Feature_GeneWise_rMAT_SE_based/"
+
+output.dir.name.rMAT_SE_based=paste0(output.dir.name,time.string,"_","Feature_GeneWise_rMAT_SE_based/")
+dir.create(output.dir.name.rMAT_SE_based)
 
 #set up output files for gene based
 gene.based.ad.by.GL.GO.output.file=paste0(output.dir.name,"geneGL_rm_non_coding.xls")
@@ -103,6 +117,11 @@ Output_GO_BP_feature_gene_redefined=paste0(output.dir.name,"GO_term_BP_feature_g
 
 Output_GO_BP_feature.gene.rMAT.2.FC=paste0(output.dir.name,"GO_term_BP_feature_gene_rMAT_2FC.xls")
 
+output.dir.DE.name=paste0(output.dir.name,time.string,"_","DE/")
+dir.create(output.dir.DE.name)
+
+Output_DE_gene_rMAT_FDR=paste0(output.dir.DE.name,"DE_gene_rMAT_FDR.xls")
+Output_DE_gene_rMAT_p_inc=paste0(output.dir.DE.name,"GO_gene_rMAT_p_inc.xls")
 ```
 
 # Get counts for gene, exon and splicing junctions
@@ -168,13 +187,13 @@ RE.cft.gene<-OutputCatBasedPwf(Gene.non.coding.GO$pwf,gene_model=gene.model,gene
 
 For differential exon and splicing usage analysis, the count file for exons and splicing junctions are used as input to get differential
 usage results with GetResultsFromJunctionSeq function in GOSJ R package:
-```{r GetResultsFromJunctionSeq,eval=T,echo=TRUE,cache=TRUE}
+```{r GetResultsFromJunctionSeq,eval=F,echo=TRUE,cache=TRUE}
 
-decoder <- read.table(paste0(input.dir.name,decode.file),header=TRUE,stringsAsFactors=FALSE)
-countFiles <- paste0(input.dir.name,decoder$sample.ID,"/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt")
-design <- data.frame(condition = factor(decoder$group.ID))
+#decoder <- read.table(paste0(input.dir.name,decode.file),header=TRUE,stringsAsFactors=FALSE)
+#countFiles <- paste0(input.dir.name,decoder$sample.ID,"/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt")
+#design <- data.frame(condition = factor(decoder$group.ID))
 
-jscs.counts = readJunctionSeqCounts(countfiles = countFiles,samplenames = decoder$sample.ID,design = design,flat.gff.file = gff.file)
+#jscs.counts = readJunctionSeqCounts(countfiles = countFiles,samplenames = decoder$sample.ID,design = design,flat.gff.file = gff.file)
 
 
 Re.PJ<-GetResultsFromJunctionSeq(input.dir.name,decode.file,sj.exon.count.file,gff.file)
@@ -185,7 +204,7 @@ Re.PJ<-GetResultsFromJunctionSeq(input.dir.name,decode.file,sj.exon.count.file,g
 
 From the resutls of differential exons and splicing junctions usage(Re.PJ), we generate genewise results using makeGeneWiseTable function
 in GOSJ R package:
-```{r makeGeneWiseTable,eval=TRUE,echo=TRUE,cache=TRUE}
+```{r makeGeneWiseTable,eval=F,echo=TRUE,cache=TRUE}
 #load(paste0(input.dir.name,junctionSeq.output.save))
 re.PJ.gene.based<-makeGeneWiseTable(Re.PJ,gene.list=unique(as.character(fData(Re.PJ)$geneID)))
 ```
@@ -194,15 +213,18 @@ To show some results of genewise resutls:
 knitr::kable(head(pData(re.PJ.gene.based)))
 ```
 
-Use genewise results to perform GO and pathway analysis
-```{r cp_and_cft,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+#Gene Ontology(GO) enrichment and pathway analysis
+
+* Use genewise results to perform GO and pathway analysis
+
+```{r cp_and_cft,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 RE.exon.sj.all.gene<-OutputGOBasedDEfromFeatures2(re.PJ.gene.based,gene.model,feature.based.ad.by.SJ.GO.output.file)
 Re.pwf.exon.sj<-GetPwfUseReformatedData(ReformatData(re.PJ.gene.based),ad="exon_SJ",sub_feature=NULL,0.05)
 RE.cp<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.cat.cp.mouse,Output_file=feature.based.ad.by.SJ.ca.path.output.file)
 RE.cft<-OutputCatBasedPwf(Re.pwf.exon.sj,gene_model=gene.model,gene_2_cat=gene.2.cat.tft.mouse,Output_file=feature.based.ad.by.SJ.tft.output.file)
 ```
 
-Draw bar plot for GO term analysis
+* Draw bar plot for GO term analysis
 ```{r bar_plot,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
 x=RE.exon.sj.all.gene[1:10,1:7]
 x$term <- factor(x$term,levels = x$term[order(x$over_represented_pvalue_adjusted,decreasing = TRUE)])
@@ -211,10 +233,10 @@ negative_log10p=-log10(x$over_represented_pvalue_adjusted)
 ggplot(x, aes(x=Function, y=negative_log10p,fill=factor(x$category)))+geom_bar(stat="identity")+geom_hline(yintercept = -log10(0.05))+coord_flip()
 ```
 
-# Analysis using the redefined DE gene list based on Fold change and p-value of features
+* Analysis using the redefined DE gene list based on Fold change and p-value of features
 
 Redefine DE genes based on features
-```{r output_DE_genes_from_feature,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+```{r output_DE_genes_from_feature,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 head(Re.pwf.exon.sj)
 dim(Re.pwf.exon.sj)
 re.PJ.gene.based.feature<-ReformatData(re.PJ.gene.based)
@@ -226,16 +248,16 @@ colnames(DE.gene.from.feature)<-c("geneSymbol","geneID")
 re.PJ.gene.based.feature.DE<-merge(re.PJ.gene.based.feature,DE.gene.from.feature,by="geneID")
 
 table.based.RE.PJ<-fData(Re.PJ)
+#
+#names(table.based.RE.PJ)
 
-names(table.based.RE.PJ)
+#head(fData(Re.PJ)$testable & (! is.na(fData(Re.PJ)$pvalue)))
 
-head(fData(Re.PJ)$testable & (! is.na(fData(Re.PJ)$pvalue)))
-
-rep(NA,nrow(fData(Re.PJ)))
+#rep(NA,nrow(fData(Re.PJ)))
 
 padjusfilter<-p.adjust(fData(Re.PJ)$pvalue[fData(Re.PJ)$testable] , method = "BH")
 
-head(cbind(fData(Re.PJ)$padjust_noFilter[fData(Re.PJ)$testable],padjusfilter))
+#head(cbind(fData(Re.PJ)$padjust_noFilter[fData(Re.PJ)$testable],padjusfilter))
 
 re.PJ.based.feature.DE<-merge(table.based.RE.PJ,DE.gene.from.feature,by="geneID")
 
@@ -252,23 +274,23 @@ dataset2<- re.PJ.gene.based.feature.DE
     sapply(dataset3[sapply(dataset3, is.list)],
            function(x)sapply(x, function(y) paste(unlist(y),collapse=", ")))
   
-  head(table.based.RE.PJ)
+#  head(table.based.RE.PJ)
   
-  grep("ENSMUSG00000026563",as.character(table.based.RE.PJ$geneID))
+#  grep("ENSMUSG00000026563",as.character(table.based.RE.PJ$geneID))
   
-table.based.RE.PJ[grep("ENSMUSG00000026563",as.character(table.based.RE.PJ$geneID)),]
+#table.based.RE.PJ[grep("ENSMUSG00000026563",as.character(table.based.RE.PJ$geneID)),]
            
   gene.ENSMUSG00000000693<-table.based.RE.PJ[grep("ENSMUSG00000000693",as.character(table.based.RE.PJ$geneID)),c(1,2,11,12,19,20)]
   
-  head(cbind(gene.ENSMUSG00000000693,p.adjust(gene.ENSMUSG00000000693$pvalue,method="fdr")))
+#  head(cbind(gene.ENSMUSG00000000693,p.adjust(gene.ENSMUSG00000000693$pvalue,method="fdr")))
   
-  dim(gene.ENSMUSG00000000693)
+#  dim(gene.ENSMUSG00000000693)
 
   write.table(dataset3[order(dataset3$geneWisePadj),],file=Output_DE_gene_file_feature_all_feature_based,row.names = FALSE,quote=FALSE,sep="\t")
 
 ```
 
-```{r genewiseFDR,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+```{r genewiseFDR,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 gene.1<-table.based.RE.PJ[which(table.based.RE.PJ[,1]=="ENSMUSG00000026563+ENSMUSG00000040596+ENSMUSG00000089853+ENSMUSG00000103400"),]
 
 data.perGene.1<-JS.perGeneQValue(table.based.RE.PJ$pvalue,table.based.RE.PJ$testable,table.based.RE.PJ$geneID,method = JS.perGeneQValueExact)
@@ -279,8 +301,9 @@ length(data.perGene.1)
 table.based.RE.PJ[which(table.based.RE.PJ[,1]=="ENSMUSG00000000001"),]
 ```
 
-To use the DE genes defined by fold change and  p-value of each feature
-```{r DE_gene_feature eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+* To use the DE genes defined by Fold Change(FC>2) and  p-value of each feature
+
+```{r DE_gene_feature,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,1,0.05,outputfile_DGE_FC_P_geneWise)
 
 #grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
@@ -296,8 +319,9 @@ RE.cft.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.m
 
 ```
 
-To use the DE genes defined by fold change and  p-value of each feature
-```{r DE_gene_feature_new_cutoff, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+* To use the DE genes defined by Fold Change(FC>1.5) and  p-value of each feature
+
+```{r DE_gene_feature_new_cutoff, eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 
 LabelGenesWithFeature<-LabelGeneBasedFeature(Re.PJ,0.58,0.5,outputfile_LabelGeneBasedFeature)
 
@@ -314,7 +338,7 @@ RE.cft.redefine<-OutputCatBasedPwf(R_GO_term_FC_p_feature[[2]],gene_model=gene.m
 ```
 
 To use the DE genes defined by fold change and  p-value of each feature, and use GO:BP only to perform enrichment analysis
-```{r DE_gene_feature_GO_BP_only, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+```{r DE_gene_feature_GO_BP_only, eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 
 Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based)
 
@@ -324,15 +348,18 @@ R_GO_BP_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.F
 unique(unlist(R_GO_BP_term_FC_p_feature[[1]]$DEgene_symbol))
 ```
 
-```{r read_PJ_data, eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+```{r read_PJ_data, eval=F,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
 GO.rMAT<-read.xls("/media/H_driver/PJ/rMAT/pHamard_MATS-selected-re-run-exon-centric/pHamard_MATS-selected-re-run-exon-centric/MATS-1-20-inclusion-all-GO_Biological_Process_2015_table.xlsx")
 length(unique(unlist(strsplit(GO.rMAT$Genes,split=";"))))
 ```
 
-To use the DE genes defined by fold change and  p-value of each feature,geneWiseFDR and rMAT
+* To use the DE genes defined by fold change(FC>1.5) and  p-value of each feature,geneWiseFDR and rMAT
 
-```{r DE_gene_feature_geneWise_rMAT eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+```{r DE_gene_feature_geneWise_rMAT,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
 Re.PJ.selected.feature.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,0.58,0.05,outputfile_DGE_FC_P_geneWise)
+
+length(unique(as.character(Re.PJ.selected.feature.FC.p[[1]][which(Re.PJ.selected.feature.FC.p[[1]]$DE_or_not_rMAT_based==1),1])))
+
 
 #grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
 R_GO_term_FC_p_feature<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.FC.p,gene.model,Output_GO_BP_use_DE_gene_use_FC_p_of_feature_058_2)
@@ -356,9 +383,9 @@ R_GO_term.feature.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.
 
 ```
 
-To use the DE genes defined by 2 fold change and p-value of each feature,geneWiseFDR and rMAT
+* To use the DE genes defined by Fold Change(FC>2) and p-value of each feature,geneWiseFDR and rMAT
 
-```{r DE_gene_feature_geneWise_rMAT_2_fold_change eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+```{r DE_gene_feature_geneWise_rMAT_2_fold_change,eval=F,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
 Re.PJ.selected.feature.2.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,1,0.05,outputfile_DGE_2_FC_P_geneWise)
 
 # #grep("ENSMUSG00000026563",Re.PJ.selected.feature.FC.p$geneID)
@@ -384,9 +411,157 @@ R_GO_term.feature.genewise<-OutputGOBasedDEfromFeatures3(Re.PJ.selected.feature.
 
 ```
 
+#Compare DE from PJ with DE we got from PJ files
 
-To save all results we got so far
-```{r save_all eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
-savehistory(file=paste0(input.dir.name,"re_save_",junctionSeq.output.save.history))
-save.image(file=paste0(input.dir.name,"re_save_",junctionSeq.output.save))
+* PJ input:
+
+```{r DE_from_PJ,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=F}
+DE.from.PJ.input.file="/media/H_driver/PJ/Results/SE.MATS.ReadsOnTargetAndJunctionCounts.Neg_WTvKO_c_001_0_20_inclusion_p_0_05_from_PJ.xlsx"
+DE.from.PJ<-read.xls(DE.from.PJ.input.file,header=T)
+dim(DE.from.PJ)
+length(unique(as.character(DE.from.PJ$geneSymbol)))
+```
+
+* Our input:
+
+```{r DE_from_PJ_files_we_got,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=F}
+dir.name.rMAT="/media/H_driver/PJ/rMAT/pHamard_MATS-selected-re-run-exon-centric/pHamard_MATS-selected-re-run-exon-centric/Neg_WTvKO_c0.01/"
+input.file.pattern="*Neg_WTvKO_c0.01.txt"
+
+file.list<-paste0(dir.name.rMAT,dir(dir.name.rMAT))
+print(file.list[19])
+
+re.Data<-read.table(file.list[19],header = T)
+names(re.Data)
+DE.defined.by.p.IncLevelDifference<-re.Data[which(re.Data$PValue<0.05&abs(re.Data$IncLevelDifference)>0.20),]
+DE.defined.by.p.IncLevelDifference.geneSymbol<-unique(as.character(DE.defined.by.p.IncLevelDifference$geneSymbol))
+length(DE.defined.by.p.IncLevelDifference.geneSymbol)
+
+#Match data set to DE list from PJ
+DE.from.PJ.2.H.driver<-re.Data[(which(as.character(re.Data$geneSymbol) %in% unique(as.character(DE.from.PJ$geneSymbol)))),c(1,2,3,19,20,23)]
+
+#dim(DE.from.PJ.2.H.driver)
+DE.from.PJ.2.H.driver.selected.events<-DE.from.PJ.2.H.driver[which(DE.from.PJ.2.H.driver$PValue<0.05&abs(DE.from.PJ.2.H.driver$IncLevelDifference)>=0.20),]
+dim(DE.from.PJ.2.H.driver.selected.events)
+
+length(unique(as.character(DE.from.PJ.2.H.driver.selected.events$geneSymbol)))
+
+setdiff(unique(as.character(DE.from.PJ.2.H.driver.selected.events$geneSymbol)),unique(as.character(DE.from.PJ$geneSymbol)))
+
+setdiff(DE.defined.by.p.IncLevelDifference.geneSymbol,unique(as.character(DE.from.PJ$geneSymbol)))
+
+knitr::kable(DE.from.PJ.2.H.driver.selected.events)
+
+```
+
+#Generate DE list 
+```{r re.rMAT,eval=TRUE,message=F,warning=F,results='asis',echo=TRUE,cache=TRUE}
+#load("/media/H_driver/PJ/JunctionRe.RData")
+qDe_defined_by_what="P_and_inclusion"
+re.rMAT<-ProcessOutputFilesFrom_rMATS(dir.name.rMAT,input.file.pattern,De_defined_by_what)
+
+Re.PJ.selected.feature.2.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,"SE",1,0.05,output.dir.DE.name)
+
+```
+
+#DE defined by FDR from rMAT(FDR<0.05)
+```{r DE_FDR}
+DE.FDR.rMAT<-gene.model[which(gene.model$ensembl_gene_id %in% Re.PJ.selected.feature.2.FC.p$DGE.rMAT),]
+DE.FDR.rMAT
+write.table(DE.FDR.rMAT,file=Output_DE_gene_rMAT_FDR,row.names = FALSE,quote=FALSE,sep="\t")
+```
+
+#DE defined by p value and IncLevelDifference from rMAT(p value <0.05 and IncLevelDifference>0.2)
+```{r DE_p_inc}
+DE.p.inc.rMAT<-gene.model[which(gene.model$ensembl_gene_id %in% Re.PJ.selected.feature.2.FC.p$DGE.p.IncLevelDifference),]
+DE.p.inc.rMAT
+write.table(DE.p.inc.rMAT,file=Output_DE_gene_rMAT_p_inc,row.names = FALSE,quote=FALSE,sep="\t")
+```
+
+<!-- #Overlap on DE between JunctionSeq,rMAT(FDR<0.05) -->
+
+<!-- * red: DE defined the genewise FDR of each gene derived from p values of all features within gene from JunctionSeq   -->
+<!-- * orange:DE defined by Fold Change(FC) and p value features(exons and splicing junctions)(FC>2 and p value <0.05) -->
+<!-- * blue:  DE defined by FDR of each gene in rMAT(FRD <0.05) -->
+
+<!-- ```{r JunctionSeq_rMAT_1 ,eval=TRUE,message=F,warning=F,results='asis',echo=F,cache=F} -->
+<!-- venn.plot <- venn.diagram( -->
+<!--     x = Re.PJ.selected.feature.2.FC.p[c(2,3,4)], -->
+<!--     filename = NULL, -->
+<!--     col = "black", -->
+<!--     lty = "dotted", -->
+<!--     lwd = 2, -->
+<!--     fill = c("red", "orange", "blue"), -->
+<!--     alpha = 0.50, -->
+<!--     label.col = c(rep("white",7)), -->
+<!--     cex = 1, -->
+<!--     fontfamily = "serif", -->
+<!--     fontface = "bold", -->
+<!--     cat.col = c("red", "orange", "blue"), -->
+<!--     cat.cex = 0.8, -->
+<!--     cat.fontfamily = "serif" -->
+<!--   ) -->
+<!-- grid.draw(venn.plot); -->
+<!-- #dev.off() -->
+<!-- ``` -->
+
+#Overlap on DE between JunctionSeq, rMAT(p<0.05 and incl> 0.20)
+
+* red: DE defined the genewise FDR of each gene derived from p values of all features within gene from JunctionSeq  
+* orange:DE defined by Fold Change(FC) and p value features(exons and splicing junctions)(FC>2 and p value <0.05)
+* blue:  DE defined by p value and IncLevelDifference from rMAT(p value <0.05 and IncLevelDifference>0.2)
+
+```{r JunctionSeq_rMAT_2,eval=TRUE,message=F,warning=F,results='asis',echo=F,cache=F}
+venn.plot <- venn.diagram(
+    x = Re.PJ.selected.feature.2.FC.p[c(2,3,4)],
+    filename = NULL,
+    col = "black",
+    lty = "dotted",
+    lwd = 2,
+    fill = c("red", "orange", "blue"),
+    alpha = 0.50,
+    label.col = c(rep("white",7)),
+    cex = 1,
+    fontfamily = "serif",
+    fontface = "bold",
+    cat.col = c("red", "orange", "blue"),
+    cat.cex = 0.8,
+    cat.fontfamily = "serif"
+  )
+grid.draw(venn.plot);
+#dev.off()
+```
+
+```{r JunctionSeq_rMAT_GO_output,eval=TRUE,message=F,warning=F,results='asis',echo=T,cache=F}
+output.dir.name="/media/H_driver/PJ/Results/"
+output.dir.name.rMAT_SE_based=paste0(output.dir.name,"test_7_25_2016","_","Feature_GeneWise_rMAT_SE_based/")
+dir.create(output.dir.name.rMAT_SE_based)
+sink(paste0(output.dir.name.rMAT_SE_based,"Output_test.txt"))
+Re.combine.3.methods.rMAT.SE<-Combine3Re(Re.PJ, re.PJ.gene.based, re.rMAT,gene.model,output.dir.name.rMAT_SE_based)
+sink()
+```
+
+# Check the relationship between DE and numner of splicing junction
+
+* DE (defined by FC>2 and p value <0.05 of features from JunctionSeq) vs. number of splicing junctions
+```{r DE_JunctionSeq_p_FC_vs_SJ,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
+logi.hist.plot(as.numeric(Re.combine.3.methods.rMAT.SE$Feature[[2]]$bias.data),Re.combine.3.methods.rMAT.SE$Feature[[2]]$DEgenes,boxp=TRUE,type="hist",col="gray",xlabel="Number of splicing junction",counts=T)
+```
+
+* DE (defined genewise FDR(<0.05) of features from JunctionSeq) vs. number of splicng junctions
+```{r JunctionSeq_DE_FDR_vs_SJ,eval=F,message=F,warning=F,results='asis',echo=F,cache=F}
+logi.hist.plot(as.numeric(Re.combine.3.methods.rMAT.SE$GeneWise[[2]]$bias.data),Re.combine.3.methods.rMAT.SE$GeneWise[[2]]$DEgenes,boxp=TRUE,type="hist",col="gray",xlabel="Number of splicing junction",counts=T)
+```
+
+* DE (defined by splicing events(p value < 0.05 and inclusion rate difference > 0.20 or < -0.20 from rMAT) vs. number of splicng junctions
+```{r rMAT_DE_SJ,eval=TRUE,message=F,warning=F,results='asis',echo=F,cache=F}
+logi.hist.plot(as.numeric(Re.combine.3.methods.rMAT.SE$rMAT[[2]]$bias.data),Re.combine.3.methods.rMAT.SE$rMAT[[2]]$DEgenes,boxp=TRUE,type="hist",col="gray",xlabel="Number of splicing junction",counts=T)
+```
+
+
+```{r save_all,eval=TRUE,message=F,warning=F,results='asis',echo=F,cache=F}
+#To save all results we got so far
+#savehistory(file=paste0(input.dir.name,"re_save_",time.string,"_",junctionSeq.output.save.history))
+save.image(file=paste0(input.dir.name,"re_save_",time.string,"_",junctionSeq.output.save))
+#ls()
 ```

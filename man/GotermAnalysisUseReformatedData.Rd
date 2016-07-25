@@ -5,7 +5,7 @@
 \title{GotermAnalysisUseReformatedData}
 \usage{
 GotermAnalysisUseReformatedData(re.gene.based, ad = "GL",
-  sub_feature = NULL, threshold, gene_model)
+  sub_feature = NULL, threshold, genomeID, geneID, gene_model)
 }
 \arguments{
 \item{threshold}{}

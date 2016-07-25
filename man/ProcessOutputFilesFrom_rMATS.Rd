@@ -4,7 +4,7 @@
 \alias{ProcessOutputFilesFrom_rMATS}
 \title{ProcessOutputFilesFrom_rMATS}
 \usage{
-ProcessOutputFilesFrom_rMATS(dir.name, input.file.pattern)
+ProcessOutputFilesFrom_rMATS(dir.name, input.file.pattern, De_defined_by_what)
 }
 \arguments{
 \item{input_file}{}
