@@ -5,7 +5,7 @@
 \title{Select_DE_gene_based_on_Feature}
 \usage{
 Select_DE_gene_basd_on_Feature(Re.PJ, re.PJ.gene.based, re.rMAT, splicing_type,
-  cutoff_FC, cutoff_P_value, venn_output)
+  cutoff_FC, cutoff_P_value, gene_model, venn_output)
 }
 \arguments{
 \item{splicing_type:}{there are 5 splicing types from rMAT, need to choose one}

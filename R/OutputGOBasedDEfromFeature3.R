@@ -21,7 +21,7 @@ OutputGOBasedDEfromFeatures3<-function(re.PJ.gene.based,DE_type,gene.model,Outpu
 
   re2<-re.PJ.gene.based
 
-  Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseFeatureDefineDE(re2,ad="exon_SJ",sub_feature=NULL,DE_define=DE_type,gene_model=gene.model)
+  Re.Go.adjusted.by.exon.SJ<-GotermAnalysisUseFeatureDefineDE(re2,ad="exon_SJ",sub_feature=NULL,DE_define=DE_type,gene_model=gene.model,Output_file_dir)
 
   #head(Re.Go.adjusted.by.exon.SJ[[1]])
 

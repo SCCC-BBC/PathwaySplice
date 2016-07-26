@@ -7,7 +7,7 @@
 GotermAnalysisUseFeatureDefineDE(re.gene.based, ad = "GL",
   sub_feature = NULL, DE_define = c("Feature", "GeneWise", "rMAT",
   "FeatureGeneWise", "FeaturerMAT", "GeneWiserMAT", "FeatureGeneWiseRMAT"),
-  gene_model)
+  gene_model, Output_file_dir)
 }
 \arguments{
 \item{gene_model}{}

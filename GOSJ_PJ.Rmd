@@ -534,7 +534,7 @@ grid.draw(venn.plot);
 
 ```{r JunctionSeq_rMAT_GO_output,eval=TRUE,message=F,warning=F,results='asis',echo=T,cache=F}
 output.dir.name="/media/H_driver/PJ/Results/"
-output.dir.name.rMAT_SE_based=paste0(output.dir.name,"test_7_25_2016","_","Feature_GeneWise_rMAT_SE_based/")
+output.dir.name.rMAT_SE_based=paste0(output.dir.name,"test_7_26_2016","_","Feature_GeneWise_rMAT_SE_based/")
 dir.create(output.dir.name.rMAT_SE_based)
 sink(paste0(output.dir.name.rMAT_SE_based,"Output_test.txt"))
 Re.combine.3.methods.rMAT.SE<-Combine3Re(Re.PJ, re.PJ.gene.based, re.rMAT,gene.model,output.dir.name.rMAT_SE_based)

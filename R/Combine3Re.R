@@ -26,7 +26,7 @@
 #'
 Combine3Re <- function(Re.PJ, re.PJ.gene.based, re.rMAT,gene.model, Output_files_dir) {
 
-  Re.PJ.selected.feature.2.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,"SE",1,0.05,Output_files_dir)
+  Re.PJ.selected.feature.2.FC.p<-Select_DE_gene_basd_on_Feature(Re.PJ,re.PJ.gene.based,re.rMAT,"SE",1,0.05,gene.model,Output_files_dir)
 
   DE_type<-c("Feature","GeneWise","rMAT","FeatureGeneWise","FeaturerMAT","GeneWiserMAT","FeatureGeneWiseRMAT")
 

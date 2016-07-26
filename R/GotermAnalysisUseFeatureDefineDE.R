@@ -20,7 +20,7 @@
 #' Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
 #' re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
 #'
-GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NULL,DE_define=c("Feature","GeneWise","rMAT","FeatureGeneWise","FeaturerMAT","GeneWiserMAT","FeatureGeneWiseRMAT"),gene_model){
+GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NULL,DE_define=c("Feature","GeneWise","rMAT","FeatureGeneWise","FeaturerMAT","GeneWiserMAT","FeatureGeneWiseRMAT"),gene_model,Output_file_dir){
 
   #Data4Goterm<-pData(re.gene.based)
 
@@ -113,7 +113,7 @@ GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NUL
 
   venn.plot <- venn.diagram(
     x = Re4_temp[c(1,2)],
-    filename = paste0(DE_define,"_overlap_with_DE_from_GO.tiff"),
+    filename = paste0(Output_file_dir,DE_define,"_overlap_with_DE_from_GO.tiff"),
     col = "black",
     lty = "dotted",
     lwd = 2,
