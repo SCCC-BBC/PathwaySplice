@@ -1,6 +1,6 @@
 #' Plot the probability Weighting Function
 #'
-#' @param pwf
+#' @param pwf: The plotPWF function takes input a vector of genes (with label 1 as significant and 0 otherwise), and the bias factor to be adjusted (e.g. number of splice junctions in the genes). The output of the function is a figure that illustrates the relationship between bias factor and proportion of significant genes. The size of the gene set size (i.e. number of genes in each gene bin) on the x-axis can be adjusted by user. 
 #' @param binsize
 #' @param pwf_col
 #' @param pwf_lwd
