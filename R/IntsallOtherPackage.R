@@ -35,13 +35,15 @@
 # biocLite("ReportingTools")
 # library(ReportingTools)
 # biocLite("hgu95av2.db")
+# library(hgu95av2.db")
 # install.packages("devtools")
 # library(devtools)
 # install.packages("rgl")
 # library(rgl)
 # install.packages("rgl")
 # install.packages("qpcR")
-
+# library(qpcR)
+# biocLite("ggbio")
 
 # gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)
 # save(gene.model,file="~/GOSJ/data/gene.model.RData")
