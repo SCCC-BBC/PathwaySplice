@@ -1,6 +1,7 @@
 #' GotermAnalysisUseFeatureDefineDE
-#' 
-#' Based on genewise results to perform GO term analysis using DGEs defined by different criterion
+#' Descrption: This function computes statistical significance of GO terms, given a list of significant genes. These significant genes can be directly from differntial splicing analysis software such as rMat, DEXSeq or JunctionSeq. 
+
+#' Based on genewise results to perform Go term analysis using DGEs defined by different criterion
 #' @param Data4Goterm
 #' @param ad
 #' @param sub_feature
