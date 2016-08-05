@@ -94,7 +94,7 @@ GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NUL
     pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
   }
 
-  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",test.cats=c("GO:BP"),gene.model=gene_model,use_genes_without_cat=TRUE)
+  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene_model,test.cats=c("GO:BP"),use_genes_without_cat=TRUE)
 
   #GO.wall.DE_interest=goseq(pwf.DE_interest,"mm10","ensGene",test.cats=c("GO:BP"),use_genes_without_cat=TRUE)
 
