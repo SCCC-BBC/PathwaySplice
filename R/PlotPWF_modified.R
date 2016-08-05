@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+
 plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.",
           ylab = "Proportion DE", ...)
 {
