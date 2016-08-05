@@ -1,5 +1,6 @@
 #' goseq2
-#'
+#'Description: goseq2 function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
+
 #' Modifying goseq to generate GO term with the listed DEgene
 #'
 #' @param pwf: probability weight function
