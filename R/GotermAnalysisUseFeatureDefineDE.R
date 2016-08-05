@@ -1,5 +1,6 @@
 #' GotermAnalysisUseFeatureDefineDE
-#'
+#' 
+#' Based on genewise results to perform GO term analysis using DGE defined by different criteia   
 #' @param Data4Goterm
 #' @param ad
 #' @param sub_feature
