@@ -35,11 +35,9 @@ callQoRT<-function(input_file,runing_cmd,gtf_file){
   outfile=paste("",sapply(strsplit(input_file,split="\\/"),"[[",2),sapply(strsplit(input_file,split="\\/"),"[[",3),
                 sapply(strsplit(input_file,split="\\/"),"[[",4),sapply(strsplit(input_file,split="\\/"),"[[",6),sep="/")
 
-
   cmd2=paste(runing_cmd,inputfile,outfile,sep=" ")
 
   print(cmd2)
-
 
   system(cmd2, intern = TRUE, ignore.stderr = TRUE)
 
