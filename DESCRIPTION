@@ -1,11 +1,11 @@
-Package: GOSJ
+Package: PathwaySplice
 Type: Package
 Title: A R package for GO term enrichment analysis with the flexible bias factor
     adjustment
 Version: 0.1.0
 Author: Aimin Yan
 Maintainer: Aimin Yan <axy148@miami.edu>
-Description: GOSJ is used to adjust the bias from different number of splicing juctions
+Description: PathwaySplice is used to adjust the bias from different number of splicing juctions
 License: LGPL(>=2)
 LazyData: TRUE
 RoxygenNote: 5.0.1
