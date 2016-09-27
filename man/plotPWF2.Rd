@@ -25,6 +25,8 @@ xlab = "Biased Data in <binsize> gene bins.", ylab = "Proportion DE", ...)
 
 \item{...}{}
 
+\item{pwf:}{The first step of the pathway analysis is to assess if there is any systematic bias of the significant genes. The plotPWF function takes input a vector of genes (with label 1 as significant and 0 otherwise), and the bias factor to be adjusted (e.g. number of splice junctions in the genes). The output of the function is a figure that illustrates the relationship between bias factor and proportion of significant genes. The size of the gene set size (i.e. number of genes in each gene bin) on the x-axis can be adjusted by user.}
+
 \item{...}{}
 }
 \description{

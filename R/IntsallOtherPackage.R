@@ -3,6 +3,7 @@
 # source("http://bioconductor.org/biocLite.R")
 # source("https://bioconductor.org/biocLite.R")
 # biocLite("biomaRt")
+# biocLite("cummeRbund")
 # library(biomaRt)
 # install.packages("roxygen2")
 # library(roxygen2)
@@ -44,6 +45,7 @@
 # install.packages("qpcR")
 # library(qpcR)
 # biocLite("ggbio")
+# library(cummeRbund)
 
 # gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)
 # save(gene.model,file="~/GOSJ/data/gene.model.RData")

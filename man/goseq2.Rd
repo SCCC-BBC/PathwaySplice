@@ -2,7 +2,9 @@
 % Please edit documentation in R/goseq2.R
 \name{goseq2}
 \alias{goseq2}
-\title{goseq2}
+\title{goseq2
+Description: goseq2 function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
+Modifying goseq to generate GO term with the listed DEgene}
 \usage{
 goseq2(pwf, genome, id, gene.model, gene2cat = NULL, test.cats = c("GO:CC",
   "GO:BP", "GO:MF"), method = "Wallenius", repcnt = 2000,
@@ -26,6 +28,8 @@ goseq2(pwf, genome, id, gene.model, gene2cat = NULL, test.cats = c("GO:CC",
 \item{use_genes_without_cat:}{whether using genes without category or not}
 }
 \description{
+goseq2
+Description: goseq2 function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
 Modifying goseq to generate GO term with the listed DEgene
 }
 \examples{

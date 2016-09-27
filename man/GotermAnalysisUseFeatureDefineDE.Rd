@@ -2,7 +2,9 @@
 % Please edit documentation in R/GotermAnalysisUseFeatureDefineDE.R
 \name{GotermAnalysisUseFeatureDefineDE}
 \alias{GotermAnalysisUseFeatureDefineDE}
-\title{GotermAnalysisUseFeatureDefineDE}
+\title{GotermAnalysisUseFeatureDefineDE
+Descrption: This function computes statistical significance of GO terms, given a list of significant genes. These significant genes can be directly from differntial splicing analysis software such as rMat, DEXSeq or JunctionSeq. 
+Based on genewise results to perform Go term analysis using DGEs defined by different criterion}
 \usage{
 GotermAnalysisUseFeatureDefineDE(re.gene.based, ad = "GL",
   sub_feature = NULL, DE_define = c("Feature", "GeneWise", "rMAT",
@@ -14,6 +16,8 @@ GotermAnalysisUseFeatureDefineDE(re.gene.based, ad = "GL",
 }
 \description{
 GotermAnalysisUseFeatureDefineDE
+Descrption: This function computes statistical significance of GO terms, given a list of significant genes. These significant genes can be directly from differntial splicing analysis software such as rMat, DEXSeq or JunctionSeq. 
+Based on genewise results to perform Go term analysis using DGEs defined by different criterion
 }
 \examples{
 
