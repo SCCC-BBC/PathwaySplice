@@ -1,6 +1,6 @@
 Package: PathwaySplice
 Type: Package
-Title: A R package for GO term enrichment analysis with the flexible bias factor
+Title: A R package for GO term and pathway enrichment analysis with the flexible bias factor
     adjustment
 Version: 0.1.0
 Author: Aimin Yan

@@ -1,3 +1,5 @@
+#' @ callQoRT
+#'
 #' @ Use QoRTs to get the count of subfeatures in each gene
 #'
 #' @ cmd1
@@ -10,6 +12,7 @@
 #' @examples
 #'
 #' #Input files
+#' dir.name="/media/H_driver/Aimin_project/GOSJ_STAR_Bam/"
 #'
 #' dir.name="/media/H_driver/Aimin_project/GOSJ_STAR_Bam/"
 #' file.name=dir(dir.name,recursive = TRUE,pattern="sorted.bam")
@@ -17,6 +20,7 @@
 #' file.name.selected<-file.name.whole
 #' file.name.selected.2<-as.list(file.name.selected)
 #' names(file.name.selected.2)=sapply(strsplit(file.name.selected,split="\\/"),"[[",6)
+
 #' file.name.selected.3<-file.name.selected.2
 #'
 #' cmd2="java -Xmx5000M -jar /home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease/QoRTs.jar QC --noGzipOutput"
@@ -32,11 +36,9 @@ callQoRT<-function(input_file,runing_cmd,gtf_file){
   outfile=paste("",sapply(strsplit(input_file,split="\\/"),"[[",2),sapply(strsplit(input_file,split="\\/"),"[[",3),
                 sapply(strsplit(input_file,split="\\/"),"[[",4),sapply(strsplit(input_file,split="\\/"),"[[",6),sep="/")
 
-
   cmd2=paste(runing_cmd,inputfile,outfile,sep=" ")
 
   print(cmd2)
-
 
   system(cmd2, intern = TRUE, ignore.stderr = TRUE)
 
