@@ -2,12 +2,22 @@
 % Please edit documentation in R/callQoRT.R
 \name{callQoRT}
 \alias{callQoRT}
-\title{callQoRT}
+\title{{callQoRT}}
 \usage{
 callQoRT(input_file, runing_cmd, gtf_file)
 }
+\arguments{
+\item{{cmd1}}{}
+
+\item{{input}{bam file}}
+
+\item{{gene}{annotation file}}
+}
+\value{
+a list include counts for each sample
+}
 \description{
-callQoRT
+{Use QoRTs to get the count of subfeatures in each gene}
 }
 \examples{
 

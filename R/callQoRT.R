@@ -1,13 +1,16 @@
-#' @ callQoRT
+#' {callQoRT} 
+#' 
+#' {Use QoRTs to get the count of subfeatures in each gene}
 #'
-#' @ Use QoRTs to get the count of subfeatures in each gene
+#' @param  {cmd1}
+#' @param  {input bam file}
+#' @param  {gene annotation file}
+#' 
 #'
-#' @ cmd1
-#' @ inputfile:bam file, gene annotation file,
-#' @ outfile
-#'
-#' @return
-#' @export
+#' @return a list include counts for each sample
+#' 
+#' @export 
+#' 
 #'
 #' @examples
 #'
