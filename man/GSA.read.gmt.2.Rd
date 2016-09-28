@@ -2,7 +2,8 @@
 % Please edit documentation in R/GSA.read.gmt.2.R
 \name{GSA.read.gmt.2}
 \alias{GSA.read.gmt.2}
-\title{GSA.read.gmt.2}
+\title{GSA.read.gmt.2
+Descrption: In addition to GO terms, the GOSJ package can analyze other types of gene sets defined by users, for example, the gene sets in MSigDB database.The GSA.read.gmt.2 function takes input the gene sets in .gmt format, i.e. the first column is the pathway or gene set name, and the rest columns include gene names of the genes within the pathway. The gene names are specified in gene symbols.}
 \usage{
 GSA.read.gmt.2(filename)
 }
@@ -11,6 +12,7 @@ GSA.read.gmt.2(filename)
 }
 \description{
 GSA.read.gmt.2
+Descrption: In addition to GO terms, the GOSJ package can analyze other types of gene sets defined by users, for example, the gene sets in MSigDB database.The GSA.read.gmt.2 function takes input the gene sets in .gmt format, i.e. the first column is the pathway or gene set name, and the rest columns include gene names of the genes within the pathway. The gene names are specified in gene symbols.
 }
 \examples{
 
