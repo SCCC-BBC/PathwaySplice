@@ -30,6 +30,7 @@ InstallOtherPackage <- function() {
   biocLite("ggbio")
 
   #loading
+  library(DEXSeq)
   library(biomaRt)
   library(roxygen2)
   library(JunctionSeq)
