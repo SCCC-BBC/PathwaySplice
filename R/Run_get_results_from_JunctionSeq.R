@@ -11,26 +11,22 @@
 #'
 #' @examples
 #'
-#' # For Guoyan Project
-#' load("/Volumes/Bioinformatics\$/2015/Nimer_Cheng/1_29_2016.RData")
-#' dir.name="/Volumes/Bioinformatics$/2015/Nimer_Cheng/"
-#' file.sample="decoder.bySample.txt"
-#' file.count="_junction_seq_new_gtf_7/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-#' file.gff="Mus_musculus.GRCm38.83.JunctionSeq.flat.gff"
-#' Re<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
-#' head(fData(Re))
-#' save(Re,file="Re_Run_test_GOSJ.RData")
+#' # For example data set
 #'
-
-#' # For PJ project
-#' dir.name.PJ="/media/H_driver/PJ/"
-#' file.sample.PJ="decoder.bySample.rtf"
-#' file.count.PJ="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+#' dir.name="/media/H_driver/Aimin_project/"
 #'
-#' file.gff=paste0("/media/H_driver/2015/Nimer_Cheng/",file.gff)
-#' Re.PJ<-GetResultsFromJunctionSeq(dir.name.PJ,file.sample.PJ,file.count.PJ,file.gff)
+#' file.sample="decoder.bySample.Mut_WT_2.rtf"
+#' file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+#' file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 #'
-#' save(Re.PJ,file="/media/H_driver/PJ/PJ_jscs.RData")
+#' file.gff=paste0(dir.name,"GTF_Files/",file.gff)
+#'
+#' Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+#' save(Re.example,file=paste0(getwd(),"/data/example_Mut_WT.RData"))
+#'
+#' file.sample.2="decoder.bySample.Mut_HC_2.rtf"
+#' Re.example.Mut.HC<-GetResultsFromJunctionSeq(dir.name,file.sample.2,file.count,file.gff)
+#'
 #' buildAllPlots(jscs=jscs,outfile.prefix="./plots_based_on_DE_splice_site_gene1/",
 #' gene.list=gene.based.de.splice.site[1],use.plotting.device="png",plot.gene.level.expression=TRUE,sequencing.type="single-end");
 #'
@@ -53,12 +49,23 @@ print(countFiles)
 #Get annotation file
 #path.file.gff<-paste0(dir.name,file.gff)
 path.file.gff<-file.gff
-
 print(path.file.gff)
 
 #Analysis
-jscs.2<-runJunctionSeqAnalyses(sample.files= countFiles,sample.names= decoder.bySample$sample.ID,condition= decoder.bySample$group.ID,
-                             flat.gff.file=path.file.gff,nCores=1,verbose=TRUE,debug.mode=TRUE,use.multigene.aggregates = TRUE)
+#jscs.2<-runJunctionSeqAnalyses(sample.files= countFiles,sample.names= decoder.bySample$sample.ID,condition= decoder.bySample$group.ID,
+#                             flat.gff.file=path.file.gff,nCores=1,verbose=TRUE,debug.mode=TRUE,use.multigene.aggregates = TRUE)
+
+#Analysis using exonsOnly , and adjust Gender
+jscs.2<-runJunctionSeqAnalyses(sample.files= countFiles,sample.names= decoder.bySample$sample.ID,
+                               condition= decoder.bySample$group.ID,
+                               flat.gff.file=path.file.gff,
+                               analysis.type = "exonsOnly",nCores=1,
+                               use.covars = decoder.bySample[,"Gender",drop=F],
+                               test.formula0  = ~ sample + countbin + Gender : countbin,
+                               test.formula1  = ~ sample + countbin + Gender : countbin + condition : countbin,
+                               effect.formula = ~ condition + Gender + countbin + Gender : countbin + condition : countbin,
+                               geneLevel.formula = ~ Gender + condition,
+                               verbose=TRUE,debug.mode=TRUE,use.multigene.aggregates = TRUE)
 
 return(jscs.2)
 }
