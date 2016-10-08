@@ -25,10 +25,15 @@ file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 file.gff=paste0(dir.name,"GTF_Files/",file.gff)
 
 Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+
+Re.example.statistics<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+
+save(Re.example.statistics,file=paste0(getwd(),"/example_Mut_WT_statistics.RData"))
+
 save(Re.example,file=paste0(getwd(),"/data/example_Mut_WT.RData"))
 
 file.sample.2="decoder.bySample.Mut_HC_2.rtf"
-Re.example.Mut.HC<-GetResultsFromJunctionSeq(dir.name,file.sample.2,file.count,file.gff)
+Re.example.Mut.HC<-dir.name,file.sample.2,file.count,file.gff)
 
 buildAllPlots(jscs=jscs,outfile.prefix="./plots_based_on_DE_splice_site_gene1/",
 gene.list=gene.based.de.splice.site[1],use.plotting.device="png",plot.gene.level.expression=TRUE,sequencing.type="single-end");
