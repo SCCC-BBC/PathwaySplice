@@ -3,7 +3,7 @@ title: 'GOSJ: An R package for adjusting bias from gene structure on identifying
   expressed genes in RNA-Seq data analysis'
 author: "Aimin Yan"
 date: "May 13, 2016"
-output: pdf_document
+output: html_document
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
