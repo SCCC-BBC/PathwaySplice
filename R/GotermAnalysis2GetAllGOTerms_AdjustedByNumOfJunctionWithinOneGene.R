@@ -21,7 +21,8 @@
 #' Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
 #' re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
 #'
-#'
+#' Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
+#' mds,ad="exon_SJ",sub_feature="E",0.05,gene_model="hg19")
 #'
 GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,gene_model){
 
@@ -32,10 +33,13 @@ GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.g
   if(is.null(sub_feature)){Data4Goterm.sub_feature<-Data4Goterm}
   else{Data4Goterm.sub_feature<-Data4Goterm[grep(sub_feature,Data4Goterm[,8]),]}
 
-
   print(dim(Data4Goterm.sub_feature))
 
+  if(sub_feature=="J"){
   Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,11)]
+  }else{
+    Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,10)]
+  }
 
   print(dim(Data4Goterm.sub_feature.geneID.NumOfJunctions))
 
@@ -65,16 +69,16 @@ GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene<-function(re.g
   print(All.gene.id.index.2)
 
 if(ad=="GL"){
-pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
+pwf.DE_interest=nullp(All.gene.id.index.2,gene_model,"ensGene",plot.fit = FALSE)
 }
 else
 {
-pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
+pwf.DE_interest=nullp(All.gene.id.index.2,gene_model,"ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
 }
 
   #GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model,use_genes_without_cat=TRUE)
 
-  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model)
+  GO.wall.DE_interest=goseq2(pwf.DE_interest,gene_model,"ensGene",gene.model=gene_model)
   enriched.GO.DE_interest=GO.wall.DE_interest[p.adjust(GO.wall.DE_interest$over_represented_pvalue,method="BH")<threshold,]
   re<-list()
 
