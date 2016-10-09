@@ -13,14 +13,7 @@
 #'
 #' @examples
 #'
-#'
-#' Re.Go.adjusted.by.number.junction.2<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
-#' re.PJ.gene.based,ad="J","J",0.05,"Splice_junction_based")
-#'
-#' data.pwf2.SJs<-plotPWF2(Re.Go.adjusted.by.number.junction.2[[2]],binsize=30,xlab = "Number of SJs(<binsize> gene bins)")
-#'
-#' Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
-#' re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
+#'example.GO<-GotermAnalysisUseFeatureDefineDE(mds,ad="exon_SJ",sub_feature="E",DE_define="Feature",gene_model="hg19",Output_file_dir=paste0(getwd(),"/"))
 #'
 GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NULL,DE_define=c("Feature","GeneWise","rMAT","FeatureGeneWise","FeaturerMAT","GeneWiserMAT","FeatureGeneWiseRMAT"),gene_model,Output_file_dir){
 
@@ -33,8 +26,12 @@ GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NUL
 
   #print(dim(Data4Goterm.sub_feature))
 
+  if(sub_feature=="J"){
   Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,11)]
-
+  }else
+  {
+    Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,10)]
+  }
   #print(dim(Data4Goterm.sub_feature.geneID.NumOfJunctions))
 
   #Data4Goterm.sub_feature.Sig<-Data4Goterm.sub_feature[which(Data4Goterm.sub_feature[,7]<threshold),]
@@ -89,14 +86,14 @@ GotermAnalysisUseFeatureDefineDE<-function(re.gene.based,ad="GL",sub_feature=NUL
   #print(All.gene.id.index.2)
 
   if(ad=="GL"){
-    pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
+    pwf.DE_interest=nullp(All.gene.id.index.2,gene_model,"ensGene",plot.fit = FALSE)
   }
   else
   {
-    pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
+    pwf.DE_interest=nullp(All.gene.id.index.2,gene_model,"ensGene",bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
   }
 
-  GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene_model,test.cats=c("GO:BP"),use_genes_without_cat=TRUE)
+  GO.wall.DE_interest=goseq2(pwf.DE_interest,gene_model,"ensGene",gene_model,test.cats=c("GO:BP"),use_genes_without_cat=TRUE)
 
   #GO.wall.DE_interest=goseq(pwf.DE_interest,"mm10","ensGene",test.cats=c("GO:BP"),use_genes_without_cat=TRUE)
 
