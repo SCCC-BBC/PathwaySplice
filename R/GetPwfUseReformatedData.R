@@ -11,8 +11,8 @@
 #' @export
 #'
 #' @examples
-#' Re.pwf.exon.sj<-GetPwfUseReformatedData(ReformatData(re.PJ.gene.based),ad="exon_SJ",sub_feature=NULL,0.05)
-#'
+#' Re.pwf.exon.sj<-GetPwfUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05)
+#' 
 GetPwfUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold){
 
   Data4Goterm<-re.gene.based
@@ -20,7 +20,7 @@ GetPwfUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,thresho
   if(is.null(sub_feature)){Data4Goterm.sub_feature<-Data4Goterm}
   else{Data4Goterm.sub_feature<-Data4Goterm[grep(sub_feature,Data4Goterm[,8]),]}
 
-  Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,11)]
+  Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,10)]
 
   Data4Goterm.sub_feature.Sig<-Data4Goterm.sub_feature[which(Data4Goterm.sub_feature[,7]<threshold),]
 

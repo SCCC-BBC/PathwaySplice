@@ -16,5 +16,7 @@ Use reformated data to calculate probability weight function
 \examples{
 Re.pwf.exon.sj<-GetPwfUseReformatedData(ReformatData(re.PJ.gene.based),ad="exon_SJ",sub_feature=NULL,0.05)
 
+Re.pwf.exon.sj<-GetPwfUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05)
+
 }
 
