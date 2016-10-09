@@ -37,9 +37,9 @@ plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Bia
                     ylab = "Proportion DE", ...)
 {
   w = !is.na(pwf$bias.data)
-  print(w)
+#  print(w)
   o = order(pwf$bias.data[w])
-  print(o)
+#  print(o)
 
   rang = max(pwf$pwf, na.rm = TRUE) - min(pwf$pwf, na.rm = TRUE)
   if (rang == 0 & binsize == "auto")
@@ -63,12 +63,12 @@ plotPWF2<-function (pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Bia
   }
   else {
     splitter = ceiling(1:length(pwf$DEgenes[w][o])/binsize)
-    print(splitter)
+#   print(splitter)
     de = sapply(split(pwf$DEgenes[w][o], splitter), mean)
-    print(de)
+#    print(de)
     binlen = sapply(split(as.numeric(pwf$bias.data[w][o]),
                           splitter), median)
-    print(binlen)
+#    print(binlen)
   }
   xlab = gsub("<binsize>", as.character(binsize), xlab)
   if ("xlab" %in% names(list(...))) {
