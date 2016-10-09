@@ -20,8 +20,12 @@ GetPwfUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,thresho
   if(is.null(sub_feature)){Data4Goterm.sub_feature<-Data4Goterm}
   else{Data4Goterm.sub_feature<-Data4Goterm[grep(sub_feature,Data4Goterm[,8]),]}
 
+  if(sub_feature=="E"){
   Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,10)]
-
+  }else
+  {Data4Goterm.sub_feature.geneID.NumOfJunctions<-Data4Goterm.sub_feature[,c(1,11)]
+  }
+  
   Data4Goterm.sub_feature.Sig<-Data4Goterm.sub_feature[which(Data4Goterm.sub_feature[,7]<threshold),]
 
   All.gene.id.based.on.sub_feature<-unique(Data4Goterm.sub_feature[,1])
@@ -32,14 +36,11 @@ GetPwfUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,thresho
   gene.DE_interest<-as.integer(which( All.gene.id.based.on.sub_feature %in% All.genes.based.on.Sig.sub_feature ))
 
   All.gene.id.index[gene.DE_interest]<-1
-  #print(length(All.gene.id.index))
-
+  
   gene.with.matched.junction<-which(Data4Goterm.sub_feature.geneID.NumOfJunctions[,1] %in% c(names(All.gene.id.index)))
   num.junction.4.matched.gene<-as.numeric(Data4Goterm.sub_feature.geneID.NumOfJunctions[gene.with.matched.junction,2])
 
   All.gene.id.index.2<-All.gene.id.index
-
-  #print(All.gene.id.index.2)
 
   if(ad=="GL"){
     pwf.DE_interest=nullp(All.gene.id.index.2,"mm10","ensGene",plot.fit = FALSE)
