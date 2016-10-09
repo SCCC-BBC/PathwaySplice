@@ -14,15 +14,9 @@ GotermAnalysisUseReformatedData(re.gene.based, ad = "GL",
 GotermAnalysisUseReformatedData
 }
 \examples{
-
-
-Re.Go.adjusted.by.number.junction.2<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
-re.PJ.gene.based,ad="J","J",0.05,"Splice_junction_based")
-
-data.pwf2.SJs<-plotPWF2(Re.Go.adjusted.by.number.junction.2[[2]],binsize=30,xlab = "Number of SJs(<binsize> gene bins)")
-
-Re.Go.adjusted.by.exon.SJ<-GotermAnalysis2GetAllGOTerms_AdjustedByNumOfJunctionWithinOneGene(
-re.PJ.gene.based,ad="exon_SJ",sub_feature=NULL,0.05,file_prefix="Exon_Splice_junction_based.xls",gene_model=gene.model)
+data(mds)
+data(hg19)
+Example.Go.adjusted.by.exon<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model)
 
 }
 
