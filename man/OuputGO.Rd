@@ -14,5 +14,9 @@ OutputGO
 }
 \examples{
 
+Output.GO<-OuputGO(Example.Go.adjusted.by.exon[[1]]$GO,Output_file=paste0(getwd(),"/example.xls"))
+
+Draw4GO(Output.GO)
+
 }
 
