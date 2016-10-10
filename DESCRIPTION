@@ -1,0 +1,11 @@
+Package: PathwaySplice
+Type: Package
+Title: A R package for GO term and pathway enrichment analysis with the flexible bias factor
+    adjustment
+Version: 0.1.0
+Author: Aimin Yan
+Maintainer: Aimin Yan <axy148@miami.edu>
+Description: PathwaySplice is used to adjust the bias from different number of splicing juctions
+License: LGPL(>=2)
+LazyData: TRUE
+RoxygenNote: 5.0.1
