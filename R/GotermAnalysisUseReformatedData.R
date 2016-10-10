@@ -1,11 +1,9 @@
 #' GotermAnalysisUseReformatedData
 #'
-#'
 #' @param Data4Goterm
 #' @param ad
 #' @param sub_feature
 #' @param threshold
-#'
 #'
 #' @return
 #' @export
@@ -13,9 +11,14 @@
 #' @examples
 #' data(mds)
 #' data(hg19)
-#' Example.Go.adjusted.by.exon<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model)
-#'
-GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model){
+#' 
+#' Example.Go.adjusted.by.exon<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
+#' 
+#' Example.Go.unadjusted<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
+#' 
+#' write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,row.names = F,quote=F)
+#'  
+GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method){
 
   #Data4Goterm<-pData(re.gene.based)
 
@@ -69,8 +72,12 @@ GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL
     pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
   }
 
-  GO.wall.DE_interest=goseq2(pwf.DE_interest,genomeID,geneID,gene.model=gene_model,use_genes_without_cat=TRUE)
-
+  if(method=="Hypergeometric"){
+  GO.wall.DE_interest=pathwaysplice(pwf.DE_interest,genomeID,geneID,gene.model=gene_model,method="Hypergeometric",use_genes_without_cat=TRUE)
+  }else
+  {
+  GO.wall.DE_interest=pathwaysplice(pwf.DE_interest,genomeID,geneID,gene.model=gene_model,use_genes_without_cat=TRUE) 
+  }
   #GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model)
   #enriched.GO.DE_interest=GO.wall.DE_interest[p.adjust(GO.wall.DE_interest$over_represented_pvalue,method="BH")<threshold,]
   re<-list()
