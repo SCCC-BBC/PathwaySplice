@@ -1,6 +1,6 @@
-#' goseq2
-#'Description: goseq2 function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
-
+#' pathwaysplice
+#'
+#' Description: pathwaysplice function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
 #' Modifying goseq to generate GO term with the listed DEgene
 #'
 #' @param pwf: probability weight function
@@ -16,19 +16,9 @@
 #' @export
 #'
 #' @examples
-#' data(gene.model)
-#' gene_model<-gene.model
 #'
-#' GO.wall.DE_interest.geneGL=goseq2(Gene.based.DE.feature.based.DE$pwfGeneGL,"mm10","ensGene",gene.model=gene_model)
-#'
-#' GO.wall.DE_interes.geneFT=goseq2(Gene.based.DE.feature.based.DE$pwfGeneFeature,"mm10","ensGene",gene.model=gene_model)
-#'
-#' GO.wall.DE_interest.FtFT=goseq2(Gene.based.DE.feature.based.DE$pwfFeatureFeature,"mm10","ensGene",gene.model=gene_model)
-#'
-#'
-#'
-#'
-goseq2=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE){
+
+pathwaysplice=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE){
   ################# Input pre-processing and validation ###################
   #Do some validation of input variables
   if(any(!test.cats%in%c("GO:CC","GO:BP","GO:MF","KEGG"))){
