@@ -7,6 +7,10 @@
 #' @export
 #'
 #' @examples
+#' 
+#' Output.GO<-OuputGO(Example.Go.adjusted.by.exon[[1]]$GO,Output_file=paste0(getwd(),"/example.xls"))
+#' 
+#' Draw4GO(Output.GO)
 #'
 OuputGO<- function(Re.Go.adjusted.by.exon.SJ,Output_file) {
 
@@ -24,6 +28,9 @@ OuputGO<- function(Re.Go.adjusted.by.exon.SJ,Output_file) {
     sapply(dataset2[sapply(dataset2, is.list)],
            function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
 
+  #Draw4GO(dataset2)
+  
   write.table(dataset2,file=Output_file,row.names = FALSE,quote=FALSE,sep="\t")
-
+ 
+  return(dataset2)
 }

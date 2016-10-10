@@ -37,6 +37,7 @@ InstallOtherPackage <- function() {
   biocLite("BSgenome.Hsapiens.UCSC.hg19")
   biocLite("biomaRt")
   biocLite("TxDb.Athaliana.BioMart.plantsmart22")
+  biocLite("OrderedList")
   
   #loading
   library(DEXSeq)
@@ -59,6 +60,7 @@ InstallOtherPackage <- function() {
   library(rgl)
   library(qpcR)
   library(clusterProfiler)
+  library(OrderedList)
 
   # source("http://bioconductor.org/biocLite.R")
   # biocLite("AnnotationHub")
