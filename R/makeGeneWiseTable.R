@@ -1,24 +1,25 @@
 #' makeGeneWiseTable
 #' 
-#' This function is to generate the gene-based results
+#' This function is used to generate the gene-based results
 #'
-#' @param jscs
-#' @param gene.list
-#' @param FDR.threshold
-#' @param verbose
-#' @param debug.mode
+#' @param jscs: output from JunctionSeq 
+#' 
+#' @param gene.list: gene list 
+#' 
+#' @param FDR.threshold: threshold to define whether exon or splicing junction is differential used 
+#' 
+#' @param verbose: whether to print runing process
+#'  
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-#' # Generate genewise table for output differential exons or splicing junctions results
-#' 
 #' re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
 #' re.example.gene.based.testable.reformat<-ReformatData(re.example.gene.based)
 #'
-makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE, debug.mode = FALSE){
+makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE){
   if(verbose) message("   Compiling data table. ",date())
 
   mainTable <- data.frame(geneID = as.character(gene.list), stringsAsFactors=FALSE)
