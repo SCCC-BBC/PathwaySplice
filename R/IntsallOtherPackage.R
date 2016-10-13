@@ -1,12 +1,9 @@
 InstallOtherPackage <- function() {
 
-  #install
-
   #installed.packages()
   install.packages("RCurl")
   install.packages("roxygen2")
   source("http://bioconductor.org/biocLite.R")
-
 
   biocLite("org.Mm.eg.db")
   biocLite("DEXSeq")
@@ -29,8 +26,6 @@ InstallOtherPackage <- function() {
   install.packages("qpcR")
   biocLite("ggbio")
   biocLite("clusterProfiler")
-
-  source("http://bioconductor.org/biocLite.R")
   biocLite("AnnotationHub")
   biocLite("Homo.sapiens")
   biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene")
@@ -39,7 +34,7 @@ InstallOtherPackage <- function() {
   biocLite("TxDb.Athaliana.BioMart.plantsmart22")
   biocLite("OrderedList")
   biocLite("Rgraphviz")
-  
+
   #loading
   library(DEXSeq)
   library(biomaRt)
@@ -64,32 +59,4 @@ InstallOtherPackage <- function() {
   library(OrderedList)
   library(Rgraphviz)
 
-  # source("http://bioconductor.org/biocLite.R")
-  # biocLite("AnnotationHub")
-  # biocLite("Homo.sapiens")
-  # biocLite("TxDb.Hsapiens.UCSC.hg19.knownGene")
-  # biocLite("BSgenome.Hsapiens.UCSC.hg19")
-  # biocLite("biomaRt")
-  # biocLite("TxDb.Athaliana.BioMart.plantsmart22")
-  # 
-  # listMarts()
-  # 
-  # ensembl <- useMart("ensembl",dataset = "hsapiens_gene_ensembl")
-  # ensembl
-  # head(listAttributes(ensembl),20)
-  # 
-  # head(listDatasets(ensembl),20)
-  # 
-  # res <- getBM(attributes=c("hgnc_symbol","entrezgene","ensembl_gene_id","chromosome_name","start_position","end_position"), mart = ensembl)
-  # 
-  # hg19.gene.model=res
-  # 
-  # save(hg19.gene.model,file=paste0(getwd(),"/data/hg19.RData"))
-  # 
-  # gene.model<-read.table("/media/H_driver/Annotation/mm10/genes_table_02052016.csv",header = TRUE, sep = ",", as.is=TRUE)
-  # save(gene.model,file="~/GOSJ/data/gene.model.RData")
-
-  # gene.model.hg38<-read.table("/media/H_driver/Annotation/hg38/genes_table_02092016.csv",header = TRUE, sep = ",", as.is=TRUE)
-  # save(gene.model.hg38,file="~/GOSJ/data/gene.model.hg38.RData")
 }
-
