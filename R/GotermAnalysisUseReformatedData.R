@@ -8,7 +8,8 @@
 #' @import goseq
 #'
 #' @importFrom geneLenDataBase unfactor
-
+#' @importFrom BiasedUrn dWNCHypergeo pWNCHypergeo
+#'
 #' @export
 #'
 #' @examples
