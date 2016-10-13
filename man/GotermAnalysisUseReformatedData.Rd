@@ -22,6 +22,6 @@ Example.Go.adjusted.by.exon<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",su
 Example.Go.unadjusted<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
 
 write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,row.names = F,quote=F)
- 
+
 }
 
