@@ -3,6 +3,7 @@
 export(GetResultsFromJunctionSeq)
 export(GotermAnalysisUseReformatedData)
 export(UseLogistic2CKBias)
+export(getgo3)
 export(makeGeneWiseTable)
 export(pathwaysplice)
 import(goseq)
