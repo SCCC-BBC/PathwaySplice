@@ -2,7 +2,7 @@
 % Please edit documentation in R/MakeGeneWiseTable_JunctionSeq.R, R/makeGeneWiseTable.R
 \name{makeGeneWiseTable}
 \alias{makeGeneWiseTable}
-\title{This function is to generate the gene-based results}
+\title{makeGeneWiseTable}
 \usage{
 makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE)
 
@@ -20,41 +20,18 @@ makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE)
 \item{verbose:}{whether to print runing process}
 }
 \description{
-This function is to generate the gene-based results
+This function is to generate gene-based results
 
 This function is used to generate the gene-based results
 }
 \examples{
 
-# Generate genewise table for PJ data
 re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
 re.example.gene.based.testable.reformat<-ReformatData(re.example.gene.based)
 
 save(re.example.gene.based,re.example.gene.based.testable.reformat,file=paste0(getwd(),"example_Mut_WT_gene.RData"))
 
 mds<-re.example.gene.based.testable.reformat
-
-save(mds,file=paste0(getwd(),"/data/mds.RData"))
-
-UseLogistic2CKBias(re.example.gene.based.testable.reformat,type="exon")
-
-
-re.example.gene.based.2<-re.example.gene.based
-
-par(mfrow=c(2,1))
-# using p value without adjustment
-temp8<-temp7[,c(2:7,43,9,43,11:18)]
-
-#using p value with adjustment
-temp8<-temp7[,c(2:7,44,9,44,11:18)]
-
-colnames(temp8)<-colnames(pData(re.example.gene.based.2))
-pData(re.example.gene.based.2)<-temp8
-rownames(pData(re.example.gene.based.2))<-pData(re.example.gene.based.2)[,1]
-
-re.example.gene.based.testable.reformat.2<-pData(re.example.gene.based.2)
-
-UseLogistic2CKBias(re.example.gene.based.testable.reformat.2,0.05,type="exon")
 
 
 re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))

@@ -1,6 +1,8 @@
 #' ReformatData
 #'
 #' @param re.PJ.gene.based
+#' @import Biobase
+#'
 #'
 #' @return
 #' @export

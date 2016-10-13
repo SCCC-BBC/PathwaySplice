@@ -34,6 +34,8 @@ InstallOtherPackage <- function() {
   biocLite("TxDb.Athaliana.BioMart.plantsmart22")
   biocLite("OrderedList")
   biocLite("Rgraphviz")
+  install.packages("testthat")
+
 
   #loading
   library(DEXSeq)
@@ -58,5 +60,5 @@ InstallOtherPackage <- function() {
   library(clusterProfiler)
   library(OrderedList)
   library(Rgraphviz)
-
+  library(testthat)
 }
