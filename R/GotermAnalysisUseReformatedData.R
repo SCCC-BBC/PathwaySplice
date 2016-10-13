@@ -9,6 +9,8 @@
 #'
 #' @importFrom geneLenDataBase unfactor
 #' @importFrom BiasedUrn dWNCHypergeo pWNCHypergeo
+#' @importFrom gdata trim
+#' @importFrom GO.db GO.db
 #'
 #' @export
 #'
