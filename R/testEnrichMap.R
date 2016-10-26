@@ -18,7 +18,7 @@ testEnrichMap <- function() {
   gene<-unique(rownames(Example.Go.adjusted.by.exon[[2]][DE.index,]))
   
   gene.df <- bitr(gene, fromType = "ENSEMBL", 
-                  toType = c("ENSEMBL", "SYMBOL"),
+                  toType = c("ENTREZID", "SYMBOL"),
                   OrgDb = org.Hs.eg.db)
   
   head(gene.df)
@@ -58,7 +58,7 @@ testEnrichMap <- function() {
   
   library(reshape2)
   library(igraph)
-  enrichMap.test(ego.HT, vertex.label.cex=1, layout=igraph::layout.kamada.kawai)
-  enrichMap.test(ego.WHT, vertex.label.cex=1, layout=igraph::layout.kamada.kawai)
+  re.HT<-enrichMap.test(ego.HT, vertex.label.cex=1, layout=igraph::layout.kamada.kawai)
+  re.WHT<-enrichMap.test(ego.WHT, vertex.label.cex=1, layout=igraph::layout.kamada.kawai,SimilarityThreshold=0.1)
   
 }

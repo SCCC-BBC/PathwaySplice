@@ -4,7 +4,8 @@
 \alias{enrichMap.test}
 \title{enrichMap}
 \usage{
-enrichMap.test(x, n = 50, fixed = TRUE, vertex.label.font = 1, ...)
+enrichMap.test(x, n = 50, fixed = TRUE, vertex.label.font = 1,
+  SimilarityThreshold, ...)
 }
 \arguments{
 \item{x}{gseaResult or enrichResult object}
@@ -14,6 +15,8 @@ enrichMap.test(x, n = 50, fixed = TRUE, vertex.label.font = 1, ...)
 \item{fixed}{if set to FALSE, will invoke tkplot}
 
 \item{vertex.label.font}{font size of vertex label}
+
+\item{SimilarityThreshold}{}
 
 \item{...}{additional parameter}
 }

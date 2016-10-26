@@ -6,6 +6,7 @@
 ##' @param n maximum number of category to shown
 ##' @param fixed if set to FALSE, will invoke tkplot
 ##' @param vertex.label.font font size of vertex label
+##' @param SimilarityThreshold 
 ##' @param ... additional parameter
 ##' @return figure
 ##' @importFrom igraph delete.edges
@@ -15,7 +16,7 @@
 ##' @export
 ##' @author Aimin did some modificatios based G Yu's code in DOSE
 ##' 
-enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, ...) {
+enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
     if (is(x, "gseaResult")) {
         geneSets <- x@geneSets
     }
@@ -23,6 +24,11 @@ enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, ...) {
         geneSets <- geneInCategory(x)
     }
     y <- as.data.frame(x)
+
+    print(head(y))
+    
+    VertexName<-paste0(y$Description,":",y$Count)
+    
     if (nrow(y) < n) {
         n <- nrow(y)
     }
@@ -33,17 +39,19 @@ enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, ...) {
     } else if (n == 1) {
         g <- graph.empty(0, directed=FALSE)
         g <- add_vertices(g, nv = 1)
-        V(g)$name <- y$Description
+        
+        V(g)$name <- VertexName
+        
         V(g)$color <- "red"
     } else {
         pvalue <- y$pvalue
-
+        
         id <- y[,1]
         geneSets <- geneSets[id]
 
         n <- nrow(y) #
         w <- matrix(NA, nrow=n, ncol=n)
-        colnames(w) <- rownames(w) <- y$Description
+        colnames(w) <- rownames(w) <- VertexName
 
         for (i in 1:n) {
             for (j in i:n) {
@@ -56,8 +64,10 @@ enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, ...) {
         wd <- wd[!is.na(wd[,3]),]
         g <- graph.data.frame(wd[,-3], directed=F)
         E(g)$width=sqrt(wd[,3]*20)
-        g <- delete.edges(g, E(g)[wd[,3] < 0.2])
-        idx <- unlist(sapply(V(g)$name, function(x) which(x == y$Description)))
+        
+        g <- delete.edges(g, E(g)[wd[,3] < SimilarityThreshold])
+        
+        idx <- unlist(sapply(V(g)$name, function(x) which(x == VertexName)))
 
         cols <- color_scale("red", "#E5C494")
 
@@ -67,10 +77,10 @@ enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, ...) {
         ## data can be exported to view in Cytoscape or other tools
         ##
         ##
-        ## Edata <- as.data.frame(get.edgelist(g))
-        ## Edata$edgewidth <- E(g)$width
-        ## Vdata <- data.frame(pathway=V(g)$name, color=V(g)$color)
-        ## map_data <- list(edge_data=Edata, vertex_data=Vdata)
+         Edata <- as.data.frame(get.edgelist(g))
+         Edata$edgewidth <- E(g)$width
+         Vdata <- data.frame(pathway=V(g)$name, color=V(g)$color)
+         map_data <- list(edge_data=Edata, vertex_data=Vdata)
 
         if (is(x, "gseaResult")) {
             cnt <- y$setSize / 10
@@ -79,14 +89,20 @@ enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, ...) {
             cnt <- y$Count
         }
 
-        names(cnt) <- y$Description
+        names(cnt) <- VertexName
         cnt2 <- cnt[V(g)$name]
-        V(g)$size <- log(cnt2, base=10) * 10 ## cnt2/sum(cnt2) * 100
+      #  V(g)$size <- log(cnt2, base=10) * 10 ## cnt2/sum(cnt2) * 100
+        
+        V(g)$size <- cnt2/sum(cnt2) * 100   
     }
 
     netplot(g, vertex.label.font=vertex.label.font, vertex.label.color="black", fixed=fixed, ...)
     ## invisible(map_data)
     invisible(g)
+    
+    #re<-list(w=w,wd=wd)
+    re2<- map_data
+    return(re2)
 }
 
 overlap_ratio <- function(x, y) {
