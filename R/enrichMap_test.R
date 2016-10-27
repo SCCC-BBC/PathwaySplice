@@ -1,12 +1,11 @@
-##' enrichment map
+##' enMap is used to draw network based on similarities between GOs
 ##'
-##' enrichment map
-##' @title enrichMap
+##' @title enMap
 ##' @param x gseaResult or enrichResult object
 ##' @param n maximum number of category to shown
 ##' @param fixed if set to FALSE, will invoke tkplot
 ##' @param vertex.label.font font size of vertex label
-##' @param SimilarityThreshold 
+##' @param SimilarityThreshold threshold for defining similarity between GOs 
 ##' @param ... additional parameter
 ##' @return figure
 ##' @importFrom igraph delete.edges
@@ -14,9 +13,9 @@
 ##' @importFrom igraph add_vertices
 ##' @importFrom igraph graph.empty
 ##' @export
-##' @author Aimin did some modificatios based G Yu's code in DOSE
+##' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 ##' 
-enrichMap.test <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
+enMap <- function(x, n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
     if (is(x, "gseaResult")) {
         geneSets <- x@geneSets
     }

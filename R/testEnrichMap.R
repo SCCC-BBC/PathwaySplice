@@ -1,4 +1,5 @@
 testEnrichMap <- function() {
+  
   library(org.Hs.eg.db)
   library(PathwaySplice)
   library(goseq)
@@ -6,6 +7,9 @@ testEnrichMap <- function() {
   library(GO.db)
   library(DOSE,quietly = TRUE)
   library(clusterProfiler,quietly = TRUE)
+  library(reshape2)
+  library(igraph)
+  
   #data(package="PathwaySplice")
   #data(geneList)
   data(mds)
@@ -53,11 +57,10 @@ testEnrichMap <- function() {
   #sink()
   
   par(mfrow=c(2,1))
-  enrichMap(ego.HT, vertex.label.cex=1.2, layout=igraph::layout.kamada.kawai)
-  enrichMap(ego.WHT, vertex.label.cex=1.2, layout=igraph::layout.kamada.kawai)
-  
-  library(reshape2)
-  library(igraph)
+
+  #enrichMap(ego.HT, vertex.label.cex=1.2, layout=igraph::layout.kamada.kawai)
+  #enrichMap(ego.WHT, vertex.label.cex=1.2, layout=igraph::layout.kamada.kawai)
+
   re.HT<-enrichMap.test(ego.HT, vertex.label.cex=1, layout=igraph::layout.kamada.kawai)
   re.WHT<-enrichMap.test(ego.WHT, vertex.label.cex=1, layout=igraph::layout.kamada.kawai,SimilarityThreshold=0.1)
   
