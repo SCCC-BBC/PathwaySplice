@@ -1,4 +1,4 @@
-#' GotermAnalysisUseReformatedData
+#' Run_pathwaysplice
 #'
 #' @param Data4Goterm
 #' @param ad
@@ -18,13 +18,13 @@
 #' data(mds)
 #' data(hg19)
 #'
-#' Example.Go.adjusted.by.exon<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
+#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
 #'
-#' Example.Go.unadjusted<-GotermAnalysisUseReformatedData(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
+#' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
 #'
 #' write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,row.names = F,quote=F)
 #'
-GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method){
+Run_pathwaysplice<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method){
 
   #Data4Goterm<-pData(re.gene.based)
 
@@ -86,10 +86,10 @@ GotermAnalysisUseReformatedData<-function(re.gene.based,ad="GL",sub_feature=NULL
   }
   #GO.wall.DE_interest=goseq2(pwf.DE_interest,"mm10","ensGene",gene.model=gene_model)
   #enriched.GO.DE_interest=GO.wall.DE_interest[p.adjust(GO.wall.DE_interest$over_represented_pvalue,method="BH")<threshold,]
-  re<-list()
+  re<-list(GO.wall.DE_interest=GO.wall.DE_interest,pwf.DE_interest)
 
-  re[[1]]<-GO.wall.DE_interest
-  re[[2]]<-pwf.DE_interest
+  #re[[1]]<-GO.wall.DE_interest
+  #re[[2]]<-pwf.DE_interest
 
   return(re)
 }
