@@ -4,10 +4,12 @@
 \alias{enMap2}
 \title{enMap2}
 \usage{
-enMap2(Example.Go.adjusted.by.exon, n = 50, fixed = TRUE,
-  vertex.label.font = 1, SimilarityThreshold, ...)
+enMap2(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
+  SimilarityThreshold, ...)
 }
 \arguments{
+\item{GoSeqRes}{object returned from Run_pathwaysplice}
+
 \item{n}{maximum number of category to shown}
 
 \item{fixed}{if set to FALSE, will invoke tkplot}
@@ -17,8 +19,6 @@ enMap2(Example.Go.adjusted.by.exon, n = 50, fixed = TRUE,
 \item{SimilarityThreshold}{threshold for defining similarity between GOs}
 
 \item{...}{additional parameter}
-
-\item{x}{gseaResult or enrichResult object}
 }
 \value{
 figure

@@ -1,7 +1,7 @@
 ##' enMap2 is used to draw network based on similarities between GOs
 ##'
 ##' @title enMap2
-##' @param x gseaResult or enrichResult object
+##' @param GoSeqRes object returned from Run_pathwaysplice
 ##' @param n maximum number of category to shown
 ##' @param fixed if set to FALSE, will invoke tkplot
 ##' @param vertex.label.font font size of vertex label
@@ -15,7 +15,7 @@
 ##' @export
 ##' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 ##' 
-enMap2 <- function(Example.Go.adjusted.by.exon, n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
+enMap2 <- function(GoSeqRes, n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
  
      # if (is(x, "gseaResult")) {
     #     geneSets <- x@geneSets
@@ -24,11 +24,12 @@ enMap2 <- function(Example.Go.adjusted.by.exon, n = 50, fixed=TRUE, vertex.label
     #     geneSets <- geneInCategory(x)
     # }
  
-    GO.name<-Example.Go.adjusted.by.exon[[1]]$GO$category
-    temp<-Example.Go.adjusted.by.exon[[1]]$GO$DEgene_ID
+    GO.name<-GoSeqRes[[1]]$GO$category
+    temp<-GoSeqRes[[1]]$GO$DEgene_ID
     names(temp)<-GO.name 
   
-    x=Example.Go.adjusted.by.exon[[1]]$GO
+    x=GoSeqRes[[1]]$GO
+    
     geneSets=temp
       
     y <- as.data.frame(x)
