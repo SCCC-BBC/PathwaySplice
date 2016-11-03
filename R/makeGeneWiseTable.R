@@ -17,7 +17,7 @@
 #' @examples
 #'
 #' re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
-#' re.example.gene.based.testable.reformat<-ReformatData(re.example.gene.based)
+#' 
 #'
 makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE){
   if(verbose) message("   Compiling data table. ",date())
@@ -113,5 +113,7 @@ makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = T
   mainTable$numSig = if(noGenes){ character()} else {paste0(mainTable$exonsSig,"/",mainTable$knownSig,"/",mainTable$novelSig)}
   varMetadata(mainTable)["numSig", "labelDescription"] <- "Number sig exonic regions / num sig known SJ / num sig novel SJ"
 
-  return(mainTable)
+  re<-ReformatData(mainTable)
+  
+  return(re)
 }

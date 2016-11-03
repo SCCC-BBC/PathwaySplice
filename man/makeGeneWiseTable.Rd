@@ -21,7 +21,7 @@ This function is used to generate the gene-based results
 \examples{
 
 re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
-re.example.gene.based.testable.reformat<-ReformatData(re.example.gene.based)
+
 
 }
 
