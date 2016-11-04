@@ -24,4 +24,9 @@ testEnrichMap <- function() {
   re.w.adjusted<-enMap2(Example.Go.adjusted.by.exon,n=4,SimilarityThreshold=0)
   re.w.unadjusted<-enMap2(Example.Go.unadjusted,n=4,SimilarityThreshold=0)
   
+  
+  
+  
+  
+  
 }
