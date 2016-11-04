@@ -1,6 +1,7 @@
 #' Gmt2GeneCat
 #'
-#' Read a gmt file, and return a list with the name of element being a gene id based on gene_anno_file, and each element
+#' Read a gmt file, and return a list with its name 
+#' being a gene id based on gene_anno_file, and each element of this list
 #' being the pathways that this gene corresponds to
 #'
 #' @param gmt_input_file
@@ -18,7 +19,9 @@
 #' gene.2.cat.tft.mouse<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.Mouse.v5.1.symbols.gmt",
 #' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
 #'
-
+#' gene.2.cat.hallmark.mouse<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
+#' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
+#'
 Gmt2GeneCat <- function(gmt_input_file,gene_anno_file) {
 
   gene.2.cat.gmt<-gene2cat2(gmt_input_file)
@@ -33,7 +36,6 @@ Gmt2GeneCat <- function(gmt_input_file,gene_anno_file) {
   #dir(paste0(dir.name,file.name))
   
   gene_anno_file=paste0(dir.name,file.name)
-  
   
   gene.ID.conversion<-read.csv(gene_anno_file)
   names.gene.gmt.2<-match(names.gene.gmt$gene_id,gene.ID.conversion$gene_id)
