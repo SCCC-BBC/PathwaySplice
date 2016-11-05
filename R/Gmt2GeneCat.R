@@ -16,11 +16,11 @@
 #' gene.2.cat.cp.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c2.cp.v5.1.symbols.gmt",
 #' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
-#' gene.2.cat.tft.mouse<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.Mouse.v5.1.symbols.gmt",
-#' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
+#' gene.2.cat.tft.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.v5.1.symbols.gmt",
+#' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
-#' gene.2.cat.hallmark.mouse<-Gmt2GeneCat("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt",
-#' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
+#' gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt",
+#' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
 Gmt2GeneCat <- function(gmt_input_file,gene_anno_file) {
 
