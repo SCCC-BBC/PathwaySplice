@@ -15,7 +15,7 @@
 ##' @export
 ##' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 ##' 
-enMap2 <- function(GoSeqRes, n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
+enMap2 <- function(GoSeqRes,gene.set.type="GO",n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
  
      # if (is(x, "gseaResult")) {
     #     geneSets <- x@geneSets
@@ -24,19 +24,31 @@ enMap2 <- function(GoSeqRes, n = 50, fixed=TRUE, vertex.label.font=1, Similarity
     #     geneSets <- geneInCategory(x)
     # }
  
+    if(gene.set.type=="GO"){
     GO.name<-GoSeqRes[[1]]$GO$category
     temp<-GoSeqRes[[1]]$GO$DEgene_ID
     names(temp)<-GO.name 
-  
     x=GoSeqRes[[1]]$GO
-    
     geneSets=temp
+    }else{
+      GO.name<-GoSeqRes$GO$category
+      temp<-GoSeqRes$GO$DEgene_ID
+      names(temp)<-GO.name 
+      x=GoSeqRes$GO
+      geneSets=temp
+    }
       
     y <- as.data.frame(x)
 
     print(head(y))
     
-    VertexName<-paste0(y$term,":",y$numDEInCat)
+    if(any(grep("^GO:",y$category))){
+      VertexName<-paste0(y$term,":",y$numDEInCat)
+    }else
+    {
+      VertexName<-paste0(y$category,":",y$numDEInCat)
+    }
+      
     
     if (nrow(y) < n) {
         n <- nrow(y)

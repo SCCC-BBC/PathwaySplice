@@ -4,8 +4,8 @@
 \alias{enMap2}
 \title{enMap2}
 \usage{
-enMap2(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
-  SimilarityThreshold, ...)
+enMap2(GoSeqRes, gene.set.type = "GO", n = 50, fixed = TRUE,
+  vertex.label.font = 1, SimilarityThreshold, ...)
 }
 \arguments{
 \item{GoSeqRes}{object returned from Run_pathwaysplice}

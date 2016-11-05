@@ -24,9 +24,10 @@ testEnrichMap <- function() {
   re.w.adjusted<-enMap2(Example.Go.adjusted.by.exon,n=4,SimilarityThreshold=0)
   re.w.unadjusted<-enMap2(Example.Go.unadjusted,n=4,SimilarityThreshold=0)
   
+  re.cp<-pathwaysplice(Example.Go.adjusted.by.exon[[2]],genome,id,gene.model=gene.model,gene2cat=gene.2.cat.cp.hg,method="Wallenius")
+  re.cp.unadjusted<-pathwaysplice(Example.Go.adjusted.by.exon[[2]],genome,id,gene.model=gene.model,gene2cat=gene.2.cat.cp.hg,method="Hypergeometric")
   
-  
-  
-  
+  enMap2(re.cp,gene.set.type="pathway",n=4,vertex.label.font = 0.05,SimilarityThreshold=0)
+  enMap2(re.cp.unadjusted,gene.set.type="pathway",n=4,vertex.label.font = 0.05,SimilarityThreshold=0)
   
 }

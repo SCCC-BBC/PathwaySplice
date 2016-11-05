@@ -13,8 +13,8 @@
 #'
 #' @examples
 #'
-#' gene.2.cat.cp.mouse<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c2.cp.Mouse.v5.1.symbols.gmt",
-#' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
+#' gene.2.cat.cp.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c2.cp.v5.1.symbols.gmt",
+#' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
 #' gene.2.cat.tft.mouse<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.Mouse.v5.1.symbols.gmt",
 #' "/media/H_driver/Annotation/mm10/genes_table_02052016.csv")
