@@ -5,8 +5,11 @@
 #' @export
 #'
 #' @examples
+#' testPathwaySplice()
+#' 
 testPathwaySplice <- function() {
   
+  library(JunctionSeq)
   library(org.Hs.eg.db)
   library(PathwaySplice)
   library(goseq)
@@ -16,7 +19,17 @@ testPathwaySplice <- function() {
   library(reshape2)
   library(igraph)
   
+  #get results from,takes time
+  #Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+  
+  #make genewise table
+  #re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
+  
+  #loading example data
   data(mds)
+  
+  #Check bias using logistics regression model
+  re<-Lcb(mds)
   
   #Analysis
   Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")

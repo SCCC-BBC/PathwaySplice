@@ -269,7 +269,7 @@ pathwaysplice=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC
   #cat(dim(dataset2),"\n")
 
   temp.gene.name=unique(apply(dataset2[,2],1,c))
-  temp.gene.name.2=unique(trim(unlist(strsplit(temp.gene.name,split=","))))
+  temp.gene.name.2=unique(gdata::trim(unlist(strsplit(temp.gene.name,split=","))))
   #print(class(temp.gene.name.2))
 
   #cat(length(temp.gene.name.2),"\n")

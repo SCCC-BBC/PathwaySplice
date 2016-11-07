@@ -2,11 +2,15 @@
 % Please edit documentation in R/testEnrichMap.R
 \name{testPathwaySplice}
 \alias{testPathwaySplice}
-\title{Title}
+\title{testPathwaySplice}
 \usage{
 testPathwaySplice()
 }
 \description{
-Title
+testPathwaySplice
+}
+\examples{
+testPathwaySplice()
+
 }
 
