@@ -1,2 +1,2 @@
 # GOSJ
-An R package for GO term enrichment analysis with the flexible bias factor adjustment 
+ An R package for adjusting bias in pathway analysis using differential exon and splicing junction usage based analysis
