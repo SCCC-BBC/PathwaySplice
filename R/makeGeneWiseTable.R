@@ -16,7 +16,7 @@
 #'
 #' @examples
 #'
-#' re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
+#' #re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
 #' 
 #'
 makeGeneWiseTable <- function(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE){

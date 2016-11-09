@@ -71,11 +71,11 @@ Run_pathwaysplice<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,gen
   print(All.gene.id.index.2)
 
   if(ad=="GL"){
-    pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,plot.fit = FALSE)
+    pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,plot.fit = TRUE)
   }
   else
   {
-    pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,bias.data = num.junction.4.matched.gene,plot.fit = FALSE)
+    pwf.DE_interest=nullp(All.gene.id.index.2,genomeID,geneID,bias.data = num.junction.4.matched.gene,plot.fit = TRUE)
   }
 
   if(method=="Hypergeometric"){

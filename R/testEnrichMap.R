@@ -41,8 +41,8 @@ testPathwaySplice <- function() {
   #gene <- names(geneList)[abs(geneList) > 2]
   
   #Construct network between gene sets
-  re.w.adjusted<-enMap2(Example.Go.adjusted.by.exon,n=4,SimilarityThreshold=0)
-  re.w.unadjusted<-enMap2(Example.Go.unadjusted,n=4,SimilarityThreshold=0)
+  re.w.adjusted<-enMap2(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
+  re.w.unadjusted<-enMap2(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
   
   re.cp<-pathwaysplice(Example.Go.adjusted.by.exon[[2]],genome,id,gene.model=gene.model,gene2cat=gene.2.cat.cp.hg,method="Wallenius")
   re.cp.unadjusted<-pathwaysplice(Example.Go.adjusted.by.exon[[2]],genome,id,gene.model=gene.model,gene2cat=gene.2.cat.cp.hg,method="Hypergeometric")
