@@ -6,6 +6,7 @@
 #'
 #' @examples
 #' testPathwaySplice()
+#' test
 #' 
 testPathwaySplice <- function() {
   
