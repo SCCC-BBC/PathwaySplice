@@ -12,5 +12,6 @@ testPathwaySplice
 \examples{
 testPathwaySplice()
 
+
 }
 

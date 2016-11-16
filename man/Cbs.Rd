@@ -8,28 +8,30 @@ Cbs(re.gene.based, ad = "GL", sub_feature = NULL, threshold, genomeID,
   geneID, gene_model, method)
 }
 \arguments{
-\item{re.gene.based}{}
+\item{re.gene.based:}{Gene based table}
 
-\item{ad}{}
+\item{ad:}{The possible bias factor}
 
-\item{sub_feature}{}
+\item{sub_feature:}{The possible bias factor}
 
-\item{threshold}{}
+\item{threshold:}{threshold used}
 
-\item{genomeID}{}
+\item{genomeID:}{which genome}
 
-\item{geneID}{}
+\item{geneID:}{which type of gene ID}
 
-\item{gene_model}{}
+\item{gene_model:}{Gene model}
 
-\item{method}{}
+\item{method:}{which method}
 }
 \description{
-Cbs is to ckeck possible bias factor using the method in goseq
+Cbs is to check possible bias factor using the method in goseq
 }
 \examples{
 
-Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
+#library(PathwaySplice)
+#data(mds)
+#Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
 
 
 }

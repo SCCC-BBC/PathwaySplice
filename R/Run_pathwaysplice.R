@@ -1,10 +1,14 @@
 #' Run_pathwaysplice
 #'
-#' @param Data4Goterm
-#' @param ad
-#' @param sub_feature
-#' @param threshold
-#'
+#' @param Data4Goterm: Gene based table
+#' @param ad:  bias factor to be adjusted
+#' @param sub_feature: bias factor to be adjusted 
+#' @param threshold: threshold to be used for adjustment
+#' @param genomeID to be used  
+#' @param geneID to be used 
+#' @param gene_model to be used
+#' @param method: method to be used
+#' 
 #' @import goseq
 #'
 #' @importFrom geneLenDataBase unfactor
@@ -18,11 +22,14 @@
 #' data(mds)
 #' data(hg19)
 #'
-#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
+#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",
+#' 0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
 #'
-#' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
+#' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",
+#' 0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
 #'
-#' write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,row.names = F,quote=F)
+#' #write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,
+#' #row.names = F,quote=F)
 #'
 Run_pathwaysplice<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method){
 

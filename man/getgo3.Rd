@@ -2,19 +2,25 @@
 % Please edit documentation in R/getgo3.R
 \name{getgo3}
 \alias{getgo3}
-\title{Title}
+\title{getgo3}
 \usage{
 getgo3(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
 }
 \arguments{
-\item{fetch.cats}{}
+\item{genes:}{gene list}
+
+\item{genome:genome}{that is used}
+
+\item{id:Gene}{id}
+
+\item{fetch.cats:}{Gene sets that you are interested}
 }
 \description{
-Title
+getgo3
 }
 \examples{
 
-getgo3(rownames(Re.Go.adjusted.by.number.junction.2[[2]]),"mm10","ensGene",fetch.cats=c("GO:BP"))
+re<-getgo3(rownames(Re.Go.adjusted.by.number.junction.2[[2]]),"mm10","ensGene",fetch.cats=c("GO:BP"))
 
 }
 

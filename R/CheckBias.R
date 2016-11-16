@@ -1,22 +1,24 @@
 #' Cbs
 #' 
-#' Cbs is to ckeck possible bias factor using the method in goseq
+#' Cbs is to check possible bias factor using the method in goseq
 #'
-#' @param re.gene.based 
-#' @param ad 
-#' @param sub_feature 
-#' @param threshold 
-#' @param genomeID 
-#' @param geneID 
-#' @param gene_model 
-#' @param method 
+#' @param re.gene.based: Gene based table 
+#' @param ad: The possible bias factor  
+#' @param sub_feature: The possible bias factor 
+#' @param threshold: threshold used  
+#' @param genomeID: which genome
+#' @param geneID: which type of gene ID 
+#' @param gene_model: Gene model 
+#' @param method: which method 
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #' 
-#' Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
+#' #library(PathwaySplice)
+#' #data(mds)
+#' #Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
 #' 
 #' 
 Cbs<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method)

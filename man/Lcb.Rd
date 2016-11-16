@@ -2,7 +2,7 @@
 % Please edit documentation in R/Lcb.R
 \name{Lcb}
 \alias{Lcb}
-\title{Lcb}
+\title{LrCheckBias}
 \usage{
 Lcb(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   sig.threshold = 0.05, type = c("exon", "splicing"))
@@ -15,6 +15,9 @@ Lcb(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
 \item{type:}{whether you are interested in exon or splicing junction}
 
 \item{jscs_genewise_object:}{an object returned from ReformatData and MakeGeneWiseTable_JunctionSeq}
+}
+\value{
+return results from logistic regression
 }
 \description{
 Logistic regression to check bias

@@ -1,4 +1,4 @@
-#' Lcb
+#' LrCheckBias
 #'
 #' Logistic regression to check bias
 #'
@@ -10,8 +10,8 @@
 #'
 #' @param jscs_genewise_object: an object returned from ReformatData and MakeGeneWiseTable_JunctionSeq
 #'
-#' @return
-#' @export
+#' @return return results from logistic regression
+#' @export Boxplot of number of splicing junctions 
 #'
 #' @examples
 #'

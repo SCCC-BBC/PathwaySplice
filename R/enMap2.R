@@ -1,18 +1,20 @@
 ##' enMap2 is used to draw network based on similarities between GOs
 ##'
 ##' @title enMap2
+##' 
 ##' @param GoSeqRes object returned from Run_pathwaysplice
+##' @param gene.set.type whether you are interested in GO, KEGG, or other pathways
 ##' @param n maximum number of category to shown
 ##' @param fixed if set to FALSE, will invoke tkplot
 ##' @param vertex.label.font font size of vertex label
 ##' @param SimilarityThreshold threshold for defining similarity between GOs 
 ##' @param ... additional parameter
-##' @return figure
-##' @importFrom igraph delete.edges
-##' @importFrom igraph get.edgelist
-##' @importFrom igraph add_vertices
-##' @importFrom igraph graph.empty
+
+##' @return A figure for visualizing network
+##' 
+##' 
 ##' @export
+##' 
 ##' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 ##' 
 enMap2 <- function(GoSeqRes,gene.set.type="GO",n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {

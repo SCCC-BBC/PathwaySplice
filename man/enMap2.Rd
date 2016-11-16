@@ -10,6 +10,8 @@ enMap2(GoSeqRes, gene.set.type = "GO", n = 50, fixed = TRUE,
 \arguments{
 \item{GoSeqRes}{object returned from Run_pathwaysplice}
 
+\item{gene.set.type}{whether you are interested in GO, KEGG, or other pathways}
+
 \item{n}{maximum number of category to shown}
 
 \item{fixed}{if set to FALSE, will invoke tkplot}
@@ -21,7 +23,7 @@ enMap2(GoSeqRes, gene.set.type = "GO", n = 50, fixed = TRUE,
 \item{...}{additional parameter}
 }
 \value{
-figure
+A figure for visualizing network
 }
 \description{
 enMap2 is used to draw network based on similarities between GOs

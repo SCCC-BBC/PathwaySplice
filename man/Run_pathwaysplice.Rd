@@ -8,7 +8,21 @@ Run_pathwaysplice(re.gene.based, ad = "GL", sub_feature = NULL, threshold,
   genomeID, geneID, gene_model, method)
 }
 \arguments{
-\item{threshold}{}
+\item{genomeID}{to be used}
+
+\item{geneID}{to be used}
+
+\item{gene_model}{to be used}
+
+\item{Data4Goterm:}{Gene based table}
+
+\item{ad:}{bias factor to be adjusted}
+
+\item{sub_feature:}{bias factor to be adjusted}
+
+\item{threshold:}{threshold to be used for adjustment}
+
+\item{method:}{method to be used}
 }
 \description{
 Run_pathwaysplice
@@ -17,11 +31,14 @@ Run_pathwaysplice
 data(mds)
 data(hg19)
 
-Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
+Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",
+0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Wallenius")
 
-Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
+Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",
+0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
 
-write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,row.names = F,quote=F)
+#write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,
+#row.names = F,quote=F)
 
 }
 

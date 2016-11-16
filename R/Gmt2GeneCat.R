@@ -4,20 +4,20 @@
 #' being a gene id based on gene_anno_file, and each element of this list
 #' being the pathways that this gene corresponds to
 #'
-#' @param gmt_input_file
-#' @param gene_anno_file
-#' @param based_by
+#' @param gmt_input_file:input file
+#' @param gene_anno_file:annotation file
+#' 
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-#' gene.2.cat.cp.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c2.cp.v5.1.symbols.gmt",
-#' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+#' #gene.2.cat.cp.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c2.cp.v5.1.symbols.gmt",
+#' #"/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
-#' gene.2.cat.tft.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.v5.1.symbols.gmt",
-#' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+#' #gene.2.cat.tft.hg<-Gmt2GeneCat("/media/H_driver/Annotation/MsigDB/c3.tft.v5.1.symbols.gmt",
+#' #"/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
 #' gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt",
 #' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
@@ -61,6 +61,16 @@ gene2cat2 <- function(gmt_input_file) {
   gene.2.cat
   
 }
+
+
+gene2cat <- function(gene_name,re) {
+  z<-re$genesets
+  res <- lapply(z, function(ch) grep(gene_name, ch))
+  res2<-sapply(res, function(x) length(x) > 0)
+  gene2cat<-list(re$geneset.names[res2])
+  gene2cat
+}
+
 
 # examples
 #

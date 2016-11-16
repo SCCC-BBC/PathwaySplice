@@ -25,11 +25,17 @@ pathwaysplice(pwf, genome, id, gene.model, gene2cat = NULL,
 
 \item{use_genes_without_cat:}{whether using genes without category or not}
 }
+\value{
+The gene set enrichment results for gene sets
+}
 \description{
-Description: pathwaysplice function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
-Modifying goseq to generate GO term with the listed DEgene
+This function computes p-values for each gene set and output the list of 
+differentially expressed genes within the gene set. 
+The user can select serveral statistical methods for computing p-values
 }
 \examples{
+
+
 
 }
 

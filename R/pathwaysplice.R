@@ -1,7 +1,8 @@
 #' pathwaysplice
 #'
-#' Description: pathwaysplice function computes p-values for each gene set and output the list of differentially expressed genes within the gene set. The user can select serveral statistical methods for computing p-values - xxx. 
-#' Modifying goseq to generate GO term with the listed DEgene
+#' This function computes p-values for each gene set and output the list of 
+#' differentially expressed genes within the gene set. 
+#' The user can select serveral statistical methods for computing p-values
 #'
 #' @param pwf: probability weight function
 #' @param genome: genome you use
@@ -12,10 +13,13 @@
 #' @param repcnt: the number of replications
 #' @param use_genes_without_cat: whether using genes without category or not
 #'
-#' @return
+#' @return The gene set enrichment results for gene sets
+#' 
 #' @export
 #'
 #' @examples
+#' 
+#' 
 #'
 
 pathwaysplice=function(pwf,genome,id,gene.model,gene2cat=NULL,test.cats=c("GO:CC","GO:BP","GO:MF"),method="Wallenius",repcnt=2000,use_genes_without_cat=FALSE){

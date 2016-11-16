@@ -1,16 +1,17 @@
-#' Title
-#'
-#' @param genes
-#' @param genome
-#' @param id
-#' @param fetch.cats
+#' getgo3
+#' 
+#' 
+#' @param genes: gene list
+#' @param genome:genome that is used
+#' @param id:Gene id
+#' @param fetch.cats: Gene sets that you are interested 
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-#' getgo3(rownames(Re.Go.adjusted.by.number.junction.2[[2]]),"mm10","ensGene",fetch.cats=c("GO:BP"))
+#' re<-getgo3(rownames(Re.Go.adjusted.by.number.junction.2[[2]]),"mm10","ensGene",fetch.cats=c("GO:BP"))
 #'
 getgo3=function(genes,genome,id,fetch.cats=c("GO:CC","GO:BP","GO:MF")){
   #Check for valid input
