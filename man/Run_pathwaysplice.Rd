@@ -8,26 +8,31 @@ Run_pathwaysplice(re.gene.based, ad = "GL", sub_feature = NULL, threshold,
   genomeID, geneID, gene_model, method)
 }
 \arguments{
-\item{genomeID}{to be used}
+\item{re.gene.based}{gene based results}
 
-\item{geneID}{to be used}
+\item{ad}{bias factor to be adjusted}
 
-\item{gene_model}{to be used}
+\item{sub_feature}{feature to be checked}
 
-\item{Data4Goterm:}{Gene based table}
+\item{threshold}{threshold to be used for adjustment}
 
-\item{ad:}{bias factor to be adjusted}
+\item{genomeID}{gene to be used}
 
-\item{sub_feature:}{bias factor to be adjusted}
+\item{geneID}{geneID to be used}
 
-\item{threshold:}{threshold to be used for adjustment}
+\item{gene_model}{gene model to be used}
 
-\item{method:}{method to be used}
+\item{method}{method to be used}
+
+\item{Data4Goterm}{Gene based table}
+
+\item{sub_feature}{bias factor to be adjusted}
 }
 \description{
 Run_pathwaysplice
 }
 \examples{
+
 data(mds)
 data(hg19)
 

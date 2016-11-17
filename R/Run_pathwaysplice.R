@@ -1,18 +1,20 @@
 #' Run_pathwaysplice
 #'
-#' @param Data4Goterm: Gene based table
-#' @param ad:  bias factor to be adjusted
-#' @param sub_feature: bias factor to be adjusted 
-#' @param threshold: threshold to be used for adjustment
-#' @param genomeID to be used  
-#' @param geneID to be used 
-#' @param gene_model to be used
-#' @param method: method to be used
+#' @param re.gene.based gene based results 
+#' @param sub_feature feature to be checked  
+#' @param Data4Goterm Gene based table
+#' @param ad bias factor to be adjusted
+#' @param sub_feature bias factor to be adjusted 
+#' @param threshold threshold to be used for adjustment
+#' @param genomeID gene to be used  
+#' @param geneID geneID to be used 
+#' @param gene_model gene model to be used
+#' @param method method to be used
 #' 
-#'
 #' @export
 #'
 #' @examples
+#' 
 #' data(mds)
 #' data(hg19)
 #'
@@ -31,7 +33,6 @@ Run_pathwaysplice<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,gen
 
   if(is.null(sub_feature)){Data4Goterm.sub_feature<-Data4Goterm}
   else{Data4Goterm.sub_feature<-Data4Goterm[grep(sub_feature,Data4Goterm[,8]),]}
-
 
   #print(dim(Data4Goterm.sub_feature))
 

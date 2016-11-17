@@ -2,16 +2,18 @@
 #' 
 #' Cbs is to check possible bias factor using the method in goseq
 #'
-#' @param re.gene.based: Gene based table 
-#' @param ad: The possible bias factor  
-#' @param sub_feature: The possible bias factor 
-#' @param threshold: threshold used  
-#' @param genomeID: which genome
-#' @param geneID: which type of gene ID 
-#' @param gene_model: Gene model 
-#' @param method: which method 
+#' @param re.gene.based Gene based table 
+#' @param ad The possible bias factor  
+#' @param sub_feature The possible bias factor 
+#' @param threshold threshold used  
+#' @param genomeID which genome
+#' @param geneID which type of gene ID 
+#' @param gene_model Gene model 
+#' @param method which method 
 #'
-#' @return
+#' @return A data frame that includes gene ID, status of differential gene 
+#' and probability weight function 
+#' 
 #' @export
 #'
 #' @examples

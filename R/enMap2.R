@@ -26,12 +26,6 @@
 #' 
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 #' 
-#' 
-#' 
-#' 
-#' 
-#'
-
 enrichmentMap <- function(GoSeqRes,gene.set.type="GO",n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
  
      # if (is(x, "gseaResult")) {

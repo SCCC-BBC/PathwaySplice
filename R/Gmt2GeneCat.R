@@ -4,11 +4,11 @@
 #' being a gene id based on gene_anno_file, and each element of this list
 #' being the pathways that this gene corresponds to
 #'
-#' @param gmt_input_file:input file
-#' @param gene_anno_file:annotation file
+#' @param gmt_input_file input file
+#' @param gene_anno_file annotation file
 #' 
-#'
-#' @return
+#' @return a list with its names being geneID, its element being the pathways
+#' 
 #' @export
 #'
 #' @examples

@@ -8,21 +8,25 @@ Cbs(re.gene.based, ad = "GL", sub_feature = NULL, threshold, genomeID,
   geneID, gene_model, method)
 }
 \arguments{
-\item{re.gene.based:}{Gene based table}
+\item{re.gene.based}{Gene based table}
 
-\item{ad:}{The possible bias factor}
+\item{ad}{The possible bias factor}
 
-\item{sub_feature:}{The possible bias factor}
+\item{sub_feature}{The possible bias factor}
 
-\item{threshold:}{threshold used}
+\item{threshold}{threshold used}
 
-\item{genomeID:}{which genome}
+\item{genomeID}{which genome}
 
-\item{geneID:}{which type of gene ID}
+\item{geneID}{which type of gene ID}
 
-\item{gene_model:}{Gene model}
+\item{gene_model}{Gene model}
 
-\item{method:}{which method}
+\item{method}{which method}
+}
+\value{
+A data frame that includes gene ID, status of differential gene 
+and probability weight function
 }
 \description{
 Cbs is to check possible bias factor using the method in goseq
