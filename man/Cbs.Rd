@@ -29,9 +29,8 @@ Cbs is to check possible bias factor using the method in goseq
 }
 \examples{
 
-#library(PathwaySplice)
-#data(mds)
-#Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
+data(mds)
+Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
 
 
 }

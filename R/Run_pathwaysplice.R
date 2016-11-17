@@ -9,12 +9,6 @@
 #' @param gene_model to be used
 #' @param method: method to be used
 #' 
-#' @import goseq
-#'
-#' @importFrom geneLenDataBase unfactor
-#' @importFrom BiasedUrn dWNCHypergeo pWNCHypergeo
-#' @importFrom gdata trim
-#' @importFrom GO.db GO.db
 #'
 #' @export
 #'
@@ -28,8 +22,6 @@
 #' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",
 #' 0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19.gene.model,method="Hypergeometric")
 #'
-#' #write.table(Example.Go.unadjusted[[1]]$DE_GO,file="DE.txt",col.names = F,
-#' #row.names = F,quote=F)
 #'
 Run_pathwaysplice<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method){
 

@@ -1,23 +1,38 @@
-##' enMap2 is used to draw network based on similarities between GOs
-##'
-##' @title enMap2
-##' 
-##' @param GoSeqRes object returned from Run_pathwaysplice
-##' @param gene.set.type whether you are interested in GO, KEGG, or other pathways
-##' @param n maximum number of category to shown
-##' @param fixed if set to FALSE, will invoke tkplot
-##' @param vertex.label.font font size of vertex label
-##' @param SimilarityThreshold threshold for defining similarity between GOs 
-##' @param ... additional parameter
+#' enrichmentMap
+#' 
+#' enrichmentMap is used to draw network based on similarities between GOs
+#'
+#' @param GoSeqRes object returned from Run_pathwaysplice
+#' @param gene.set.type whether you are interested in GO, KEGG, or other pathways
+#' @param n maximum number of category to shown
+#' @param fixed if set to FALSE, will invoke tkplot
+#' @param vertex.label.font font size of vertex label
+#' @param SimilarityThreshold threshold for defining similarity between GOs 
+#' @param ... additional parameter
 
-##' @return A figure for visualizing network
-##' 
-##' 
-##' @export
-##' 
-##' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
-##' 
-enMap2 <- function(GoSeqRes,gene.set.type="GO",n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
+#' @return A figure for visualizing network
+#' 
+#' @examples
+#' 
+#' data(mds)
+#' 
+#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",
+#' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
+#' gene_model=hg19.gene.model,method="Wallenius")
+#' 
+#' re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
+#' 
+#' @export
+#' 
+#' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
+#' 
+#' 
+#' 
+#' 
+#' 
+#'
+
+enrichmentMap <- function(GoSeqRes,gene.set.type="GO",n = 50, fixed=TRUE, vertex.label.font=1, SimilarityThreshold,...) {
  
      # if (is(x, "gseaResult")) {
     #     geneSets <- x@geneSets

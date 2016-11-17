@@ -36,6 +36,5 @@ The user can select serveral statistical methods for computing p-values
 \examples{
 
 
-
 }
 

@@ -1,4 +1,4 @@
-#' LrCheckBias
+#' LRtestBias
 #'
 #' Logistic regression to check bias
 #'
@@ -16,9 +16,9 @@
 #' @examples
 #'
 #' data(mds)
-#' re<-Lcb(mds)
+#' re<-LRtestBias(mds)
 #'
-Lcb <- function(jscs_genewise_object,genewise.pvalue="geneWisePadj",sig.threshold=0.05,type=c("exon","splicing")) {
+LRtestBias <- function(jscs_genewise_object,genewise.pvalue="geneWisePadj",sig.threshold=0.05,type=c("exon","splicing")) {
 
   mydata<-jscs_genewise_object
 

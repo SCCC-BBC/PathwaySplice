@@ -16,9 +16,8 @@
 #'
 #' @examples
 #' 
-#' #library(PathwaySplice)
-#' #data(mds)
-#' #Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
+#' data(mds)
+#' Cbs(mds,ad="E",sub_feature="E",threshold=0.05)
 #' 
 #' 
 Cbs<-function(re.gene.based,ad="GL",sub_feature=NULL,threshold,genomeID,geneID,gene_model,method)
