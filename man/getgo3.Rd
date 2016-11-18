@@ -7,16 +7,19 @@
 getgo3(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
 }
 \arguments{
-\item{genes:}{gene list}
+\item{genes}{gene list}
 
-\item{genome:genome}{that is used}
+\item{genome}{genome that is used}
 
-\item{id:Gene}{id}
+\item{id}{Gene id}
 
-\item{fetch.cats:}{Gene sets that you are interested}
+\item{fetch.cats}{Gene sets that you are interested}
+}
+\value{
+a gene set(GO or pathway)
 }
 \description{
-getgo3
+Based on a gene list, and return a gene set that these genes belong to
 }
 \examples{
 

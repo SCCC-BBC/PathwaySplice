@@ -23,13 +23,9 @@ Run_pathwaysplice(re.gene.based, ad = "GL", sub_feature = NULL, threshold,
 \item{gene_model}{gene model to be used}
 
 \item{method}{method to be used}
-
-\item{Data4Goterm}{Gene based table}
-
-\item{sub_feature}{bias factor to be adjusted}
 }
 \description{
-Run_pathwaysplice
+Perform pathwaysplice in one step
 }
 \examples{
 

@@ -2,22 +2,17 @@
 #' 
 #' This function is used to generate the gene-based results
 #'
-#' @param jscs: output from JunctionSeq 
-#' 
-#' @param gene.list: gene list 
-#' 
-#' @param FDR.threshold: threshold to define whether exon or splicing junction is differential used 
-#' 
-#' @param verbose: whether to print runing process
+#' @param jscs output from JunctionSeq 
+#' @param gene.list gene list 
+#' @param FDR.threshold threshold to define whether exon or splicing junction is differential used 
+#' @param verbose whether to print runing process
 #'  
-#'
-#' @return
+#' @return A gene based table
 #' @export
 #'
 #' @examples
 #'
 #' #re.example.gene.based<-makeGeneWiseTable(Re.example,
-#' 
 #' #gene.list=unique(as.character(fData(Re.example)$geneID)))
 #' 
 #'

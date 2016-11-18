@@ -9,21 +9,23 @@ pathwaysplice(pwf, genome, id, gene.model, gene2cat = NULL,
   repcnt = 2000, use_genes_without_cat = FALSE)
 }
 \arguments{
-\item{pwf:}{probability weight function}
+\item{pwf}{probability weight function}
 
-\item{genome:}{genome you use}
+\item{genome}{genome you will use}
 
-\item{id:}{which gene id}
+\item{id}{which gene id}
 
-\item{gene2cat:}{a list with gene as name and category as value}
+\item{gene.model}{which gene model}
 
-\item{test.cats:}{the category you choose}
+\item{gene2cat}{a list with gene as name and category as value}
 
-\item{method:}{which method for calculting overpresentation p-value}
+\item{test.cats}{the category you choose}
 
-\item{repcnt:}{the number of replications}
+\item{method}{which method for calculting overpresentation p-value}
 
-\item{use_genes_without_cat:}{whether using genes without category or not}
+\item{repcnt}{the number of replications}
+
+\item{use_genes_without_cat}{whether using genes without category or not}
 }
 \value{
 The gene set enrichment results for gene sets

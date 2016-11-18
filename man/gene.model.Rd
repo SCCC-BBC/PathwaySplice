@@ -3,13 +3,13 @@
 \docType{data}
 \name{gene.model}
 \alias{gene.model}
-\title{Gene annotation data set}
+\title{mm10 Gene annotation data set}
 \format{A data frame with 23440 rows and 6 variables}
 \usage{
 data(gene.model)
 }
 \description{
-a data set for gene annotation
+a data set for mm10 gene annotation
 }
 \keyword{datasets}
 

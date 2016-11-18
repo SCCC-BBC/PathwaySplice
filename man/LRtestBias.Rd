@@ -8,13 +8,14 @@ LRtestBias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   sig.threshold = 0.05, type = c("exon", "splicing"))
 }
 \arguments{
-\item{genewise.pvalue:}{whether you use smallest p value or geneWisePadj}
+\item{jscs_genewise_object}{gene based table returned 
+from ReformatData and MakeGeneWiseTable_JunctionSeq}
 
-\item{sig.threshold:}{threshold to define differential gene list}
+\item{genewise.pvalue}{whether you use smallest p value or geneWisePadj}
 
-\item{type:}{whether you are interested in exon or splicing junction}
+\item{sig.threshold}{threshold to define differential gene list}
 
-\item{jscs_genewise_object:}{an object returned from ReformatData and MakeGeneWiseTable_JunctionSeq}
+\item{type}{whether you are interested in exon or splicing junction}
 }
 \value{
 return results from logistic regression

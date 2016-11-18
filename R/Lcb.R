@@ -2,16 +2,14 @@
 #'
 #' Logistic regression to check bias
 #'
-#' @param genewise.pvalue: whether you use smallest p value or geneWisePadj
-#'
-#' @param sig.threshold: threshold to define differential gene list
-#'
-#' @param type: whether you are interested in exon or splicing junction
-#'
-#' @param jscs_genewise_object: an object returned from ReformatData and MakeGeneWiseTable_JunctionSeq
+#' @param jscs_genewise_object gene based table returned 
+#' from ReformatData and MakeGeneWiseTable_JunctionSeq 
+#' @param genewise.pvalue whether you use smallest p value or geneWisePadj
+#' @param sig.threshold threshold to define differential gene list
+#' @param type whether you are interested in exon or splicing junction
 #'
 #' @return return results from logistic regression
-#' @export Boxplot of number of splicing junctions 
+#' @export  
 #'
 #' @examples
 #'

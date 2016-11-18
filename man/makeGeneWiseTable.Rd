@@ -7,13 +7,16 @@
 makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE)
 }
 \arguments{
-\item{jscs:}{output from JunctionSeq}
+\item{jscs}{output from JunctionSeq}
 
-\item{gene.list:}{gene list}
+\item{gene.list}{gene list}
 
-\item{FDR.threshold:}{threshold to define whether exon or splicing junction is differential used}
+\item{FDR.threshold}{threshold to define whether exon or splicing junction is differential used}
 
-\item{verbose:}{whether to print runing process}
+\item{verbose}{whether to print runing process}
+}
+\value{
+A gene based table
 }
 \description{
 This function is used to generate the gene-based results
@@ -21,7 +24,6 @@ This function is used to generate the gene-based results
 \examples{
 
 #re.example.gene.based<-makeGeneWiseTable(Re.example,
-
 #gene.list=unique(as.character(fData(Re.example)$geneID)))
 
 

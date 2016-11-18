@@ -4,14 +4,15 @@
 #' differentially expressed genes within the gene set. 
 #' The user can select serveral statistical methods for computing p-values
 #'
-#' @param pwf: probability weight function
-#' @param genome: genome you use
-#' @param id: which gene id
-#' @param gene2cat: a list with gene as name and category as value
-#' @param test.cats: the category you choose
-#' @param method: which method for calculting overpresentation p-value
-#' @param repcnt: the number of replications
-#' @param use_genes_without_cat: whether using genes without category or not
+#' @param pwf probability weight function
+#' @param genome genome you will use
+#' @param id which gene id
+#' @param gene.model which gene model
+#' @param gene2cat a list with gene as name and category as value
+#' @param test.cats the category you choose
+#' @param method which method for calculting overpresentation p-value
+#' @param repcnt the number of replications
+#' @param use_genes_without_cat whether using genes without category or not
 #'
 #' @return The gene set enrichment results for gene sets
 #' 

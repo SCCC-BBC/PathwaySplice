@@ -1,12 +1,14 @@
 #' getgo3
 #' 
+#' Based on a gene list, and return a gene set that these genes belong to
 #' 
-#' @param genes: gene list
-#' @param genome:genome that is used
-#' @param id:Gene id
-#' @param fetch.cats: Gene sets that you are interested 
+#' @param genes gene list
+#' @param genome genome that is used
+#' @param id Gene id
+#' @param fetch.cats Gene sets that you are interested 
 #'
-#' @return
+#' @return a gene set(GO or pathway)
+#' 
 #' @export
 #'
 #' @examples

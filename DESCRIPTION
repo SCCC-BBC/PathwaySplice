@@ -4,7 +4,7 @@ Title: An R Package for GO Term and Pathway Enrichment Analysis with the Flexibl
 Version: 0.1.0
 Author: Aimin Yan
 Maintainer: Aimin Yan <axy148@miami.edu>
-Imports:DOSE,GO.db,JunctionSeq,goseq,BiasedUrn,Biobase,gdata,geneLenDataBase,grDevices,
+Imports:stats,DOSE,GO.db,JunctionSeq,goseq,BiasedUrn,Biobase,gdata,geneLenDataBase,grDevices,
         igraph,org.Hs.eg.db,reshape2
 Suggests: testthat
 Description: PathwaySplice is used to adjust the bias from different number of splicing juctions
