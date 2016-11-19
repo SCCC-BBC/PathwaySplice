@@ -6,7 +6,7 @@
 \title{hg19 Gene annotation data set}
 \format{A data frame with 64437 rows and 6 variables}
 \usage{
-data(hg19.gene.model)
+data(hg19)
 }
 \description{
 a data set for hg19 gene annotation

@@ -1,4 +1,5 @@
 #  GetResultsFromJunctionSeq
+
 #' Get analysis results using JunctionSeq
 #'
 #' @param dir.name
@@ -6,7 +7,8 @@
 #' @param file.count
 #' @param file.gff
 #'
-#' @return
+#' @return return an analysis results from JunctionSeq
+
 #' @export
 #'
 #' @examples

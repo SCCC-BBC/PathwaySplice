@@ -12,7 +12,7 @@ NULL
 #' @docType data
 #' @keywords datasets
 #' @name hg19.gene.model
-#' @usage data(hg19.gene.model)
+#' @usage data(hg19)
 #' @format A data frame with 64437 rows and 6 variables
 NULL
 

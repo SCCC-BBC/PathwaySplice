@@ -4,13 +4,24 @@
 \alias{testPathwaySplice}
 \title{testPathwaySplice}
 \usage{
-testPathwaySplice()
+testPathwaySplice(gene_based_table, which_gene_model)
+}
+\arguments{
+\item{gene_based_table}{A gene based table converted from DEXSeq or JunctionSeq resutls}
+
+\item{which_gene_model}{Gene annotation file}
+}
+\value{
+
 }
 \description{
-testPathwaySplice
+Peform one-step analysis for check bias, adjusted gene set enrichment anlysis and build network
 }
 \examples{
-testPathwaySplice()
+data(mds)
+data(hg19) 
+
+testPathwaySplice(mds,hg19.gene.model)
 
 
 }
