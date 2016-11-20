@@ -25,7 +25,7 @@ Cbs(re.gene.based, ad = "GL", sub_feature = NULL, threshold, genomeID,
 \item{method}{which method}
 }
 \value{
-A data frame that includes gene ID, status of differential gene 
+A data frame that includes gene ID, status of differential gene
 and probability weight function
 }
 \description{

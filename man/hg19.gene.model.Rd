@@ -8,6 +8,9 @@
 \usage{
 data(hg19)
 }
+\value{
+a data frame with 64437 rows and 6 variables
+}
 \description{
 a data set for hg19 gene annotation
 }

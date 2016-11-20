@@ -11,7 +11,7 @@
 .onAttach <- function(libname, pkgname)
 {
   if(.Platform$OS.type=="windows" && .Platform$GUI=="Rgui" ) {
-    winMenuAddItem("Vignettes","goseq","shell.exec(system.file(\"doc\",\"goseq.pdf\",package=\"goseq\"))")
+    base::winMenuAddItem("Vignettes","PathwaySplice","shell.exec(system.file(\"doc\",\"PathwaySplice.pdf\",package=\"PathwaySplice\"))")
   }
 }
 

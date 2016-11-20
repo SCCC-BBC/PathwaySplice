@@ -8,6 +8,9 @@
 \usage{
 data(gene.model)
 }
+\value{
+a data set 23440 rows and 6 variables
+}
 \description{
 a data set for mm10 gene annotation
 }

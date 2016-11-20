@@ -5,7 +5,7 @@
 #' @param gene_based_table A gene based table converted from DEXSeq or JunctionSeq resutls
 #' @param which_gene_model Gene annotation file 
 #' 
-#' @return NULL
+#' @return None
 #' 
 #' @export
 #'

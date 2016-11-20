@@ -24,6 +24,9 @@ Run_pathwaysplice(re.gene.based, ad = "GL", sub_feature = NULL, threshold,
 
 \item{method}{method to be used}
 }
+\value{
+a list that has gene set enrichment analysis results
+}
 \description{
 Perform pathwaysplice in one step
 }

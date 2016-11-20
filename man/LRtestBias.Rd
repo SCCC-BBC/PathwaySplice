@@ -8,7 +8,7 @@ LRtestBias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   sig.threshold = 0.05, type = c("exon", "splicing"))
 }
 \arguments{
-\item{jscs_genewise_object}{gene based table returned 
+\item{jscs_genewise_object}{gene based table returned
 from ReformatData and MakeGeneWiseTable_JunctionSeq}
 
 \item{genewise.pvalue}{whether you use smallest p value or geneWisePadj}

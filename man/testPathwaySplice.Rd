@@ -11,6 +11,9 @@ testPathwaySplice(gene_based_table, which_gene_model)
 
 \item{which_gene_model}{Gene annotation file}
 }
+\value{
+None
+}
 \description{
 Peform one-step analysis for check bias, adjusted gene set enrichment anlysis and build network
 }

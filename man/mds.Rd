@@ -8,6 +8,9 @@
 \usage{
 data(mds)
 }
+\value{
+a data set 23520 rows and 17 variables
+}
 \description{
 a data set
 }

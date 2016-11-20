@@ -3,6 +3,7 @@ import(Biobase)
 import(DOSE)
 import(reshape2)
 import(igraph)
+import(org.Hs.eg.db)
 
 importFrom(BiocGenerics,sizeFactors)
 importFrom(AnnotationDbi,toTable,select)

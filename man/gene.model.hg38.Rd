@@ -8,6 +8,9 @@
 \usage{
 data(gene.model.hg38)
 }
+\value{
+a data set 24323 rows and 6 variables
+}
 \description{
 a data set for hg38 gene annotation
 }
