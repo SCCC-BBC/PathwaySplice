@@ -53,10 +53,6 @@ GetResultsFromJunctionSeq <-
     #path.file.gff<-file.gff
     print(path.file.gff)
     
-    #Analysis
-    #jscs.2<-runJunctionSeqAnalyses(sample.files= countFiles,sample.names= decoder.bySample$sample.ID,condition= decoder.bySample$group.ID,
-    #                             flat.gff.file=path.file.gff,nCores=1,verbose=TRUE,debug.mode=TRUE,use.multigene.aggregates = TRUE)
-    
     #Analysis using exonsOnly , and adjust Gender
     jscs.2 <-
       runJunctionSeqAnalyses(

@@ -3,7 +3,7 @@ Type: Package
 Title: An R Package for Adjusting Bias in Gene Set Enrichment Analysis 
 Version: 0.0.1
 Author: Aimin Yan
-Maintainer: Aimin Yan <axy148@miami.edu>
+Maintainer: Aimin Yan <jlfmssm@gmail.com>
 Depends: R (>= 3.3.0)
 Imports:stats,DOSE,GO.db,JunctionSeq,goseq,BiasedUrn,Biobase,gdata,geneLenDataBase,grDevices,
         igraph,org.Hs.eg.db,reshape2,BiocGenerics,AnnotationDbi,graphics,utils

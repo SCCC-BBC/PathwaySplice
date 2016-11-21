@@ -1,0 +1,42 @@
+---
+title: 'The tutorial to use PathwaySplice'
+header-includes: \usepackage{float}
+output:
+  html_document: default
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+  word_document: default
+pandoc_args: --natbib 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(cache = TRUE)
+```
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.pos = 'H')
+```
+
+## Motivation: 
+
+
+## Results: 
+
+## Introduction
+
+## RESULTS AND DISCUSSIONS
+
+## Analysis on a real data set
+
+![Bias_from_number_of exons](/Volumes/Bioinformatics\$/Aimin_project/GOSJ_example_data/presentation/Bias_gene.png)
+
+
+### Adjust bias on the step for identifying DGE
+
+
+
+## Conclusion
+
+## Reference
