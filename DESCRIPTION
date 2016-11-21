@@ -8,7 +8,6 @@ Depends: R (>= 3.3.0)
 Imports:stats,DOSE,GO.db,JunctionSeq,goseq,BiasedUrn,Biobase,gdata,geneLenDataBase,grDevices,
         igraph,org.Hs.eg.db,reshape2,BiocGenerics,AnnotationDbi,graphics,utils
 Suggests: testthat,knitr,rmarkdown
-VignetteBuilder: knitr
 biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization
 Description: PathwaySplice is used to adjust the bias from different number of splicing juctions.
 License: LGPL(>=2)
