@@ -1,6 +1,4 @@
----
-title: 'The tutorial to use PathwaySplice'
----
+<center> <h1>The tutorial to use PathwaySplice</h1> </center>
 
 + Run DExSeq or JunctionSeq to get differential exon or splicing junction analysis resutls 
 
