@@ -1,25 +1,8 @@
 ---
 title: 'The tutorial to use PathwaySplice'
-header-includes: \usepackage{float}
-output:
-  html_document: default
-  pdf_document:
-    fig_caption: yes
-    keep_tex: yes
-  word_document: default
-pandoc_args: --natbib 
 ---
 
-```{r setup, include=FALSE,echo=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-knitr::opts_chunk$set(cache = FALSE)
-```
-
-```{r global_options, include=FALSE,echo=FALSE}
-knitr::opts_chunk$set(fig.pos = 'H')
-```
-
-## Run DExSeq or JunctionSeq to get differential exon or splicing junction analysis resutls 
++ Run DExSeq or JunctionSeq to get differential exon or splicing junction analysis resutls 
 
 ```{r eval=FALSE}
 dir.name="/media/H_driver/Aimin_project/"
@@ -33,16 +16,21 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
  
 ```
 
-## Results: 
++ Convert the results of differential usage analysis into gene based resutls
 
-## Introduction
+```{r eval=FALSE}
+re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
+```
 
-## RESULTS AND DISCUSSIONS
 
-## Analysis on a real data set
++ Introduction
 
-### Adjust bias on the step for identifying DGE
++ RESULTS AND DISCUSSIONS
 
-## Conclusion
++ Analysis on a real data set
 
-## Reference
++ Adjust bias on the step for identifying DGE
+
++ Conclusion
+
++ Reference
