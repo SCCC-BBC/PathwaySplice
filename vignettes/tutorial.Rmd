@@ -10,12 +10,12 @@ output:
 pandoc_args: --natbib 
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE,echo=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(cache = FALSE)
 ```
 
-```{r global_options, include=FALSE}
+```{r global_options, include=FALSE,echo=FALSE}
 knitr::opts_chunk$set(fig.pos = 'H')
 ```
 
