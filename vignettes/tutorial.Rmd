@@ -11,16 +11,27 @@ pandoc_args: --natbib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(cache = FALSE)
 ```
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.pos = 'H')
 ```
 
-## Motivation: 
+## Run DExSeq or JunctionSeq to get differential exon or splicing junction analysis resutls 
 
+```{r eval=FALSE}
+dir.name="/media/H_driver/Aimin_project/"
+
+file.sample="decoder.bySample.Mut_WT_2.rtf"
+file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+
+file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+
+Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+ 
+```
 
 ## Results: 
 
@@ -30,12 +41,7 @@ knitr::opts_chunk$set(fig.pos = 'H')
 
 ## Analysis on a real data set
 
-![Bias_from_number_of exons](/Volumes/Bioinformatics\$/Aimin_project/GOSJ_example_data/presentation/Bias_gene.png)
-
-
 ### Adjust bias on the step for identifying DGE
-
-
 
 ## Conclusion
 
