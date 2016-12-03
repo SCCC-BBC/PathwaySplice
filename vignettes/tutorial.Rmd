@@ -39,7 +39,12 @@ Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,g
 
 + If you are interested in other gene sets such as Canonical Pathways(CP),Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these .gmt files, then perform the following steps:
 ```{r eval=TRUE}
-gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+
+gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt","local","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+
+#read from url
+#gene.2.cat.hallmark.hg.from.url<-Gmt2GeneCat("http://software.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/msigdb/5.2/h.all.v5.2.symbols.gmt","url","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+
 ```
 
 + Build up network based on the overlap between gene sets and visualize this network

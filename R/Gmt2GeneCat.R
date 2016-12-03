@@ -5,6 +5,7 @@
 #' being the pathways that this gene corresponds to
 #'
 #' @param gmt_input_file input file
+#' @param file.type local or url
 #' @param gene_anno_file annotation file
 #'
 #' @return a list with its names being geneID, its element being the pathways
@@ -13,11 +14,13 @@
 #'
 #' @examples
 #'
-#' gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt",
+#' gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt","local",
 #' "/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 #'
-Gmt2GeneCat <- function(gmt_input_file, gene_anno_file) {
-  gene.2.cat.gmt <- gene2cat2(gmt_input_file)
+Gmt2GeneCat <- function(gmt_input_file,file.type,gene_anno_file) {
+  
+  
+  gene.2.cat.gmt <- gene2cat2(gmt_input_file,file.type)
   
   names.gene.gmt <- as.data.frame(names(gene.2.cat.gmt))
   colnames(names.gene.gmt) <- "gene_id"
@@ -45,8 +48,11 @@ Gmt2GeneCat <- function(gmt_input_file, gene_anno_file) {
 #
 # gene.2.cat.hallmark<-gene2cat2("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt")
 #
-gene2cat2 <- function(gmt_input_file) {
-  re <- GSA.read.gmt.2(gmt_input_file)
+gene2cat2 <- function(gmt_input_file,file.type) {
+  
+  #tmp=file.type
+  
+  re <- GSA.read.gmt.2(gmt_input_file,file.type)
   gene.name <- unique(do.call(c, re$genesets))
   
   gene.2.cat <- sapply(gene.name, gene2cat, re)
@@ -72,8 +78,9 @@ gene2cat <- function(gene_name, re) {
 # re.gsa<-GSA.read.gmt.2("/media/H_driver/Annotation/MsigDB/c2.cp.Mouse.v5.1.symbols.gmt")
 #
 
-GSA.read.gmt.2 <- function (filename)
+GSA.read.gmt.2 <- function (filename,file.type)
 {
+  if(file.type!="url"){
   dir.name = dirname(filename)
   dir.name = reformatPath(dir.name)
   file.name = basename(filename)
@@ -81,7 +88,7 @@ GSA.read.gmt.2 <- function (filename)
   #dir(paste0(dir.name,file.name))
   
   filename = paste0(dir.name, file.name)
-  
+  }
   
   a = scan(
     filename,
