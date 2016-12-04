@@ -19,7 +19,6 @@
 #'
 Gmt2GeneCat <- function(gmt_input_file,file.type,gene_anno_file) {
   
-  
   gene.2.cat.gmt <- gene2cat2(gmt_input_file,file.type)
   
   names.gene.gmt <- as.data.frame(names(gene.2.cat.gmt))
@@ -44,24 +43,6 @@ Gmt2GeneCat <- function(gmt_input_file,file.type,gene_anno_file) {
   gene.2.cat.gmt.2
 }
 
-# examples
-#
-# gene.2.cat.hallmark<-gene2cat2("/media/H_driver/2015/Nimer_Cheng/h.all.v5.1.symbols.gmt")
-#
-gene2cat2 <- function(gmt_input_file,file.type) {
-  
-  #tmp=file.type
-  
-  re <- GSA.read.gmt.2(gmt_input_file,file.type)
-  gene.name <- unique(do.call(c, re$genesets))
-  
-  gene.2.cat <- sapply(gene.name, gene2cat, re)
-  names(gene.2.cat) <- gene.name
-  gene.2.cat
-  
-}
-
-
 gene2cat <- function(gene_name, re) {
   z <- re$genesets
   res <- lapply(z, function(ch)
@@ -72,39 +53,22 @@ gene2cat <- function(gene_name, re) {
   gene2cat
 }
 
-
-# examples
-#
-# re.gsa<-GSA.read.gmt.2("/media/H_driver/Annotation/MsigDB/c2.cp.Mouse.v5.1.symbols.gmt")
-#
-
-GSA.read.gmt.2 <- function (filename,file.type)
+GSA.read.gmt.2<-function (filename,type)
 {
-  if(file.type!="url"){
-  dir.name = dirname(filename)
-  dir.name = reformatPath(dir.name)
-  file.name = basename(filename)
   
-  #dir(paste0(dir.name,file.name))
-  
-  filename = paste0(dir.name, file.name)
+  if(type=="local"){
+    dir.name=dirname(filename)
+    dir.name=reformatPath(dir.name)
+    file.name=basename(filename)
+    #dir(paste0(dir.name,file.name))
+    filename=paste0(dir.name,file.name)
   }
   
-  a = scan(
-    filename,
-    what = list("", ""),
-    sep = "\t",
-    quote = NULL,
-    fill = TRUE,
-    flush = TRUE,
-    multi.line = FALSE
-  )
+  a = scan(filename, what = list("", ""), sep = "\t", quote = NULL,
+           fill = T, flush = T, multi.line = F)
   geneset.names = a[1][[1]]
   geneset.descriptions = a[2][[1]]
-  dd = scan(filename,
-            what = "",
-            sep = "\t",
-            quote = NULL)
+  dd = scan(filename, what = "", sep = "\t", quote = NULL)
   nn = length(geneset.names)
   n = length(dd)
   ox = rep(NA, nn)
@@ -128,11 +92,24 @@ GSA.read.gmt.2 <- function (filename,file.type)
   }
   geneset.descriptions[nn] = dd[ox[nn] + 1]
   genesets[[nn]] = dd[(ox[nn] + 2):n]
-  out = list(
-    genesets = genesets,
-    geneset.names = geneset.names,
-    geneset.descriptions = geneset.descriptions
-  )
+  out = list(genesets = genesets, geneset.names = geneset.names,
+             geneset.descriptions = geneset.descriptions)
   class(out) = "GSA.genesets"
   return(out)
 }
+
+gene2cat2 <- function(gmt_input_file,file.type) {
+  
+  #tmp=file.type
+  
+  re <- GSA.read.gmt.2(gmt_input_file,file.type)
+  gene.name <- unique(do.call(c, re$genesets))
+  
+  gene.2.cat <- sapply(gene.name, gene2cat, re)
+  names(gene.2.cat) <- gene.name
+  gene.2.cat
+  
+}
+
+
+
