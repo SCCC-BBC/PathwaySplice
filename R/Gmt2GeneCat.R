@@ -56,7 +56,7 @@ gene2cat <- function(gene_name, re) {
 GSA.read.gmt.2<-function (filename,type)
 {
   
-  if(type=="local"){
+  if(type!="url"){
     dir.name=dirname(filename)
     dir.name=reformatPath(dir.name)
     file.name=basename(filename)
