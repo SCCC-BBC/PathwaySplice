@@ -28,8 +28,6 @@ Gmt2GeneCat <- function(gmt_input_file,file.type,gene_anno_file) {
   dir.name = reformatPath(dir.name)
   file.name = basename(gene_anno_file)
   
-  #dir(paste0(dir.name,file.name))
-  
   gene_anno_file = paste0(dir.name, file.name)
   
   gene.ID.conversion <- read.csv(gene_anno_file)
@@ -60,7 +58,6 @@ GSA.read.gmt.2<-function (filename,type)
     dir.name=dirname(filename)
     dir.name=reformatPath(dir.name)
     file.name=basename(filename)
-    #dir(paste0(dir.name,file.name))
     filename=paste0(dir.name,file.name)
   }
   
@@ -74,7 +71,6 @@ GSA.read.gmt.2<-function (filename,type)
   ox = rep(NA, nn)
   ii = 1
   for (i in 1:nn) {
-    #cat(i)
     while ((dd[ii] != geneset.names[i]) | (dd[ii + 1] !=
                                            geneset.descriptions[i])) {
       ii = ii + 1
@@ -84,7 +80,6 @@ GSA.read.gmt.2<-function (filename,type)
   }
   genesets = vector("list", nn)
   for (i in 1:(nn - 1)) {
-    #cat(i, fill = T)
     i1 = ox[i] + 2
     i2 = ox[i + 1] - 1
     geneset.descriptions[i] = dd[ox[i] + 1]
@@ -100,16 +95,10 @@ GSA.read.gmt.2<-function (filename,type)
 
 gene2cat2 <- function(gmt_input_file,file.type) {
   
-  #tmp=file.type
-  
   re <- GSA.read.gmt.2(gmt_input_file,file.type)
   gene.name <- unique(do.call(c, re$genesets))
-  
   gene.2.cat <- sapply(gene.name, gene2cat, re)
   names(gene.2.cat) <- gene.name
   gene.2.cat
   
 }
-
-
-
