@@ -43,7 +43,8 @@ Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,g
 gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt","local","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 
 #read from url
-#gene.2.cat.hallmark.hg.from.url<-Gmt2GeneCat("http://software.broadinstitute.org/gsea/msigdb/download_file.jsp?filePath=/resources/msigdb/5.2/h.all.v5.2.symbols.gmt","url","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+# it works, but you need to get the correct url for h.all.v5.1.symbols-1.gmt file
+#gene.2.cat.hallmark.hg.from.url<-Gmt2GeneCat("ftp://ftp.broad.mit.edu/distribution/gsea/gene_sets/msigdb.v4.0c.symbols.gmt","url","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
 
 ```
 
