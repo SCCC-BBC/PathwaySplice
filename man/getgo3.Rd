@@ -23,7 +23,7 @@ Based on a gene list, and return a gene set that these genes belong to
 }
 \examples{
 
-re<-getgo3(rownames(Re.Go.adjusted.by.number.junction.2[[2]]),"mm10","ensGene",fetch.cats=c("GO:BP"))
+re<-getgo3(rownames(Re.Go.adjusted.by.number.junction.2[[2]]),'mm10','ensGene',fetch.cats=c('GO:BP'))
 
 }
 
