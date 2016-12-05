@@ -24,7 +24,6 @@
 #'
 Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL, 
     threshold, genomeID, geneID, gene_model, method) {
-    # Data4Goterm<-pData(re.gene.based)
     
     Data4Goterm <- re.gene.based
     
@@ -35,9 +34,6 @@ Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL,
             Data4Goterm[, 8]), ]
     }
     
-    
-    # print(dim(Data4Goterm.sub_feature))
-    
     if (sub_feature == "J") {
         Data4Goterm.sub_feature.geneID.NumOfJunctions <- Data4Goterm.sub_feature[, 
             c(1, 11)]
@@ -45,7 +41,6 @@ Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL,
         Data4Goterm.sub_feature.geneID.NumOfJunctions <- Data4Goterm.sub_feature[, 
             c(1, 10)]
     }
-    # print(dim(Data4Goterm.sub_feature.geneID.NumOfJunctions))
     
     Data4Goterm.sub_feature.Sig <- Data4Goterm.sub_feature[which(Data4Goterm.sub_feature[, 
         7] < threshold), ]
@@ -53,7 +48,7 @@ Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL,
     # GO term analysis using GOSeq
     All.gene.id.based.on.sub_feature <- unique(Data4Goterm.sub_feature[, 
         1])
-    # length(All.gene.id.based.on.sub_feature)
+    
     All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub_feature))
     names(All.gene.id.index) = All.gene.id.based.on.sub_feature
     
@@ -69,13 +64,6 @@ Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL,
         1] %in% c(names(All.gene.id.index)))
     num.junction.4.matched.gene <- as.numeric(Data4Goterm.sub_feature.geneID.NumOfJunctions[gene.with.matched.junction, 
         2])
-    
-    # names.4.matched.gene<-Data4Goterm.sub_feature.geneID.NumOfJunctions[gene.with.matched.junction,1]
-    
-    # All.gene.id.index.2<-All.gene.id.index[which(names(All.gene.id.index)
-    # %in% c(names.4.matched.gene))]
-    
-    # print(length(All.gene.id.index.2))
     
     All.gene.id.index.2 <- All.gene.id.index
     

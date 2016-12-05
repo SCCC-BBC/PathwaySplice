@@ -26,27 +26,21 @@
 
 GetResultsFromJunctionSeq <- function(dir.name, file.sample, 
   file.count, file.gff) {
+
   # Get sample file
-  
   dir.name = reformatPath(dir.name)
   
   path.file.sample <- paste0(dir.name, file.sample)
   decoder.bySample <- read.table(path.file.sample, header = TRUE, 
     stringsAsFactors = FALSE)
   
-  print(decoder.bySample)
-  
   # Get count file
   path.file.count <- paste0(dir.name, decoder.bySample$sample.ID, 
     file.count)
   countFiles <- paste0(path.file.count)
   
-  print(countFiles)
-  
   # Get annotation file
   path.file.gff <- paste0(dir.name, "GTF_Files/", file.gff)
-  # path.file.gff<-file.gff
-  print(path.file.gff)
   
   # Analysis using exonsOnly , and adjust Gender
   jscs.2 <- runJunctionSeqAnalyses(sample.files = countFiles, 

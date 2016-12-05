@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @examples
+#' # add an example
 
 #'
 #' gene.2.cat.hallmark.hg<-Gmt2GeneCat('/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt','local',
