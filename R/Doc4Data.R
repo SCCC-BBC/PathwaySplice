@@ -98,8 +98,8 @@ NULL
 #'     
 #' @docType data
 #' @keywords datasets
-#' @name gene.model
-#' @usage data(gene.model)
+#' @name mm10
+#' @usage data(mm10)
 #' @return a data set 23440 rows and 6 variables
 #' @format A data frame with 23440 rows and 6 variables
 NULL
