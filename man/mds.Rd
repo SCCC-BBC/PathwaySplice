@@ -3,7 +3,7 @@
 \docType{data}
 \name{mds}
 \alias{mds}
-\title{example data set}
+\title{An example data set}
 \format{A data frame with 23520 rows and 17 variables}
 \usage{
 data(mds)
@@ -12,7 +12,31 @@ data(mds)
 a data set 23520 rows and 17 variables
 }
 \description{
-a data set
+a data set for example data set
+}
+\details{
+\itemize{
+  \item geneID. Gene ID
+  \item chr. Chromosome information
+  \item start. Starting position
+  \item end. End position
+  \item strand. Strand information
+  \item baseMean. BaseMean based on all samples
+  \item geneWisePadj. GeneWise FDR calculated using smallest p value within each gene 
+  \item mostSigID. The feature that have smallest p-value within gene  
+  \item mostSigPadjust. p-value for the most significant feature 
+  \item numExons. Number of exons within gene
+  \item numKnown. Number of splicing junction within gene
+  \item numNovel. Number of novel splicing junction within gene
+  \item exonsSig. Number of significant exons
+  \item knownSig. Number of significant splicing junction
+  \item novelSig. Number of significant novel splicing junction
+  \item numFeatures. A list that includes number of exons,number of 
+  splicing junction and number of novel splicing junction within gene 
+  \item numSig. A list that includes number of significant exons,number of 
+  significant splicing junction and number of significant novel splicing 
+  junction within gene 
+}
 }
 \keyword{datasets}
 

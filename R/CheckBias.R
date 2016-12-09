@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' 
 #' data(mds)
 #' Cbs(mds,ad='E',sub_feature='E',threshold=0.05)
 #'

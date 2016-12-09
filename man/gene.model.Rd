@@ -13,6 +13,15 @@ a data set 23440 rows and 6 variables
 }
 \description{
 a data set for mm10 gene annotation
+ 
+\itemize{
+   \item gene_id. Gene symbol  
+   \item entrezgene. Entrez gene ID
+   \item ensembl_gene_id. Ensembl gene ID
+   \item chromosome_name. Chromosome information
+   \item start_position. Starting position
+   \item end_position. End position
+}
 }
 \keyword{datasets}
 
