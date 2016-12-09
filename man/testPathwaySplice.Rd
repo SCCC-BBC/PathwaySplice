@@ -21,7 +21,7 @@ Peform one-step analysis for check bias, adjusted gene set enrichment anlysis an
 data(mds)
 data(hg19)
 
-testPathwaySplice(mds,hg19.gene.model)
+testPathwaySplice(mds,hg19)
 
 
 }

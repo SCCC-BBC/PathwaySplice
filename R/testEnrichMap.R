@@ -13,7 +13,7 @@
 #' data(mds)
 #' data(hg19)
 #'
-#' testPathwaySplice(mds,hg19.gene.model)
+#' testPathwaySplice(mds,hg19)
 #'
 #'
 testPathwaySplice <- function(gene_based_table, which_gene_model) {
