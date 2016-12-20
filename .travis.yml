@@ -10,11 +10,28 @@ os:
   - linux
   - osx
 
+env:
+  global:
+    - _R_CHECK_FORCE_SUGGESTS_=False
+    - R_LIBS="http://cran.rstudio.com"
+
+r_packages:
+    - knitr
+    - rmarkdown
+    - Jun
+    - JunctionSeq
+    - goseq
+    
+## bioc_packages:
+##     - org.Hs.eg.db
+##     - DOSE
+##     - GOSemSim
+
 after_failure:
   - ./travis-tool.sh dump_logs
 
 after_success:
-  - Rscript -e 'library(PathwaySplice);'
+  - Rscript -e 'library(covr); codecov()'
 
 notifications:
   email:
