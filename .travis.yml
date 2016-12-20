@@ -36,12 +36,13 @@ r_packages:
     - rmarkdown
     - JunctionSeq
     - goseq
+    - gdata
+    - geneLenDataBase
+    - GO.db
+    - igraph
 
-
-
-
-## bioc_packages:
-##     - org.Hs.eg.db
+bioc_packages:
+     - org.Hs.eg.db
 ##     - DOSE
 ##     - GOSemSim
 
