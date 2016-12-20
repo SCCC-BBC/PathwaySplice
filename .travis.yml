@@ -3,6 +3,8 @@ r:
   - bioc-devel
 
 cache: packages
+warnings_are_errors: true
+sudo: false 
 bioc_required: true
 bioc_use_devel: true
 
@@ -10,6 +12,20 @@ os:
   - linux
   - osx
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
+
+before_install: |
+  mkdir ~/.R
+  cat <<EOF > ~/.R/Makevars
+  CXX1X=g++-4.9
+  CXX1XSTD=-std=c++11
+  
 env:
   global:
     - _R_CHECK_FORCE_SUGGESTS_=False
@@ -20,20 +36,9 @@ r_packages:
     - rmarkdown
     - JunctionSeq
     - goseq
-    
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.9
-      - g++-4.9
 
-before_install: 
-  mkdir ~/.R
-  cat <<EOF > ~/.R/Makevars
-  CXX1X=g++-4.9
-  CXX1XSTD=-std=c++11
+
+
 
 ## bioc_packages:
 ##     - org.Hs.eg.db
