@@ -39,6 +39,7 @@ r_packages:
   - rmarkdown
   - grDevices
   - graphics
+  - lazyeval
   
 r_github_packages:
   - kevinushey/rex
