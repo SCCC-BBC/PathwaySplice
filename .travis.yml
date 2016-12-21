@@ -37,6 +37,8 @@ r_packages:
   - graphics
   
 r_github_packages:
+  - kevinushey/rex
+  - gaborcsardi/crayon
   - jimhester/covr
 
 ##     - DOSE
