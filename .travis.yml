@@ -34,15 +34,16 @@ env:
 r_packages:
     - knitr
     - rmarkdown
-    - JunctionSeq
-    - goseq
     - gdata
-    - geneLenDataBase
-    - GO.db
     - igraph
 
 bioc_packages:
      - org.Hs.eg.db
+     - geneLenDataBase
+     - GO.db
+     - goseq
+     - JunctionSeq
+     
 ##     - DOSE
 ##     - GOSemSim
 
