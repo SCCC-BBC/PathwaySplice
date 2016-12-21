@@ -5,8 +5,11 @@ Version: 0.99.0
 Author: Aimin Yan
 Maintainer: Aimin Yan <jlfmssm@gmail.com>
 Depends: R (>= 3.3.0)
-Imports:stats,DOSE,GO.db,JunctionSeq,goseq,BiasedUrn,Biobase,gdata,geneLenDataBase,grDevices,
-        igraph,org.Hs.eg.db,reshape2,BiocGenerics,AnnotationDbi,graphics,utils
+Imports:goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationDbi,JunctionSeq,
+        BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils
+Remotes:bioc::release/goseq,bioc::release/Biobase,bioc::release/DOSE,bioc::release/org.Hs.eg.db,
+        bioc::release/BiocGenerics,bioc::release/AnnotationDbi,bioc::release/JunctionSeq,bioc::release/GO.db,
+        bioc::release/geneLenDataBase
 Suggests: testthat,knitr,rmarkdown
 VignetteBuilder: knitr
 biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization
