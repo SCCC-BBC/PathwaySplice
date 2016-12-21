@@ -9,7 +9,6 @@ bioc_required: true
 bioc_use_devel: true
 
 os:
-  - linux
   - osx
 
 addons:
@@ -30,20 +29,7 @@ env:
   global:
     - _R_CHECK_FORCE_SUGGESTS_=False
     - R_LIBS="http://cran.rstudio.com"
-
-r_packages:
-    - knitr
-    - rmarkdown
-    - gdata
-    - igraph
-
-bioc_packages:
-     - org.Hs.eg.db
-     - geneLenDataBase
-     - GO.db
-     - goseq
-     - JunctionSeq
-     
+  
 ##     - DOSE
 ##     - GOSemSim
 
