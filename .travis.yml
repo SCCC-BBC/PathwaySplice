@@ -1,61 +1,26 @@
 language: r
-r:
-  - bioc-devel
 
-before_install:
-  - tlmgr install index
-
+r: bioc-devel
+warnings_are_errors: false
+sudo: false
 cache: packages
-warnings_are_errors: true
-sudo: false 
-bioc_required: true
-bioc_use_devel: true
-
-os:
-  - osx
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-4.9
-      - g++-4.9
-
-before_install: |
-  mkdir ~/.R
-  cat <<EOF > ~/.R/Makevars
-  CXX1X=g++-4.9
-  CXX1XSTD=-std=c++11
-  
-env:
-  global:
-    - _R_CHECK_FORCE_SUGGESTS_=False
-    - R_LIBS="http://cran.rstudio.com"
 
 r_packages:
-  - knitr
-  - rmarkdown
-  - grDevices
-  - graphics
-  - lazyeval
+  - knitrBootstrap
+  - covr
 
-r_github_packages:
-  - kevinushey/rex
-  - gaborcsardi/crayon
-  - jimhester/covr
-
-##     - DOSE
-##     - GOSemSim
-
-after_failure:
-  - ./travis-tool.sh dump_logs
+r_build_args: "--no-manual --no-resave-data"
+r_check_args: "--no-build-vignettes --no-manual --timings"
 
 after_success:
-  - Rscript -e 'covr::codecov()'
-  
+  - Rscript -e 'library(covr); codecov()'
+
 notifications:
   email:
-    recipients: axy148@miami.edu
-    on_success: always
-    on_failure: always
+    on_success: axy148@miami.edu
+    on_failure: axy148@miami.edu
+
+
+env:
+  global:
+    - _R_CHECK_TIMINGS_="0"
