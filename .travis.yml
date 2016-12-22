@@ -1,10 +1,9 @@
 language: r
+r:
+  - bioc-devel
 
 before_install:
   - tlmgr install index
-
-r:
-  - bioc-devel
 
 cache: packages
 warnings_are_errors: true
@@ -40,7 +39,10 @@ r_packages:
   - grDevices
   - graphics
   - lazyeval
-  
+
+bioc_packages:
+    - org.Hs.eg.db
+    
 r_github_packages:
   - kevinushey/rex
   - gaborcsardi/crayon
