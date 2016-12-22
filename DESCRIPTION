@@ -7,7 +7,7 @@ Maintainer: Aimin Yan <jlfmssm@gmail.com>
 Depends: R (>= 3.3.0)
 Imports:goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationDbi,JunctionSeq,
         BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils
-Remotes:bioc::release/goseq,bioc::release/Biobase,bioc::release/DOSE,bioc::release/org.Hs.eg.db,
+Remotes:bioc::release/goseq,bioc::release/Biobase,bioc::release/DOSE,bioc::3.3/org.Hs.eg.db,
         bioc::release/BiocGenerics,bioc::release/AnnotationDbi,bioc::release/JunctionSeq,bioc::release/GO.db,
         bioc::release/geneLenDataBase
 Suggests: testthat,knitr,rmarkdown
