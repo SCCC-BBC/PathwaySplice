@@ -40,9 +40,6 @@ r_packages:
   - graphics
   - lazyeval
 
-bioc_packages:
-    - org.Hs.eg.db
-    
 r_github_packages:
   - kevinushey/rex
   - gaborcsardi/crayon
