@@ -26,6 +26,7 @@ r_github_packages:
   - kevinushey/rex
   - gaborcsardi/crayon
   - jimhester/covr
+  - gagolews/stringi
 
 r_build_args: "--no-manual --no-resave-data"
 r_check_args: "--no-build-vignettes --no-manual --timings"
