@@ -20,6 +20,10 @@ before_install: |
   CXX1XSTD=-std=c++11
 
 r_packages:
+  - evaluate
+  - stringr
+  - knitr
+  - rmarkdown 
   - knitrBootstrap
   - covr
 
