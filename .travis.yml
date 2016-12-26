@@ -23,7 +23,7 @@ before_install: |
   CXX1XSTD=-std=c++11 -fPIC
 
 r_github_packages:
-  - gagolews/stringi
+#  - gagolews/stringi
   - yihui/knitr
   - rstudio/rmarkdown
   - jimhester/knitrBootstrap
