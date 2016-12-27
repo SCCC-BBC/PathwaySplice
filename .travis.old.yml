@@ -1,0 +1,64 @@
+language: r
+r:
+  - bioc-devel
+
+before_install:
+  - tlmgr install index
+
+cache: packages
+warnings_are_errors: true
+sudo: false 
+bioc_required: true
+bioc_use_devel: true
+
+os:
+  - osx
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.9
+      - g++-4.9
+
+before_install: |
+  mkdir ~/.R
+  cat <<EOF > ~/.R/Makevars
+  CXX1X=g++-4.9
+  CXX1XSTD=-std=c++11
+  
+env:
+  global:
+    - _R_CHECK_FORCE_SUGGESTS_=False
+    - R_LIBS="http://cran.rstudio.com"
+
+r_packages:
+  - knitr
+  - rmarkdown
+  - grDevices
+  - graphics
+  - lazyeval
+
+r_binary_packages:
+  - stringi
+
+r_github_packages:
+  - kevinushey/rex
+  - gaborcsardi/crayon
+  - jimhester/covr
+
+#     - DOSE
+##     - GOSemSim
+
+after_failure:
+  - ./travis-tool.sh dump_logs
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+  
+notifications:
+  email:
+    recipients: axy148@miami.edu
+    on_success: always
+    on_failure: always
