@@ -18,9 +18,17 @@
 #'
 #' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",
 #' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
-#' gene_model=hg19,method="Wallenius")
-#'
+#' gene_model=hg19,method="Sampling")
+#' 
 #' re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
+
+#' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",
+#' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
+#' gene_model=hg19,method="Hypergeometric")
+#' 
+#' re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
+#'
+#' 
 #'
 #' @export
 #'
@@ -42,16 +50,16 @@ enrichmentMap <-
     # }
     
     if (gene.set.type == "GO") {
-      GO.name <- GoSeqRes[[1]]$GO$category
-      temp <- GoSeqRes[[1]]$GO$DEgene_ID
+      GO.name <- GoSeqRes[[1]]$category
+      temp <- GoSeqRes[[1]]$DEgene_ID
       names(temp) <- GO.name
-      x = GoSeqRes[[1]]$GO
+      x = GoSeqRes[[1]]
       geneSets = temp
     } else{
-      GO.name <- GoSeqRes$GO$category
-      temp <- GoSeqRes$GO$DEgene_ID
+      GO.name <- GoSeqRes$category
+      temp <- GoSeqRes$DEgene_ID
       names(temp) <- GO.name
-      x = GoSeqRes$GO
+      x = GoSeqRes[[1]]
       geneSets = temp
     }
     
@@ -82,7 +90,9 @@ enrichmentMap <-
       
       V(g)$color <- "red"
     } else {
-      pvalue <- y$over_represented_pvalue
+      pvalue <- as.numeric(y$over_represented_pvalue)
+      
+      print(pvalue)
       
       id <- y[, 1]
       geneSets <- geneSets[id]
@@ -130,7 +140,7 @@ enrichmentMap <-
       #     cnt <- y$Count
       # }
       
-      cnt <- y$numDEInCat
+      cnt <- as.integer(y$numDEInCat)
       
       names(cnt) <- VertexName[1:n]
       cnt2 <- cnt[V(g)$name]
