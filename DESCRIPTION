@@ -10,7 +10,8 @@ Imports:goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationD
 Suggests: testthat,knitr,rmarkdown
 VignetteBuilder: knitr
 biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization
-Description: PathwaySplice is used to adjust the bias from different number of splicing juctions.
+Description: PathwaySplice is used to perform gene set enrichment analysis for differential
+usage based gene list, and to construct and visualize network from enrichment analysis results.
 License: LGPL(>=2)
 LazyData: TRUE
 RoxygenNote: 5.0.1
