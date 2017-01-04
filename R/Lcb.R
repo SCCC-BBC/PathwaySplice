@@ -15,7 +15,7 @@
 #' @examples
 #'
 #' data(mds)
-#' re<-LRtestBias(mds)
+#' re<-LRtestBias(mds,boxplot_width=0.3)
 #'
 LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
     sig.threshold = 0.05, type = c("exon", "splicing"),boxplot_width) {
