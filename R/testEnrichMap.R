@@ -18,7 +18,7 @@
 #'
 testPathwaySplice <- function(gene_based_table, which_gene_model) {
   #Check bias using logistics regression model
-  re <- LRtestBias(gene_based_table)
+  re <- LRtestBias(gene_based_table,boxplot_width = 0.3)
   
   #Analysis
   Example.Go.adjusted.by.exon <-
