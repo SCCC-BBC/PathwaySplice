@@ -5,7 +5,7 @@
 \title{LRtestBias}
 \usage{
 LRtestBias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
-  sig.threshold = 0.05, type = c("exon", "splicing"))
+  sig.threshold = 0.05, type = c("exon", "splicing"), boxplot_width)
 }
 \arguments{
 \item{jscs_genewise_object}{gene based table returned
@@ -16,6 +16,8 @@ from ReformatData and MakeGeneWiseTable_JunctionSeq}
 \item{sig.threshold}{threshold to define differential gene list}
 
 \item{type}{whether you are interested in exon or splicing junction}
+
+\item{boxplot_width}{parameter for boxplot width}
 }
 \value{
 return results from logistic regression
