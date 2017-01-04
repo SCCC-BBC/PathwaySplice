@@ -11,7 +11,8 @@ Suggests: testthat,knitr,rmarkdown
 VignetteBuilder: knitr
 biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization
 Description: PathwaySplice is used to perform gene set enrichment analysis for differential
-usage based gene list, and to construct and visualize network from enrichment analysis results.
+             usage based gene list, and to construct and visualize network from enrichment
+             analysis results.
 License: LGPL(>=2)
 LazyData: TRUE
 RoxygenNote: 5.0.1
