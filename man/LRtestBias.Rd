@@ -28,7 +28,7 @@ Logistic regression to check bias
 \examples{
 
 data(mds)
-re<-LRtestBias(mds)
+re<-LRtestBias(mds,boxplot_width=0.3)
 
 }
 
