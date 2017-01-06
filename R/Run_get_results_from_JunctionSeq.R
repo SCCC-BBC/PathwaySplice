@@ -1,5 +1,4 @@
-# GetResultsFromJunctionSeq
-
+#' GetResultsFromJunctionSeq
 #' Get analysis results using JunctionSeq
 #'
 #' @param dir.name
@@ -22,7 +21,7 @@
 #' #file.count='/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
 #'
 #' #Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
-#' 
+
 
 GetResultsFromJunctionSeq <- function(dir.name, file.sample, 
   file.count, file.gff) {
