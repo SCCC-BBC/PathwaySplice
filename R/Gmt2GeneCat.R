@@ -14,8 +14,7 @@
 #'
 #' @examples
 #'
-#' gene.2.cat.hallmark.hg<-Gmt2GeneCat('/media/H_driver/
-#' Annotation/hg38/h.all.v5.1.symbols-1.gmt','local',
+#' gene.2.cat.hallmark.hg<-Gmt2GeneCat('/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt','local',
 #' '/media/H_driver/Annotation/hg38/genes_table_02092016.csv')
 #'
 Gmt2GeneCat <- function(gmt_input_file, file.type, gene_anno_file) {
@@ -56,6 +55,8 @@ GSA.read.gmt.2 <- function(filename, type) {
     file.name = basename(filename)
     filename = paste0(dir.name, file.name)
   }
+  
+  print(filename)
   
   a = scan(filename, what = list("", ""), sep = "\t", quote = NULL, 
     fill = TRUE, flush = TRUE, multi.line = FALSE)
