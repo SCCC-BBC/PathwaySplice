@@ -598,7 +598,6 @@ plotPWF2 <-
 
 OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   
-
   #select GO term(10<=numInCat<=300 and BP only)
   
   index.select<-which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat>=10&Re.Go.adjusted.by.exon.SJ[[1]]$numInCat<=300&Re.Go.adjusted.by.exon.SJ[[1]]$ontology=="BP")
@@ -607,21 +606,7 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   Re.Go.adjusted.by.exon.SJ.select<-Re.Go.adjusted.by.exon.SJ.select[,-3]
   
   Re.Go.adjusted.by.exon.SJ.select<-format(Re.Go.adjusted.by.exon.SJ.select,scientific = TRUE,digits=2)
-  # over_represented_pvalue_adjusted<-p.adjust(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue,method="BH")
-  # 
-  # Re.Go.adjusted.by.exon.SJ.select.with.adjP<-cbind(Re.Go.adjusted.by.exon.SJ.select[,c(1,2)],over_represented_pvalue_adjusted,Re.Go.adjusted.by.exon.SJ.select[,-c(1,2,3)])
-  # 
-  # 
-  # dataset2<- Re.Go.adjusted.by.exon.SJ.select.with.adjP
-  # 
-  # dataset2[sapply(dataset2, is.list)] <-
-  #   sapply(dataset2[sapply(dataset2, is.list)],
-  #          function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
-  # 
-  # write.table(dataset2,file=paste0(Output_file_dir,"/",DE_type,".xls"),row.names = FALSE,quote=FALSE,sep="\t")
-  # 
-  # write.table(Re.Go.adjusted.by.exon.SJ[[2]],file=paste0(Output_file_dir,"/",DE_type,"pwf.xls"),row.names = T,quote=FALSE,sep="\t")
-  # 
+  
   return(Re.Go.adjusted.by.exon.SJ.select)
   
 }
