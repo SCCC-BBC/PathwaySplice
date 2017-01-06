@@ -23,7 +23,7 @@ enrichmentMap(GoSeqRes, gene.set.type = "GO", n = 50, fixed = TRUE,
 \item{...}{additional parameter}
 }
 \value{
-A figure for visualizing network
+A figure for visualizing enrichment network
 }
 \description{
 enrichmentMap is used to draw network based on similarities between GOs
@@ -31,19 +31,14 @@ enrichmentMap is used to draw network based on similarities between GOs
 \examples{
 
 data(mds)
-
 Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",
 sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
 gene_model=hg19,method="Sampling")
-
 re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
 Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",
 sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
 gene_model=hg19,method="Hypergeometric")
-
 re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
-
-
 
 }
 \author{
