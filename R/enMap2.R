@@ -9,31 +9,25 @@
 #' @param vertex.label.font font size of vertex label
 #' @param SimilarityThreshold threshold for defining similarity between GOs
 #' @param ... additional parameter
-
-#' @return A figure for visualizing network
-#'
+#' @export
+#' @return A figure for visualizing enrichment network
+#' 
+#' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
+#' 
 #' @examples
 #'
 #' data(mds)
-#'
 #' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",
 #' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
 #' gene_model=hg19,method="Sampling")
-#' 
 #' re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
 
 #' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",
 #' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
 #' gene_model=hg19,method="Hypergeometric")
-#' 
 #' re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
 #'
-#' 
-#'
-#' @export
-#'
-#' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
-#'
+
 enrichmentMap <-
   function(GoSeqRes,
            gene.set.type = "GO",
@@ -42,13 +36,7 @@ enrichmentMap <-
            vertex.label.font = 1,
            SimilarityThreshold,
            ...) {
-    # if (is(x, "gseaResult")) {
-    #     geneSets <- x@geneSets
-    # }
-    # if (is(x, "enrichResult")) {
-    #     geneSets <- geneInCategory(x)
-    # }
-    
+
     if (gene.set.type == "GO") {
       GO.name <- GoSeqRes[[1]]$category
       temp <- GoSeqRes[[1]]$DEgene_ID
@@ -64,8 +52,6 @@ enrichmentMap <-
     }
     
     y <- as.data.frame(x)
-    
-    print(head(y))
     
     if (any(grep("^GO:", y$category))) {
       VertexName <- paste0(y$term, ":", y$numDEInCat)
@@ -91,8 +77,6 @@ enrichmentMap <-
       V(g)$color <- "red"
     } else {
       pvalue <- as.numeric(y$over_represented_pvalue)
-      
-      print(pvalue)
       
       id <- y[, 1]
       geneSets <- geneSets[id]
@@ -123,29 +107,17 @@ enrichmentMap <-
       
       V(g)$color <-
         cols[sapply(pvalue, getIdx, min(pvalue), max(pvalue))]
-      ## seq_gradient_pal("red", "grey")(pvalue[idx])
-      
-      ## data can be exported to view in Cytoscape or other tools
-      ##
-      ##
+
       Edata <- as.data.frame(get.edgelist(g))
       Edata$edgewidth <- E(g)$width
       Vdata <- data.frame(pathway = V(g)$name, color = V(g)$color)
       map_data <- list(edge_data = Edata, vertex_data = Vdata)
       
-      # if (is(x, "gseaResult")) {
-      #     cnt <- y$setSize / 10
-      # }
-      # if (is(x, "enrichResult")) {
-      #     cnt <- y$Count
-      # }
-      
       cnt <- as.integer(y$numDEInCat)
       
       names(cnt) <- VertexName[1:n]
       cnt2 <- cnt[V(g)$name]
-      #  V(g)$size <- log(cnt2, base=10) * 10 ## cnt2/sum(cnt2) * 100
-      
+
       V(g)$size <- cnt2 / sum(cnt2) * 100
     }
     
@@ -156,10 +128,9 @@ enrichmentMap <-
       fixed = fixed,
       ...
     )
-    ## invisible(map_data)
+ 
     invisible(g)
     
-    #re<-list(w=w,wd=wd)
     re2 <- map_data
     return(re2)
   }
@@ -170,7 +141,6 @@ overlap_ratio <- function(x, y) {
   length(intersect(x, y)) / length(unique(c(x, y)))
 }
 
-##' @importFrom grDevices colorRampPalette
 color_scale <- function(c1 = "grey", c2 = "red") {
   pal <- colorRampPalette(c(c1, c2))
   colors <- pal(100)
