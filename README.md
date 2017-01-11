@@ -3,4 +3,66 @@
 # PathwaySplice
 An R package for adjusting bias in pathway analysis using differential exon and splicing junction usage based results
 
+# To Install
 
+
+<center> <h1>The tutorial to use PathwaySplice</h1> </center>
+
++ Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
+
+```{r eval=FALSE}
+dir.name="/media/H_driver/Aimin_project/"
+
+file.sample="decoder.bySample.Mut_WT_2.rtf"
+file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+
+file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+
+Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+ 
+```
+
++ Convert the results of differential usage analysis into gene based resutls
+
+```{r eval=FALSE}
+re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
+```
+
++ Apply logistic regression model to identify bias factor
+```{r eval=TRUE}
+library(PathwaySplice)
+data(mds)
+hist(as.numeric(mds$numExons),xlab="Number of exons",main="Distribution of number of exons")
+
+re<-LRtestBias(mds,boxplot_width=0.3)
+```
+
++ Perform pathwaysplice in one step
+```{r eval=TRUE}
+library(PathwaySplice)
+data(mds)
+data(hg19)
+Example.Go.adjusted.by.exon.Wallenius<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Wallenius")
+Example.Go.adjusted.by.exon.sampling<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Sampling")
+Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Hypergeometric")
+
+```
+
++ If you are interested in other gene sets such as Canonical Pathways(CP),Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these .gmt files, then perform the following steps:
+```{r eval=TRUE}
+
+gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt","local","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+
+#read from url
+# it works, but you need to get the correct url for h.all.v5.1.symbols-1.gmt file
+#gene.2.cat.hallmark.hg.from.url<-Gmt2GeneCat("ftp://ftp.broad.mit.edu/distribution/gsea/gene_sets/msigdb.v4.0c.symbols.gmt","url","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+
+```
+
++ Build up network based on the overlap between gene sets and visualize this network
+
+```{r eval=TRUE}
+data(mds)
+Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Wallenius")
+re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
+```
