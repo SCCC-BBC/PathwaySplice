@@ -22,9 +22,30 @@
 #' data(TinyData)
 #' re<-LRtestBias(tiny.data,p.x=2,p.y=150,boxplot_width=0.3)
 #' 
-#'
+#' re<-LRtestBias(mds2,p.x=2,p.y=600,boxplot_width=0.3)
+#' 
+#' head(mds2,100)
+#' 
+#' range(as.numeric(mds2$numExons))
+#' hist(as.numeric(mds2$numExons))
+#' 
+#' boxplot(as.numeric(mds2$numExons))
+#' 
+#' mds3<-mds2[which(as.numeric(mds2$numExons)<=50),]
+#' 
+#' hist(as.numeric(mds3$numExons))
+#' 
+#' dim(mds3)
+#' dim(mds2)
+#' 
+#' mds<-mds3
+#' 
+#' save(mds,file="./data/mds.RData")
+#' 
+#' re<-LRtestBias(mds3,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
+#' 
 LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
-    sig.threshold = 0.05, type = c("exon", "splicing"),p.x,p.y,boxplot_width) {
+    sig.threshold = 0.05, type = c("exon","splicing"),p.x,p.y,y_lim,boxplot_width) {
     mydata <- jscs_genewise_object
     
     n.gene <- dim(mydata)[1]
@@ -61,7 +82,7 @@ LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
     }
     
     boxplot(unlist(mydata.3[, c(10, 18)]$numExons) ~ unlist(mydata.3[, 
-        c(10, 18)]$DE.out), boxwex=boxplot_width,ylab = "Number of exons", col = "lightgray")
+        c(10, 18)]$DE.out), boxwex=boxplot_width,ylab = "Number of exons", col = "lightgray",ylim=c(1,y_lim))
     
     text(x = p.x, y = p.y, labels = c("", paste0("p value from logistic regression:\n\n", 
         pvalue)), col = c(NA, "black"))
