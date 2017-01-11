@@ -6,7 +6,7 @@ An R package for adjusting bias in pathway analysis using differential exon and 
 # To Install
 
 
-<center> <h1>The tutorial to use PathwaySplice</h1> </center>
+<center> <h1>Use PathwaySplice</h1> </center>
 
 + Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
 
