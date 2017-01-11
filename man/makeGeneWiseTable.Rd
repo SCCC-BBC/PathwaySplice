@@ -23,8 +23,21 @@ This function is used to generate the gene-based results
 }
 \examples{
 
-#re.example.gene.based<-makeGeneWiseTable(Re.example,
-#gene.list=unique(as.character(fData(Re.example)$geneID)))
+all.gene.list<-unique(as.character(fData(Re.example)$geneID))
+
+#make a tiny example data set
+choosed.gene.list<-sample(all.gene.list,500)
+re.example.gene.based<-makeGeneWiseTable(Re.example,
+gene.list=choosed.gene.list)
+tiny.data<-re.example.gene.based
+save(tiny.data,file="./data/TinyData.RData")
+
+#make an example data using all genes
+
+all.gene.data<-makeGeneWiseTable(Re.example,
+gene.list=all.gene.list)
+mds2<-all.gene.data
+save(mds2,file="./data/mds2.RData")
 
 
 }
