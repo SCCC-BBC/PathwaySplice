@@ -6,7 +6,8 @@ An R package for adjusting bias in pathway analysis using differential exon and 
 # To Install
 
 library(devtools)
-install_github("twitter/AnomalyDetection")
+
+install_github("SCCC-BBC/PathwaySplice")
 
 # Use PathwaySplice
 
