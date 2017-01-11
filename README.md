@@ -19,7 +19,7 @@ install_github("SCCC-BBC/PathwaySplice")
 library(PathwaySplice)
 dir.name="/media/H_driver/Aimin_project/"
 
-file.sample="decoder.bySample.Mut_WT_2.rtf"
+file.sample="decoder.bySample.Mut_WT_3.rtf"
 file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
 
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
@@ -39,9 +39,6 @@ choosed.gene.list<-sample(all.gene.list,500)
 re.example.gene.based<-makeGeneWiseTable(Re.example,
 gene.list=choosed.gene.list)
 tiny.data<-re.example.gene.based
-
-#make an example data set for all genes
-#re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
 
 ```
 
