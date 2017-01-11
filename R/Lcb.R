@@ -7,6 +7,8 @@
 #' @param genewise.pvalue whether you use smallest p value or geneWisePadj
 #' @param sig.threshold threshold to define differential gene list
 #' @param type whether you are interested in exon or splicing junction
+#' @param p.x x coordinate for p value label 
+#' @param p.y y coordinate for p value label
 #' @param boxplot_width parameter for boxplot width
 #'
 #' @return return results from logistic regression
@@ -16,9 +18,13 @@
 #'
 #' data(mds)
 #' re<-LRtestBias(mds,boxplot_width=0.3)
+#' 
+#' data(TinyData)
+#' re<-LRtestBias(tiny.data,p.x=2,p.y=150,boxplot_width=0.3)
+#' 
 #'
 LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
-    sig.threshold = 0.05, type = c("exon", "splicing"),boxplot_width) {
+    sig.threshold = 0.05, type = c("exon", "splicing"),p.x,p.y,boxplot_width) {
     mydata <- jscs_genewise_object
     
     n.gene <- dim(mydata)[1]
@@ -57,8 +63,8 @@ LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
     boxplot(unlist(mydata.3[, c(10, 18)]$numExons) ~ unlist(mydata.3[, 
         c(10, 18)]$DE.out), boxwex=boxplot_width,ylab = "Number of exons", col = "lightgray")
     
-    text(x = 2, y = 600, labels = c("", paste0("p value from logistic regression:\n\n", 
-        pvalue)), col = c(NA, "red"))
+    text(x = p.x, y = p.y, labels = c("", paste0("p value from logistic regression:\n\n", 
+        pvalue)), col = c(NA, "black"))
     
     re <- mydata.2
     
