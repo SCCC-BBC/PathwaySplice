@@ -38,7 +38,8 @@ data(hg19)
 Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
 
-Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
+set.seed(100)
+Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
 
 Example.Go.unadjusted<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',

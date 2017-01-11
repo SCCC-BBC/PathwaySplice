@@ -37,6 +37,7 @@ save(tiny.data,file="./data/TinyData.RData")
 all.gene.data<-makeGeneWiseTable(Re.example,
 gene.list=all.gene.list)
 mds2<-all.gene.data
+
 save(mds2,file="./data/mds2.RData")
 
 
