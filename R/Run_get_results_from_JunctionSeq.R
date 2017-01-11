@@ -14,13 +14,15 @@
 #'
 #' # For example data set
 #'
-#' #dir.name='/media/H_driver/Aimin_project/'
+#' dir.name='/media/H_driver/Aimin_project/'
 #'
-#' #file.sample='decoder.bySample.Mut_WT_2.rtf'
-#' #file.gff='Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff'
-#' #file.count='/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
+#' file.sample='decoder.bySample.Mut_WT_3.rtf'
+#' 
+#' file.gff='Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff'
+#' file.count='/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
 #'
-#' #Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+#' Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+#' save(Re.example,file="New_add_sample_run.RData")
 
 
 GetResultsFromJunctionSeq <- function(dir.name, file.sample, 
