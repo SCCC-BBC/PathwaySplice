@@ -31,12 +31,23 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 + Convert the results of differential usage analysis into gene based resutls
 
 ```{r eval=FALSE}
-re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
+
+all.gene.list<-unique(as.character(fData(Re.example)$geneID))
+ 
+#make a tiny example data set
+choosed.gene.list<-sample(all.gene.list,500)
+re.example.gene.based<-makeGeneWiseTable(Re.example,
+gene.list=choosed.gene.list)
+tiny.data<-re.example.gene.based
+
+#make an example data set for all genes
+#re.example.gene.based<-makeGeneWiseTable(Re.example,gene.list=unique(as.character(fData(Re.example)$geneID)))
+
 ```
 
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE}
-library(PathwaySplice)
+
 data(mds)
 hist(as.numeric(mds$numExons),xlab="Number of exons",main="Distribution of number of exons")
 
@@ -45,11 +56,13 @@ re<-LRtestBias(mds,boxplot_width=0.3)
 
 + Perform pathwaysplice in one step
 ```{r eval=TRUE}
-library(PathwaySplice)
+
 data(mds)
 data(hg19)
 Example.Go.adjusted.by.exon.Wallenius<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Wallenius")
-Example.Go.adjusted.by.exon.sampling<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Sampling")
+
+Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Sampling")
+
 Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Hypergeometric")
 
 ```
@@ -68,7 +81,7 @@ gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.
 + Build up network based on the overlap between gene sets and visualize this network
 
 ```{r eval=TRUE}
-data(mds)
-Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Wallenius")
-re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
+re.w.adjusted.by.Wallenius<-enrichmentMap(Example.Go.adjusted.by.exon.Wallenius,n=5,SimilarityThreshold=0)
+re.w.adjusted.by.sampling<-enrichmentMap(Example.Go.adjusted.by.exon.by.sampling,n=5,SimilarityThreshold=0)
+re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
 ```
