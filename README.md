@@ -5,12 +5,15 @@ An R package for adjusting bias in pathway analysis using differential exon and 
 
 # To Install
 
+library(devtools)
+install_github("twitter/AnomalyDetection")
 
-<center> <h1>Use PathwaySplice</h1> </center>
+# Use PathwaySplice
 
 + Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
 
 ```{r eval=FALSE}
+library(PathwaySplice)
 dir.name="/media/H_driver/Aimin_project/"
 
 file.sample="decoder.bySample.Mut_WT_2.rtf"
