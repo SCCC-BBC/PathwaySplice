@@ -97,7 +97,7 @@ Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL,
     
     GO.selected<-OutputGOBasedSelection(GO.wall.DE_interest)
     
-    re <- list(GO.wall.DE_interest = GO.selected,pwf.DE_interest)
+    re <- list(GO.wall.DE_interest = GO.selected,pwf.DE_interest=pwf.DE_interest)
     
     return(re)
 }
