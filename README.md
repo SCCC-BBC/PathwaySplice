@@ -1,5 +1,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/SCCC-BBC/PathwaySplice.svg?branch=master)](https://travis-ci.org/SCCC-BBC/PathwaySplice)
 [![codecov](https://codecov.io/github/SCCC-BBC/PathwaySplice/coverage.svg?branch=master)](https://codecov.io/github/SCCC-BBC/PathwaySplice)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)](https://cran.r-project.org/package=PathwaySplice)
+
 # PathwaySplice
 An R package for adjusting bias in pathway analysis using differential exon and splicing junction usage based results
 
