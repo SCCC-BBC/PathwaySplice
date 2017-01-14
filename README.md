@@ -49,7 +49,7 @@ tiny.data<-re.example.gene.based
 
 data(mds)
 hist(as.numeric(mds$numExons),xlab="Number of exons",main="Distribution of number of exons")
-re<-LRtestBias(mds3,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
+re<-LRtestBias(mds,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 
 ```
 
