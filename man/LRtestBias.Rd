@@ -58,6 +58,8 @@ mds<-mds3
 
 save(mds,file="./data/mds.RData")
 
+dim(mds)
+hist(as.numeric(mds$numExons))
 re<-LRtestBias(mds3,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 
 }
