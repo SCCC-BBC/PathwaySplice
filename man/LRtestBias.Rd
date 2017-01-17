@@ -32,35 +32,13 @@ Logistic regression to check bias
 }
 \examples{
 
-data(mds)
-re<-LRtestBias(mds,boxplot_width=0.3)
+data(mds11)
+mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
 
-data(TinyData)
-re<-LRtestBias(tiny.data,p.x=2,p.y=150,boxplot_width=0.3)
+dim(mds33)
+hist(as.numeric(mds33$numExons))
+re<-LRtestBias(mds33,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 
-re<-LRtestBias(mds2,p.x=2,p.y=600,boxplot_width=0.3)
-
-head(mds2,100)
-
-range(as.numeric(mds2$numExons))
-hist(as.numeric(mds2$numExons))
-
-boxplot(as.numeric(mds2$numExons))
-
-mds3<-mds2[which(as.numeric(mds2$numExons)<=50),]
-
-hist(as.numeric(mds3$numExons))
-
-dim(mds3)
-dim(mds2)
-
-mds<-mds3
-
-save(mds,file="./data/mds.RData")
-
-dim(mds)
-hist(as.numeric(mds$numExons))
-re<-LRtestBias(mds3,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 
 }
 
