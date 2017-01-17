@@ -23,10 +23,14 @@
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
 #'
 #' set.seed(100)
-#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
+#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds33,ad='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
 #'
-#' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
+#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
+#' 
+#'
+#' Example.Go.unadjusted<-Run_pathwaysplice(mds33,ad='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')
 
 Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL, 
