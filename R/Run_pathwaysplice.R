@@ -16,21 +16,17 @@
 #'
 #' @examples
 #'
-#' data(mds)
+#' data(mds11)
 #' data(hg19)
 #'
-#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
+#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
 #'
 #' set.seed(100)
-#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds33,ad='exon_SJ',sub_feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
-#'
 #' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
 #' 
-#'
-#' Example.Go.unadjusted<-Run_pathwaysplice(mds33,ad='exon_SJ',sub_feature='E',
+#' Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')
 
 Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL, 
@@ -365,8 +361,13 @@ pathwaysplice = function(pwf, genome, id, gene.model, gene2cat = NULL,
     }, DE_pwf)
     
     pvals.6.gene.symbol <- sapply(pvals.6, function(u, gene.model) {
-        y <- gene.model[which(as.character(gene.model[, 3]) %in% 
-            u), 1]
+        
+        #y <- gene.model[which(as.character(gene.model[, 3]) %in% 
+        #    u), 1]
+        #print(u)
+      
+        y <- gene.model[match(u,as.character(gene.model[, 3])), 1]
+        
         y
     }, gene.model)
     
@@ -615,3 +616,17 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   return(Re.Go.adjusted.by.exon.SJ.select)
   
 }
+
+GetStaisitcs4GO<-function(Example.Go.unadjusted,mds.11.sample){
+  
+  
+  hg19[hg19$ensembl_gene_id=="ENSG00000185499",]
+  
+  
+  
+  
+}
+
+
+
+

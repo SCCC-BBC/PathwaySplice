@@ -24,6 +24,15 @@
 #' Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 #' save(Re.example,file="New_add_sample_run.RData")
 
+#' 
+#' dir.name=paste0(dirname(system.file("extdata","decoder.bySample.Mut_WT_3.rtf", package = "PathwaySplice")),"/")
+
+#' file.sample="decoder.bySample.Mut_WT_3.rtf"
+#' file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+
+#' file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+
+#' Re.example.tiny<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 
 GetResultsFromJunctionSeq <- function(dir.name, file.sample, 
   file.count, file.gff) {

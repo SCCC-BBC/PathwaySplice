@@ -41,6 +41,9 @@ output.file.dir <- readLines(input, n=1)
 # #print(num.row)
 
 cmd="gshuf -n 100"
+cmd_4_count="head -n 1000"
+cmd5="cat"
+
 
 #Generate these tine files
 re<-lapply(1:length(sample.name),function(u,sample.name){
@@ -59,7 +62,7 @@ re<-lapply(1:length(sample.name),function(u,sample.name){
   print(input1)
   print(output1)
 
-  system(paste(cmd,input1,">",output1,collapse = " "))
+  system(paste(cmd5,input1,">",output1,collapse = " "))
 
   output1
 
@@ -72,6 +75,6 @@ if(!dir.exists(paste0(output.file.dir,"/GTF_Files/")))
 
 output2=paste0(output.file.dir,"/GTF_Files/",gff.file.name)
 
-system(paste(cmd,gff.file,">",output2,collapse=" "))
+system(paste(cmd5,gff.file,">",output2,collapse=" "))
 
 
