@@ -617,13 +617,43 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   
 }
 
+
+# Example.Go.unadjusted.add.num.exon<-GetStaisitcs4GO(Example.Go.unadjusted,mds.11.sample)
 GetStaisitcs4GO<-function(Example.Go.unadjusted,mds.11.sample){
   
+  GO.data=Example.Go.unadjusted[[1]]
   
-  hg19[hg19$ensembl_gene_id=="ENSG00000185499",]
+  y<-as.list(GO.data$DEgene_ID)
   
+  re<-lapply(1:length(y),function(u,y,mds.11.sample){
+    
+    #u=1
+    yy=y[[u]]
+    
+    y.id=trim(c(unlist(strsplit(y[[u]],split=","))))
+    
+    if(length(y.id)!=0){
+      
+      yyy=mean(as.numeric(unlist(mds.11.sample[match(y.id,mds.11.sample$geneID),]$numExons)))
+      
+    }else
+    {
+      yyy=0
+    }
+    
+    yyy
+    
+  },y,mds.11.sample)
   
+  re2=list_to_df(re)
+
+  GO.data.1=cbind(GO.data,re2)
+  GO.data.2=GO.data.1[,-9]
+  colnames(GO.data.2)[9]="Ave_value"
   
+  re3=list(GO.wall.DE_interest=GO.data.2,pwf.DE_interest=Example.Go.unadjusted[[2]])
+
+  return(re3)  
   
 }
 
