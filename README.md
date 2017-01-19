@@ -40,7 +40,7 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 all.gene.list<-unique(as.character(fData(Re.example)$geneID))
  
 #make a tiny example data set
-choosed.gene.list<-sample(all.gene.list,500)
+choosed.gene.list<-all.gene.list
 re.example.gene.based<-makeGeneWiseTable(Re.example,
 gene.list=choosed.gene.list)
 tiny.data<-re.example.gene.based
