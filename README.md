@@ -22,10 +22,10 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 
 ```{r eval=FALSE}
 library(PathwaySplice)
-dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_3.rtf", package = "PathwaySplice"))
-
-file.sample="decoder.bySample.Mut_WT_3.rtf"
-file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_example.txt", package = "PathwaySplice"))
+dir.name=paste0(dir.name,"/")
+file.sample="decoder.bySample.Mut_WT_example.txt"
+file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff"
 
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 
@@ -40,7 +40,7 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 all.gene.list<-unique(as.character(fData(Re.example)$geneID))
  
 #make a tiny example data set
-choosed.gene.list<-sample(all.gene.list,500)
+choosed.gene.list<-all.gene.list
 re.example.gene.based<-makeGeneWiseTable(Re.example,
 gene.list=choosed.gene.list)
 tiny.data<-re.example.gene.based
