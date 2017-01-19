@@ -95,13 +95,14 @@ Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL,
             genomeID, geneID, gene.model = gene_model, use_genes_without_cat = TRUE)
     }
     
-    GO.selected<-OutputGOBasedSelection(GO.wall.DE_interest)
+    GO.wall.DE_interest.2<-GetStaisitcs4GO(GO.wall.DE_interest,re.gene.based)
     
-    re <- list(GO.wall.DE_interest = GO.selected,pwf.DE_interest=pwf.DE_interest)
+    GO.selected<-OutputGOBasedSelection(GO.wall.DE_interest.2)
+    
+    re <- list(GO.selected = GO.selected,pwf.DE_interest=pwf.DE_interest,GO.wall.DE_interest=GO.wall.DE_interest)
     
     return(re)
 }
-
 
 pathwaysplice = function(pwf, genome, id, gene.model, gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), method = "Wallenius", 
@@ -410,7 +411,7 @@ pathwaysplice = function(pwf, genome, id, gene.model, gene2cat = NULL,
     pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "category", 
         sort = FALSE)
     
-    pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO)
+    pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO,cat2gene=cat2gene)
     
     return(pvals.4)
     
@@ -610,17 +611,19 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   
   Re.Go.adjusted.by.exon.SJ.select<-Re.Go.adjusted.by.exon.SJ[[1]][index.select,]
   Re.Go.adjusted.by.exon.SJ.select<-Re.Go.adjusted.by.exon.SJ.select[,-3]
-  
-  Re.Go.adjusted.by.exon.SJ.select<-format(Re.Go.adjusted.by.exon.SJ.select,scientific = TRUE,digits=2)
+  temp<-format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue,scientific = TRUE,digits=2)
+  Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue<-temp
+  #Re.Go.adjusted.by.exon.SJ.select<-format(Re.Go.adjusted.by.exon.SJ.select,scientific = TRUE,digits=2)
   
   return(Re.Go.adjusted.by.exon.SJ.select)
   
 }
 
 # Example.Go.unadjusted.add.num.exon<-GetStaisitcs4GO(Example.Go.unadjusted,mds.11.sample)
-GetStaisitcs4GO<-function(Example.Go.unadjusted,mds.11.sample){
+GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
   
-  GO.data=Example.Go.unadjusted[[1]]
+  GO.data=GO.wall.DE_interest[[1]]
+  #GO.data=Example.Go.unadjusted$GO.wall.DE_interest[[1]]
   
   y<-as.list(GO.data$DEgene_ID)
   
@@ -647,10 +650,39 @@ GetStaisitcs4GO<-function(Example.Go.unadjusted,mds.11.sample){
   re2=list_to_df(re)
 
   GO.data.1=cbind(GO.data,re2)
-  GO.data.2=GO.data.1[,-9]
-  colnames(GO.data.2)[9]="Ave_value"
+  GO.data.2=GO.data.1[,-(dim(GO.data.1)[2]-1)]
+  colnames(GO.data.2)[dim(GO.data.2)[2]]="Ave_value_DE"
   
-  re3=list(GO.wall.DE_interest=GO.data.2,pwf.DE_interest=Example.Go.unadjusted[[2]])
+  cat2gene=GO.wall.DE_interest[[3]]
+  #cat2gene=Example.Go.unadjusted$GO.wall.DE_interest[[3]]
+  
+  rre<-lapply(1:length(cat2gene),function(u,cat2gene,mds.11.sample){
+    
+    #u=1
+    yy=cat2gene[[u]]
+    
+    y.id=yy
+    
+    if(length(y.id)!=0){
+      
+      yyy=mean(as.numeric(unlist(mds.11.sample[match(y.id,mds.11.sample$geneID),]$numExons)),na.rm=TRUE)
+      
+    }else
+    {
+      yyy=0
+    }
+    
+    yyy
+    
+  },cat2gene,mds.11.sample)
+  names(rre)=names(cat2gene)
+  rre2=list_to_df(rre)
+  
+  colnames(rre2)=c("category","Ave_value_all_gene")
+  
+  GO.data.3<-merge(GO.data.2,rre2,by="category",sort = FALSE)
+  
+  re3=list(GO.wall.DE_interest=GO.data.3,pwf.DE_interest=Example.Go.unadjusted[[2]])
 
   return(re3)  
   
