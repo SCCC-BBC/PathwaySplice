@@ -617,7 +617,6 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   
 }
 
-
 # Example.Go.unadjusted.add.num.exon<-GetStaisitcs4GO(Example.Go.unadjusted,mds.11.sample)
 GetStaisitcs4GO<-function(Example.Go.unadjusted,mds.11.sample){
   
