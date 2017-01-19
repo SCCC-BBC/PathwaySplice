@@ -22,10 +22,10 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 
 ```{r eval=FALSE}
 library(PathwaySplice)
-dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_3.rtf", package = "PathwaySplice"))
+dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_example.txt", package = "PathwaySplice"))
 
-file.sample="decoder.bySample.Mut_WT_3.rtf"
-file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+file.sample="decoder.bySample.Mut_WT_example.txt"
+file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff"
 
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 
