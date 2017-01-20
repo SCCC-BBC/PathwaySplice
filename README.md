@@ -59,13 +59,24 @@ re<-LRtestBias(mds,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 + Perform pathwaysplice in one step
 ```{r eval=TRUE}
 
-data(mds)
+data(mds11)
 data(hg19)
-Example.Go.adjusted.by.exon.Wallenius<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Wallenius")
 
-Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Sampling")
+Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
+temp=Example.Go.adjusted.by.exon$GO.selected
+mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$rank.value.by.over_represented_pvalue)
 
-Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",gene_model=hg19,method="Hypergeometric")
+set.seed(100)
+Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
+temp=Example.Go.adjusted.by.exon.by.sampling$GO.selected
+mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$rank.value.by.over_represented_pvalue)
+
+Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')
+temp=Example.Go.unadjusted$GO.selected
+mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$rank.value.by.over_represented_pvalue)
 
 ```
 
