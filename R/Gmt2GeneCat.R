@@ -14,15 +14,17 @@
 #'
 #' @examples
 #'
-#' gene.2.cat.hallmark.hg<-Gmt2GeneCat('/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt','local',
-#' '/media/H_driver/Annotation/hg38/genes_table_02092016.csv')
+#' cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
+#' data(hg38)
+#' gene.2.cat.hallmark.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
 #'
-Gmt2GeneCat <- function(gmt_input_file, file.type, gene_anno_file) {
+Gmt2GeneCat <- function(gmt_input_file, file.type, gene_anno_file=NULL,gene_anno) {
   gene.2.cat.gmt <- gene2cat2(gmt_input_file, file.type)
   
   names.gene.gmt <- as.data.frame(names(gene.2.cat.gmt))
   colnames(names.gene.gmt) <- "gene_id"
   
+  if(!is.null(gene_anno_file)){
   dir.name = dirname(gene_anno_file)
   dir.name = reformatPath(dir.name)
   file.name = basename(gene_anno_file)
@@ -30,6 +32,10 @@ Gmt2GeneCat <- function(gmt_input_file, file.type, gene_anno_file) {
   gene_anno_file = paste0(dir.name, file.name)
   
   gene.ID.conversion <- read.csv(gene_anno_file)
+  }else{
+    gene.ID.conversion=gene_anno
+  }
+  
   names.gene.gmt.2 <- match(names.gene.gmt$gene_id, gene.ID.conversion$gene_id)
   gene.ID.conversion.2 <- gene.ID.conversion[names.gene.gmt.2, 
     ]
@@ -53,7 +59,7 @@ GSA.read.gmt.2 <- function(filename, type) {
     dir.name = dirname(filename)
     dir.name = reformatPath(dir.name)
     file.name = basename(filename)
-    filename = paste0(dir.name, file.name)
+    filename = paste0(dir.name,"/",file.name)
   }
   
   print(filename)
