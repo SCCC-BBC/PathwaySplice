@@ -682,7 +682,7 @@ GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
   
   GO.data.3<-merge(GO.data.2,rre2,by="category",sort = FALSE)
   
-  re3=list(GO.wall.DE_interest=GO.data.3,pwf.DE_interest=Example.Go.unadjusted[[2]])
+  re3=list(GO.wall.DE_interest=GO.data.3,pwf.DE_interest=GO.wall.DE_interest[[2]])
 
   return(re3)  
   
