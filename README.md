@@ -83,11 +83,19 @@ mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$
 + If you are interested in other gene sets such as Canonical Pathways(CP),Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these .gmt files, then perform the following steps:
 ```{r eval=TRUE}
 
-gene.2.cat.hallmark.hg<-Gmt2GeneCat("/media/H_driver/Annotation/hg38/h.all.v5.1.symbols-1.gmt","local","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
+data(hg38)
+gene.2.cat.hallmark.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
 
-#read from url
-# it works, but you need to get the correct url for h.all.v5.1.symbols-1.gmt file
-#gene.2.cat.hallmark.hg.from.url<-Gmt2GeneCat("ftp://ftp.broad.mit.edu/distribution/gsea/gene_sets/msigdb.v4.0c.symbols.gmt","url","/media/H_driver/Annotation/hg38/genes_table_02092016.csv")
+Example.cp.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene2cat=gene.2.cat.cp.hg,gene_model=hg19,method='Wallenius')
+
+set.seed(100)
+Example.cp.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene2cat=gene.2.cat.cp.hg,gene_model=hg19,method='Sampling')
+
+Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene2cat=gene.2.cat.cp.hg,gene_model=hg19,method='Hypergeometric')
 
 ```
 
