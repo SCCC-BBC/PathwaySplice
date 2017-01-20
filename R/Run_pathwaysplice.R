@@ -627,13 +627,11 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
 GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
   
   GO.data=GO.wall.DE_interest[[1]]
-  #GO.data=Example.Go.unadjusted$GO.wall.DE_interest[[1]]
-  
+
   y<-as.list(GO.data$DEgene_ID)
   
   re<-lapply(1:length(y),function(u,y,mds.11.sample){
     
-    #u=1
     yy=y[[u]]
     
     y.id=trim(c(unlist(strsplit(y[[u]],split=","))))
@@ -658,11 +656,9 @@ GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
   colnames(GO.data.2)[dim(GO.data.2)[2]]="Ave_value_DE"
   
   cat2gene=GO.wall.DE_interest[[3]]
-  #cat2gene=Example.Go.unadjusted$GO.wall.DE_interest[[3]]
-  
+
   rre<-lapply(1:length(cat2gene),function(u,cat2gene,mds.11.sample){
     
-    #u=1
     yy=cat2gene[[u]]
     
     y.id=yy
@@ -691,7 +687,3 @@ GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
   return(re3)  
   
 }
-
-
-
-

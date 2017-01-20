@@ -34,9 +34,6 @@ Logistic regression to check bias
 
 data(mds11)
 mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-
-dim(mds33)
-hist(as.numeric(mds33$numExons))
 re<-LRtestBias(mds33,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 
 
