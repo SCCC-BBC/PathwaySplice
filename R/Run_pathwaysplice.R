@@ -613,13 +613,17 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   Re.Go.adjusted.by.exon.SJ.select<-Re.Go.adjusted.by.exon.SJ.select[,-3]
   temp<-format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue,scientific = TRUE,digits=2)
   Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue<-temp
+  
+  rank.value.by.over_represented_pvalue<-rank(as.numeric(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue),ties.method="min")
+  
+  Re.Go.adjusted.by.exon.SJ.select<-cbind(Re.Go.adjusted.by.exon.SJ.select,rank.value.by.over_represented_pvalue)
+  
   #Re.Go.adjusted.by.exon.SJ.select<-format(Re.Go.adjusted.by.exon.SJ.select,scientific = TRUE,digits=2)
   
   return(Re.Go.adjusted.by.exon.SJ.select)
   
 }
 
-# Example.Go.unadjusted.add.num.exon<-GetStaisitcs4GO(Example.Go.unadjusted,mds.11.sample)
 GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
   
   GO.data=GO.wall.DE_interest[[1]]
