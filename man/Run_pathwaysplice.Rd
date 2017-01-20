@@ -5,7 +5,7 @@
 \title{Run_pathwaysplice}
 \usage{
 Run_pathwaysplice(re.gene.based, ad = "GL", sub_feature = NULL, threshold,
-  genomeID, geneID, gene_model, method)
+  genomeID, geneID, gene_model, method, gene2cat = NULL)
 }
 \arguments{
 \item{re.gene.based}{gene based results}
