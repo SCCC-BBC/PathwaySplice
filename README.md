@@ -46,14 +46,11 @@ gene.list=choosed.gene.list)
 tiny.data<-re.example.gene.based
 
 ```
-
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE}
-
-data(mds)
-hist(as.numeric(mds$numExons),xlab="Number of exons",main="Distribution of number of exons")
-re<-LRtestBias(mds,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
-
+data(mds11)
+mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
+re<-LRtestBias(mds33,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 ```
 
 + Perform pathwaysplice in one step
@@ -102,7 +99,7 @@ Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature=
 + Build up network based on the overlap between gene sets and visualize this network
 
 ```{r eval=TRUE}
-re.w.adjusted.by.Wallenius<-enrichmentMap(Example.Go.adjusted.by.exon.Wallenius,n=5,SimilarityThreshold=0)
+re.w.adjusted.by.Wallenius<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
 re.w.adjusted.by.sampling<-enrichmentMap(Example.Go.adjusted.by.exon.by.sampling,n=5,SimilarityThreshold=0)
 re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
 ```
