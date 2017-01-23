@@ -30,8 +30,7 @@ cmd4="java -Xmx5000M -jar /home/aiminyan/QoRTs/QoRTsFullExampleData/QoRTsRelease
 
 re.out<-lapply(file.name.selected.2,callQoRT,output.dir="chr4_drop_other",gtf_file=gtf1,runing_cmd=cmd4)
 
-add "Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff" into PathwaySplice/inst/extdata/GTF_Files/
-
+add the count data and "Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff" into PathwaySplice/inst/extdata/
 
 ```
 
