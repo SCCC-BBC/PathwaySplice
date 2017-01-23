@@ -31,7 +31,7 @@ r_github_packages:
   - gaborcsardi/crayon
   - jimhester/covr
 
-r_build_args: "--no-manual --no-resave-data"
+r_build_args: "--no-manual --resave-data"
 r_check_args: "--no-build-vignettes --no-manual --timings"
 
 after_success:
