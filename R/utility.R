@@ -116,3 +116,143 @@ heatmap_wPCA = function(Data,g_level = NULL) {
   }
 }
 
+WriteGoToTable <- function(GO_re,Output_file) {
+  dataset2<- GO_re
+  dataset2[sapply(dataset2, is.list)] <-
+    sapply(dataset2[sapply(dataset2, is.list)],
+           function(x)sapply(x, function(y) paste(unlist(y),collapse=", ") ) )
+  
+  write.table(dataset2,file=Output_file,row.names = FALSE,quote=FALSE,sep="\t")
+}
+
+
+#' PostProcessGO
+#'
+#' @param n.go 
+#' @param adjusted 
+#' @param unadjuasted 
+#' @param venn.dir 
+#' @param boxplot.dir 
+#' @param In.ad.not.un.file 
+#' @param In.un.not.ad.file 
+#'
+#' @return null
+#' @export
+#'
+#' @examples
+#' 
+#' PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
+#' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/","/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
+#' In_ad_not_un.xls","In_un_not_ad.xls")
+#'
+#' 
+#' 
+#' 
+PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,In.ad.not.un.file,In.un.not.ad.file) {
+  n=n.go
+  
+  Example.Go.adjusted.by.exon<-adjusted
+  Example.Go.unadjusted<-unadjuasted
+  
+  adjusted<-Example.Go.adjusted.by.exon$GO.selected[1:n,1]
+  unadjusted<-Example.Go.unadjusted$GO.selected[1:n,1]
+  
+  re<-list(adjusted=adjusted,unadjusted=unadjusted)
+  
+  venn.plot <- venn.diagram(
+    x = re[c(1,2)],
+    filename = paste0(venn.dir,"/",names(re)[1],"_",names(re)[2],"_overlap_venn.tiff"),
+    #filename=NULL,
+    height = 3000,
+    width = 3500,
+    resolution = 1000,
+    col = "black",
+    lty = "dotted",
+    lwd = 1,
+    fill = c("red","blue"),
+    alpha = 0.50,
+    label.col = c(rep("black",3)),
+    cex = 0.5,
+    fontfamily = "serif",
+    fontface = "bold",
+    cat.col = c("red","blue"),
+    cat.cex = 0.5,
+    cat.pos = 0.5,
+    cat.dist = 0.05,
+    cat.fontfamily = "serif"
+  )
+  
+  
+  #boxplot
+  
+  common<-intersect(unadjusted,adjusted)
+  
+  In.unadjusted.not.in.adjusted<-setdiff(unadjusted,common)
+  In.adjusted.not.in.unadjusted<-setdiff(adjusted,common)
+  
+  length(In.unadjusted.not.in.adjusted)
+  length(In.adjusted.not.in.unadjusted)
+  length(common)
+  
+  index1<-match(In.adjusted.not.in.unadjusted,Example.Go.adjusted.by.exon$GO.selected$category)
+  In.ad.not.un<-Example.Go.adjusted.by.exon$GO.selected[index1,]$Ave_value_all_gene
+  
+  index2<-match(In.unadjusted.not.in.adjusted,Example.Go.unadjusted$GO.selected$category)
+  In.un.not.ad<-Example.Go.unadjusted$GO.selected[index2,]$Ave_value_all_gene
+  
+  xx<-cbind(unlist(In.ad.not.un),unlist(In.un.not.ad))
+  
+  colnames(xx)=c("In.ad.not.un","In.un.not.ad")
+  
+  #boxplot(xx)
+  
+  #cbind(Example.Go.adjusted.by.exon$GO.selected[index1,1],Example.Go.unadjusted$GO.selected[index2,1])
+  
+  #In.ad.not.un<-xx[,1]
+  #In.un.not.ad<-xx[,2]
+  
+  cp.top.adjusted.25<-unlist(Example.Go.adjusted.by.exon$GO.selected[1:n,]$Ave_value_all_gene)
+  cp.top.unadjusted.25<-unlist(Example.Go.unadjusted$GO.selected[1:n,]$Ave_value_all_gene)
+  
+  cp.all.adjusted<-unlist(Example.Go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
+  cp.all.unadjusted<-unlist(Example.Go.unadjusted$GO.selected$Ave_value_all_gene)
+  
+  yy<-rbind(cbind(xx[,1],rep("In.ad.not.un",length(xx[,1]))),
+            cbind(xx[,2],rep("In.un.not.ad",length(xx[,2]))),
+            cbind(cp.top.adjusted.25,rep("cp.top.adjusted.25",length(cp.top.adjusted.25))),
+            cbind(cp.top.unadjusted.25,rep("cp.top.unadjusted.25",length(cp.top.unadjusted.25))),
+            cbind(cp.all.adjusted,rep("cp.all.adjusted",length(cp.all.adjusted))),
+            cbind(cp.all.unadjusted,rep("cp.all.unadjusted",length(cp.all.unadjusted))))
+  
+  colnames(yy)<-c("y","grp")
+  
+  yy<-as.data.frame(yy)
+  #head(yy)
+  
+  png(paste0(boxplot.dir,"/","boxplot.png"))
+  boxplot(as.numeric(as.character(y))~grp,data=yy)
+  dev.off()
+    
+  Output_file=paste0(boxplot.dir,"/",In.ad.not.un.file)
+  WriteGoToTable(Example.Go.adjusted.by.exon$GO.selected[index1,],Output_file)
+  
+  Output_file=paste0(boxplot.dir,"/",In.un.not.ad.file)
+  WriteGoToTable(Example.Go.unadjusted$GO.selected[index2,],Output_file)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
