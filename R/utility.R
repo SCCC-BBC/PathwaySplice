@@ -137,14 +137,16 @@ WriteGoToTable <- function(GO_re,Output_file) {
 #' @param In.un.not.ad.file 
 #'
 #' @return null
-#' @export
+#' 
 #'
 #' @examples
 #' 
 #' PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
 #' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/","/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
 #' In_ad_not_un.xls","In_un_not_ad.xls")
-#'
+#' 
+#' @export
+#' 
 #' 
 #' 
 #' 
