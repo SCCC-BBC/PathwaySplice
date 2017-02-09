@@ -101,7 +101,7 @@ Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL,
                                             use_genes_without_cat = TRUE)
       }else{
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-                                            genomeID, geneID, gene.model = gene_model, gene2cat= gene2cat,method = "Hypergeometric", 
+                                            genomeID, geneID, gene.model = gene_model, gene2cat= gene2cat,method = "Sampling", 
                                             use_genes_without_cat = TRUE)
         } 
       }else {
