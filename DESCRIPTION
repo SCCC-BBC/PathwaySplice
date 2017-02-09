@@ -6,7 +6,7 @@ Author: Aimin Yan
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
 Depends: R (>= 3.3.0)
 Imports:goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationDbi,JunctionSeq,
-        BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils
+        BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils,VennDiagram
 Suggests: testthat,knitr,rmarkdown
 VignetteBuilder: knitr
 biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization
