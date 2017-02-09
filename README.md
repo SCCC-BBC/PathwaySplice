@@ -99,7 +99,13 @@ Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature=
 + Build up network based on the overlap between gene sets and visualize this network
 
 ```{r eval=TRUE}
+#GO
 re.w.adjusted.by.Wallenius<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
 re.w.adjusted.by.sampling<-enrichmentMap(Example.Go.adjusted.by.exon.by.sampling,n=5,SimilarityThreshold=0)
 re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
+
+#Canonical Pathways
+re.w.adjusted.by.Wallenius.cp<-enrichmentMap(Example.cp.adjusted.by.exon,n=5,SimilarityThreshold=0)
+re.w.adjusted.by.sampling.cp<-enrichmentMap(Example.cp.adjusted.by.exon.by.sampling,n=5,SimilarityThreshold=0)
+re.w.unadjusted.cp<-enrichmentMap(Example.cp.unadjusted,n=5,SimilarityThreshold=0)
 ```
