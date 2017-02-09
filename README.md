@@ -82,7 +82,7 @@ mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$
 
 cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
 data(hg38)
-gene.2.cat.hallmark.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
+gene.2.cat.cp.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
 
 Example.cp.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene2cat=gene.2.cat.cp.hg,gene_model=hg19,method='Wallenius')
