@@ -35,10 +35,9 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 + Convert the results of differential usage analysis into gene based resutls
 
 ```{r eval=FALSE}
-
-all.gene.list<-unique(as.character(fData(Re.example)$geneID))
- 
 #make a tiny example data set
+library(Biobase)
+all.gene.list<-unique(as.character(fData(Re.example)$geneID))
 choosed.gene.list<-all.gene.list
 re.example.gene.based<-makeGeneWiseTable(Re.example,
 gene.list=choosed.gene.list)
