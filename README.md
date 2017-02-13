@@ -21,23 +21,15 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 + Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
 
 ```{r eval=FALSE}
-find ~/ -name Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff 2>/dev/null
-
 
 library(PathwaySplice)
 dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_example.txt", package = "PathwaySplice"))
 dir.name=paste0(dir.name,"/")
 file.sample="decoder.bySample.Mut_WT_example.txt"
-
-#file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff"
-
 file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.gff"
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-
-ptm<-proc.time()
 Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
-proc.time()-ptm 
- 
+
 ```
 
 + Convert the results of differential usage analysis into gene based resutls
