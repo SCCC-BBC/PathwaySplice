@@ -9,7 +9,7 @@ import(VennDiagram)
 importFrom(BiocGenerics,sizeFactors)
 importFrom(AnnotationDbi,toTable,select)
 
-importFrom(JunctionSeq1.4.0,runJunctionSeqAnalyses)
+importFrom(JunctionSeq,runJunctionSeqAnalyses)
 importFrom(BiasedUrn,dWNCHypergeo,pWNCHypergeo)
 importFrom(GO.db,GO.db)
 importFrom(gdata,trim)
