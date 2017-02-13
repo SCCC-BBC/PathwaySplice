@@ -5,11 +5,11 @@ Version: 0.99.0
 Author: Aimin Yan
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
 Depends: R (>= 3.3.0)
-Imports:goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationDbi,JunctionSeq,
+Imports:goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationDbi,JunctionSeq(>=1.4.0),
         BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils,VennDiagram
 Suggests: testthat,knitr,rmarkdown
 VignetteBuilder: knitr
-biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization
+biocViews:AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization,NetworkEnrichment,Network
 Description: PathwaySplice is used to perform gene set enrichment analysis for differential
              usage based gene list, and to construct and visualize network from enrichment
              analysis results.
