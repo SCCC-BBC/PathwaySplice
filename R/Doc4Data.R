@@ -37,7 +37,7 @@ NULL
 #'   \item end. End position
 #'   \item strand. Strand information
 #'   \item baseMean. BaseMean based on all samples
-#'   \item geneWisePadj. GeneWise FDR calculated using smallest p value within each gene 
+#'   \item geneWisePadj. perGeneQvalue from DEXSeq package 
 #'   \item mostSigID. The feature that have smallest p-value within gene  
 #'   \item mostSigPadjust. p-value for the most significant feature 
 #'   \item numExons. Number of exons within gene
