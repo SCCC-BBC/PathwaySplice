@@ -48,7 +48,7 @@ tiny.data<-re.example.gene.based
 ```{r eval=TRUE}
 data(mds11)
 mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-re<-LRtestBias(mds33,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
+re<-LRtestBias(mds33, loc.x=2, loc.y=70,y_lim=80,boxplot_width=0.3) #loc.x and loc.y indicates location of p-value
 ```
 
 + Perform pathwaysplice in one step
@@ -59,7 +59,7 @@ data(hg19)
 
 # This function performes gene set analysis that adjusts for different number of gene subfeatures 
 # (i.e. exons, spicing junctions, or gene length indicated by *adjust*) associated with each gene. 
-# The significant genes are those with minimum *sub_feature* associated with the gene < *threshold*. 
+# The significant genes are those with perGeneQvalue (from DEXSeq) < *threshold*. 
 
 Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
 threshold=0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
