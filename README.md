@@ -57,21 +57,19 @@ re<-LRtestBias(mds33,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
 data(mds11)
 data(hg19)
 
-Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
-temp=Example.Go.adjusted.by.exon$GO.selected
-mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$rank.value.by.over_represented_pvalue)
+# This function performes gene set analysis that adjusts for different number of gene subfeatures 
+# (i.e. exons, spicing junctions, or gene length indicated by *adjust*) associated with each gene. 
+# The significant genes are those with minimum *sub_feature* associated with the gene < *threshold*. 
+
+Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+threshold=0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
 
 set.seed(100)
-Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
-temp=Example.Go.adjusted.by.exon.by.sampling$GO.selected
-mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$rank.value.by.over_represented_pvalue)
+Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+threshold=0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
 
-Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')
-temp=Example.Go.unadjusted$GO.selected
-mean(temp[which(temp$category %in% c("GO:0072331","GO:0072332","GO:0097193")),]$rank.value.by.over_represented_pvalue)
+Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+threshold=0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')
 
 ```
 
@@ -98,6 +96,8 @@ Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature=
 
 ```{r eval=TRUE}
 #GO
+# SimilarityThreshold: Gene sets with Jaccard coefficient > similarity threshold are connected by a line,
+# with thickness proportional to Jaccard coefficient    
 re.w.adjusted.by.Wallenius<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
 re.w.adjusted.by.sampling<-enrichmentMap(Example.Go.adjusted.by.exon.by.sampling,n=5,SimilarityThreshold=0)
 re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)
