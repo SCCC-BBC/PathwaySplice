@@ -23,10 +23,11 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 ```{r eval=FALSE}
 
 library(PathwaySplice)
-dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_example.txt", package = "PathwaySplice"))
+
+file.sample="Sample_info.txt"
+dir.name=dirname(system.file("extdata","Sample_info.txt", package = "PathwaySplice"))
 dir.name=paste0(dir.name,"/")
-file.sample="decoder.bySample.Mut_WT_example.txt"
-file.gff="flat.chr4.gff"
+file.gff="flat.chr22.gff"
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 
@@ -37,11 +38,9 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 ```{r eval=FALSE}
 #make a tiny example data set
 library(Biobase)
-data(chr4)
-re.example.gene.based<-makeGeneWiseTable(chr4,
-gene.list=unique(as.character(fData(chr4)$geneID)))
-tiny.data<-re.example.gene.based
-
+data(chr22)
+re.example.gene.based<-makeGeneWiseTable(chr22,
+gene.list=unique(as.character(fData(chr22)$geneID)))
 ```
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE}
