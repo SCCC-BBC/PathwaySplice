@@ -58,11 +58,14 @@ reformatPath <- function(dir.name) {
         
         #unlist(strsplit('/media/H_driver/Aimin_project/',split="\\/"))
         
-        if(temp[3]=="H_driver"){
+        if(!is.na(temp[3]=="H_driver")){
+        if(temp[3]=="H_driver"){ 
         temp[2] = "Volumes"
         temp[3] = "Bioinformatics$"
         dir.name = paste0(paste0(temp, collapse = "/"), "/")
-       }
+        }
+        }
+         
     }
     
     return(dir.name)

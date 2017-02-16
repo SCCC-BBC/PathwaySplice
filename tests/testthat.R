@@ -1,3 +1,2 @@
 library(testthat)
-library(PathwaySplice)
-test_package("PathwaySplice")
+test_check("PathwaySplice")

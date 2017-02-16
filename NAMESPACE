@@ -18,6 +18,8 @@ importFrom(grDevices,colorRampPalette)
 importFrom(graphics,boxplot,par,text,lines,legend)
 importFrom(stats,median,dhyper,glm,phyper,runif,approx,prcomp)
 importFrom(utils,data,head,read.csv,read.table,relist)
+importFrom(grDevices,dev.off,png)
+importFrom(utils,write.table)
 
 export(.onAttach)
 export(Cbs)

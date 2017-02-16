@@ -9,6 +9,7 @@
 #' @param type whether you are interested in exon or splicing junction
 #' @param p.x x coordinate for p value label 
 #' @param p.y y coordinate for p value label
+#' @param y_lim defining the largest number of exons in y axis in boxplot 
 #' @param boxplot_width parameter for boxplot width
 #'
 #' @return return results from logistic regression
@@ -22,7 +23,7 @@
 #' 
 #' 
 LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
-    sig.threshold = 0.05, type = c("exon","splicing"),p.x,p.y,y_lim,boxplot_width) {
+    sig.threshold = 0.05, type = c("exon","splicing"),p.x=2,p.y=70,y_lim=80,boxplot_width) {
     mydata <- jscs_genewise_object
     
     n.gene <- dim(mydata)[1]

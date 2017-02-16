@@ -22,17 +22,10 @@ A gene based table
 This function is used to generate the gene-based results
 }
 \examples{
-
-dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_example.txt", package = "PathwaySplice"))
-dir.name=paste0(dir.name,"/")
-file.sample="decoder.bySample.Mut_WT_example.txt"
-file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.100.gff"
-file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
-all.gene.list<-unique(as.character(fData(Re.example)$geneID))
-choosed.gene.list<-all.gene.list
-re.example.gene.based<-makeGeneWiseTable(Re.example,
-gene.list=choosed.gene.list)
+library(Biobase)
+data(chr22)
+re.example.gene.based<-makeGeneWiseTable(chr22,
+gene.list=unique(as.character(fData(chr22)$geneID)))
 
 
 }

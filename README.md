@@ -26,7 +26,7 @@ library(PathwaySplice)
 dir.name=dirname(system.file("extdata","decoder.bySample.Mut_WT_example.txt", package = "PathwaySplice"))
 dir.name=paste0(dir.name,"/")
 file.sample="decoder.bySample.Mut_WT_example.txt"
-file.gff="Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.chr4.gff"
+file.gff="flat.chr4.gff"
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 
@@ -37,10 +37,9 @@ Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 ```{r eval=FALSE}
 #make a tiny example data set
 library(Biobase)
-all.gene.list<-unique(as.character(fData(Re.example)$geneID))
-choosed.gene.list<-all.gene.list
-re.example.gene.based<-makeGeneWiseTable(Re.example,
-gene.list=choosed.gene.list)
+data(chr4)
+re.example.gene.based<-makeGeneWiseTable(chr4,
+gene.list=unique(as.character(fData(chr4)$geneID)))
 tiny.data<-re.example.gene.based
 
 ```

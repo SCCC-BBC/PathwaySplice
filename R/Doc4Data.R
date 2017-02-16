@@ -103,3 +103,17 @@ NULL
 #' @return a data set 23440 rows and 6 variables
 #' @format A data frame with 23440 rows and 6 variables
 NULL
+
+#' chr22 runJunctionSeqAnalyses data set
+#' 
+#' a data set for chr22 
+#'  
+#'     
+#' @docType data
+#' @keywords datasets
+#' @name chr22
+#' @usage data(chr22)
+#' @format A object of class \code{"runJunctionSeqAnalyses"}
+NULL
+
+

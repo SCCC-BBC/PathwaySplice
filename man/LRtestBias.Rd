@@ -5,8 +5,8 @@
 \title{LRtestBias}
 \usage{
 LRtestBias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
-  sig.threshold = 0.05, type = c("exon", "splicing"), p.x, p.y, y_lim,
-  boxplot_width)
+  sig.threshold = 0.05, type = c("exon", "splicing"), p.x = 2, p.y = 70,
+  y_lim = 80, boxplot_width)
 }
 \arguments{
 \item{jscs_genewise_object}{gene based table returned
@@ -21,6 +21,8 @@ from ReformatData and MakeGeneWiseTable_JunctionSeq}
 \item{p.x}{x coordinate for p value label}
 
 \item{p.y}{y coordinate for p value label}
+
+\item{y_lim}{defining the largest number of exons in y axis in boxplot}
 
 \item{boxplot_width}{parameter for boxplot width}
 }
