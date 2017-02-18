@@ -1,13 +1,17 @@
 #' Gmt2GeneCat
 #'
 #' Read a gmt file, and return a list with its name
-#' being a gene id based on gene_anno_file, and each element of this list
-#' being the pathways that this gene corresponds to
+#' being a gene id based on gene_anno_file, and each element of this list  
+#' being the pathways that this gene corresponds to#' being the pathways that this gene corresponds to
+####ZG
+#' Read a gmt file, and return a list named by gene id from gene_anno_file, 
+#' and each element of this list is the pathways that this gene corresponds to
+####ZG
 #'
-#' @param gmt_input_file input file
+#' @param gmt_input_file input file  #### input file for somethings
 #' @param file.type local or url
 #' @param gene_anno_file annotation file
-#' @param gene_anno gene annotation to be used if no annotation file
+#' @param gene_anno gene annotation #### data or variable #### to be used if no annotation file #### is provided
 #'
 #' @return a list with its names being geneID, its element being the pathways
 #'
