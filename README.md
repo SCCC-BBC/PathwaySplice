@@ -1,6 +1,6 @@
 [![Travis-CI Build Status](https://travis-ci.org/SCCC-BBC/PathwaySplice.svg?branch=master)](https://travis-ci.org/SCCC-BBC/PathwaySplice)
 [![codecov](https://codecov.io/github/SCCC-BBC/PathwaySplice/coverage.svg?branch=master)](https://codecov.io/github/SCCC-BBC/PathwaySplice)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)](https://cran.r-project.org/package=PathwaySplice)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)]
 
 # PathwaySplice
 An R package for adjusting bias in pathway analysis using differential exon and splicing junction usage based results
@@ -22,8 +22,8 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 
 ```{r eval=FALSE}
 
+# test create jscs object
 library(PathwaySplice)
-
 file.sample="Sample_info.txt"
 dir.name=dirname(system.file("extdata","Sample_info.txt", package = "PathwaySplice"))
 dir.name=paste0(dir.name,"/")
@@ -31,16 +31,10 @@ file.gff="flat.chr22.gff"
 file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
 
-```
-
-+ Convert the results of differential usage analysis into gene based resutls
-
-```{r eval=FALSE}
-#make a tiny example data set
+# Convert the results of differential usage analysis into gene based resutls
 library(Biobase)
-data(chr22)
-re.example.gene.based<-makeGeneWiseTable(chr22,
-gene.list=unique(as.character(fData(chr22)$geneID)))
+re.example.gene.based<-makeGeneWiseTable(Re.example,
+gene.list=unique(as.character(fData(Re.example)$geneID)))
 ```
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE}
