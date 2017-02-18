@@ -1,15 +1,15 @@
 #' Cbs
 #'
-#' Cbs is to check possible bias factor using the method in goseq
+#' Cbs is to check possible bias factor using the method in goseq#### May you add the method/function name? somebody may want to check the details of the method
 #'
-#' @param re.gene.based Gene based table
+#' @param re.gene.based Gene based table #### what the meaning of gene based table?
 #' @param ad The possible bias factor
 #' @param sub_feature The possible bias factor
-#' @param threshold threshold used
-#' @param genomeID which genome
-#' @param geneID which type of gene ID
-#' @param gene_model Gene model
-#' @param method which method
+#' @param threshold threshold used #### The P-value threshold to remove all items above that
+#' @param genomeID which genome  #### the input genome? or the the reference genome such as hg19 or mm10?   
+#' @param geneID which type of gene ID #### litteral geneID or the type of gene ID
+#' @param gene_model Gene model #### gene model for what? / do you have the default one (details needed)? 
+#' @param method which method   #### the method for what???
 #'
 #' @return A data frame that includes gene ID, status of differential gene
 #' and probability weight function
