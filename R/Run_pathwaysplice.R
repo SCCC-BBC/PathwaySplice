@@ -3,14 +3,15 @@
 #' Perform pathwaysplice in one step
 #'
 #' @param re.gene.based gene based results
-#' @param ad bias factor to be adjusted
+#' @param adjust bias factor to be adjusted
 #' @param sub_feature feature to be checked
 #' @param threshold threshold to be used for adjustment
 #' @param genomeID gene to be used
 #' @param geneID geneID to be used
 #' @param gene_model gene model to be used
 #' @param method method to be used
-#'
+#' @param gene2cat get sets defined by users 
+#' 
 #' @return a list that has gene set enrichment analysis results
 #' @export
 #'
@@ -19,17 +20,17 @@
 #' data(mds11)
 #' data(hg19)
 #'
-#' Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
+#' \donttest{Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
 #'
 #' set.seed(100)
-#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
+#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',
+#' sub_feature='E',0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
 #' 
-#' Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,ad='exon_SJ',sub_feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')
+#' Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')}
 
-Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL, 
+Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL, 
     threshold, genomeID, geneID, gene_model, method,gene2cat = NULL) {
     
     Data4Goterm <- re.gene.based
@@ -73,7 +74,7 @@ Run_pathwaysplice <- function(re.gene.based, ad = "GL", sub_feature = NULL,
     
     All.gene.id.index.2 <- All.gene.id.index
     
-    if (ad == "GL") {
+    if (adjust == "GL") {
         pwf.DE_interest = nullp(All.gene.id.index.2, genomeID, 
             geneID, plot.fit = TRUE)
     } else {

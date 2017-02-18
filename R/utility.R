@@ -71,7 +71,6 @@ reformatPath <- function(dir.name) {
     return(dir.name)
 }
 
-
 heatmap_wPCA = function(Data,g_level = NULL) {
   
   Data.pca = prcomp(t(Data))
@@ -131,13 +130,13 @@ WriteGoToTable <- function(GO_re,Output_file) {
 
 #' PostProcessGO
 #'
-#' @param n.go 
-#' @param adjusted 
-#' @param unadjuasted 
-#' @param venn.dir 
-#' @param boxplot.dir 
-#' @param In.ad.not.un.file 
-#' @param In.un.not.ad.file 
+#' @param n.go number of gene sets
+#' @param adjusted adjusted result 
+#' @param unadjuasted unadjusted result 
+#' @param venn.dir path for outputing venn 
+#' @param boxplot.dir path for outputing boxplot 
+#' @param In.ad.not.un.file file name for outputing adjused but not in unadjusted when using the selected gene sets     
+#' @param In.un.not.ad.file file name for outputing unadjused but not in adjusted when using the selected gene sets  
 #'
 #' @return null
 #' 
@@ -149,9 +148,6 @@ WriteGoToTable <- function(GO_re,Output_file) {
 #' In_ad_not_un.xls","In_un_not_ad.xls")
 #' 
 #' @export
-#' 
-#' 
-#' 
 #' 
 PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,In.ad.not.un.file,In.un.not.ad.file) {
   n=n.go
@@ -244,20 +240,3 @@ PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,In.ad.n
   Output_file=paste0(boxplot.dir,"/",In.un.not.ad.file)
   WriteGoToTable(Example.Go.unadjusted$GO.selected[index2,],Output_file)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

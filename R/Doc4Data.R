@@ -104,14 +104,110 @@ NULL
 #' @format A data frame with 23440 rows and 6 variables
 NULL
 
-#' chr22 runJunctionSeqAnalyses data set
+#' A small gene-based result data set by sampling 500 genes from the whole gene list
 #' 
-#' a data set for chr22 
-#'  
-#'     
+#' a samll gene-based result data set
+#' 
+#' \itemize{
+#'   \item geneID. Gene ID
+#'   \item chr. Chromosome information
+#'   \item start. Starting position
+#'   \item end. End position
+#'   \item strand. Strand information
+#'   \item baseMean. BaseMean based on all samples
+#'   \item geneWisePadj. perGeneQvalue from DEXSeq package 
+#'   \item mostSigID. The feature that have smallest p-value within gene  
+#'   \item mostSigPadjust. p-value for the most significant feature 
+#'   \item numExons. Number of exons within gene
+#'   \item numKnown. Number of splicing junction within gene
+#'   \item numNovel. Number of novel splicing junction within gene
+#'   \item exonsSig. Number of significant exons
+#'   \item knownSig. Number of significant splicing junction
+#'   \item novelSig. Number of significant novel splicing junction
+#'   \item numFeatures. A list that includes number of exons,number of 
+#'   splicing junction and number of novel splicing junction within gene 
+#'   \item numSig. A list that includes number of significant exons,number of 
+#'   significant splicing junction and number of significant novel splicing 
+#'   junction within gene 
+#' }
+#'   
 #' @docType data
 #' @keywords datasets
-#' @name chr22
-#' @usage data(chr22)
-#' @format A object of class \code{"runJunctionSeqAnalyses"}
+#' @name tiny.data
+#' @usage data(TinyData)
+#' @return a data set 252 rows and 17 variables
+#' @format A data frame with 252 rows and 17 variables
+#' 
+NULL
+
+#' A gene-based result data set by using 11 subjuects(excluding 309)
+#' 
+#' a gene-based result data set
+#' 
+#' \itemize{
+#'   \item geneID. Gene ID
+#'   \item chr. Chromosome information
+#'   \item start. Starting position
+#'   \item end. End position
+#'   \item strand. Strand information
+#'   \item baseMean. BaseMean based on all samples
+#'   \item geneWisePadj. perGeneQvalue from DEXSeq package 
+#'   \item mostSigID. The feature that have smallest p-value within gene  
+#'   \item mostSigPadjust. p-value for the most significant feature 
+#'   \item numExons. Number of exons within gene
+#'   \item numKnown. Number of splicing junction within gene
+#'   \item numNovel. Number of novel splicing junction within gene
+#'   \item exonsSig. Number of significant exons
+#'   \item knownSig. Number of significant splicing junction
+#'   \item novelSig. Number of significant novel splicing junction
+#'   \item numFeatures. A list that includes number of exons,number of 
+#'   splicing junction and number of novel splicing junction within gene 
+#'   \item numSig. A list that includes number of significant exons,number of 
+#'   significant splicing junction and number of significant novel splicing 
+#'   junction within gene 
+#' }
+#'   
+#' @docType data
+#' @keywords datasets
+#' @name mds.11.sample
+#' @usage data(mds11)
+#' @return a data set 23520 rows and 17 variables
+#' @format A data frame with 23520 rows and 17 variables
+#' 
+NULL
+
+#' A gene-based result data set by using 12 subjuects(including 309)
+#' 
+#' a gene-based result data set
+#' 
+#' \itemize{
+#'   \item geneID. Gene ID
+#'   \item chr. Chromosome information
+#'   \item start. Starting position
+#'   \item end. End position
+#'   \item strand. Strand information
+#'   \item baseMean. BaseMean based on all samples
+#'   \item geneWisePadj. perGeneQvalue from DEXSeq package 
+#'   \item mostSigID. The feature that have smallest p-value within gene  
+#'   \item mostSigPadjust. p-value for the most significant feature 
+#'   \item numExons. Number of exons within gene
+#'   \item numKnown. Number of splicing junction within gene
+#'   \item numNovel. Number of novel splicing junction within gene
+#'   \item exonsSig. Number of significant exons
+#'   \item knownSig. Number of significant splicing junction
+#'   \item novelSig. Number of significant novel splicing junction
+#'   \item numFeatures. A list that includes number of exons,number of 
+#'   splicing junction and number of novel splicing junction within gene 
+#'   \item numSig. A list that includes number of significant exons,number of 
+#'   significant splicing junction and number of significant novel splicing 
+#'   junction within gene 
+#' }
+#'   
+#' @docType data
+#' @keywords datasets
+#' @name mds2
+#' @usage data(mds2)
+#' @return a data set 29945 rows and 17 variables
+#' @format A data frame with 29945 rows and 17 variables
+#' 
 NULL

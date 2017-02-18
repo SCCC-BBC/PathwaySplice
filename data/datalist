@@ -1,6 +1,6 @@
 chr22
 hg19
-hg38: .Random.seed hg38
+hg38
 mds
 mds11: mds.11.sample
 mds2

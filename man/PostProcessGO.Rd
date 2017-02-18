@@ -8,19 +8,19 @@ PostProcessGO(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
   In.ad.not.un.file, In.un.not.ad.file)
 }
 \arguments{
-\item{n.go}{}
+\item{n.go}{number of gene sets}
 
-\item{adjusted}{}
+\item{adjusted}{adjusted result}
 
-\item{unadjuasted}{}
+\item{unadjuasted}{unadjusted result}
 
-\item{venn.dir}{}
+\item{venn.dir}{path for outputing venn}
 
-\item{boxplot.dir}{}
+\item{boxplot.dir}{path for outputing boxplot}
 
-\item{In.ad.not.un.file}{}
+\item{In.ad.not.un.file}{file name for outputing adjused but not in unadjusted when using the selected gene sets}
 
-\item{In.un.not.ad.file}{}
+\item{In.un.not.ad.file}{file name for outputing unadjused but not in adjusted when using the selected gene sets}
 }
 \value{
 null

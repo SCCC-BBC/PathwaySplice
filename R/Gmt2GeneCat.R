@@ -7,6 +7,7 @@
 #' @param gmt_input_file input file
 #' @param file.type local or url
 #' @param gene_anno_file annotation file
+#' @param gene_anno gene annotation to be used if no annotation file
 #'
 #' @return a list with its names being geneID, its element being the pathways
 #'
@@ -16,7 +17,8 @@
 #'
 #' cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
 #' data(hg38)
-#' gene.2.cat.hallmark.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
+#' 
+#' \donttest{gene.2.cat.hallmark.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)}
 #'
 Gmt2GeneCat <- function(gmt_input_file, file.type, gene_anno_file=NULL,gene_anno) {
   gene.2.cat.gmt <- gene2cat2(gmt_input_file, file.type)

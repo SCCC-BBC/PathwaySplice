@@ -1,10 +1,10 @@
 #' GetResultsFromJunctionSeq
 #' Get analysis results using JunctionSeq
 #'
-#' @param dir.name
-#' @param file.sample
-#' @param file.count
-#' @param file.gff
+#' @param dir.name path name for sample information file 
+#' @param file.sample sample information file
+#' @param file.count count file
+#' @param file.gff annotation file
 #'
 #' @return return an analysis results from JunctionSeq
 
@@ -16,7 +16,8 @@
 #' dir.name=paste0(dir.name,"/")
 #' file.gff="flat.chr22.gff"
 #' file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-#' Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
+#' \donttest{Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)}
+#' 
 GetResultsFromJunctionSeq <- function(dir.name, file.sample, 
   file.count, file.gff) {
 

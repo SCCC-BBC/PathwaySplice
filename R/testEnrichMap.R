@@ -14,7 +14,7 @@
 #' data(mds)
 #' data(hg19)
 #'
-#' testPathwaySplice(mds,hg19)
+#' \donttest{testPathwaySplice(mds,hg19)}
 #'
 #'
 testPathwaySplice <- function(gene_based_table, which_gene_model) {
@@ -25,7 +25,7 @@ testPathwaySplice <- function(gene_based_table, which_gene_model) {
   Example.Go.adjusted.by.exon <-
     Run_pathwaysplice(
       gene_based_table,
-      ad = "exon_SJ",
+      adjust = "exon_SJ",
       sub_feature = "E",
       0.05,
       genomeID = "hg19",
@@ -36,7 +36,7 @@ testPathwaySplice <- function(gene_based_table, which_gene_model) {
   Example.Go.unadjusted <-
     Run_pathwaysplice(
       gene_based_table,
-      ad = "exon_SJ",
+      adjust = "exon_SJ",
       sub_feature = "E",
       0.05,
       genomeID = "hg19",

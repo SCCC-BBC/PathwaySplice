@@ -5,8 +5,8 @@
 \title{LRtestBias}
 \usage{
 LRtestBias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
-  sig.threshold = 0.05, type = c("exon", "splicing"), p.x = 2, p.y = 70,
-  y_lim = 80, boxplot_width)
+  sig.threshold = 0.05, type = c("exon", "splicing"), loc.x = 2,
+  loc.y = 70, y_lim = 80, boxplot_width)
 }
 \arguments{
 \item{jscs_genewise_object}{gene based table returned
@@ -18,9 +18,9 @@ from ReformatData and MakeGeneWiseTable_JunctionSeq}
 
 \item{type}{whether you are interested in exon or splicing junction}
 
-\item{p.x}{x coordinate for p value label}
+\item{loc.x}{indicates x coordinate of p value from logistic regression}
 
-\item{p.y}{y coordinate for p value label}
+\item{loc.y}{indicates y coordinate of p value from logistic regression}
 
 \item{y_lim}{defining the largest number of exons in y axis in boxplot}
 
@@ -36,8 +36,6 @@ Logistic regression to check bias
 
 data(mds11)
 mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-re<-LRtestBias(mds33,p.x=2,p.y=70,y_lim=80,boxplot_width=0.3)
-
-
+re<-LRtestBias(mds33,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
 }
 
