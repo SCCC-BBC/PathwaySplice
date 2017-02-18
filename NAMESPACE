@@ -20,6 +20,7 @@ importFrom(stats,median,dhyper,glm,phyper,runif,approx,prcomp)
 importFrom(utils,data,head,read.csv,read.table,relist)
 importFrom(grDevices,dev.off,png)
 importFrom(utils,write.table)
+importFrom(RColorBrewer,brewer.pal)
 
 export(.onAttach)
 export(Cbs)
