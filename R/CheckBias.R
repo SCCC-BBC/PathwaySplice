@@ -56,7 +56,6 @@ Cbs <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
         All.genes.based.on.Sig.sub_feature))
     
     All.gene.id.index[gene.DE_interest] <- 1
-    print(length(All.gene.id.index))
     
     gene.with.matched.junction <- which(Data4Goterm.sub_feature.geneID.NumOfJunctions[, 
         1] %in% c(names(All.gene.id.index)))
@@ -64,8 +63,6 @@ Cbs <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
         2])
     
     All.gene.id.index.2 <- All.gene.id.index
-    
-    print(All.gene.id.index.2)
     
     if (adjust == "GL") {
         pwf.DE_interest = nullp(All.gene.id.index.2, genomeID, 
