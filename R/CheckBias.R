@@ -2,14 +2,12 @@
 #'
 #' Cbs is to check possible bias factor using the method in goseq
 #'
-#' @param re.gene.based Gene based table
-#' @param ad The possible bias factor
-#' @param sub_feature The possible bias factor
-#' @param threshold threshold used
-#' @param genomeID which genome
-#' @param geneID which type of gene ID
-#' @param gene_model Gene model
-#' @param method which method
+#' @param re.gene.based Gene based table converted from DU results
+#' @param adjust The possible bias factor to be used(gene length or number of exons)
+#' @param sub_feature use exon("E") or splicing junction("J") to get gene table 
+#' @param threshold cutoff for perGeneQvalue calculated using the method in DEXSeq
+#' @param genomeID which genome(mm10 or hg19)
+#' @param geneID which type of gene ID("ensGene" or "geneSymbol")
 #'
 #' @return A data frame that includes gene ID, status of differential gene
 #' and probability weight function
@@ -19,11 +17,11 @@
 #' @examples
 #' 
 #' data(mds)
-#' Cbs(mds,ad='E',sub_feature='E',threshold=0.05)
+#' Cbs(mds,adjust='E',sub_feature='E',threshold=0.05)
 #'
 #'
-Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL, 
-    threshold, genomeID, geneID, gene_model, method) {
+Cbs <- function(re.gene.based, adjust = "GL", sub_feature = NULL, 
+    threshold, genomeID, geneID) {
     
     Data4Goterm <- re.gene.based
     
@@ -69,7 +67,7 @@ Cbs <- function(re.gene.based, ad = "GL", sub_feature = NULL,
     
     print(All.gene.id.index.2)
     
-    if (ad == "GL") {
+    if (adjust == "GL") {
         pwf.DE_interest = nullp(All.gene.id.index.2, genomeID, 
             geneID, plot.fit = TRUE)
     } else {
