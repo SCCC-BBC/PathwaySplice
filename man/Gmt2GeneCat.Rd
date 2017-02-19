@@ -7,16 +7,16 @@
 Gmt2GeneCat(gmt_input_file, file.type, gene_anno_file = NULL, gene_anno)
 }
 \arguments{
-\item{gmt_input_file}{input file}
+\item{gmt_input_file}{Input file}
 
-\item{file.type}{local or url}
+\item{file.type}{Local or url}
 
-\item{gene_anno_file}{annotation file}
+\item{gene_anno_file}{Gene annotation file supplied as a file}
 
-\item{gene_anno}{gene annotation to be used if no annotation file}
+\item{gene_anno}{Gene annotation data set(mm10 or hg19 in this package) to be used if no annotation file}
 }
 \value{
-a list with its names being geneID, its element being the pathways
+a list with its names being geneID, its elements being the pathways
 }
 \description{
 Read a gmt file, and return a list with its name

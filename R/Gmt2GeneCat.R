@@ -4,12 +4,12 @@
 #' being a gene id based on gene_anno_file, and each element of this list
 #' being the pathways that this gene corresponds to
 #'
-#' @param gmt_input_file input file
-#' @param file.type local or url
-#' @param gene_anno_file annotation file
-#' @param gene_anno gene annotation to be used if no annotation file
+#' @param gmt_input_file Input file 
+#' @param file.type Local or url
+#' @param gene_anno_file Gene annotation file supplied as a file 
+#' @param gene_anno Gene annotation data set(mm10 or hg19 in this package) to be used if no annotation file
 #'
-#' @return a list with its names being geneID, its element being the pathways
+#' @return a list with its names being geneID, its elements being the pathways
 #'
 #' @export
 #'
