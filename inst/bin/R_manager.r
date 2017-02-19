@@ -14,7 +14,7 @@ print(row)
 if(row=="Yes") {
   
   cat("Starting build...\n")
-  system("R CMD build --resave-data PathwaySplice")
+  system("R CMD build --resave-data --no-build-vignettes PathwaySplice")
   cat("Finished build ...\n")
   
   cat("Do you want to perform CRAN check for this package?\n")
