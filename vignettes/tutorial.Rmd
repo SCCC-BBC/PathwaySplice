@@ -1,17 +1,23 @@
 ---
 title: "PathwaySplice"
+author: "Aimin Yan"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{PathwaySplice}
   %\VignetteEngine{knitr::rmarkdown}
-  %\usepackage[utf8]{inputenc}
+  \usepackage[utf8]{inputenc}
 ---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
 
 # Use PathwaySplice
 
 + Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
 
-```{r eval=TRUE}
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 
 # test create jscs object
 library(PathwaySplice)
@@ -28,7 +34,7 @@ re.example.gene.based<-makeGeneWiseTable(Re.example,
 gene.list=unique(as.character(fData(Re.example)$geneID)))
 ```
 + Apply logistic regression model to identify bias factor
-```{r eval=TRUE}
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 library(PathwaySplice)
 data(mds11)
 mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
@@ -36,7 +42,7 @@ re<-LRtestBias(mds33, loc.x=2, loc.y=70,y_lim=80,boxplot_width=0.3) #loc.x and l
 ```
 
 + Perform pathwaysplice in one step
-```{r eval=TRUE}
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 
 data(mds11)
 data(hg19)
@@ -58,7 +64,7 @@ threshold=0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeo
 ```
 
 + If you are interested in other gene sets such as Canonical Pathways(CP),Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these .gmt files, then perform the following steps:
-```{r eval=TRUE}
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 
 cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
 data(hg38)
@@ -78,7 +84,7 @@ Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust = 'exon_SJ',sub_fe
 
 + Build up network based on the overlap between gene sets and visualize this network
 
-```{r eval=TRUE}
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 #GO
 # SimilarityThreshold: Gene sets with Jaccard coefficient > similarity threshold are connected by a line,
 # with thickness proportional to Jaccard coefficient    
