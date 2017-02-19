@@ -4,25 +4,21 @@
 \alias{Cbs}
 \title{Cbs}
 \usage{
-Cbs(re.gene.based, ad = "GL", sub_feature = NULL, threshold, genomeID,
-  geneID, gene_model, method)
+Cbs(re.gene.based, adjust = "GL", sub_feature = NULL, threshold, genomeID,
+  geneID)
 }
 \arguments{
-\item{re.gene.based}{Gene based table}
+\item{re.gene.based}{Gene based table converted from DU results}
 
-\item{ad}{The possible bias factor}
+\item{adjust}{The possible bias factor to be used(gene length or number of exons)}
 
-\item{sub_feature}{The possible bias factor}
+\item{sub_feature}{use exon("E") or splicing junction("J") to get gene table}
 
-\item{threshold}{threshold used}
+\item{threshold}{cutoff for perGeneQvalue calculated using the method in DEXSeq}
 
-\item{genomeID}{which genome}
+\item{genomeID}{which genome(mm10 or hg19)}
 
-\item{geneID}{which type of gene ID}
-
-\item{gene_model}{Gene model}
-
-\item{method}{which method}
+\item{geneID}{which type of gene ID("ensGene" or "geneSymbol")}
 }
 \value{
 A data frame that includes gene ID, status of differential gene
@@ -34,7 +30,7 @@ Cbs is to check possible bias factor using the method in goseq
 \examples{
 
 data(mds)
-Cbs(mds,ad='E',sub_feature='E',threshold=0.05)
+Cbs(mds,adjust='E',sub_feature='E',threshold=0.05)
 
 
 }
