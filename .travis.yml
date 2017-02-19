@@ -31,8 +31,13 @@ r_github_packages:
   - gaborcsardi/crayon
   - jimhester/covr
 
-r_build_args: --no-build-vignettes --no-manual --no-resave-data
-r_check_args: --no-build-vignettes --no-manual
+script:
+  - |
+    R CMD build .
+    travis_wait 40 R CMD check PathwaySplice*tar.gz
+  
+r_build_args: --no-manual --no-resave-data
+r_check_args: --no-vignettes --no-manual
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
