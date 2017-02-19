@@ -31,7 +31,10 @@ r_github_packages:
   - gaborcsardi/crayon
   - jimhester/covr
 
-install: travis_wait 30 mvn install
+script:
+  - |
+    R CMD build --no-build-vignettes.
+    travis_wait 40 R CMD check --no-vignettes PathwaySplice_0.99.0.tar.gz
 
 r_build_args: "--no-manual --resave-data"
 r_check_args: "--no-build-vignettes --no-manual --timings"
