@@ -14,7 +14,7 @@ print(row)
 if(row=="Yes") {
   
   cat("Starting build...\n")
-  system("R CMD build --resave-data --no-build-vignettes PathwaySplice")
+  system("R CMD build --resave-data PathwaySplice")
   cat("Finished build ...\n")
   
   cat("Do you want to perform CRAN check for this package?\n")
@@ -23,7 +23,7 @@ if(row=="Yes") {
   
   if(row=="Yes"){
     cat("Starting check as CRAN...\n")
-    system("R CMD check --no-build-vignettes --as-cran PathwaySplice_0.99.0.tar.gz")
+    system("R CMD check --as-cran PathwaySplice_0.99.0.tar.gz")
     cat("Finished check as CRAN...\n")
   }else{
     cat("You decide Not check this package as CRAN at the moment\n")
