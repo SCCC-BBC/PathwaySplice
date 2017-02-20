@@ -1,13 +1,13 @@
 #' makeGeneWiseTable
 #'
-#' This function is used to generate the gene-based results
+#' This function is used to generate the gene-based results  #### gene-based XX YY results
 #'
-#' @param jscs output from JunctionSeq
+#' @param jscs output from JunctionSeq #### the output from JunctionSeq
 #' @param gene.list gene list
 #' @param FDR.threshold threshold to define whether exon or splicing junction is differential used
 #' @param verbose whether to print runing process
 #'
-#' @return A gene based table
+#' @return A gene based table   #### A gene-based XX YY results
 #' @export
 #'
 #' @examples
