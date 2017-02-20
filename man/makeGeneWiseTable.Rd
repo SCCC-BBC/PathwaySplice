@@ -7,16 +7,19 @@
 makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE)
 }
 \arguments{
-\item{jscs}{output from JunctionSeq}
+\item{jscs}{The object returned from \code{"GetResultsFromJunctionSeq"}}
 
-\item{gene.list}{gene list}
+\item{gene.list}{Gene list of the returned object from JunctionSeq or DEXSeq}
 
-\item{FDR.threshold}{threshold to define whether exon or splicing junction is differential used}
+\item{FDR.threshold}{Threshold to define whether exon or splicing 
+junction is differentially used based on the padjust value of 
+exon and splicing junction}
 
-\item{verbose}{whether to print runing process}
+\item{verbose}{Whether to print runing process or not}
 }
 \value{
-A gene based table
+A gene based table converted from the object returned 
+       from GetResultsFromJunctionSeq
 }
 \description{
 This function is used to generate the gene-based results
