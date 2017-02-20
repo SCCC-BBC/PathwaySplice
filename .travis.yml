@@ -33,11 +33,11 @@ r_github_packages:
 
 script: 
   - |
-    R CMD build .
-    travis_wait 40 R CMD check PathwaySplice*tar.gz
+    R CMD build --no-manual --no-resave-data
+    travis_wait 40 R CMD check --no-vignettes --no-manual
 
-#r_build_args: --no-manual --no-resave-data
-#r_check_args: --no-vignettes --no-manual
+#r_build_args: 
+#r_check_args: 
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
