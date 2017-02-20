@@ -33,7 +33,7 @@ r_github_packages:
 
 script: 
   - |
-    R CMD build --no-manual --no-resave-data
+    travis_wait 60 R CMD build --no-manual --no-resave-data
     travis_wait 60 R CMD check --no-vignettes --no-manual PathwaySplice*tar.gz
 
 #r_build_args: 
