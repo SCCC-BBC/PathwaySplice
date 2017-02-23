@@ -44,4 +44,3 @@ re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)}
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 }
-

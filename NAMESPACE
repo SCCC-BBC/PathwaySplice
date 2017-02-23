@@ -8,6 +8,7 @@ import(VennDiagram)
 
 importFrom(BiocGenerics,sizeFactors)
 importFrom(AnnotationDbi,toTable,select)
+importFrom(stats, var)
 
 importFrom(JunctionSeq,runJunctionSeqAnalyses)
 importFrom(BiasedUrn,dWNCHypergeo,pWNCHypergeo)

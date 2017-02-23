@@ -47,4 +47,3 @@ sub_feature='E',0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sa
 Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')}
 }
-

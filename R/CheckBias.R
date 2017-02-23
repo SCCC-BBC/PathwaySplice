@@ -13,7 +13,6 @@
 #' and probability weight function
 #'
 #' @export
-#'
 #' @examples
 #' 
 #' data(mds)

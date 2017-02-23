@@ -31,4 +31,3 @@ data(hg38)
 \donttest{gene.2.cat.hallmark.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)}
 
 }
-

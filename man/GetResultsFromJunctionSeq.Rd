@@ -32,4 +32,3 @@ file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 \donttest{Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)}
 
 }
-

@@ -134,22 +134,42 @@ WriteGoToTable <- function(GO_re,Output_file) {
 #' @param adjusted adjusted result 
 #' @param unadjuasted unadjusted result 
 #' @param venn.dir path for outputing venn 
-#' @param boxplot.dir path for outputing boxplot 
-#' @param In.ad.not.un.file file name for outputing adjused but not in unadjusted when using the selected gene sets     
-#' @param In.un.not.ad.file file name for outputing unadjused but not in adjusted when using the selected gene sets  
+#' @param boxplot.dir path for outputing boxplot
+#' @param type.boxplot Get boxplot for 5 categories or 3 categories
+#'        5 categories: "All.adjusted","All.unadjusted","Top25.adjusted"
+#'                      "Top25.unadjusted","In_ad_not_un","In_un_not_ad"
+#'        3 categories: "All","Top25.adjusted","Top25.unadjusted
+#' @param In.ad.not.un.file file name for outputing adjused but not 
+#' in unadjusted when using the selected gene sets     
+#' @param In.un.not.ad.file file name for outputing unadjused but not
+#' in adjusted when using the selected gene sets  
 #'
 #' @return null
 #' 
 #'
 #' @examples
-#' 
+#' \donttest{
+#' cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
+#' data(hg38)
+#' gene.2.cat.cp.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
+#' Example.cp.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust = 'exon_SJ',sub_feature='E',
+#'                                               0.05,genomeID='hg19',geneID='ensGene',
+#'                                               gene2cat=gene.2.cat.cp.hg,gene_model=hg19,
+#'                                               method='Wallenius')
+#'
+#' Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust = 'exon_SJ',sub_feature='E',
+#'                                         0.05,genomeID='hg19',geneID='ensGene',
+#'                                         gene2cat=gene.2.cat.cp.hg,
+#'                                         gene_model=hg19,method='Hypergeometric')
+#'                                         
 #' PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
-#' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/","/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
-#' In_ad_not_un.xls","In_un_not_ad.xls")
+#' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
+#' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
+#' type.boxplot="Only3","In_ad_not_un.xls","In_un_not_ad.xls")}
 #' 
 #' @export
 #' 
-PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,In.ad.not.un.file,In.un.not.ad.file) {
+PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,type.boxplot=c("All","Only3"),In.ad.not.un.file,In.un.not.ad.file) {
   n=n.go
   
   Example.Go.adjusted.by.exon<-adjusted
@@ -218,22 +238,46 @@ PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,In.ad.n
   cp.all.adjusted<-unlist(Example.Go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
   cp.all.unadjusted<-unlist(Example.Go.unadjusted$GO.selected$Ave_value_all_gene)
   
-  yy<-rbind(cbind(xx[,1],rep("In.ad.not.un",length(xx[,1]))),
-            cbind(xx[,2],rep("In.un.not.ad",length(xx[,2]))),
-            cbind(cp.top.adjusted.25,rep("cp.top.adjusted.25",length(cp.top.adjusted.25))),
-            cbind(cp.top.unadjusted.25,rep("cp.top.unadjusted.25",length(cp.top.unadjusted.25))),
-            cbind(cp.all.adjusted,rep("cp.all.adjusted",length(cp.all.adjusted))),
-            cbind(cp.all.unadjusted,rep("cp.all.unadjusted",length(cp.all.unadjusted))))
+  type.boxplot<-match.arg(type.boxplot)
   
-  colnames(yy)<-c("y","grp")
+  switch (type.boxplot,
+          Only3 = {
+            
+            yy<-rbind(cbind(cp.top.adjusted.25,rep("Adjusted_25",length(cp.top.adjusted.25))),
+                      cbind(cp.top.unadjusted.25,rep("Unadjusted_25",length(cp.top.unadjusted.25))),
+                      cbind(cp.all.unadjusted,rep("All",length(cp.all.unadjusted))))
+            
+            colnames(yy)<-c("y","grp")
+            yy<-as.data.frame(yy)
+            
+            yy$grp<-factor(yy$grp)
+            
+            yy$grp<-factor(yy$grp,levels=levels(yy$grp)[c(2,1,3)])
+            
+            png(paste0(boxplot.dir,"/","boxplot.png"))
+            boxplot(as.numeric(as.character(y))~grp,data=yy)
+            dev.off()
+            
+          },
+          {
+            yy<-rbind(cbind(xx[,1],rep("In.ad.not.un",length(xx[,1]))),
+                      cbind(xx[,2],rep("In.un.not.ad",length(xx[,2]))),
+                      cbind(cp.top.adjusted.25,rep("cp.top.adjusted.25",length(cp.top.adjusted.25))),
+                      cbind(cp.top.unadjusted.25,rep("cp.top.unadjusted.25",length(cp.top.unadjusted.25))),
+                      cbind(cp.all.adjusted,rep("cp.all.adjusted",length(cp.all.adjusted))),
+                      cbind(cp.all.unadjusted,rep("cp.all.unadjusted",length(cp.all.unadjusted))))
+            
+            colnames(yy)<-c("y","grp")
+            yy<-as.data.frame(yy)
+            
+            png(paste0(boxplot.dir,"/","boxplot.png"))
+            boxplot(as.numeric(as.character(y))~grp,data=yy)
+            dev.off()
+            
+          }
+  )
   
-  yy<-as.data.frame(yy)
-  #head(yy)
-  
-  png(paste0(boxplot.dir,"/","boxplot.png"))
-  boxplot(as.numeric(as.character(y))~grp,data=yy)
-  dev.off()
-    
+
   Output_file=paste0(boxplot.dir,"/",In.ad.not.un.file)
   WriteGoToTable(Example.Go.adjusted.by.exon$GO.selected[index1,],Output_file)
   

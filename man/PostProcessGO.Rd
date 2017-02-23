@@ -5,7 +5,7 @@
 \title{PostProcessGO}
 \usage{
 PostProcessGO(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
-  In.ad.not.un.file, In.un.not.ad.file)
+  type.boxplot = c("All", "Only3"), In.ad.not.un.file, In.un.not.ad.file)
 }
 \arguments{
 \item{n.go}{number of gene sets}
@@ -18,9 +18,16 @@ PostProcessGO(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 
 \item{boxplot.dir}{path for outputing boxplot}
 
-\item{In.ad.not.un.file}{file name for outputing adjused but not in unadjusted when using the selected gene sets}
+\item{type.boxplot}{Get boxplot for 5 categories or 3 categories
+5 categories: "All.adjusted","All.unadjusted","Top25.adjusted"
+              "Top25.unadjusted","In_ad_not_un","In_un_not_ad"
+3 categories: "All","Top25.adjusted","Top25.unadjusted}
 
-\item{In.un.not.ad.file}{file name for outputing unadjused but not in adjusted when using the selected gene sets}
+\item{In.ad.not.un.file}{file name for outputing adjused but not 
+in unadjusted when using the selected gene sets}
+
+\item{In.un.not.ad.file}{file name for outputing unadjused but not
+in adjusted when using the selected gene sets}
 }
 \value{
 null
@@ -28,4 +35,24 @@ null
 \description{
 PostProcessGO
 }
+\examples{
+\donttest{
+cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
+data(hg38)
+gene.2.cat.cp.hg<-Gmt2GeneCat(cp.gmt.file,'local',gene_anno=hg38)
+Example.cp.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust = 'exon_SJ',sub_feature='E',
+                                              0.05,genomeID='hg19',geneID='ensGene',
+                                              gene2cat=gene.2.cat.cp.hg,gene_model=hg19,
+                                              method='Wallenius')
 
+Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust = 'exon_SJ',sub_feature='E',
+                                        0.05,genomeID='hg19',geneID='ensGene',
+                                        gene2cat=gene.2.cat.cp.hg,
+                                        gene_model=hg19,method='Hypergeometric')
+                                        
+PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
+"/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
+"/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
+type.boxplot="Only3","In_ad_not_un.xls","In_un_not_ad.xls")}
+
+}
