@@ -1,8 +1,7 @@
 library(testthat)
-test_that("test Run_pathwaysplice",
+test_that("test LRtestBias",
           {
-            data(mds)
-            data(hg19)
-            Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad='exon_SJ',sub_feature='E',
-                                                           0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')  
+            data(mds11)
+            mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
+            re<-LRtestBias(mds33,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3,type="splicing")
           })

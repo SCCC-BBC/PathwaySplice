@@ -1,7 +1,7 @@
 Package: PathwaySplice
 Type: Package
 Title: An R Package for Adjusting Bias in Gene Set Enrichment Analysis 
-Version: 0.99.3
+Version: 0.99.4
 Author: Aimin Yan
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
 Depends: R (>= 3.4.0)
@@ -9,7 +9,8 @@ Imports: goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,Annotation
         BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils,VennDiagram,RColorBrewer
 Suggests: testthat,knitr,rmarkdown
 VignetteBuilder: knitr
-biocViews: AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,Visualization,NetworkEnrichment,Network
+biocViews: AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,RNASeq,Sequencing,Software,
+           Visualization,NetworkEnrichment,Network
 Description: PathwaySplice is used to perform gene set enrichment analysis for differential
              usage based gene list, and to construct and visualize network from enrichment
              analysis results.
