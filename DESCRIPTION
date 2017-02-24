@@ -1,7 +1,7 @@
 Package: PathwaySplice
 Type: Package
 Title: An R Package for Adjusting Bias in Gene Set Enrichment Analysis 
-Version: 0.99.2
+Version: 0.99.1
 Author: Aimin Yan
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
 Depends: R (>= 3.4.0)
@@ -15,4 +15,4 @@ Description: PathwaySplice is used to perform gene set enrichment analysis for d
              analysis results.
 License: LGPL(>=2)
 LazyData: TRUE
-RoxygenNote: 6.0.1
+RoxygenNote: 5.0.1
