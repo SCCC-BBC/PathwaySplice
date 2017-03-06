@@ -8,25 +8,26 @@ PostProcessGO(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
   type.boxplot = c("All", "Only3"), In.ad.not.un.file, In.un.not.ad.file)
 }
 \arguments{
-\item{n.go}{number of gene sets}
+\item{n.go}{Number of gene sets}
 
-\item{adjusted}{adjusted result}
+\item{adjusted}{Adjusted result}
 
-\item{unadjuasted}{unadjusted result}
+\item{unadjuasted}{Unadjusted result}
 
-\item{venn.dir}{path for outputing venn}
+\item{venn.dir}{Path for outputing venn}
 
-\item{boxplot.dir}{path for outputing boxplot}
+\item{boxplot.dir}{Path for outputing boxplot}
 
 \item{type.boxplot}{Get boxplot for 5 categories or 3 categories
-5 categories: "All.adjusted","All.unadjusted","Top25.adjusted"
-              "Top25.unadjusted","In_ad_not_un","In_un_not_ad"
+6 categories: "All.adjusted","All.unadjusted",
+              "Top25.adjusted","Top25.unadjusted",
+              "In_ad_not_un","In_un_not_ad"
 3 categories: "All","Top25.adjusted","Top25.unadjusted}
 
-\item{In.ad.not.un.file}{file name for outputing adjused but not 
+\item{In.ad.not.un.file}{File name for outputing adjused but not
 in unadjusted when using the selected gene sets}
 
-\item{In.un.not.ad.file}{file name for outputing unadjused but not
+\item{In.un.not.ad.file}{File name for outputing unadjused but not
 in adjusted when using the selected gene sets}
 }
 \value{
@@ -50,9 +51,11 @@ Example.cp.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust = 'exon_SJ',sub_fe
                                         gene2cat=gene.2.cat.cp.hg,
                                         gene_model=hg19,method='Hypergeometric')
                                         
-PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
-"/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
-"/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
-type.boxplot="Only3","In_ad_not_un.xls","In_un_not_ad.xls")}
+rre<-PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
+"/Volumes/Bioinformatics$/Aimin_project/TestNew/",
+"/Volumes/Bioinformatics$/Aimin_project/TestNew/",
+type.boxplot="Only3","In_ad_not_un.xls","In_un_not_ad.xls")
+
+}
 
 }

@@ -4,23 +4,27 @@
 \alias{enrichmentMap}
 \title{enrichmentMap}
 \usage{
-enrichmentMap(GoSeqRes, gene.set.type = "GO", n = 50, fixed = TRUE,
-  vertex.label.font = 1, SimilarityThreshold, ...)
+enrichmentMap(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
+  SimilarityThreshold, ...)
 }
 \arguments{
-\item{GoSeqRes}{object returned from Run_pathwaysplice}
+\item{GoSeqRes}{Object returned from Run_pathwaysplice}
 
-\item{gene.set.type}{whether you are interested in GO, KEGG, or other pathways}
+\item{n}{Maximum number of category to be shown}
 
-\item{n}{maximum number of category to shown}
+\item{fixed}{If set to FALSE, will invoke tkplot}
 
-\item{fixed}{if set to FALSE, will invoke tkplot}
+\item{vertex.label.font}{Font size of vertex label}
 
-\item{vertex.label.font}{font size of vertex label}
+\item{SimilarityThreshold}{Threshold for defining Jaccard Coefficient(JC)
+JC ranges from 0 to 1:
+JC=0, indicates there are no overlap on genes between
+       two gene sets
+JC=1, indicates two gene sets are identical  
+SimilarityThreshold=0, indicates the enrichment map includes
+all gene sets with their mutual JC greater than 0}
 
-\item{SimilarityThreshold}{threshold for defining similarity between GOs}
-
-\item{...}{additional parameter}
+\item{...}{Additional parameter}
 }
 \value{
 A figure for visualizing enrichment network
@@ -30,16 +34,10 @@ enrichmentMap is used to draw network based on similarities between GOs
 }
 \examples{
 
-data(mds)
-\donttest{Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",
-sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
-gene_model=hg19,method="Sampling")
-re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
-Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",
-sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
-gene_model=hg19,method="Hypergeometric")
-re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)}
+res <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 
+enmap<-enrichmentMap(res,n=5,SimilarityThreshold=0)
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package

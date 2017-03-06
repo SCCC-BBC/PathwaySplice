@@ -5,45 +5,34 @@
 \title{Run_pathwaysplice}
 \usage{
 Run_pathwaysplice(re.gene.based, adjust = "GL", sub_feature = NULL,
-  threshold, genomeID, geneID, gene_model, method, gene2cat = NULL)
+  threshold, genomeID, geneID, method, gene2cat = NULL)
 }
 \arguments{
-\item{re.gene.based}{gene based results}
+\item{re.gene.based}{Gene based results}
 
-\item{adjust}{bias factor to be adjusted}
+\item{adjust}{Bias factor to be adjusted}
 
-\item{sub_feature}{feature to be checked}
+\item{sub_feature}{Feature to be checked}
 
-\item{threshold}{threshold to be used for adjustment}
+\item{threshold}{Threshold to be used for adjustment}
 
-\item{genomeID}{gene to be used}
+\item{genomeID}{Genome to be used(hg19 or mm10)}
 
-\item{geneID}{geneID to be used}
+\item{geneID}{GeneID to be used(entrezgene or ensembl_gene_id)}
 
-\item{gene_model}{gene model to be used}
+\item{method}{Method to be used for calculating overrepresented p value
+of gene sets(Options include Wallenius,Sampling, and Hypergeometric)}
 
-\item{method}{method to be used}
-
-\item{gene2cat}{get sets defined by users}
+\item{gene2cat}{Get sets defined by users}
 }
 \value{
-a list that has gene set enrichment analysis results
+A list that has gene set enrichment analysis results
 }
 \description{
 Perform pathwaysplice in one step
 }
 \examples{
+res <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 
-data(mds11)
-data(hg19)
-
-\donttest{Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
-
-set.seed(100)
-Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',
-sub_feature='E',0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
-
-Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')}
 }

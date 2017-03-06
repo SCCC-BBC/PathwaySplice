@@ -11,9 +11,8 @@ makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE)
 
 \item{gene.list}{Gene list of the returned object from JunctionSeq or DEXSeq}
 
-\item{FDR.threshold}{Threshold to define whether exon or splicing 
-junction is differentially used based on the padjust value of 
-exon and splicing junction}
+\item{FDR.threshold}{Threshold to define the differential usage of either exon
+or splicing junction}
 
 \item{verbose}{Whether to print runing process or not}
 }

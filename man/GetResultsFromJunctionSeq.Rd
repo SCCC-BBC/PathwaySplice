@@ -2,33 +2,31 @@
 % Please edit documentation in R/Run_get_results_from_JunctionSeq.R
 \name{GetResultsFromJunctionSeq}
 \alias{GetResultsFromJunctionSeq}
-\title{GetResultsFromJunctionSeq
-Get analysis results using JunctionSeq}
+\title{GetResultsFromJunctionSeq}
 \usage{
-GetResultsFromJunctionSeq(dir.name, file.sample, file.count, file.gff)
+GetResultsFromJunctionSeq(dir.name, sample.file, count.file, gff.file)
 }
 \arguments{
-\item{dir.name}{path name for sample information file}
+\item{dir.name}{Path name for sample information file}
 
-\item{file.sample}{sample information file}
+\item{sample.file}{Sample information file}
 
-\item{file.count}{count file}
+\item{count.file}{Count file}
 
-\item{file.gff}{annotation file}
+\item{gff.file}{Annotation file}
 }
 \value{
-return an analysis results from JunctionSeq
+The analysis result from JunctionSeq R package
 }
 \description{
-GetResultsFromJunctionSeq
-Get analysis results using JunctionSeq
+This function is used to get analysis results from using JunctionSeq
 }
 \examples{
-file.sample="Sample_info.txt"
-dir.name=dirname(system.file("extdata","Sample_info.txt", package = "PathwaySplice"))
-dir.name=paste0(dir.name,"/")
-file.gff="flat.chr22.gff"
-file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-\donttest{Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)}
+
+dir.name <- system.file("extdata", package="PathwaySplice")
+sample.file <- "Sample_info.txt"
+count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+gff.file <- "flat.chr22.gff"
+# res <- GetResultsFromJunctionSeq(dir.name, sample.file, count.file, gff.file)
 
 }

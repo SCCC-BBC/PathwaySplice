@@ -22,8 +22,15 @@ if(row=="Yes") {
   row <- readLines(input, n=1)
   
   if(row=="Yes"){
+    
+    cat("Please specify the latest package that you build...\n")
+    input<-file('stdin', 'r')
+    
+    input_pkg <- readLines(input, n=1)
+    
     cat("Starting check as CRAN...\n")
-    system("R CMD check --no-vignettes --as-cran PathwaySplice_0.99.0.tar.gz")
+    cmd=paste0("R CMD check --no-vignettes --as-cran ",input_pkg)
+    system(cmd)
     cat("Finished check as CRAN...\n")
   }else{
     cat("You decide Not check this package as CRAN at the moment\n")
@@ -36,8 +43,17 @@ if(row=="Yes") {
   row <- readLines(input, n=1)
   
   if(row=="Yes"){
+    
+    cat("Please specify the latest package that you build...\n")
+    input<-file('stdin', 'r')
+    
+    input_pkg <- readLines(input, n=1)
+    
+    cmd=paste0("R CMD BiocCheck ",input_pkg)
+    system(cmd)
+    
     cat("Starting BiocCheck...\n")
-    system("R CMD BiocCheck PathwaySplice_0.99.0.tar.gz")
+    system(cmd)
     cat("Finished BiocCheck...\n")
   }else{
     cat("You decide Not BiocCheck for this package at the moment\n")
@@ -56,10 +72,16 @@ if(row=="Yes") {
     input<-file('stdin', 'r')
     row <- readLines(input, n=1)
     
+    cat("Please specify the latest package that you build...\n")
+    input<-file('stdin', 'r')
+    
+    input_pkg <- readLines(input, n=1)
+  
     if(row==1){
+    
       R_lib=.libPaths()[1]
-      cat(paste0("Starting install at ",R_lib,"...\n"))      
-      cmd=paste0("R CMD INSTALL PathwaySplice_0.99.0.tar.gz -l ",R_lib) 
+      cat(paste0("Starting install at ",R_lib,"...\n"))
+      cmd=paste0("R CMD INSTALL ",input_pkg," -l ",R_lib) 
       system(cmd)
     }
     cat("Finished install...\n")

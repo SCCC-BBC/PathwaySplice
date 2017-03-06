@@ -9,25 +9,25 @@ LRtestBias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   loc.y = 70, y_lim = 80, boxplot_width)
 }
 \arguments{
-\item{jscs_genewise_object}{gene based table returned
+\item{jscs_genewise_object}{Gene based table returned
 from ReformatData and MakeGeneWiseTable_JunctionSeq}
 
-\item{genewise.pvalue}{whether you use smallest p value or geneWisePadj}
+\item{genewise.pvalue}{Whether you use smallest p value or geneWisePadj}
 
-\item{sig.threshold}{threshold to define differential gene list}
+\item{sig.threshold}{Threshold to define differential gene list}
 
-\item{type}{whether you are interested in exon or splicing junction}
+\item{type}{Whether you are interested in exon or splicing junction}
 
-\item{loc.x}{indicates x coordinate of p value from logistic regression}
+\item{loc.x}{Indicates x coordinate of p value from logistic regression}
 
-\item{loc.y}{indicates y coordinate of p value from logistic regression}
+\item{loc.y}{Indicates y coordinate of p value from logistic regression}
 
-\item{y_lim}{defining the largest number of exons in y axis in boxplot}
+\item{y_lim}{Defining the largest number of exons in y axis in boxplot}
 
-\item{boxplot_width}{parameter for boxplot width}
+\item{boxplot_width}{Parameter for boxplot width}
 }
 \value{
-return results from logistic regression
+Results from logistic regression
 }
 \description{
 Logistic regression to check bias
