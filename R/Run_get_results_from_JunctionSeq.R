@@ -1,9 +1,9 @@
 #' GetResultsFromJunctionSeq
-#' Get analysis results using JunctionSeq
+#' Get analysis results using JunctionSeq  #### I guess we could add a brief introduction of the results, e.g. peak results, mappting results etc
 #'
 #' @param dir.name path name for sample information file 
 #' @param file.sample sample information file
-#' @param file.count count file
+#' @param file.count count file      #### short reads count? or other count?
 #' @param file.gff annotation file
 #'
 #' @return return an analysis results from JunctionSeq
