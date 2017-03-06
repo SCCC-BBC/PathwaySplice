@@ -2,36 +2,26 @@
 #'
 #' Perform pathwaysplice in one step
 #'
-#' @param re.gene.based gene based results
-#' @param adjust bias factor to be adjusted
-#' @param sub_feature feature to be checked
-#' @param threshold threshold to be used for adjustment
-#' @param genomeID gene to be used
-#' @param geneID geneID to be used
-#' @param gene_model gene model to be used
-#' @param method method to be used
-#' @param gene2cat get sets defined by users 
+#' @param re.gene.based Gene based results
+#' @param adjust Bias factor to be adjusted
+#' @param sub_feature Feature to be checked
+#' @param threshold Threshold to be used for adjustment
+#' @param genomeID Genome to be used(hg19 or mm10)
+#' @param geneID GeneID to be used(entrezgene or ensembl_gene_id)
+#' @param method Method to be used for calculating overrepresented p value
+#'        of gene sets(Options include Wallenius,Sampling, and Hypergeometric)
+#' @param gene2cat Get sets defined by users 
 #' 
-#' @return a list that has gene set enrichment analysis results
+#' @return A list that has gene set enrichment analysis results
 #' @export
 #'
 #' @examples
+#' res <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+#' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #'
-#' data(mds11)
-#' data(hg19)
-#'
-#' \donttest{Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Wallenius')
-#'
-#' set.seed(100)
-#' Example.Go.adjusted.by.exon.by.sampling<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',
-#' sub_feature='E',0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Sampling')
-#' 
-#' Example.Go.unadjusted<-Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene_model=hg19,method='Hypergeometric')}
 
 Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL, 
-    threshold, genomeID, geneID, gene_model, method,gene2cat = NULL) {
+    threshold, genomeID, geneID, method,gene2cat = NULL) {
     
     Data4Goterm <- re.gene.based
     
@@ -87,32 +77,32 @@ Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
       
       if(is.null(gene2cat)){
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-            genomeID, geneID, gene.model = gene_model, method = "Hypergeometric", 
+            genomeID, geneID, method = "Hypergeometric", 
             use_genes_without_cat = TRUE)
       }else{
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-                                            genomeID, geneID, gene.model = gene_model, gene2cat= gene2cat,method = "Hypergeometric", 
+                                            genomeID, geneID, gene2cat= gene2cat,method = "Hypergeometric", 
                                             use_genes_without_cat = TRUE)
         }
       } else if (method == "Sampling") {
       
       if(is.null(gene2cat)){
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-                                            genomeID, geneID, gene.model = gene_model, method = "Sampling", 
+                                            genomeID, geneID, method = "Sampling", 
                                             use_genes_without_cat = TRUE)
       }else{
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-                                            genomeID, geneID, gene.model = gene_model, gene2cat= gene2cat,method = "Sampling", 
+                                            genomeID, geneID, gene2cat= gene2cat,method = "Sampling", 
                                             use_genes_without_cat = TRUE)
         } 
       }else {
       
       if(is.null(gene2cat)){
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-                                            genomeID, geneID, gene.model = gene_model,use_genes_without_cat = TRUE)
+                                            genomeID, geneID, use_genes_without_cat = TRUE)
       }else{
         GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
-                                            genomeID, geneID, gene.model = gene_model, gene2cat= gene2cat, 
+                                            genomeID, geneID, gene2cat= gene2cat, 
                                             use_genes_without_cat = TRUE)
         }
       }
@@ -130,7 +120,7 @@ Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
     return(re)
 }
 
-pathwaysplice = function(pwf, genome, id, gene.model, gene2cat = NULL, 
+pathwaysplice = function(pwf, genome, id,gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), method = "Wallenius", 
     repcnt = 2000, use_genes_without_cat = FALSE) {
     ################# Input pre-processing and validation ################### Do
@@ -386,61 +376,57 @@ pathwaysplice = function(pwf, genome, id, gene.model, gene2cat = NULL,
         x <- u[which(u %in% DE_pwf)]
         x
     }, DE_pwf)
+
+     xxx <- match2Genome(genome)
     
-    pvals.6.gene.symbol <- sapply(pvals.6, function(u, gene.model) {
-        
-        #y <- gene.model[which(as.character(gene.model[, 3]) %in% 
-        #    u), 1]
-        #print(u)
-      
-        y <- gene.model[match(u,as.character(gene.model[, 3])), 1]
-        
+     pvals.6.gene.symbol <- sapply(pvals.6, function(u,xxx) {
+        y <- xxx[match(u,as.character(xxx[, 2])), 1]
         y
-    }, gene.model)
-    
-    
+    }, xxx)
+
+
     # Convert list to data frame
     pvals.6.df <- list_to_df(pvals.6)
-    
+
     pvals.6.gene.symbol.df <- list_to_df(pvals.6.gene.symbol)
-    
+
     dataset2 <- pvals.6.gene.symbol.df
-    dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, 
-        is.list)], function(x) sapply(x, function(y) paste(unlist(y), 
+    dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2,
+        is.list)], function(x) sapply(x, function(y) paste(unlist(y),
         collapse = ", ")))
-    
+
     temp.gene.name = unique(apply(dataset2[, 2], 1, c))
-    temp.gene.name.2 = unique(gdata::trim(unlist(strsplit(temp.gene.name, 
+    temp.gene.name.2 = unique(gdata::trim(unlist(strsplit(temp.gene.name,
         split = ","))))
-    
+
     DE_from_GO <- temp.gene.name.2
-    
+
     colnames(pvals.6.df) = c("category", "DEgene_ID")
     colnames(pvals.6.gene.symbol.df) = c("category", "DEgene_symbol")
-    
+
     # Finally, sort by p-value
     pvals = pvals[order(pvals$over_represented_pvalue), ]
-    
+
     # Supplement the table with the GO term name and ontology
     # group but only if the enrichment categories are actually GO
     # terms
     if (any(grep("^GO:", pvals$category))) {
-        GOnames = select(GO.db, keys = pvals$category, columns = c("TERM", 
+        GOnames = select(GO.db, keys = pvals$category, columns = c("TERM",
             "ONTOLOGY"))[, 2:3]
         colnames(GOnames) <- tolower(colnames(GOnames))
         pvals = cbind(pvals, GOnames)
     }
-    
+
     # And return
     pvals.2 <- merge(pvals, pvals.6.df, by = "category", sort = FALSE)
-    
-    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "category", 
+
+    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "category",
         sort = FALSE)
-    
+
     pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO,cat2gene=cat2gene)
-    
+
     return(pvals.4)
-    
+
 }
 
 getgo3 = function(genes, genome, id, fetch.cats = c("GO:CC", 

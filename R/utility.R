@@ -127,26 +127,25 @@ WriteGoToTable <- function(GO_re,Output_file) {
   write.table(dataset2,file=Output_file,row.names = FALSE,quote=FALSE,sep="\t")
 }
 
-
 #' PostProcessGO
 #'
-#' @param n.go number of gene sets
-#' @param adjusted adjusted result 
-#' @param unadjuasted unadjusted result 
-#' @param venn.dir path for outputing venn 
-#' @param boxplot.dir path for outputing boxplot
+#' @param n.go Number of gene sets
+#' @param adjusted Adjusted result 
+#' @param unadjuasted Unadjusted result 
+#' @param venn.dir Path for outputing venn 
+#' @param boxplot.dir Path for outputing boxplot
 #' @param type.boxplot Get boxplot for 5 categories or 3 categories
-#'        5 categories: "All.adjusted","All.unadjusted","Top25.adjusted"
-#'                      "Top25.unadjusted","In_ad_not_un","In_un_not_ad"
+#'        6 categories: "All.adjusted","All.unadjusted",
+#'                      "Top25.adjusted","Top25.unadjusted",
+#'                      "In_ad_not_un","In_un_not_ad"
 #'        3 categories: "All","Top25.adjusted","Top25.unadjusted
-#' @param In.ad.not.un.file file name for outputing adjused but not 
-#' in unadjusted when using the selected gene sets     
-#' @param In.un.not.ad.file file name for outputing unadjused but not
-#' in adjusted when using the selected gene sets  
+#' @param In.ad.not.un.file File name for outputing adjused but not
+#'        in unadjusted when using the selected gene sets     
+#' @param In.un.not.ad.file File name for outputing unadjused but not
+#'        in adjusted when using the selected gene sets  
 #'
 #' @return null
 #' 
-#'
 #' @examples
 #' \donttest{
 #' cp.gmt.file=system.file("extdata","c2.cp.v5.2.symbols.gmt.txt", package = "PathwaySplice")
@@ -162,10 +161,12 @@ WriteGoToTable <- function(GO_re,Output_file) {
 #'                                         gene2cat=gene.2.cat.cp.hg,
 #'                                         gene_model=hg19,method='Hypergeometric')
 #'                                         
-#' PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
-#' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
-#' "/Volumes/Bioinformatics$/Aimin_project/ToGaoZhen/",
-#' type.boxplot="Only3","In_ad_not_un.xls","In_un_not_ad.xls")}
+#' rre<-PostProcessGO(25,Example.cp.adjusted.by.exon,Example.cp.unadjusted,
+#' "/Volumes/Bioinformatics$/Aimin_project/TestNew/",
+#' "/Volumes/Bioinformatics$/Aimin_project/TestNew/",
+#' type.boxplot="Only3","In_ad_not_un.xls","In_un_not_ad.xls")
+#' 
+#' }
 #' 
 #' @export
 #' 
@@ -203,9 +204,7 @@ PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,type.bo
     cat.fontfamily = "serif"
   )
   
-  
   #boxplot
-  
   common<-intersect(unadjusted,adjusted)
   
   In.unadjusted.not.in.adjusted<-setdiff(unadjusted,common)
@@ -218,8 +217,16 @@ PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,type.bo
   index1<-match(In.adjusted.not.in.unadjusted,Example.Go.adjusted.by.exon$GO.selected$category)
   In.ad.not.un<-Example.Go.adjusted.by.exon$GO.selected[index1,]$Ave_value_all_gene
   
+  yy<-cbind(Example.Go.unadjusted$GO.selected[index1,]$rank.value.by.over_represented_pvalue,
+  Example.Go.adjusted.by.exon$GO.selected[index1,]$rank.value.by.over_represented_pvalue)
+  
   index2<-match(In.unadjusted.not.in.adjusted,Example.Go.unadjusted$GO.selected$category)
   In.un.not.ad<-Example.Go.unadjusted$GO.selected[index2,]$Ave_value_all_gene
+  
+  yyy<-cbind(Example.Go.unadjusted$GO.selected[index2,]$rank.value.by.over_represented_pvalue,
+            Example.Go.adjusted.by.exon$GO.selected[index2,]$rank.value.by.over_represented_pvalue)
+  
+  rre<-list(yy=yy,yyy=yyy)
   
   xx<-cbind(unlist(In.ad.not.un),unlist(In.un.not.ad))
   
@@ -242,22 +249,16 @@ PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,type.bo
   
   switch (type.boxplot,
           Only3 = {
-            
             yy<-rbind(cbind(cp.top.adjusted.25,rep("Adjusted_25",length(cp.top.adjusted.25))),
                       cbind(cp.top.unadjusted.25,rep("Unadjusted_25",length(cp.top.unadjusted.25))),
                       cbind(cp.all.unadjusted,rep("All",length(cp.all.unadjusted))))
-            
             colnames(yy)<-c("y","grp")
             yy<-as.data.frame(yy)
-            
             yy$grp<-factor(yy$grp)
-            
             yy$grp<-factor(yy$grp,levels=levels(yy$grp)[c(2,1,3)])
-            
             png(paste0(boxplot.dir,"/","boxplot.png"))
             boxplot(as.numeric(as.character(y))~grp,data=yy)
             dev.off()
-            
           },
           {
             yy<-rbind(cbind(xx[,1],rep("In.ad.not.un",length(xx[,1]))),
@@ -266,21 +267,69 @@ PostProcessGO <- function(n.go,adjusted,unadjuasted,venn.dir,boxplot.dir,type.bo
                       cbind(cp.top.unadjusted.25,rep("cp.top.unadjusted.25",length(cp.top.unadjusted.25))),
                       cbind(cp.all.adjusted,rep("cp.all.adjusted",length(cp.all.adjusted))),
                       cbind(cp.all.unadjusted,rep("cp.all.unadjusted",length(cp.all.unadjusted))))
-            
             colnames(yy)<-c("y","grp")
             yy<-as.data.frame(yy)
-            
             png(paste0(boxplot.dir,"/","boxplot.png"))
             boxplot(as.numeric(as.character(y))~grp,data=yy)
             dev.off()
-            
           }
   )
   
-
   Output_file=paste0(boxplot.dir,"/",In.ad.not.un.file)
   WriteGoToTable(Example.Go.adjusted.by.exon$GO.selected[index1,],Output_file)
   
   Output_file=paste0(boxplot.dir,"/",In.un.not.ad.file)
   WriteGoToTable(Example.Go.unadjusted$GO.selected[index2,],Output_file)
+  
+  return(rre)
+  
 }
+
+
+match2Genome <- function(genome_id) {
+  
+  ah <- AnnotationHub()
+  switch (genome_id,
+          hg38 = {
+            hs <- query(ah, c("Ensembl","GRCh38","Homo sapiens"))
+            res <- hs[["AH53211"]]
+            res <- genes(res,columns=c("gene_name"))
+            xxx <- mcols(res)
+            yyy <- xxx 
+            #names.gene.gmt.2 <- match(matchedItem, xxx[,1])
+            #gene.ID.conversion.2 <- xxx[names.gene.gmt.2,]
+            
+          },
+          hg19 = {
+            edb <- org.Hs.eg.db
+            entrezid <- keys(edb, keytype="ENTREZID")
+            suppressMessages(xxx<-select(edb,keys=entrezid,columns=c("ENSEMBL","SYMBOL")))
+            yyy<-xxx[,c(3,2,1)]
+            #hs <- query(ah, c("Ensembl","GRCh37","Homo sapiens"))
+            #res <- hs[["AH10684"]]
+            #res <- genes(res,columns=c("gene_name"))
+            #xxx <- mcols(res)
+            #names.gene.gmt.2 <- match(matchedItem, xxx[,3])
+            #gene.ID.conversion.2 <- xxx[names.gene.gmt.2,]
+            
+          },
+          {
+            hs <- query(ah, c("Ensembl","GRCm38","Mus Musculus"))
+            res <- hs[["AH53222"]]
+            res <- genes(res,columns=c("gene_name"))
+            xxx <- mcols(res)
+            yyy <- xxx
+            #names.gene.gmt.2 <- match(matchedItem, xxx[,1])
+            #gene.ID.conversion.2 <- xxx[names.gene.gmt.2,]
+          }
+  )
+
+  return(yyy)
+  
+}
+
+
+
+
+
+

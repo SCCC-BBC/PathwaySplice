@@ -2,13 +2,18 @@
 #'
 #' enrichmentMap is used to draw network based on similarities between GOs
 #'
-#' @param GoSeqRes object returned from Run_pathwaysplice
-#' @param gene.set.type whether you are interested in GO, KEGG, or other pathways
-#' @param n maximum number of category to shown
-#' @param fixed if set to FALSE, will invoke tkplot
-#' @param vertex.label.font font size of vertex label
-#' @param SimilarityThreshold threshold for defining similarity between GOs
-#' @param ... additional parameter
+#' @param GoSeqRes Object returned from Run_pathwaysplice
+#' @param n Maximum number of category to be shown
+#' @param fixed If set to FALSE, will invoke tkplot
+#' @param vertex.label.font Font size of vertex label
+#' @param SimilarityThreshold Threshold for defining Jaccard Coefficient(JC)
+#'        JC ranges from 0 to 1:
+#'        JC=0, indicates there are no overlap on genes between
+#'               two gene sets
+#'        JC=1, indicates two gene sets are identical  
+#'        SimilarityThreshold=0, indicates the enrichment map includes
+#'        all gene sets with their mutual JC greater than 0  
+#' @param ... Additional parameter
 #' @export
 #' @return A figure for visualizing enrichment network
 #' 
@@ -16,41 +21,25 @@
 #' 
 #' @examples
 #'
-#' data(mds)
-#' \donttest{Example.Go.adjusted.by.exon<-Run_pathwaysplice(mds,ad="exon_SJ",
-#' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
-#' gene_model=hg19,method="Sampling")
-#' re.w.adjusted<-enrichmentMap(Example.Go.adjusted.by.exon,n=5,SimilarityThreshold=0)
-
-#' Example.Go.unadjusted<-Run_pathwaysplice(mds,ad="exon_SJ",
-#' sub_feature="E",0.05,genomeID="hg19",geneID="ensGene",
-#' gene_model=hg19,method="Hypergeometric")
-#' re.w.unadjusted<-enrichmentMap(Example.Go.unadjusted,n=5,SimilarityThreshold=0)}
-#'
+#' res <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+#' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
+#' 
+#' enmap<-enrichmentMap(res,n=5,SimilarityThreshold=0)
 
 enrichmentMap <-
   function(GoSeqRes,
-           gene.set.type = "GO",
            n = 50,
            fixed = TRUE,
            vertex.label.font = 1,
            SimilarityThreshold,
            ...) {
 
-    if (gene.set.type == "GO") {
       GO.name <- GoSeqRes[[1]]$category
       temp <- GoSeqRes[[1]]$DEgene_ID
       names(temp) <- GO.name
       x = GoSeqRes[[1]]
       geneSets = temp
-    } else{
-      GO.name <- GoSeqRes$category
-      temp <- GoSeqRes$DEgene_ID
-      names(temp) <- GO.name
-      x = GoSeqRes[[1]]
-      geneSets = temp
-    }
-    
+
     y <- as.data.frame(x)
     
     if (any(grep("^GO:", y$category))) {
@@ -59,7 +48,6 @@ enrichmentMap <-
     {
       VertexName <- paste0(y$category, ":", y$numDEInCat)
     }
-    
     
     if (nrow(y) < n) {
       n <- nrow(y)
@@ -114,8 +102,21 @@ enrichmentMap <-
       map_data <- list(edge_data = Edata, vertex_data = Vdata)
       
       cnt <- as.integer(y$numDEInCat)
+     
+      print(VertexName[1:n])
       
+      #y <- names(VertexName[1:n])
+      #mode(y) <- "numeric"
+      #y <- match(x, letters) 
+      
+      #print(y)
+      #n=length(VertexName[1:n])
+      #index.name=letters[1:n]
+        
       names(cnt) <- VertexName[1:n]
+      
+      #names(cnt) <- y
+      
       cnt2 <- cnt[V(g)$name]
 
       V(g)$size <- cnt2 / sum(cnt2) * 100

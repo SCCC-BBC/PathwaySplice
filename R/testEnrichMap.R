@@ -1,9 +1,10 @@
 #' testPathwaySplice
 #'
-#' Peform one-step analysis for check bias, adjusted gene set enrichment anlysis and build network
+#' Peform one-step analysis for check bias, adjusted gene set 
+#' enrichment anlysis and build network
 #'
-#' @param gene_based_table A gene based table converted from DEXSeq or JunctionSeq resutls
-#' @param which_gene_model Gene annotation file
+#' @param gene_based_table A gene based table converted from 
+#'                        DEXSeq or JunctionSeq resutls
 #' 
 #'
 #' @return None
@@ -11,13 +12,10 @@
 #' @export
 #'
 #' @examples
-#' data(mds)
-#' data(hg19)
-#'
-#' \donttest{testPathwaySplice(mds,hg19)}
+#' testPathwaySplice(mds.11.sample)
 #'
 #'
-testPathwaySplice <- function(gene_based_table, which_gene_model) {
+testPathwaySplice <- function(gene_based_table) {
   #Check bias using logistics regression model
   re <- LRtestBias(gene_based_table,boxplot_width = 0.3)
   
@@ -30,7 +28,6 @@ testPathwaySplice <- function(gene_based_table, which_gene_model) {
       0.05,
       genomeID = "hg19",
       geneID = "ensGene",
-      gene_model = which_gene_model,
       method = "Wallenius"
     )
   Example.Go.unadjusted <-
@@ -41,7 +38,6 @@ testPathwaySplice <- function(gene_based_table, which_gene_model) {
       0.05,
       genomeID = "hg19",
       geneID = "ensGene",
-      gene_model = which_gene_model,
       method = "Hypergeometric"
     )
   

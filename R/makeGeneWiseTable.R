@@ -4,9 +4,8 @@
 #'
 #' @param jscs The object returned from \code{"GetResultsFromJunctionSeq"}
 #' @param gene.list Gene list of the returned object from JunctionSeq or DEXSeq
-#' @param FDR.threshold Threshold to define whether exon or splicing 
-#'        junction is differentially used based on the padjust value of 
-#'        exon and splicing junction
+#' @param FDR.threshold Threshold to define the differential usage of either exon
+#'        or splicing junction
 #' @param verbose Whether to print runing process or not
 #'
 #' @return A gene based table converted from the object returned 
