@@ -1,12 +1,12 @@
 #' LRtestBias
 #'
-#' Logistic regression to check bias
+#' Logistic regression to check bias  #### Logistic regression from ?? to ?? to check the bias from exon length
 #'
-#' @param jscs_genewise_object gene based table returned
-#' from ReformatData and MakeGeneWiseTable_JunctionSeq
-#' @param genewise.pvalue whether you use smallest p value or geneWisePadj
-#' @param sig.threshold threshold to define differential gene list
-#' @param type whether you are interested in exon or splicing junction
+#' @param jscs_genewise_object gene based table returned  #### ?? The table of genes and their XXYY features ？？  
+#' from ReformatData and MakeGeneWiseTable_JunctionSeq  #### from ReformatData function and YY function
+#' @param genewise.pvalue whether you use smallest p value or geneWisePadj #### a logical value 
+#' @param sig.threshold threshold to define differential gene list         #### p-value threshold 
+#' @param type whether you are interested in exon or splicing junction     #### exon or splicing junction, based on user's interests 
 #' @param loc.x indicates x coordinate of p value from logistic regression 
 #' @param loc.y indicates y coordinate of p value from logistic regression
 #' @param y_lim defining the largest number of exons in y axis in boxplot 
