@@ -1,6 +1,8 @@
 #' Run_pathwaysplice
 #'
-#' Perform pathwaysplice in one step
+#' Perform analysis using Run_pathwaysplice,user use gene-based
+#' table as an input, and select genes based on subfeature, then choose
+#' to using which bias factor to perform adjutsment
 #'
 #' @param re.gene.based Gene based results
 #' @param adjust Bias factor to be adjusted
