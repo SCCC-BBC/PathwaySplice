@@ -1,18 +1,18 @@
 #' Run_pathwaysplice
 #'
-#' Perform pathwaysplice in one step
+#' Perform pathwaysplice in one step  #### pathwaysplice
 #'
-#' @param re.gene.based gene based results
+#' @param re.gene.based gene based results  #### may you add details of the gene based results?
 #' @param adjust bias factor to be adjusted
-#' @param sub_feature feature to be checked
-#' @param threshold threshold to be used for adjustment
-#' @param genomeID gene to be used
+#' @param sub_feature feature to be checked   #### details of the checking
+#' @param threshold threshold to be used for adjustment  #### p-value threshold
+#' @param genomeID gene to be used   #### I guess a mistake here, genome or gene?
 #' @param geneID geneID to be used
-#' @param gene_model gene model to be used
-#' @param method method to be used
+#' @param gene_model gene model to be used   #### the meaning of gene model
+#' @param method method to be used           #### what's the method? statistics method, modeling method? etc       
 #' @param gene2cat get sets defined by users 
 #' 
-#' @return a list that has gene set enrichment analysis results
+#' @return a list that has gene set enrichment analysis results  #### a list with gene set enrichment analysis results
 #' @export
 #'
 #' @examples
