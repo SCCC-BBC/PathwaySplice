@@ -2,17 +2,17 @@
 #'
 #' Logistic regression to check bias
 #'
-#' @param jscs_genewise_object gene based table returned
-#' from ReformatData and MakeGeneWiseTable_JunctionSeq
-#' @param genewise.pvalue whether you use smallest p value or geneWisePadj
-#' @param sig.threshold threshold to define differential gene list
-#' @param type whether you are interested in exon or splicing junction
-#' @param loc.x indicates x coordinate of p value from logistic regression 
-#' @param loc.y indicates y coordinate of p value from logistic regression
-#' @param y_lim defining the largest number of exons in y axis in boxplot 
-#' @param boxplot_width parameter for boxplot width
+#' @param jscs_genewise_object Gene based table returned
+#'        from ReformatData and MakeGeneWiseTable_JunctionSeq
+#' @param genewise.pvalue Whether you use smallest p value or geneWisePadj
+#' @param sig.threshold Threshold to define differential gene list
+#' @param type Whether you are interested in exon or splicing junction
+#' @param loc.x Indicates x coordinate of p value from logistic regression 
+#' @param loc.y Indicates y coordinate of p value from logistic regression
+#' @param y_lim Defining the largest number of exons in y axis in boxplot 
+#' @param boxplot_width Parameter for boxplot width
 #'
-#' @return return results from logistic regression
+#' @return Results from logistic regression
 #' @export
 #'
 #' @examples
@@ -67,6 +67,7 @@ LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
                                family = "binomial")
               re <- summary(mylogit.2)
               pvalue <- re$coefficients[2, 4]
+              pvalue <- format(pvalue,width=8,digits=4)
               
               temp<-data.frame(mydata.3[, c(10, 18)])
               
