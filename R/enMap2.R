@@ -1,18 +1,18 @@
 #' enrichmentMap
 #'
-#' enrichmentMap is used to draw network based on similarities between GOs
+#' enrichmentMap is used to draw network based on similarities between GOs #### draw interaction network?
 #'
 #' @param GoSeqRes object returned from Run_pathwaysplice
-#' @param gene.set.type whether you are interested in GO, KEGG, or other pathways
+#' @param gene.set.type whether you are interested in GO, KEGG, or other pathways #### GO, KEGG, or other pathways according your interests
 #' @param n maximum number of category to shown
 #' @param fixed if set to FALSE, will invoke tkplot
 #' @param vertex.label.font font size of vertex label
-#' @param SimilarityThreshold threshold for defining similarity between GOs
-#' @param ... additional parameter
+#' @param SimilarityThreshold threshold for defining similarity between GOs  
+#' @param ... additional parameter   
 #' @export
 #' @return A figure for visualizing enrichment network
 #' 
-#' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
+#' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package # based on the DOSE R package by G Yu et al.
 #' 
 #' @examples
 #'
