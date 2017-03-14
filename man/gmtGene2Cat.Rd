@@ -30,6 +30,6 @@ being the pathways that this gene corresponds to
 
 dir.name <- system.file("extdata", package="PathwaySplice")
 canonical.pathway.file <- "c2.cp.v5.2.symbols.gmt.txt"
-res<-gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
+res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
 
 }
