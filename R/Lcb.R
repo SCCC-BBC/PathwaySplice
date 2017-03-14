@@ -16,10 +16,8 @@
 #' @export
 #'
 #' @examples
-#'
-#' data(mds11)
 #' mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-#' re<-LRtestBias(mds33,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3,type="splicing")
+#' res<-LRtestBias(mds33,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3,type="splicing")
 
 LRtestBias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
     sig.threshold = 0.05, type = c("exon","splicing"),loc.x=2,loc.y=70,y_lim=80,boxplot_width) {
