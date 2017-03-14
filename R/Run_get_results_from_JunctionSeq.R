@@ -17,7 +17,7 @@
 #' sample.file <- "Sample_info.txt"
 #' count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 #' gff.file <- "flat.chr22.gff"
-#' # res <- GetResultsFromJunctionSeq(dir.name, sample.file, count.file, gff.file)
+#' res <- GetResultsFromJunctionSeq(dir.name, sample.file, count.file, gff.file)
 #' 
 GetResultsFromJunctionSeq <- function(dir.name, sample.file, 
   count.file, gff.file) {
@@ -33,8 +33,12 @@ GetResultsFromJunctionSeq <- function(dir.name, sample.file,
   path.count.file <- file.path(dir.name, decoder.bySample$sample.ID, 
     count.file)
   
+  print(path.count.file)
+  
   # Get annotation file
   path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
+  
+  print(path.gff.file)
   
   # Analysis using exonsOnly,and adjust Gender
   jscs <- runJunctionSeqAnalyses(sample.files = path.count.file, 
