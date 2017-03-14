@@ -4,7 +4,8 @@
 \alias{makeGeneWiseTable}
 \title{makeGeneWiseTable}
 \usage{
-makeGeneWiseTable(jscs, gene.list, FDR.threshold = 0.05, verbose = TRUE)
+makeGeneWiseTable(jscs, gene.list = NULL, FDR.threshold = 0.05,
+  verbose = TRUE)
 }
 \arguments{
 \item{jscs}{The object returned from \code{"GetResultsFromJunctionSeq"}}
@@ -24,17 +25,12 @@ A gene based table converted from the object returned
 This function is used to generate the gene-based results
 }
 \examples{
-library(Biobase)
-file.sample="Sample_info.txt"
-dir.name=dirname(system.file("extdata","Sample_info.txt", package = "PathwaySplice"))
-dir.name=paste0(dir.name,"/")
-file.gff="flat.chr22.gff"
-file.count="/QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 
-\donttest{Re.example<-GetResultsFromJunctionSeq(dir.name,file.sample,file.count,file.gff)
-
-re.example.gene.based<-makeGeneWiseTable(Re.example,
-gene.list=unique(as.character(fData(Re.example)$geneID)))}
-
+dir.name <- system.file("extdata", package="PathwaySplice")
+sample.file <- "Sample_info.txt"
+count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+gff.file <- "flat.chr22.gff"
+#res1 <- GetResultsFromJunctionSeq(dir.name, sample.file, count.file, gff.file)
+#res2 <- makeGeneWiseTable(res1)
 
 }
