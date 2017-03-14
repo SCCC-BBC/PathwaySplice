@@ -8,20 +8,15 @@ An R package for adjusting bias in pathway analysis using differential exon and 
 # To Install
 
 ```{r eval=TRUE}
-#In R console
+
 library(devtools)
 
-# If your R version is 3.3.2 or 3.3.3, install PathSplice using the following
+# If your R version is greatern than 3.3.0, PathwaySplice 0.99.4 version can be installed using the following
+#In R console
 install_github("SCCC-BBC/PathwaySplice",ref = '0.99.4')
 
-# If your R version is development version(3.4.0), install PathSplice using the following
-install_github("SCCC-BBC/PathwaySplice")
-
-#If you use command line in pegasus terminal and R version is 3.3.2 or 3.3.3
+#In pegasus terminal
 R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice",ref = '0.99.4')'
-
-#If you use command line in pegasus terminal and R version is 3.4.0 
-R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 
 ```
 
