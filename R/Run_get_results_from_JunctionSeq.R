@@ -21,7 +21,9 @@
 #' 
 GetResultsFromJunctionSeq <- function(dir.name, sample.file, 
   count.file, gff.file) {
+  
 
+  
   # Get sample file
   dir.name = reformatPath(dir.name)
   
@@ -46,7 +48,7 @@ GetResultsFromJunctionSeq <- function(dir.name, sample.file,
       Gender:countbin + condition:countbin, effect.formula = ~condition + 
       Gender + countbin + Gender:countbin + condition:countbin, 
     geneLevel.formula = ~Gender + condition, verbose = TRUE, 
-    debug.mode = TRUE, use.multigene.aggregates = TRUE)
+    debug.mode = TRUE, use.multigene.aggregates = TRUE,method.dispFinal = "max")
   
   return(jscs)
 }
