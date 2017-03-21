@@ -11,16 +11,10 @@ An R package for adjusting bias in pathway analysis using differential exon and 
 #In R console
 library(devtools)
 
-# If your R version is 3.3.2 or 3.3.3, install PathwaySplice using the following
-install_github("SCCC-BBC/PathwaySplice",ref = '0.99.4')
-
-# If your R version is development version(3.4.0), install PathwaySplice using the following
+# This version of PathwaySplice can be installed if your R version is >= 3.4.0
 install_github("SCCC-BBC/PathwaySplice")
 
-#If you use command line in pegasus terminal and R version is 3.3.2 or 3.3.3
-R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice",ref = '0.99.4')'
-
-#If you use command line in pegasus terminal and R version is 3.4.0 
+#In pegasus terminal 
 R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 
 ```
@@ -40,9 +34,8 @@ gff.file <- "flat.chr22.gff"
 res <- GetResultsFromJunctionSeq(dir.name,sample.file,count.file,gff.file)
 
 # Convert the results of differential usage analysis into gene based resutls
-library(Biobase)
-re.example.gene.based <- makeGeneWiseTable(Re.example,
-gene.list=unique(as.character(fData(Re.example)$geneID)))
+#library(Biobase)
+re.example.gene.based <- makeGeneWiseTable(res)
 ```
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE}
