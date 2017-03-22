@@ -1,4 +1,4 @@
-#' Run_pathwaysplice
+#' runpathwaysplice
 #'
 #' Perform analysis using Run_pathwaysplice,user use gene-based
 #' table as an input, and select genes based on subfeature, then choose
@@ -22,7 +22,7 @@
 #' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #'
 
-Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL, 
+runpathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL, 
     threshold, genomeID, geneID, method,gene2cat = NULL) {
     
     Data4Goterm <- re.gene.based
@@ -50,7 +50,7 @@ Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
         1])
     
     All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub_feature))
-    names(All.gene.id.index) = All.gene.id.based.on.sub_feature
+    names(All.gene.id.index) <- All.gene.id.based.on.sub_feature
     
     All.genes.based.on.Sig.sub_feature <- unique(Data4Goterm.sub_feature.Sig[, 
         1])
@@ -67,10 +67,10 @@ Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
     All.gene.id.index.2 <- All.gene.id.index
     
     if (adjust == "GL") {
-        pwf.DE_interest = nullp(All.gene.id.index.2, genomeID, 
+        pwf.DE_interest <- nullp(All.gene.id.index.2, genomeID, 
             geneID, plot.fit = TRUE)
     } else {
-        pwf.DE_interest = nullp(All.gene.id.index.2, genomeID, 
+        pwf.DE_interest <- nullp(All.gene.id.index.2, genomeID, 
             geneID, bias.data = num.junction.4.matched.gene, 
             plot.fit = TRUE)
     }
@@ -78,43 +78,43 @@ Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
     if (method == "Hypergeometric") {
       
       if(is.null(gene2cat)){
-        GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
+        GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, 
             genomeID, geneID, method = "Hypergeometric", 
             use_genes_without_cat = TRUE)
       }else{
-        GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
+        GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, 
                                             genomeID, geneID, gene2cat= gene2cat,method = "Hypergeometric", 
                                             use_genes_without_cat = TRUE)
         }
       } else if (method == "Sampling") {
       
       if(is.null(gene2cat)){
-        GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
+        GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, 
                                             genomeID, geneID, method = "Sampling", 
                                             use_genes_without_cat = TRUE)
       }else{
-        GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
+        GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, 
                                             genomeID, geneID, gene2cat= gene2cat,method = "Sampling", 
                                             use_genes_without_cat = TRUE)
         } 
       }else {
       
       if(is.null(gene2cat)){
-        GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
+        GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, 
                                             genomeID, geneID, use_genes_without_cat = TRUE)
       }else{
-        GO.wall.DE_interest = pathwaysplice(pwf.DE_interest, 
+        GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, 
                                             genomeID, geneID, gene2cat= gene2cat, 
                                             use_genes_without_cat = TRUE)
         }
       }
     
-    GO.wall.DE_interest.2<-GetStaisitcs4GO(GO.wall.DE_interest,re.gene.based)
+    GO.wall.DE_interest.2 <- getstaisitcs4go(GO.wall.DE_interest,re.gene.based)
     
     if(is.null(gene2cat)){
-    GO.selected<-OutputGOBasedSelection(GO.wall.DE_interest.2)
+    GO.selected <- outputgobasedselection(GO.wall.DE_interest.2)
     }else{
-    GO.selected<-OutputCatBasedSelection(GO.wall.DE_interest.2)
+    GO.selected <- outputcatbasedselection(GO.wall.DE_interest.2)
     }
     
     re <- list(GO.selected = GO.selected,pwf.DE_interest=pwf.DE_interest,GO.wall.DE_interest=GO.wall.DE_interest)
@@ -122,7 +122,7 @@ Run_pathwaysplice <- function(re.gene.based, adjust = "GL", sub_feature = NULL,
     return(re)
 }
 
-pathwaysplice = function(pwf, genome, id,gene2cat = NULL, 
+pathwaysplice <- function(pwf, genome, id,gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), method = "Wallenius", 
     repcnt = 2000, use_genes_without_cat = FALSE) {
     ################# Input pre-processing and validation ################### Do
@@ -431,7 +431,7 @@ pathwaysplice = function(pwf, genome, id,gene2cat = NULL,
 
 }
 
-getgo3 = function(genes, genome, id, fetch.cats = c("GO:CC", 
+getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", 
     "GO:BP", "GO:MF")) {
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG"))) {
@@ -542,7 +542,7 @@ getgo3 = function(genes, genome, id, fetch.cats = c("GO:CC",
 
 # Description: Prints progress through a loop copy from
 # Matthew Young's goseq
-pp = function(total, count, i = i) {
+pp <- function(total, count, i = i) {
     if (missing(count)) {
         count = evalq(i, envir = parent.frame())
     }
@@ -617,7 +617,7 @@ plotPWF2 <-
     
   }
 
-OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
+outputgobasedselection<-function(Re.Go.adjusted.by.exon.SJ){
   
   #select GO term(10<=numInCat<=300 and BP only)
   
@@ -638,7 +638,7 @@ OutputGOBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
   
 }
 
-OutputCatBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
+outputcatbasedselection<-function(Re.Go.adjusted.by.exon.SJ){
   
   index.select<-which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat>=10&Re.Go.adjusted.by.exon.SJ[[1]]$numInCat<=300)
   
@@ -658,7 +658,7 @@ OutputCatBasedSelection<-function(Re.Go.adjusted.by.exon.SJ){
 }
 
 
-GetStaisitcs4GO<-function(GO.wall.DE_interest,mds.11.sample){
+getstaisitcs4go<-function(GO.wall.DE_interest,mds.11.sample){
   
   GO.data=GO.wall.DE_interest[[1]]
 
