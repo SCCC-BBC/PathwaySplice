@@ -12,16 +12,16 @@
 #' @export
 #'
 #' @examples
-#' testPathwaySplice(mds.11.sample)
+#' testpathwaysplice(mds.11.sample)
 #'
 #'
-testPathwaySplice <- function(gene_based_table) {
+testpathwaysplice <- function(gene_based_table) {
   #Check bias using logistics regression model
-  re <- LRtestBias(gene_based_table,boxplot_width = 0.3)
+  re <- lrtestbias(gene_based_table,boxplot_width = 0.3)
   
   #Analysis
   Example.Go.adjusted.by.exon <-
-    Run_pathwaysplice(
+    runpathwaysplice(
       gene_based_table,
       adjust = "exon_SJ",
       sub_feature = "E",
@@ -31,7 +31,7 @@ testPathwaySplice <- function(gene_based_table) {
       method = "Wallenius"
     )
   Example.Go.unadjusted <-
-    Run_pathwaysplice(
+    runpathwaysplice(
       gene_based_table,
       adjust = "exon_SJ",
       sub_feature = "E",
@@ -47,11 +47,11 @@ testPathwaySplice <- function(gene_based_table) {
   
   #Construct network between gene sets
   re.w.adjusted <-
-    enrichmentMap(Example.Go.adjusted.by.exon,
+    enrichmentmap(Example.Go.adjusted.by.exon,
                   n = 5,
                   SimilarityThreshold = 0)
   re.w.unadjusted <-
-    enrichmentMap(Example.Go.unadjusted,
+    enrichmentmap(Example.Go.unadjusted,
                   n = 5,
                   SimilarityThreshold = 0)
   
