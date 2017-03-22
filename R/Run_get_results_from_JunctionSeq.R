@@ -1,4 +1,4 @@
-#' GetResultsFromJunctionSeq
+#' getresultsfromjunctionseq
 #' 
 #' This function is used to get analysis results from using JunctionSeq
 #'
@@ -17,13 +17,15 @@
 #' sample.file <- "Sample_info.txt"
 #' count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 #' gff.file <- "flat.chr22.gff"
-#' # res <- GetResultsFromJunctionSeq(dir.name, sample.file, count.file, gff.file)
+#' # res <- getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
 #' 
-GetResultsFromJunctionSeq <- function(dir.name, sample.file, 
+getresultsfromjunctionseq <- function(dir.name, sample.file, 
   count.file, gff.file) {
+  
 
+  
   # Get sample file
-  dir.name = reformatPath(dir.name)
+  dir.name = reformatpath(dir.name)
   
   path.sample.file <- file.path(dir.name, sample.file)
   decoder.bySample <- read.table(path.sample.file, header = TRUE, 
@@ -46,7 +48,7 @@ GetResultsFromJunctionSeq <- function(dir.name, sample.file,
       Gender:countbin + condition:countbin, effect.formula = ~condition + 
       Gender + countbin + Gender:countbin + condition:countbin, 
     geneLevel.formula = ~Gender + condition, verbose = TRUE, 
-    debug.mode = TRUE, use.multigene.aggregates = TRUE)
+    debug.mode = TRUE, use.multigene.aggregates = TRUE,method.dispFinal = "max")
   
   return(jscs)
 }

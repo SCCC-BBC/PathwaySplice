@@ -53,3 +53,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 # TxDb Length databases
 .TXDB_ORGS = c("ce6", "dm3", "hg18", "hg19", "hg38", "mm10", 
   "mm9", "rn4", "rn5", "sacCer2", "sacCer3")
+
+
+
+

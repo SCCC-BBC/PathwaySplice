@@ -21,12 +21,12 @@
 #' 
 #' @examples
 #'
-#' res <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+#' res <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #' 
-#' enmap<-enrichmentMap(res,n=5,SimilarityThreshold=0)
+#' enmap <- enrichmentmap(res,n=5,SimilarityThreshold=0)
 
-enrichmentMap <-
+enrichmentmap <-
   function(GoSeqRes,
            n = 50,
            fixed = TRUE,

@@ -18,9 +18,9 @@
 #' 
 #' dir.name <- system.file("extdata", package="PathwaySplice")
 #' canonical.pathway.file <- "c2.cp.v5.2.symbols.gmt.txt"
-#' res<-gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
+#' res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
 #' 
-gmtGene2Cat <- function(dir.name,pathway.file,file.type,gene_anno_file=NULL,genomeID=c("mm10","hg19","hg38")) {
+gmtgene2cat <- function(dir.name,pathway.file,file.type,gene_anno_file=NULL,genomeID=c("mm10","hg19","hg38")) {
   
   gmt_input_file <- file.path(dir.name,pathway.file)
   
@@ -31,7 +31,7 @@ gmtGene2Cat <- function(dir.name,pathway.file,file.type,gene_anno_file=NULL,geno
   
   if(!is.null(gene_anno_file)){
   gene.anno.dir = dirname(gene_anno_file)
-  gene.annno.dir = reformatPath(gene.anno.dir)
+  gene.annno.dir = reformatpath(gene.anno.dir)
   file.name = basename(gene_anno_file)
   
   gene_anno_file = file.path(dir.name, file.name)
@@ -64,7 +64,7 @@ gene2cat <- function(gene_name, re) {
 gsa.read.gmt <- function(filename, type) {
   if (type != "url") {
     dir.name = dirname(filename)
-    dir.name = reformatPath(dir.name)
+    dir.name = reformatpath(dir.name)
     file.name = basename(filename)
     filename = file.path(dir.name,file.name)
   }
