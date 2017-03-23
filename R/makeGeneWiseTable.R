@@ -28,7 +28,7 @@ makegenewisetable <- function(jscs, gene.list=NULL, FDR.threshold = 0.05,
     verbose = TRUE) {
   
     if(is.null(gene.list)){
-    gene.list=unique(as.character(fData(jscs)$geneID))
+    gene.list <- unique(as.character(fData(jscs)$geneID))
     }
   
     if (verbose) 
