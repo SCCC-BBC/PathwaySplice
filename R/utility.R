@@ -49,7 +49,7 @@ reformatdata <- function(re.PJ.gene.based) {
 
 #' @examples 
 #' dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
-#' reformatPath(dir.name)
+#' reformatpath(dir.name)
 
 reformatpath <- function(dir.name) {
     CheckOPS <- Sys.info()[["sysname"]]
