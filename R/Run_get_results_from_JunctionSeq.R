@@ -21,11 +21,9 @@
 #' 
 getresultsfromjunctionseq <- function(dir.name, sample.file, 
   count.file, gff.file) {
-  
 
-  
   # Get sample file
-  dir.name = reformatpath(dir.name)
+  dir.name <- reformatpath(dir.name)
   
   path.sample.file <- file.path(dir.name, sample.file)
   decoder.bySample <- read.table(path.sample.file, header = TRUE, 
