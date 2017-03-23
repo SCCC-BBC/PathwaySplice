@@ -2,7 +2,7 @@
 % Please edit documentation in R/enMap.R
 \name{enrichmentmap}
 \alias{enrichmentmap}
-\title{enrichmentMap}
+\title{enrichmentmap}
 \usage{
 enrichmentmap(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
   SimilarityThreshold, ...)
@@ -30,7 +30,7 @@ all gene sets with their mutual JC greater than 0}
 A figure for visualizing enrichment network
 }
 \description{
-enrichmentMap is used to draw network based on similarities between GOs
+enrichmentmap is used to draw network based on similarities between GOs
 }
 \examples{
 
