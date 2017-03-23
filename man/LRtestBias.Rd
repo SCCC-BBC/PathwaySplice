@@ -2,7 +2,7 @@
 % Please edit documentation in R/Lcb.R
 \name{lrtestbias}
 \alias{lrtestbias}
-\title{LRtestBias}
+\title{lrtestbias}
 \usage{
 lrtestbias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   sig.threshold = 0.05, type = c("exon", "splicing"), loc.x = 2,
@@ -33,8 +33,6 @@ Results from logistic regression
 Logistic regression to check bias
 }
 \examples{
-
-data(mds11)
-mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-re<-lrtestbias(mds33,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
+res <- mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
+res1 <- lrtestbias(res,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
 }
