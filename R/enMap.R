@@ -1,6 +1,6 @@
-#' enrichmentMap
+#' enrichmentmap
 #'
-#' enrichmentMap is used to draw network based on similarities between GOs
+#' enrichmentmap is used to draw network based on similarities between GOs
 #'
 #' @param GoSeqRes Object returned from Run_pathwaysplice
 #' @param n Maximum number of category to be shown
@@ -37,8 +37,8 @@ enrichmentmap <-
       GO.name <- GoSeqRes[[1]]$category
       temp <- GoSeqRes[[1]]$DEgene_ID
       names(temp) <- GO.name
-      x = GoSeqRes[[1]]
-      geneSets = temp
+      x <- GoSeqRes[[1]]
+      geneSets <- temp
 
     y <- as.data.frame(x)
     
@@ -75,7 +75,7 @@ enrichmentmap <-
       
       for (i in 1:n) {
         for (j in i:n) {
-          w[i, j] = overlap_ratio(geneSets[id[i]], geneSets[id[j]])
+          w[i, j] <- overlap_ratio(geneSets[id[i]], geneSets[id[j]])
         }
       }
       
@@ -83,7 +83,7 @@ enrichmentmap <-
       wd <- wd[wd[, 1] != wd[, 2], ]
       wd <- wd[!is.na(wd[, 3]), ]
       g <- graph.data.frame(wd[, -3], directed = FALSE)
-      E(g)$width = sqrt(wd[, 3] * 20)
+      E(g)$width <- sqrt(wd[, 3] * 20)
       
       g <- delete.edges(g, E(g)[wd[, 3] < SimilarityThreshold])
       
@@ -102,20 +102,8 @@ enrichmentmap <-
       map_data <- list(edge_data = Edata, vertex_data = Vdata)
       
       cnt <- as.integer(y$numDEInCat)
-     
-      print(VertexName[1:n])
-      
-      #y <- names(VertexName[1:n])
-      #mode(y) <- "numeric"
-      #y <- match(x, letters) 
-      
-      #print(y)
-      #n=length(VertexName[1:n])
-      #index.name=letters[1:n]
-        
+
       names(cnt) <- VertexName[1:n]
-      
-      #names(cnt) <- y
       
       cnt2 <- cnt[V(g)$name]
 
