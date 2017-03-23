@@ -1,4 +1,4 @@
-#' LRtestBias
+#' lrtestbias
 #'
 #' Logistic regression to check bias
 #'
@@ -16,13 +16,12 @@
 #' @export
 #'
 #' @examples
-#'
-#' data(mds11)
-#' mds33<-mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-#' re<-lrtestbias(mds33,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
+#' res <- mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
+#' res1 <- lrtestbias(res,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
 
 lrtestbias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
     sig.threshold = 0.05, type = c("exon","splicing"),loc.x=2,loc.y=70,y_lim=80,boxplot_width) {
+
     mydata <- jscs_genewise_object
     
     n.gene <- dim(mydata)[1]
@@ -45,7 +44,7 @@ lrtestbias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
     
     mydata.3[which(mydata.3$DE.out == 0), ]$DE.out <- "Non significant genes"
     
-    type<-match.arg(type)
+    type <- match.arg(type)
     
     switch (type,
             splicing = {
@@ -69,11 +68,11 @@ lrtestbias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
               pvalue <- re$coefficients[2, 4]
               pvalue <- format(pvalue,width=8,digits=4)
               
-              temp<-data.frame(mydata.3[, c(10, 18)])
+              temp <- data.frame(mydata.3[, c(10, 18)])
               
-              temp$DE.out<-factor(temp$DE.out)
+              temp$DE.out <- factor(temp$DE.out)
               
-              temp$DE.out<-factor(temp$DE.out,levels=levels(temp$DE.out)[c(2,1)])
+              temp$DE.out <- factor(temp$DE.out,levels=levels(temp$DE.out)[c(2,1)])
               
               boxplot(unlist(temp$numExons) ~ unlist(temp$DE.out),
                       boxwex=boxplot_width,ylab = "Number of exons",col = "lightgray",ylim=c(1,y_lim))
