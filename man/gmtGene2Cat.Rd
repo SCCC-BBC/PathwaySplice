@@ -2,7 +2,7 @@
 % Please edit documentation in R/Gmt2GeneCat.R
 \name{gmtgene2cat}
 \alias{gmtgene2cat}
-\title{gmtGene2Cat}
+\title{gmtgene2cat}
 \usage{
 gmtgene2cat(dir.name, pathway.file, file.type, gene_anno_file = NULL,
   genomeID = c("mm10", "hg19", "hg38"))

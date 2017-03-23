@@ -27,6 +27,6 @@ dir.name <- system.file("extdata", package="PathwaySplice")
 sample.file <- "Sample_info.txt"
 count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
 gff.file <- "flat.chr22.gff"
-# res <- getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
+res <- getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
 
 }
