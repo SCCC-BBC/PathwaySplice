@@ -17,10 +17,10 @@
 #'
 testpathwaysplice <- function(gene_based_table) {
   #Check bias using logistics regression model
-  re <- lrtestbias(gene_based_table,boxplot_width = 0.3)
+  res <- lrtestbias(gene_based_table,boxplot_width = 0.3)
   
   #Analysis
-  Example.Go.adjusted.by.exon <-
+  res1 <-
     runpathwaysplice(
       gene_based_table,
       adjust = "exon_SJ",
@@ -30,7 +30,7 @@ testpathwaysplice <- function(gene_based_table) {
       geneID = "ensGene",
       method = "Wallenius"
     )
-  Example.Go.unadjusted <-
+  res2 <-
     runpathwaysplice(
       gene_based_table,
       adjust = "exon_SJ",
@@ -41,17 +41,13 @@ testpathwaysplice <- function(gene_based_table) {
       method = "Hypergeometric"
     )
   
-  #Check bias
-  plotPWF2(Example.Go.adjusted.by.exon[[2]])
-  #gene <- names(geneList)[abs(geneList) > 2]
-  
   #Construct network between gene sets
-  re.w.adjusted <-
-    enrichmentmap(Example.Go.adjusted.by.exon,
+  res11 <-
+    enrichmentmap(res1,
                   n = 5,
                   SimilarityThreshold = 0)
-  re.w.unadjusted <-
-    enrichmentmap(Example.Go.unadjusted,
+  res22 <-
+    enrichmentmap(res2,
                   n = 5,
                   SimilarityThreshold = 0)
   
