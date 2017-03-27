@@ -25,6 +25,7 @@ importFrom(utils,data,head,read.csv,read.table,relist)
 importFrom(grDevices,dev.off,png)
 importFrom(utils,write.table)
 importFrom(RColorBrewer,brewer.pal)
+importFrom(S4Vectors,mcols)
 
 export(.onAttach)
 export(gmtgene2cat)
@@ -35,3 +36,5 @@ export(makegenewisetable)
 export(testpathwaysplice)
 export(getresultsfromjunctionseq)
 export(postprocessgo)
+export(reformatpath)
+

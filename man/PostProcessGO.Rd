@@ -19,10 +19,10 @@ postprocessgo(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 \item{boxplot.dir}{Path for outputing boxplot}
 
 \item{type.boxplot}{Get boxplot for 5 categories or 3 categories
-6 categories: "All.adjusted","All.unadjusted",
-              "Top25.adjusted","Top25.unadjusted",
-              "In_ad_not_un","In_un_not_ad"
-3 categories: "All","Top25.adjusted","Top25.unadjusted}
+6 categories: 'All.adjusted','All.unadjusted',
+              'Top25.adjusted','Top25.unadjusted',
+              'In_ad_not_un','In_un_not_ad'
+3 categories: 'All','Top25.adjusted','Top25.unadjusted}
 
 \item{In.ad.not.un.file}{File name for outputing adjused but not
 in unadjusted when using the selected gene sets}
@@ -38,13 +38,16 @@ postprocessgo
 }
 \examples{
 
-dir.name <- system.file("extdata", package="PathwaySplice")
-canonical.pathway.file <- "c2.cp.v5.2.symbols.gmt.txt"
-res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
-res1 <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Wallenius')
-res2 <- Run_pathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Hypergeometric')
-output.dir <- "~/TestNew/"
-output.file.name.1 <- "In_ad_not_un.xls"
-output.file.name.2 <- "In_un_not_ad.xls"
-res3 <- PostProcessGO(25,res1,res2,output.dir,output.dir,type.boxplot="Only3",output.file.name.1,output.file.name.2)
+dir.name <- system.file('extdata', package='PathwaySplice')
+canonical.pathway.file <- 'c2.cp.v5.2.symbols.gmt.txt'
+res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
+res1 <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Wallenius')
+res2 <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Hypergeometric')
+output.dir <- '~/TestNew/'
+output.file.name.1 <- 'In_ad_not_un.xls'
+output.file.name.2 <- 'In_un_not_ad.xls'
+res3 <- postprocessgo(25,res1,res2,output.dir,output.dir,
+type.boxplot='Only3',output.file.name.1,output.file.name.2)
 }
