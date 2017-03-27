@@ -1,8 +1,8 @@
 #' PathwaySplice 
 #'
 #'@name PathwaySplice 
-#'@doctype package 
-#'@import  
+#'@doctype package
+#' 
 NULL
 
 #' tiny.data
