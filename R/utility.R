@@ -49,10 +49,10 @@ reformatdata <- function(re.PJ.gene.based) {
 
 #' reformatpath
 #' 
-#' @param dir.name Pathway name to be converted 
+#' @param dir.name Directory name to be converted 
+#' @return A converted directory
 #' 
 #' @examples
-#' 
 #' dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
 #' reformatpath(dir.name)
 #' 
