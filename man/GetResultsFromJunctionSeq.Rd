@@ -4,7 +4,8 @@
 \alias{getresultsfromjunctionseq}
 \title{getresultsfromjunctionseq}
 \usage{
-getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
+getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file,
+  method.dispFinal = c("shrink", "max", "fitted", "noShare"))
 }
 \arguments{
 \item{dir.name}{Path name for sample information file}
@@ -14,6 +15,9 @@ getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
 \item{count.file}{Count file}
 
 \item{gff.file}{Annotation file}
+
+\item{method.dispFinal}{Determines the method 
+used to arrive at a 'final' dispersion estimate.}
 }
 \value{
 The analysis result from JunctionSeq R package
@@ -23,10 +27,12 @@ This function is used to get analysis results from using JunctionSeq
 }
 \examples{
 
-dir.name <- system.file("extdata", package="PathwaySplice")
-sample.file <- "Sample_info.txt"
-count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-gff.file <- "flat.chr22.gff"
-res <- getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
+dir.name <- system.file('extdata', package='PathwaySplice')
+sample.file <- 'Sample_info.txt'
+count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
+gff.file <- 'flat.chr22.gff'
+res <- getresultsfromjunctionseq(dir.name, sample.file, 
+count.file,gff.file, method.dispFinal = "max")
+
 
 }
