@@ -7,13 +7,15 @@
 reformatpath(dir.name)
 }
 \arguments{
-\item{dir.name}{Pathway name to be converted}
+\item{dir.name}{Directory name to be converted}
+}
+\value{
+A converted directory
 }
 \description{
 reformatpath
 }
 \examples{
-
 dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
 reformatpath(dir.name)
 
