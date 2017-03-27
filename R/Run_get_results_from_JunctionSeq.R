@@ -6,6 +6,8 @@
 #' @param sample.file Sample information file
 #' @param count.file Count file
 #' @param gff.file Annotation file
+#' @param method.dispFinal Determines the method 
+#' used to arrive at a 'final' dispersion estimate.
 #'
 #' @return The analysis result from JunctionSeq R package
 #' 
@@ -13,15 +15,22 @@
 #'
 #' @examples
 #' 
-#' dir.name <- system.file("extdata", package="PathwaySplice")
-#' sample.file <- "Sample_info.txt"
-#' count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-#' gff.file <- "flat.chr22.gff"
-#' res <- getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file)
+#' dir.name <- system.file('extdata', package='PathwaySplice')
+#' sample.file <- 'Sample_info.txt'
+#' count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
+#' gff.file <- 'flat.chr22.gff'
+#' res <- getresultsfromjunctionseq(dir.name, sample.file, 
+#' count.file,gff.file, method.dispFinal = "max")
 #' 
-getresultsfromjunctionseq <- function(dir.name, sample.file, 
-  count.file, gff.file) {
+#' 
 
+getresultsfromjunctionseq <- function(dir.name, sample.file, 
+  count.file, gff.file, method.dispFinal = c("shrink", "max", 
+    "fitted", "noShare")) {
+  
+  # set up method for calculating dispFinal
+  method.dispFinal <- match.arg(method.dispFinal)
+  
   # Get sample file
   dir.name <- reformatpath(dir.name)
   
@@ -46,7 +55,7 @@ getresultsfromjunctionseq <- function(dir.name, sample.file,
       Gender:countbin + condition:countbin, effect.formula = ~condition + 
       Gender + countbin + Gender:countbin + condition:countbin, 
     geneLevel.formula = ~Gender + condition, verbose = TRUE, 
-    debug.mode = TRUE, use.multigene.aggregates = TRUE,method.dispFinal = "max")
+    debug.mode = TRUE, use.multigene.aggregates = TRUE, method.dispFinal = method.dispFinal)
   
   return(jscs)
 }
