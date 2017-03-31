@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-#' res <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+#' res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #'
 
