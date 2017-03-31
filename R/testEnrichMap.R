@@ -12,7 +12,7 @@
 #' @export
 #'
 #' @examples
-#' testpathwaysplice(mds.11.sample)
+#' testpathwaysplice(tiny.data)
 #'
 #'
 testpathwaysplice <- function(gene_based_table) {
