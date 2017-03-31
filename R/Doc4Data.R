@@ -1,10 +1,3 @@
-#' PathwaySplice 
-#'
-#'@name PathwaySplice 
-#'@doctype package
-#' 
-NULL
-
 #' tiny.data
 #' 
 #' A tiny gene-based data set by sampling 500 genes from the whole gene list
