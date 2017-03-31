@@ -29,8 +29,8 @@ This function is used to generate the gene-based results
 #Get differential usage for exons or splicing junctions
 dir.name <- system.file('extdata',package = 'PathwaySplice')
 sample.file <- 'Sample_info.txt'
-count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
-gff.file <- 'flat.chr22.gff'
+count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.10.genes.txt'
+gff.file <- 'flat.chr22.10.genes.gff'
 res <- getresultsfromjunctionseq(dir.name, sample.file, 
 count.file, gff.file, method.dispFinal='max')
 # Convert the results of differential usage analysis into gene based resutls

@@ -5,7 +5,7 @@
 \title{enrichmentmap}
 \usage{
 enrichmentmap(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
-  SimilarityThreshold, ...)
+  SimilarityThreshold, output.file.dir, label_vertex_by_index = FALSE, ...)
 }
 \arguments{
 \item{GoSeqRes}{Object returned from Run_pathwaysplice}
@@ -17,12 +17,24 @@ enrichmentmap(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
 \item{vertex.label.font}{Font size of vertex label}
 
 \item{SimilarityThreshold}{Threshold for defining Jaccard Coefficient(JC)
+
 JC ranges from 0 to 1:
+
 JC=0, indicates there are no overlap on genes between
        two gene sets
+
 JC=1, indicates two gene sets are identical  
+
 SimilarityThreshold=0, indicates the enrichment map includes
 all gene sets with their mutual JC greater than 0}
+
+\item{output.file.dir}{Output dir for the gene set information file on network}
+
+\item{label_vertex_by_index}{Which way to be used for labeling vertex on network
+
+FALSE indicates to label vertex by the name of gene sets
+
+TRUE indicates to label vertex by the index of gene sets}
 
 \item{...}{Additional parameter}
 }
@@ -34,10 +46,13 @@ enrichmentmap is used to draw network based on similarities between GOs
 }
 \examples{
 
-res <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 
-enmap <- enrichmentmap(res,n=5,SimilarityThreshold=0)
+output.file.dir <- "~/TestNew"
+
+enmap <- enrichmentmap(res,n=10,SimilarityThreshold=0,
+output.file.dir = output.file.dir,label_vertex_by_index = TRUE)
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
