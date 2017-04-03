@@ -83,6 +83,11 @@ enrichmentmap <-
       output.text <- as.data.frame(cbind(VertexName.index,VertexName))[1:n,]
       VertexName <- VertexName.index
       colnames(output.text) <- c("index","name")
+      
+      if (!dir.exists(output.file.dir)) {
+        dir.create(output.file.dir)
+      }
+    
       write.table(output.text,
                   file = file.path(output.file.dir,"enrichmap_text.xls"),
                   quote = FALSE,
