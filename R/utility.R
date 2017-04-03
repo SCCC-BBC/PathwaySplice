@@ -149,7 +149,7 @@ writegototable <- function(GO_re, Output_file) {
 #' @examples
 #' 
 #' dir.name <- system.file('extdata', package='PathwaySplice')
-#' canonical.pathway.file <- 'c2.cp.v5.2.symbols.gmt.txt'
+#' canonical.pathway.file <- '10.cp.gmt.txt'
 #' res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 
 #' res1 <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
@@ -182,6 +182,10 @@ postprocessgo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, ty
     Example.Go.adjusted.by.exon <- adjusted
     Example.Go.unadjusted <- unadjuasted
     
+    
+    if (dim(Example.Go.adjusted.by.exon$GO.selected)[1]>=n&&
+        dim(Example.Go.unadjusted$GO.selected)[1]>=n){
+      
     adjusted <- Example.Go.adjusted.by.exon$GO.selected[1:n, 1]
     unadjusted <- Example.Go.unadjusted$GO.selected[1:n, 1]
     
@@ -199,10 +203,6 @@ postprocessgo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, ty
     
     In.unadjusted.not.in.adjusted <- setdiff(unadjusted, common)
     In.adjusted.not.in.unadjusted <- setdiff(adjusted, common)
-    
-    length(In.unadjusted.not.in.adjusted)
-    length(In.adjusted.not.in.unadjusted)
-    length(common)
     
     if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
         0) {
@@ -282,7 +282,12 @@ postprocessgo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, ty
         cat("\n")
         
     }
+    } else {
     
+      cat("The enriched gene sets is less than", n,"\n")
+      
+    }
+
 }
 
 match2Genome <- function(genome_id) {
