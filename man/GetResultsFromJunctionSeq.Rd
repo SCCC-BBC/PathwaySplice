@@ -29,7 +29,7 @@ This function is used to get analysis results from using JunctionSeq
 
 dir.name <- system.file('extdata', package='PathwaySplice')
 sample.file <- 'Sample_info.txt'
-count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.10.genes.txt'
+count.file <- 'Counts.10.genes.txt'
 gff.file <- 'flat.chr22.10.genes.gff'
 res <- getresultsfromjunctionseq(dir.name, sample.file, 
 count.file,gff.file, method.dispFinal = "max")

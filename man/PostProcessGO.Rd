@@ -39,7 +39,7 @@ postprocessgo
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
-canonical.pathway.file <- 'c2.cp.v5.2.symbols.gmt.txt'
+canonical.pathway.file <- '10.cp.gmt.txt'
 res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 res1 <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Wallenius')
