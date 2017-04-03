@@ -1,8 +1,40 @@
 #' tiny.data
 #' 
-#' A tiny gene-based data set by sampling 500 genes from the whole gene list
+#' A tiny gene-based data set by sampling 500 genes from the whole gene list.
+#' 
+#' We use JunctionSeq to calculate differential usage  of exons and/or splicing junction of each gene by setting the argument of use.multigene.aggregates to be TRUE. 
+#' 
+#' We get the count for "ENSG00000135226+ENSG00000215110" multigene 
+#' in the example SRR1660311 like the following: 
+#' 
+#' ENSG00000135226+ENSG00000215110:A000	9
+#' ENSG00000135226+ENSG00000215110:E001	0
+#' ENSG00000135226+ENSG00000215110:E002	0
+#' ENSG00000135226+ENSG00000215110:E003	0
+#' 
+#' ...
+#' 
+#' ENSG00000135226+ENSG00000215110:E005	2
+#' ENSG00000135226+ENSG00000215110:E006	0
+#' ENSG00000135226+ENSG00000215110:E007	7
+#' 
+#' ...
+#' 
+#' ENSG00000135226+ENSG00000215110:J016	0
+#' 
+#' ...
+#' 
+#' ESG00000135226+ENSG00000215110:J028	0
+
+#' For example: 
+#' 
+#' The genes
+#' "ENSG00000135226+ENSG00000215110" has 15 exons and 13 splicing junctions.
+#' To convert the different usage based result of this multigene, we get the
+#' the following informartion(including number of exons and splicing junctions)
 #' 
 #' \itemize{
+#' 
 #'   \item geneID: Gene ID
 #'   \item chr: Chromosome information
 #'   \item start: Starting position
@@ -24,50 +56,18 @@
 #'   significant splicing junction and number of significant novel splicing 
 #'   junction within gene 
 #' }
+#' 
+#' for gene "ENSG00000135226+ENSG00000215110",
+#' and give the row name as "ENSG00000135226.ENSG00000135226+ENSG00000215110" and "ENSG00000215110.ENSG00000135226+ENSG00000215110" in this gene 
+#' based table.
 #'   
 #' @docType data
 #' @keywords datasets
 #' @name tiny.data
 #' @usage data(TinyData)
+#' 
 #' @return A data set 252 rows and 17 variables
+#' 
 #' @format A data frame with 252 rows and 17 variables
-#' 
-NULL
-
-#' mds.11.sample
-#' 
-#' A gene-based data set converted from the differential usage 
-#' analysis based on 11 subjuects(excluding 309)
-#' 
-#' 
-#' \itemize{
-#'   \item geneID: Gene ID
-#'   \item chr: Chromosome information
-#'   \item start: Starting position
-#'   \item end: End position
-#'   \item strand: Strand information
-#'   \item baseMean: BaseMean based on all samples
-#'   \item geneWisePadj: perGeneQvalue from DEXSeq package 
-#'   \item mostSigID: The feature that have smallest p-value within gene  
-#'   \item mostSigPadjust: p-value for the most significant feature 
-#'   \item numExons: Number of exons within gene
-#'   \item numKnown: Number of splicing junction within gene
-#'   \item numNovel: Number of novel splicing junction within gene
-#'   \item exonsSig: Number of significant exons
-#'   \item knownSig: Number of significant splicing junction
-#'   \item novelSig: Number of significant novel splicing junction
-#'   \item numFeatures: A list that includes number of exons,number of 
-#'   splicing junction and number of novel splicing junction within gene 
-#'   \item numSig: A list that includes number of significant exons,number of 
-#'   significant splicing junction and number of significant novel splicing 
-#'   junction within gene 
-#' }
-#'   
-#' @docType data
-#' @keywords datasets
-#' @name mds.11.sample
-#' @usage data(mds11)
-#' @return A data set with 23520 rows and 17 variables
-#' @format A data frame with 23520 rows and 17 variables
 #' 
 NULL
