@@ -29,7 +29,7 @@ if(row=="Yes") {
     input_pkg <- readLines(input, n=1)
     
     cat("Starting check as CRAN...\n")
-    cmd=paste0("R CMD check --no-vignettes --as-cran ",input_pkg)
+    cmd=paste0("R CMD check --no-build-vignettes --as-cran ",input_pkg)
     system(cmd)
     cat("Finished check as CRAN...\n")
   }else{

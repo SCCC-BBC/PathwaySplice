@@ -6,8 +6,8 @@
 #' @param sample.file Sample information file
 #' @param count.file Count file
 #' @param gff.file Annotation file
-#' @param method.dispFinal Determines the method 
-#' used to arrive at a 'final' dispersion estimate.
+#' @param method.dispFinal Determine the method 
+#' used to get a 'final' dispersion estimate.
 #'
 #' @return The analysis result from JunctionSeq R package
 #' 
@@ -17,8 +17,8 @@
 #' 
 #' dir.name <- system.file('extdata', package='PathwaySplice')
 #' sample.file <- 'Sample_info.txt'
-#' count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
-#' gff.file <- 'flat.chr22.gff'
+#' count.file <- 'Counts.10.genes.txt'
+#' gff.file <- 'flat.chr22.10.genes.gff'
 #' res <- getresultsfromjunctionseq(dir.name, sample.file, 
 #' count.file,gff.file, method.dispFinal = "max")
 #' 

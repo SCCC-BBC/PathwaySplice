@@ -2,8 +2,7 @@
 #'
 #' Logistic regression to check bias
 #'
-#' @param jscs_genewise_object Gene based table returned
-#'        from ReformatData and MakeGeneWiseTable_JunctionSeq
+#' @param jscs_genewise_object Gene based table 
 #' @param genewise.pvalue Whether you use smallest p value or geneWisePadj
 #' @param sig.threshold Threshold to define differential gene list
 #' @param type Whether you are interested in exon or splicing junction
@@ -16,8 +15,7 @@
 #' @export
 #'
 #' @examples
-#' res <- mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-#' res1 <- lrtestbias(res,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
+#' res <- lrtestbias(tiny.data,loc.x=2,loc.y=150,y_lim=200,boxplot_width=0.3)
 
 lrtestbias <- function(jscs_genewise_object, genewise.pvalue = "geneWisePadj", 
     sig.threshold = 0.05, type = c("exon","splicing"),loc.x=2,loc.y=70,y_lim=80,boxplot_width) {

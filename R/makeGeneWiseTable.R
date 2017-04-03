@@ -2,7 +2,7 @@
 #'
 #' This function is used to generate the gene-based results
 #'
-#' @param jscs The object returned from \code{'GetResultsFromJunctionSeq'}
+#' @param jscs The object returned from \code{'getresultsfromjunctionseq'}
 #' @param gene.list Gene list of the returned object from JunctionSeq or DEXSeq
 #' @param FDR.threshold Threshold to define the differential usage of either exon
 #'        or splicing junction
@@ -17,11 +17,11 @@
 #' #Get differential usage for exons or splicing junctions
 #' dir.name <- system.file('extdata',package = 'PathwaySplice')
 #' sample.file <- 'Sample_info.txt'
-#' count.file <- 'QC.spliceJunctionAndExonCounts.forJunctionSeq.txt'
-#' gff.file <- 'flat.chr22.gff'
+#' count.file <- 'Counts.10.genes.txt'
+#' gff.file <- 'flat.chr22.10.genes.gff'
 #' res <- getresultsfromjunctionseq(dir.name, sample.file, 
 #' count.file, gff.file, method.dispFinal='max')
-#' # Convert the results of differential usage analysis into gene based resutls
+#' # Convert the results of differential usage analysis into gene based results
 #' res1 <- makegenewisetable(res)
 
 makegenewisetable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05, 

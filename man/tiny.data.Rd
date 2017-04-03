@@ -9,14 +9,53 @@
 data(TinyData)
 }
 \value{
-A data set 252 rows and 17 variables
+A data set with 252 rows and 17 variables
 }
 \description{
-A tiny gene-based data set by sampling 500 genes from the whole gene list
+A tiny gene-based data set by sampling 500 genes from the whole gene list.
 }
 \details{
+We used Hartley's QoRTs program to get counts of exons and/or splicing
+
+junctions for each gene. The following is the count from genes
+
+"ENSG00000135226+ENSG00000215110sample" for the sample SRR1660311:
+
+ENSG00000135226+ENSG00000215110:A000	9
+
+ENSG00000135226+ENSG00000215110:E001	0
+
+ENSG00000135226+ENSG00000215110:E002	0
+
+ENSG00000135226+ENSG00000215110:E003	0
+
+...
+
+ENSG00000135226+ENSG00000215110:E005	2
+
+ENSG00000135226+ENSG00000215110:E006	0
+
+ENSG00000135226+ENSG00000215110:E007	7
+
+...
+
+ENSG00000135226+ENSG00000215110:J016	0
+
+...
+
+ESG00000135226+ENSG00000215110:J028	0
+
+We applied Hartley's JunctionSeq on counts to calculate Differential
+
+Usage(DU) of exons and/or splicing junction, then converted
+
+DU results to gene based table.
+
+This table includes the following information:
+
 \itemize{
-  \item geneID: Gene ID
+
+\item geneID: Gene ID
   \item chr: Chromosome information
   \item start: Starting position
   \item end: End position
@@ -37,5 +76,15 @@ A tiny gene-based data set by sampling 500 genes from the whole gene list
   significant splicing junction and number of significant novel splicing 
   junction within gene 
 }
+
+In this gene based table, for "ENSG00000135226+ENSG00000215110",
+
+we give row names as "ENSG00000135226.ENSG00000135226+ENSG00000215110"
+
+and "ENSG00000215110.ENSG00000135226+ENSG00000215110" to demonstrate
+
+"ENSG00000135226" and "ENSG00000215110" are two genes from
+
+"ENSG00000135226+ENSG00000215110".
 }
 \keyword{datasets}

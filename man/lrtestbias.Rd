@@ -9,8 +9,7 @@ lrtestbias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   loc.y = 70, y_lim = 80, boxplot_width)
 }
 \arguments{
-\item{jscs_genewise_object}{Gene based table returned
-from ReformatData and MakeGeneWiseTable_JunctionSeq}
+\item{jscs_genewise_object}{Gene based table}
 
 \item{genewise.pvalue}{Whether you use smallest p value or geneWisePadj}
 
@@ -33,6 +32,5 @@ Results from logistic regression
 Logistic regression to check bias
 }
 \examples{
-res <- mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-res1 <- lrtestbias(res,loc.x=2,loc.y=70,y_lim=80,boxplot_width=0.3)
+res <- lrtestbias(tiny.data,loc.x=2,loc.y=150,y_lim=200,boxplot_width=0.3)
 }

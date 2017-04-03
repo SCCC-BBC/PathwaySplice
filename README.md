@@ -23,41 +23,38 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice")'
 
 + Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
 
-```{r eval=FALSE}
-
-# test create jscs object
+```{r eval=TRUE}
+# Get differential usage results
 library(PathwaySplice)
 dir.name <- system.file("extdata",package = "PathwaySplice")
 sample.file <- "Sample_info.txt"
-count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
-gff.file <- "flat.chr22.gff"
-res <- getresultsfromjunctionseq(dir.name,sample.file,count.file,gff.file)
+count.file <- 'Counts.10.genes.txt'
+gff.file <- 'flat.chr22.10.genes.gff'
+res <- getresultsfromjunctionseq(dir.name, sample.file, 
+count.file,gff.file, method.dispFinal = "max")
 
 # Convert the results of differential usage analysis into gene based resutls
 res1 <- makegenewisetable(res)
+
 ```
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE, r eval=TRUE}
-res <- mds.11.sample[which(as.numeric(mds.11.sample$numExons)<=50),]
-res1 <- lrtestbias(res, loc.x=2, loc.y=70,y_lim=80,boxplot_width=0.3) #loc.x and loc.y indicates location of p-value
+res <- lrtestbias(tiny.data,loc.x=2,loc.y=150,y_lim=200,boxplot_width=0.3)#loc.x and loc.y indicates location of p-value
 ```
 
 + Perform pathwaysplice using Canonical Pathways
 ```{r eval=TRUE}
 
-dir.name <- system.file("extdata", package="PathwaySplice")
-canonical.pathway.file <- "c2.cp.v5.2.symbols.gmt.txt"
+dir.name <- system.file('extdata', package='PathwaySplice')
 
-res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
+#Use canonical pathways with 10 pathways
+canonical.pathway.file <- '10.cp.gmt.txt'
+res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 
-res1 <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+res1 <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Wallenius')
 
-set.seed(100)
-res2 <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Sampling')
-
-res3 <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+res2 <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Hypergeometric')
 
 #If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
@@ -67,9 +64,11 @@ res3 <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
 + Build up network based on the overlap between gene sets and visualize this network
 
 ```{r eval=TRUE}
+res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
+0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 
-#Canonical Pathways
-res11 <- enrichmentmap(res1,n=5,SimilarityThreshold=0)
-res22 <- enrichmentmap(res2,n=5,SimilarityThreshold=0)
-res33 <- enrichmentmap(res3,n=5,SimilarityThreshold=0)
+output.file.dir <- "~/TestNew"
+
+enmap <- enrichmentmap(res,n=10,SimilarityThreshold=0,
+output.file.dir = output.file.dir,label_vertex_by_index = TRUE)
 ```

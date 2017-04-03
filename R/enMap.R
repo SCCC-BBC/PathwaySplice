@@ -7,13 +7,25 @@
 #' @param fixed If set to FALSE, will invoke tkplot
 #' @param vertex.label.font Font size of vertex label
 #' @param SimilarityThreshold Threshold for defining Jaccard Coefficient(JC)
+#'        
 #'        JC ranges from 0 to 1:
+#'        
 #'        JC=0, indicates there are no overlap on genes between
 #'               two gene sets
+#'        
 #'        JC=1, indicates two gene sets are identical  
+#'        
 #'        SimilarityThreshold=0, indicates the enrichment map includes
-#'        all gene sets with their mutual JC greater than 0  
-#' @param ... Additional parameter
+#'        all gene sets with their mutual JC greater than 0
+
+#' @param output.file.dir Output dir for the gene set information file on network
+#' @param label_vertex_by_index Which way to be used for labeling vertex on network
+#'        
+#'        FALSE indicates to label vertex by the name of gene sets
+#'        
+#'        TRUE indicates to label vertex by the index of gene sets    
+#'          
+#' @param ... Additional parameter 
 #' @export
 #' @return A figure for visualizing enrichment network
 #' 
@@ -21,18 +33,22 @@
 #' 
 #' @examples
 #'
-#' res <- runpathwaysplice(mds.11.sample,adjust='exon_SJ',sub_feature='E',
+#' res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #' 
-#' enmap <- enrichmentmap(res,n=5,SimilarityThreshold=0)
+#' output.file.dir <- "~/TestNew"
+#' 
+#' enmap <- enrichmentmap(res,n=10,SimilarityThreshold=0,
+#' output.file.dir = output.file.dir,label_vertex_by_index = TRUE)
 
 enrichmentmap <-
   function(GoSeqRes,
            n = 50,
            fixed = TRUE,
            vertex.label.font = 1,
-           SimilarityThreshold,
-           ...) {
+           SimilarityThreshold,output.file.dir,label_vertex_by_index = FALSE,
+           ...) 
+    {
 
       GO.name <- GoSeqRes[[1]]$category
       temp <- GoSeqRes[[1]]$DEgene_ID
@@ -44,9 +60,35 @@ enrichmentmap <-
     
     if (any(grep("^GO:", y$category))) {
       VertexName <- paste0(y$term, ":", y$numDEInCat)
+      
+      if(label_vertex_by_index == TRUE) {
+      VertexName.index <- seq(1,length(VertexName))
+      
+      output.text <- as.data.frame(cbind(VertexName.index,VertexName))[1:n,]
+      VertexName <- VertexName.index
+      colnames(output.text) <- c("index","name")
+      write.table(output.text,
+                  file = file.path(output.file.dir,"enrichmap_text.xls"),
+                  quote = FALSE,
+                  col.names = TRUE,
+                  row.names = FALSE,sep = "\t")
+      }
     } else
     {
       VertexName <- paste0(y$category, ":", y$numDEInCat)
+      
+      if(label_vertex_by_index == TRUE) {
+      VertexName.index <- seq(1,length(VertexName))
+      
+      output.text <- as.data.frame(cbind(VertexName.index,VertexName))[1:n,]
+      VertexName <- VertexName.index
+      colnames(output.text) <- c("index","name")
+      write.table(output.text,
+                  file = file.path(output.file.dir,"enrichmap_text.xls"),
+                  quote = FALSE,
+                  col.names = TRUE,
+                  row.names = FALSE,sep = "\t")
+      }
     }
     
     if (nrow(y) < n) {
@@ -83,7 +125,7 @@ enrichmentmap <-
       wd <- wd[wd[, 1] != wd[, 2], ]
       wd <- wd[!is.na(wd[, 3]), ]
       g <- graph.data.frame(wd[, -3], directed = FALSE)
-      E(g)$width <- sqrt(wd[, 3] * 20)
+      E(g)$width <- sqrt(wd[, 3] * 5)
       
       g <- delete.edges(g, E(g)[wd[, 3] < SimilarityThreshold])
       

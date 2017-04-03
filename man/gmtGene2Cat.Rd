@@ -29,7 +29,7 @@ being the pathways that this gene corresponds to
 \examples{
 
 dir.name <- system.file("extdata", package="PathwaySplice")
-canonical.pathway.file <- "c2.cp.v5.2.symbols.gmt.txt"
+canonical.pathway.file <- "10.cp.gmt.txt"
 res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
 
 }

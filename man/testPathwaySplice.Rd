@@ -18,7 +18,7 @@ Peform one-step analysis for check bias, adjusted gene set
 enrichment anlysis and build network
 }
 \examples{
-testpathwaysplice(mds.11.sample)
+testpathwaysplice(tiny.data)
 
 
 }
