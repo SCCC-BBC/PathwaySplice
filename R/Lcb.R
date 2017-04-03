@@ -2,8 +2,7 @@
 #'
 #' Logistic regression to check bias
 #'
-#' @param jscs_genewise_object Gene based table returned
-#'        from ReformatData and MakeGeneWiseTable_JunctionSeq
+#' @param jscs_genewise_object Gene based table 
 #' @param genewise.pvalue Whether you use smallest p value or geneWisePadj
 #' @param sig.threshold Threshold to define differential gene list
 #' @param type Whether you are interested in exon or splicing junction

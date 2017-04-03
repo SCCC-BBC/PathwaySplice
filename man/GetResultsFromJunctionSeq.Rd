@@ -16,8 +16,8 @@ getresultsfromjunctionseq(dir.name, sample.file, count.file, gff.file,
 
 \item{gff.file}{Annotation file}
 
-\item{method.dispFinal}{Determines the method 
-used to arrive at a 'final' dispersion estimate.}
+\item{method.dispFinal}{Determine the method 
+used to get a 'final' dispersion estimate.}
 }
 \value{
 The analysis result from JunctionSeq R package

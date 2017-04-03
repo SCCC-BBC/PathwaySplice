@@ -79,7 +79,7 @@
 #' @name tiny.data
 #' @usage data(TinyData)
 #' 
-#' @return A data set 252 rows and 17 variables
+#' @return A data set with 252 rows and 17 variables
 #' 
 #' @format A data frame with 252 rows and 17 variables
 #' 

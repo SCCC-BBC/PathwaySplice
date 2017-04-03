@@ -9,7 +9,7 @@
 data(TinyData)
 }
 \value{
-A data set 252 rows and 17 variables
+A data set with 252 rows and 17 variables
 }
 \description{
 A tiny gene-based data set by sampling 500 genes from the whole gene list.

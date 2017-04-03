@@ -8,7 +8,7 @@ makegenewisetable(jscs, gene.list = NULL, FDR.threshold = 0.05,
   verbose = TRUE)
 }
 \arguments{
-\item{jscs}{The object returned from \code{'GetResultsFromJunctionSeq'}}
+\item{jscs}{The object returned from \code{'getresultsfromjunctionseq'}}
 
 \item{gene.list}{Gene list of the returned object from JunctionSeq or DEXSeq}
 
@@ -33,6 +33,6 @@ count.file <- 'Counts.10.genes.txt'
 gff.file <- 'flat.chr22.10.genes.gff'
 res <- getresultsfromjunctionseq(dir.name, sample.file, 
 count.file, gff.file, method.dispFinal='max')
-# Convert the results of differential usage analysis into gene based resutls
+# Convert the results of differential usage analysis into gene based results
 res1 <- makegenewisetable(res)
 }

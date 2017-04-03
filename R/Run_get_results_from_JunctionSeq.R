@@ -6,8 +6,8 @@
 #' @param sample.file Sample information file
 #' @param count.file Count file
 #' @param gff.file Annotation file
-#' @param method.dispFinal Determines the method 
-#' used to arrive at a 'final' dispersion estimate.
+#' @param method.dispFinal Determine the method 
+#' used to get a 'final' dispersion estimate.
 #'
 #' @return The analysis result from JunctionSeq R package
 #' 

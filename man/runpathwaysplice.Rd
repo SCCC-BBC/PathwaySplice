@@ -29,9 +29,10 @@ of gene sets(Options include Wallenius,Sampling, and Hypergeometric)}
 A list that has gene set enrichment analysis results
 }
 \description{
-Perform analysis using Run_pathwaysplice,user use gene-based
-table as an input, and select genes based on subfeature, then choose
-to using which bias factor to perform adjutsment
+This function uses gene-based
+table as an input, and selects genes based on subfeature, 
+then chooses to using which bias factor 
+to perform adjutsment
 }
 \examples{
 res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',

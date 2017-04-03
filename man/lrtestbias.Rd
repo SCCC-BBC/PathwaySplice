@@ -9,8 +9,7 @@ lrtestbias(jscs_genewise_object, genewise.pvalue = "geneWisePadj",
   loc.y = 70, y_lim = 80, boxplot_width)
 }
 \arguments{
-\item{jscs_genewise_object}{Gene based table returned
-from ReformatData and MakeGeneWiseTable_JunctionSeq}
+\item{jscs_genewise_object}{Gene based table}
 
 \item{genewise.pvalue}{Whether you use smallest p value or geneWisePadj}
 
