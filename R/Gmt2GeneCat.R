@@ -17,7 +17,7 @@
 #' @examples
 #' 
 #' dir.name <- system.file("extdata", package="PathwaySplice")
-#' canonical.pathway.file <- "c2.cp.v5.2.symbols.gmt.txt"
+#' canonical.pathway.file <- "10.cp.gmt.txt"
 #' res <- gmtgene2cat(dir.name,canonical.pathway.file,'local',genomeID="hg19")
 #' 
 gmtgene2cat <- function(dir.name,pathway.file,file.type,gene_anno_file=NULL,genomeID=c("mm10","hg19","hg38")) {
