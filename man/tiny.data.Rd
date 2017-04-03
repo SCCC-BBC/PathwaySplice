@@ -15,20 +15,26 @@ A data set 252 rows and 17 variables
 A tiny gene-based data set by sampling 500 genes from the whole gene list.
 }
 \details{
-We use JunctionSeq to calculate differential usage  of exons and/or splicing junction of each gene by setting the argument of use.multigene.aggregates to be TRUE.
+We used Hartley's QoRTs program to get counts of exons and/or splicing
 
-We get the count for "ENSG00000135226+ENSG00000215110" multigene 
-in the example SRR1660311 like the following:
+junctions for each gene. The following is the count from genes
+
+"ENSG00000135226+ENSG00000215110sample" for the sample SRR1660311:
 
 ENSG00000135226+ENSG00000215110:A000	9
+
 ENSG00000135226+ENSG00000215110:E001	0
+
 ENSG00000135226+ENSG00000215110:E002	0
+
 ENSG00000135226+ENSG00000215110:E003	0
 
 ...
 
 ENSG00000135226+ENSG00000215110:E005	2
+
 ENSG00000135226+ENSG00000215110:E006	0
+
 ENSG00000135226+ENSG00000215110:E007	7
 
 ...
@@ -38,12 +44,14 @@ ENSG00000135226+ENSG00000215110:J016	0
 ...
 
 ESG00000135226+ENSG00000215110:J028	0
-For example:
 
-The genes
-"ENSG00000135226+ENSG00000215110" has 15 exons and 13 splicing junctions.
-To convert the different usage based result of this multigene, we get the
-the following informartion(including number of exons and splicing junctions)
+We applied Hartley's JunctionSeq on counts to calculate Differential
+
+Usage(DU) of exons and/or splicing junction, then converted
+
+DU results to gene based table.
+
+This table includes the following information:
 
 \itemize{
 
@@ -69,8 +77,14 @@ the following informartion(including number of exons and splicing junctions)
   junction within gene 
 }
 
-for gene "ENSG00000135226+ENSG00000215110",
-and give the row name as "ENSG00000135226.ENSG00000135226+ENSG00000215110" and "ENSG00000215110.ENSG00000135226+ENSG00000215110" in this gene 
-based table.
+In this gene based table, for "ENSG00000135226+ENSG00000215110",
+
+we give row names as "ENSG00000135226.ENSG00000135226+ENSG00000215110"
+
+and "ENSG00000215110.ENSG00000135226+ENSG00000215110" to demonstrate
+
+"ENSG00000135226" and "ENSG00000215110" are two genes from
+
+"ENSG00000135226+ENSG00000215110".
 }
 \keyword{datasets}
