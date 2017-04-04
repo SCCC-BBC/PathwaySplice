@@ -13,7 +13,8 @@
 #'
 #' @examples
 #' 
-#' output.file.dir <- "~/OutputTest"
+#' dir.name <- system.file("extdata",package = "PathwaySplice")
+#' output.file.dir <- file.path(dir.name,"OutputTest")
 #' testpathwaysplice(tiny.data,output.file.dir = output.file.dir)
 #'
 #'

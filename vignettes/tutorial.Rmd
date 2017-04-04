@@ -38,7 +38,9 @@ threshold=0.05,genomeID='hg19',geneID='ensGene',method='Wallenius')
 #GO
 # SimilarityThreshold: Gene sets with Jaccard coefficient > similarity threshold are connected by a line,
 # with thickness proportional to Jaccard coefficient
-output.file.dir <- "~/OutputEnmap"
+
+dir.name <- system.file("extdata",package = "PathwaySplice")
+output.file.dir <- file.path(dir.name,"OutputEnmap")
 enmap <- enrichmentmap(res,n=5,output.file.dir
                        =output.file.dir,SimilarityThreshold=0)
 ```
