@@ -36,7 +36,7 @@
 #' res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #' 
-#' output.file.dir <- "~/TestNew"
+#' output.file.dir <- "~/OutputTest"
 #' 
 #' enmap <- enrichmentmap(res,n=10,SimilarityThreshold=0,
 #' output.file.dir = output.file.dir,label_vertex_by_index = TRUE)
@@ -50,6 +50,10 @@ enrichmentmap <-
            ...) 
     {
 
+     if (!dir.exists(output.file.dir)) {
+      dir.create(output.file.dir)
+     }
+    
       GO.name <- GoSeqRes[[1]]$category
       temp <- GoSeqRes[[1]]$DEgene_ID
       names(temp) <- GO.name
@@ -84,9 +88,7 @@ enrichmentmap <-
       VertexName <- VertexName.index
       colnames(output.text) <- c("index","name")
       
-      if (!dir.exists(output.file.dir)) {
-        dir.create(output.file.dir)
-      }
+      
     
       write.table(output.text,
                   file = file.path(output.file.dir,"enrichmap_text.xls"),
