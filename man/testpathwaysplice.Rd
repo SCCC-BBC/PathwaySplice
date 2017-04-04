@@ -21,7 +21,8 @@ enrichment anlysis and build network
 }
 \examples{
 
-output.file.dir <- "~/OutputTest"
+dir.name <- tempdir()
+output.file.dir <- file.path(dir.name,"OutputTest")
 testpathwaysplice(tiny.data,output.file.dir = output.file.dir)
 
 
