@@ -21,7 +21,7 @@ enrichment anlysis and build network
 }
 \examples{
 
-dir.name <- system.file("extdata",package = "PathwaySplice")
+dir.name <- tempdir()
 output.file.dir <- file.path(dir.name,"OutputTest")
 testpathwaysplice(tiny.data,output.file.dir = output.file.dir)
 
