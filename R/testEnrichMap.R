@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' 
-#' dir.name <- system.file("extdata",package = "PathwaySplice")
+#' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,"OutputTest")
 #' testpathwaysplice(tiny.data,output.file.dir = output.file.dir)
 #'
@@ -45,8 +45,6 @@ testpathwaysplice <- function(gene_based_table,output.file.dir) {
     )
   
   #Construct network between gene sets
-  
-  
   
   res11 <-
     enrichmentmap(res1,

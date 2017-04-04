@@ -36,8 +36,8 @@
 #' res <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
 #' 
-#' dir.name <- system.file("extdata",package = "PathwaySplice")
-#' output.file.dir <- file.path(dir.name,"OutputEnmap")
+#' dir.name <- tempdir()
+#' output.file.dir <- file.path(dir.name,"OutputEnmapEx")
 #' 
 #' enmap <- enrichmentmap(res,n=10,SimilarityThreshold=0,
 #' output.file.dir = output.file.dir,label_vertex_by_index = TRUE)
