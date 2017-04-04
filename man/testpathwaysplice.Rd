@@ -4,11 +4,13 @@
 \alias{testpathwaysplice}
 \title{testPathwaySplice}
 \usage{
-testpathwaysplice(gene_based_table)
+testpathwaysplice(gene_based_table, output.file.dir)
 }
 \arguments{
 \item{gene_based_table}{A gene based table converted from 
 DEXSeq or JunctionSeq resutls}
+
+\item{output.file.dir}{Directory for output}
 }
 \value{
 None
@@ -18,7 +20,9 @@ Peform one-step analysis for check bias, adjusted gene set
 enrichment anlysis and build network
 }
 \examples{
-testpathwaysplice(tiny.data)
+
+output.file.dir <- "~/OutputTest"
+testpathwaysplice(tiny.data,output.file.dir = output.file.dir)
 
 
 }

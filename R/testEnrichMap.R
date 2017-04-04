@@ -5,17 +5,19 @@
 #'
 #' @param gene_based_table A gene based table converted from 
 #'                        DEXSeq or JunctionSeq resutls
+#' @param output.file.dir Directory for output
 #' 
-#'
 #' @return None
 #'
 #' @export
 #'
 #' @examples
-#' testpathwaysplice(tiny.data)
+#' 
+#' output.file.dir <- "~/OutputTest"
+#' testpathwaysplice(tiny.data,output.file.dir = output.file.dir)
 #'
 #'
-testpathwaysplice <- function(gene_based_table) {
+testpathwaysplice <- function(gene_based_table,output.file.dir) {
   #Check bias using logistics regression model
   res <- lrtestbias(gene_based_table,boxplot_width = 0.3)
   
@@ -42,13 +44,18 @@ testpathwaysplice <- function(gene_based_table) {
     )
   
   #Construct network between gene sets
+  
+  
+  
   res11 <-
     enrichmentmap(res1,
                   n = 5,
+                  output.file.dir = output.file.dir,
                   SimilarityThreshold = 0)
   res22 <-
     enrichmentmap(res2,
                   n = 5,
+                  output.file.dir = output.file.dir,
                   SimilarityThreshold = 0)
   
 }

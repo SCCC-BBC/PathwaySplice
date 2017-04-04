@@ -158,9 +158,9 @@ writegototable <- function(GO_re, Output_file) {
 #' res2 <- runpathwaysplice(tiny.data,adjust='exon_SJ',sub_feature='E',
 #' 0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Hypergeometric')
 
-#' output.dir <- '~/TestNew/'
-#' output.file.name.1 <- 'In_ad_not_un.xls'
-#' output.file.name.2 <- 'In_un_not_ad.xls'
+#' output.dir <- "~/OutputTest"
+#' output.file.name.1 <- "In_ad_not_un.xls"
+#' output.file.name.2 <- "In_un_not_ad.xls"
 #' res3 <- postprocessgo(4,res1,res2,output.dir,output.dir,
 #' type.boxplot='Only3',output.file.name.1,output.file.name.2)
 
