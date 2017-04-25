@@ -853,16 +853,12 @@ match2Genome <- function(genome_id)
   return(yyy)
 }
 
-#' reformatpath
-#' 
-#' @param dir.name Directory name to be converted 
-#' @return A converted directory
-#' 
-#' @examples
-#' dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
-#' converted.dir.name <- PathwaySplice:::reformatpath(dir.name)
-#' 
-#' @export 
+# reformatpath
+
+# #examples
+# dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
+# converted.dir.name <- PathwaySplice:::reformatpath(dir.name)
+# 
 
 reformatpath <- function(dir.name)
 {
