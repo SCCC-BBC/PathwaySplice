@@ -1,5 +1,5 @@
 library(testthat)
-test_that("test lrtestbias",
+test_that("test lrTestBias",
           {
-            res <- lrtestbias(tiny.data,loc.x=2,loc.y=150,y_lim=200,boxplot_width=0.3)
+            res <- lrTestBias(tiny.data,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
           })
