@@ -36,5 +36,4 @@ export(makeGeneWiseTable)
 export(testPathwaySplice)
 export(getResultsFromJunctionSeq)
 export(postProcessGo)
-export(reformatpath)
 
