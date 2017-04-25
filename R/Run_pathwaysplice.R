@@ -710,31 +710,7 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
     
 }
 
-match2Genome <- function(genome_id)
-{
-    
-    ah <- AnnotationHub()
-    switch(genome_id, hg38 = {
-        hs <- query(ah, c("Ensembl", "GRCh38", "Homo sapiens"))
-        res <- hs[["AH53211"]]
-        res <- genes(res, columns = c("gene_name"))
-        xxx <- mcols(res)
-        yyy <- xxx
-    }, hg19 = {
-        edb <- org.Hs.eg.db
-        entrezid <- keys(edb, keytype = "ENTREZID")
-        suppressMessages(xxx <- select(edb, keys = entrezid, columns = c("ENSEMBL", 
-            "SYMBOL")))
-        yyy <- xxx[, c(3, 2, 1)]
-    }, {
-        hs <- query(ah, c("Ensembl", "GRCm38", "Mus Musculus"))
-        res <- hs[["AH53222"]]
-        res <- genes(res, columns = c("gene_name"))
-        xxx <- S4Vectors::mcols(res)
-        yyy <- xxx
-    })
-    return(yyy)
-}
+
 
 #' enrichmentMap
 #'
