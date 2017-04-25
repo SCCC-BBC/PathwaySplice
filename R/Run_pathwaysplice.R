@@ -741,7 +741,7 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 #'          
 #' @param ... Additional parameter 
 #' @export
-#' @return A figure for visualizing enrichment network
+#' @return A list for giving edge and vertex information of enrichment map
 #' 
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 #' 
@@ -979,38 +979,4 @@ gmtGene2Cat <- function(dir.name, pathway.file, file.type, gene.anno.file = NULL
     names(gene.2.cat.gmt.2) <- gene.ID.conversion.2[, 2]
     gene.2.cat.gmt.2
     
-}
-
-#' reformatpath
-#' 
-#' @param dir.name Directory name to be converted 
-#' @return A converted directory
-#' 
-#' @examples
-#' dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
-#' converted.dir.name <- reformatpath(dir.name)
-#' 
-#' @export 
-
-reformatpath <- function(dir.name)
-{
-    CheckOPS <- Sys.info()[["sysname"]]
-    
-    if (CheckOPS == "Darwin")
-    {
-        temp <- unlist(strsplit(dir.name, split = "\\/"))
-        
-        if (!is.na(temp[3] == "H_driver"))
-        {
-            if (temp[3] == "H_driver")
-            {
-                temp[2] <- "Volumes"
-                temp[3] <- "Bioinformatics$"
-                dir.name <- do.call("file.path", as.list(temp))
-            }
-        }
-        
-    }
-    
-    return(dir.name)
 }
