@@ -39,7 +39,7 @@ TRUE indicates to label vertex by the index of gene sets}
 \item{...}{Additional parameter}
 }
 \value{
-A figure for visualizing enrichment network
+A list for giving edge and vertex information of enrichment map
 }
 \description{
 enrichmentMap is used to draw network based on similarities between GOs
