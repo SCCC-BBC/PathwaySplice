@@ -15,7 +15,7 @@ library(devtools)
 install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 
 #In pegasus terminal 
-R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice",ref='development')'
+R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice",ref="development")'
 
 ```
 
