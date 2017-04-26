@@ -4,11 +4,11 @@
 \alias{enrichmentMap}
 \title{enrichmentMap}
 \usage{
-enrichmentMap(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
-  SimilarityThreshold, output.file.dir, label.vertex.by.index = FALSE, ...)
+enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
+  similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
 }
 \arguments{
-\item{GoSeqRes}{Object returned from runpathwaysplice}
+\item{goseqres}{Object returned from runpathwaysplice}
 
 \item{n}{Maximum number of category to be shown}
 
@@ -16,7 +16,7 @@ enrichmentMap(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
 
 \item{vertex.label.font}{Font size of vertex label}
 
-\item{SimilarityThreshold}{Threshold for defining Jaccard Coefficient(JC)
+\item{similarity.threshold}{Threshold for defining Jaccard Coefficient(JC)
 
 JC ranges from 0 to 1:
 
@@ -25,7 +25,7 @@ JC=0, indicates there are no overlap on genes between
 
 JC=1, indicates two gene sets are identical  
 
-SimilarityThreshold=0, indicates the enrichment map includes
+similarity.threshold=0, indicates the enrichment map includes
 all gene sets with their mutual JC greater than 0}
 
 \item{output.file.dir}{Output dir for the gene set information file on network}
@@ -53,7 +53,7 @@ res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
 dir.name <- tempdir()
 output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 
-enmap <- enrichmentMap(res,n=10,SimilarityThreshold=0,
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0,
                        output.file.dir = output.file.dir,
                        label.vertex.by.index = TRUE)
 }

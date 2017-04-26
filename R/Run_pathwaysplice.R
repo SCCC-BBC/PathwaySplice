@@ -23,8 +23,6 @@
 #'                                  count.file,gff.file, 
 #'                                  method.dispFinal = 'max')
 #' 
-#' 
-
 getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file, 
     gff.file, method.dispFinal = c("shrink", "max", "fitted", "noShare"))
     {
@@ -85,7 +83,6 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 #'                                  method.dispFinal='max')
 #' # Convert the results of differential usage analysis into gene based results
 #' res1 <- makeGeneWiseTable(res)
-
 makeGeneWiseTable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05, 
     verbose = TRUE)
     {
@@ -315,7 +312,6 @@ makeGeneWiseTable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05,
 #'
 #' @examples
 #' res <- lrTestBias(tiny.data,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
-
 lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj", 
     sig.threshold = 0.05, type = c("exon", "splicing"), loc.x = 2, loc.y = 70, 
     y.lim = 80, boxplot.width)
@@ -414,63 +410,62 @@ lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
 #'                         0.05,genomeID='hg19',geneID='ensGene', 
 #'                         method='Wallenius')
 #'
-
 runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL, 
     threshold, genomeID, geneID, method, gene2cat = NULL)
     {
     
-    Data4Goterm <- re.gene.based
+    data4goterm <- re.gene.based
     
     if (is.null(sub.feature))
     {
-        Data4Goterm.sub.feature <- Data4Goterm
+        data4goterm.sub.feature <- data4goterm
     } else
     {
-        Data4Goterm.sub.feature <- Data4Goterm[grep(sub.feature, Data4Goterm[, 
+        data4goterm.sub.feature <- data4goterm[grep(sub.feature, data4goterm[, 
             8]), ]
     }
     
     if (sub.feature == "J")
     {
-        Data4Goterm.sub.feature.geneID.NumOfJunctions <- Data4Goterm.sub.feature[, 
+        data4goterm.sub.feature.geneID.NumOfJunctions <- data4goterm.sub.feature[, 
             c(1, 11)]
     } else
     {
-        Data4Goterm.sub.feature.geneID.NumOfJunctions <- Data4Goterm.sub.feature[, 
+        data4goterm.sub.feature.geneID.NumOfJunctions <- data4goterm.sub.feature[, 
             c(1, 10)]
     }
     
-    Data4Goterm.sub.feature.Sig <- Data4Goterm.sub.feature[which(Data4Goterm.sub.feature[, 
+    data4goterm.sub.feature.Sig <- data4goterm.sub.feature[which(data4goterm.sub.feature[, 
         7] < threshold), ]
     
     # GO term analysis using GOSeq
-    All.gene.id.based.on.sub.feature <- unique(Data4Goterm.sub.feature[, 
+    all.gene.id.based.on.sub.feature <- unique(data4goterm.sub.feature[, 
         1])
     
-    All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub.feature))
-    names(All.gene.id.index) <- All.gene.id.based.on.sub.feature
+    all.gene.id.index <- rep(0, length(all.gene.id.based.on.sub.feature))
+    names(all.gene.id.index) <- all.gene.id.based.on.sub.feature
     
-    All.genes.based.on.Sig.sub.feature <- unique(Data4Goterm.sub.feature.Sig[, 
+    all.genes.based.on.Sig.sub.feature <- unique(data4goterm.sub.feature.Sig[, 
         1])
-    gene.DE_interest <- as.integer(which(All.gene.id.based.on.sub.feature %in% 
-        All.genes.based.on.Sig.sub.feature))
+    gene.DE.interest <- as.integer(which(all.gene.id.based.on.sub.feature %in% 
+        all.genes.based.on.Sig.sub.feature))
     
-    All.gene.id.index[gene.DE_interest] <- 1
+    all.gene.id.index[gene.DE.interest] <- 1
     
-    gene.with.matched.junction <- which(Data4Goterm.sub.feature.geneID.NumOfJunctions[, 
-        1] %in% c(names(All.gene.id.index)))
-    num.junction.4.matched.gene <- as.numeric(Data4Goterm.sub.feature.geneID.NumOfJunctions[gene.with.matched.junction, 
+    gene.with.matched.junction <- which(data4goterm.sub.feature.geneID.NumOfJunctions[, 
+        1] %in% c(names(all.gene.id.index)))
+    num.junction.4.matched.gene <- as.numeric(data4goterm.sub.feature.geneID.NumOfJunctions[gene.with.matched.junction, 
         2])
     
-    All.gene.id.index.2 <- All.gene.id.index
+    all.gene.id.index.2 <- all.gene.id.index
     
     if (adjust == "GL")
     {
-        pwf.DE_interest <- nullp(All.gene.id.index.2, genomeID, geneID, 
+        pwf.DE.interest <- nullp(all.gene.id.index.2, genomeID, geneID, 
             plot.fit = TRUE)
     } else
     {
-        pwf.DE_interest <- nullp(All.gene.id.index.2, genomeID, geneID, 
+        pwf.DE.interest <- nullp(all.gene.id.index.2, genomeID, geneID, 
             bias.data = num.junction.4.matched.gene, plot.fit = TRUE)
     }
     
@@ -479,11 +474,11 @@ runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL,
         
         if (is.null(gene2cat))
         {
-            GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, genomeID, 
+            go.wall.de.interest <- pathwaysplice(pwf.DE.interest, genomeID, 
                 geneID, method = "Hypergeometric", use.genes.without.cat = TRUE)
         } else
         {
-            GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, genomeID, 
+            go.wall.de.interest <- pathwaysplice(pwf.DE.interest, genomeID, 
                 geneID, gene2cat = gene2cat, method = "Hypergeometric", 
                 use.genes.without.cat = TRUE)
         }
@@ -492,11 +487,11 @@ runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL,
         
         if (is.null(gene2cat))
         {
-            GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, genomeID, 
+            go.wall.de.interest <- pathwaysplice(pwf.DE.interest, genomeID, 
                 geneID, method = "Sampling", use.genes.without.cat = TRUE)
         } else
         {
-            GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, genomeID, 
+            go.wall.de.interest <- pathwaysplice(pwf.DE.interest, genomeID, 
                 geneID, gene2cat = gene2cat, method = "Sampling", use.genes.without.cat = TRUE)
         }
     } else
@@ -504,32 +499,30 @@ runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL,
         
         if (is.null(gene2cat))
         {
-            GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, genomeID, 
+            go.wall.de.interest <- pathwaysplice(pwf.DE.interest, genomeID, 
                 geneID, use.genes.without.cat = TRUE)
         } else
         {
-            GO.wall.DE_interest <- pathwaysplice(pwf.DE_interest, genomeID, 
+            go.wall.de.interest <- pathwaysplice(pwf.DE.interest, genomeID, 
                 geneID, gene2cat = gene2cat, use.genes.without.cat = TRUE)
         }
     }
     
-    GO.wall.DE_interest.2 <- getStaisitcs4Go(GO.wall.DE_interest, re.gene.based)
+    go.wall.de.interest.2 <- getStaisitcs4Go(go.wall.de.interest, re.gene.based)
     
     if (is.null(gene2cat))
     {
-        GO.selected <- outputGoBasedSelection(GO.wall.DE_interest.2)
+        GO.selected <- outputGoBasedSelection(go.wall.de.interest.2)
     } else
     {
-        GO.selected <- outputCatBasedSelection(GO.wall.DE_interest.2)
+        GO.selected <- outputCatBasedSelection(go.wall.de.interest.2)
     }
     
-    re <- list(GO.selected = GO.selected, pwf.DE_interest = pwf.DE_interest, 
-        GO.wall.DE_interest = GO.wall.DE_interest)
+    re <- list(GO.selected = GO.selected, pwf.DE.interest = pwf.DE.interest, 
+        go.wall.de.interest = go.wall.de.interest)
     
     return(re)
 }
-
-
 
 #' postProcessGo
 #'
@@ -572,7 +565,6 @@ runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL,
 #' res3 <- postProcessGo(4,res1,res2,output.dir,output.dir,
 #'                       type.boxplot='Only3',
 #'                       output.file.name.1,output.file.name.2)
-
 #' @export
 
 postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, 
@@ -591,16 +583,16 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
     
     n <- n.go
     
-    Example.Go.adjusted.by.exon <- adjusted
-    Example.Go.unadjusted <- unadjuasted
+    example.go.adjusted.by.exon <- adjusted
+    example.go.unadjusted <- unadjuasted
     
     
-    if (dim(Example.Go.adjusted.by.exon$GO.selected)[1] >= n && dim(Example.Go.unadjusted$GO.selected)[1] >= 
+    if (dim(example.go.adjusted.by.exon$GO.selected)[1] >= n && dim(example.go.unadjusted$GO.selected)[1] >= 
         n)
         {
         
-        adjusted <- Example.Go.adjusted.by.exon$GO.selected[1:n, 1]
-        unadjusted <- Example.Go.unadjusted$GO.selected[1:n, 1]
+        adjusted <- example.go.adjusted.by.exon$GO.selected[1:n, 1]
+        unadjusted <- example.go.unadjusted$GO.selected[1:n, 1]
         
         re <- list(adjusted = adjusted, unadjusted = unadjusted)
         
@@ -621,19 +613,19 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
         if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
             0)
             {
-            index1 <- match(In.adjusted.not.in.unadjusted, Example.Go.adjusted.by.exon$GO.selected$category)
-            In.ad.not.un <- Example.Go.adjusted.by.exon$GO.selected[index1, 
+            index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$GO.selected$category)
+            In.ad.not.un <- example.go.adjusted.by.exon$GO.selected[index1, 
                 ]$Ave_value_all_gene
             
-            yy <- cbind(Example.Go.unadjusted$GO.selected[index1, ]$rank.value.by.over_represented_pvalue, 
-                Example.Go.adjusted.by.exon$GO.selected[index1, ]$rank.value.by.over_represented_pvalue)
+            yy <- cbind(example.go.unadjusted$GO.selected[index1, ]$rank.value.by.over_represented_pvalue, 
+                example.go.adjusted.by.exon$GO.selected[index1, ]$rank.value.by.over_represented_pvalue)
             
             
-            index2 <- match(In.unadjusted.not.in.adjusted, Example.Go.unadjusted$GO.selected$category)
-            In.un.not.ad <- Example.Go.unadjusted$GO.selected[index2, ]$Ave_value_all_gene
+            index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$GO.selected$category)
+            In.un.not.ad <- example.go.unadjusted$GO.selected[index2, ]$Ave_value_all_gene
             
-            yyy <- cbind(Example.Go.unadjusted$GO.selected[index2, ]$rank.value.by.over_represented_pvalue, 
-                Example.Go.adjusted.by.exon$GO.selected[index2, ]$rank.value.by.over_represented_pvalue)
+            yyy <- cbind(example.go.unadjusted$GO.selected[index2, ]$rank.value.by.over_represented_pvalue, 
+                example.go.adjusted.by.exon$GO.selected[index2, ]$rank.value.by.over_represented_pvalue)
             
             rre <- list(yy = yy, yyy = yyy)
             
@@ -641,13 +633,13 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
             
             colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
             
-            cp.top.adjusted.25 <- unlist(Example.Go.adjusted.by.exon$GO.selected[1:n, 
+            cp.top.adjusted.25 <- unlist(example.go.adjusted.by.exon$GO.selected[1:n, 
                 ]$Ave_value_all_gene)
-            cp.top.unadjusted.25 <- unlist(Example.Go.unadjusted$GO.selected[1:n, 
+            cp.top.unadjusted.25 <- unlist(example.go.unadjusted$GO.selected[1:n, 
                 ]$Ave_value_all_gene)
             
-            cp.all.adjusted <- unlist(Example.Go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
-            cp.all.unadjusted <- unlist(Example.Go.unadjusted$GO.selected$Ave_value_all_gene)
+            cp.all.adjusted <- unlist(example.go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
+            cp.all.unadjusted <- unlist(example.go.unadjusted$GO.selected$Ave_value_all_gene)
             
             type.boxplot <- match.arg(type.boxplot)
             
@@ -680,11 +672,11 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
             })
             
             Output_file <- file.path(boxplot.dir, In.ad.not.un.file)
-            writegototable(Example.Go.adjusted.by.exon$GO.selected[index1, 
+            writegototable(example.go.adjusted.by.exon$GO.selected[index1, 
                 ], Output_file)
             
             Output_file <- file.path(boxplot.dir, In.un.not.ad.file)
-            writegototable(Example.Go.unadjusted$GO.selected[index2, ], 
+            writegototable(example.go.unadjusted$GO.selected[index2, ], 
                 Output_file)
             
             return(rre)
@@ -722,11 +714,11 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 #'
 #' enrichmentMap is used to draw network based on similarities between GOs
 #'
-#' @param GoSeqRes Object returned from runpathwaysplice
+#' @param goseqres Object returned from runpathwaysplice
 #' @param n Maximum number of category to be shown
 #' @param fixed If set to FALSE, will invoke tkplot
 #' @param vertex.label.font Font size of vertex label
-#' @param SimilarityThreshold Threshold for defining Jaccard Coefficient(JC)
+#' @param similarity.threshold Threshold for defining Jaccard Coefficient(JC)
 #'        
 #'        JC ranges from 0 to 1:
 #'        
@@ -735,7 +727,7 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 #'        
 #'        JC=1, indicates two gene sets are identical  
 #'        
-#'        SimilarityThreshold=0, indicates the enrichment map includes
+#'        similarity.threshold=0, indicates the enrichment map includes
 #'        all gene sets with their mutual JC greater than 0
 #'        
 #' @param output.file.dir Output dir for the gene set information file on network
@@ -760,12 +752,11 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 #' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 #' 
-#' enmap <- enrichmentMap(res,n=10,SimilarityThreshold=0,
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0,
 #'                        output.file.dir = output.file.dir,
 #'                        label.vertex.by.index = TRUE)
-
-enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1, 
-    SimilarityThreshold, output.file.dir, label.vertex.by.index = FALSE, 
+enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
+    similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, 
     ...)
     {
     
@@ -774,25 +765,25 @@ enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
         dir.create(output.file.dir)
     }
     
-    GO.name <- GoSeqRes[[1]]$category
-    temp <- GoSeqRes[[1]]$DEgene_ID
+    GO.name <- goseqres[[1]]$category
+    temp <- goseqres[[1]]$DEgene_ID
     names(temp) <- GO.name
-    x <- GoSeqRes[[1]]
+    x <- goseqres[[1]]
     geneSets <- temp
     
     y <- as.data.frame(x)
     
     if (any(grep("^GO:", y$category)))
     {
-        VertexName <- paste0(y$term, ":", y$numDEInCat)
+        vertexname <- paste0(y$term, ":", y$numDEInCat)
         
         if (label.vertex.by.index == TRUE)
         {
-            VertexName.index <- seq(1, length(VertexName))
+            vertexname.index <- seq(1, length(vertexname))
             
-            output.text <- as.data.frame(cbind(VertexName.index, VertexName))[1:n, 
+            output.text <- as.data.frame(cbind(vertexname.index, vertexname))[1:n, 
                 ]
-            VertexName <- VertexName.index
+            vertexname <- vertexname.index
             colnames(output.text) <- c("index", "name")
             write.table(output.text, file = file.path(output.file.dir, 
                 "enrichmap_GO.xls"), quote = FALSE, col.names = TRUE, row.names = FALSE, 
@@ -800,15 +791,15 @@ enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
         }
     } else
     {
-        VertexName <- paste0(y$category, ":", y$numDEInCat)
+        vertexname <- paste0(y$category, ":", y$numDEInCat)
         
         if (label.vertex.by.index == TRUE)
         {
-            VertexName.index <- seq(1, length(VertexName))
+            vertexname.index <- seq(1, length(vertexname))
             
-            output.text <- as.data.frame(cbind(VertexName.index, VertexName))[1:n, 
+            output.text <- as.data.frame(cbind(vertexname.index, vertexname))[1:n, 
                 ]
-            VertexName <- VertexName.index
+            vertexname <- vertexname.index
             colnames(output.text) <- c("index", "name")
             
             write.table(output.text, file = file.path(output.file.dir, 
@@ -831,7 +822,7 @@ enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
         g <- graph.empty(0, directed = FALSE)
         g <- add_vertices(g, nv = 1)
         
-        V(g)$name <- VertexName
+        V(g)$name <- vertexname
         
         V(g)$color <- "red"
     } else
@@ -843,7 +834,7 @@ enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
         
         n <- nrow(y)  #
         w <- matrix(NA, nrow = n, ncol = n)
-        colnames(w) <- rownames(w) <- VertexName[1:n]
+        colnames(w) <- rownames(w) <- vertexname[1:n]
         
         for (i in 1:n)
         {
@@ -859,9 +850,9 @@ enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
         g <- graph.data.frame(wd[, -3], directed = FALSE)
         E(g)$width <- sqrt(wd[, 3] * 5)
         
-        g <- delete.edges(g, E(g)[wd[, 3] < SimilarityThreshold])
+        g <- delete.edges(g, E(g)[wd[, 3] < similarity.threshold])
         
-        idx <- unlist(sapply(V(g)$name, function(x) which(x == VertexName[1:n])))
+        idx <- unlist(sapply(V(g)$name, function(x) which(x == vertexname[1:n])))
         
         cols <- color_scale("red", "#E5C494")
         
@@ -874,7 +865,7 @@ enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1,
         
         cnt <- as.integer(y$numDEInCat)
         
-        names(cnt) <- VertexName[1:n]
+        names(cnt) <- vertexname[1:n]
         
         cnt2 <- cnt[V(g)$name]
         
@@ -924,9 +915,9 @@ testPathwaySplice <- function(gene.based.table, output.file.dir)
     # Construct network between gene sets
     
     res11 <- enrichmentMap(res1, n = 5, output.file.dir = output.file.dir, 
-        SimilarityThreshold = 0)
+        similarity.threshold = 0)
     res22 <- enrichmentMap(res2, n = 5, output.file.dir = output.file.dir, 
-        SimilarityThreshold = 0)
+        similarity.threshold = 0)
     
 }
 
@@ -971,20 +962,20 @@ gmtGene2Cat <- function(dir.name, pathway.file, file.type, gene.anno.file = NULL
         
         gene_anno_file <- file.path(dir.name, file.name)
         
-        gene.ID.conversion <- read.csv(gene_anno_file)
+        gene.id.conversion <- read.csv(gene_anno_file)
     } else
     {
-        gene.ID.conversion <- match.arg(genomeID)
+        gene.id.conversion <- match.arg(genomeID)
     }
     
-    xxx <- match2Genome(gene.ID.conversion)
+    xxx <- match2Genome(gene.id.conversion)
     
     names.gene.gmt.2 <- match(names.gene.gmt$gene_id, xxx[, 1])
     
-    gene.ID.conversion.2 <- xxx[names.gene.gmt.2, ]
+    gene.id.conversion.2 <- xxx[names.gene.gmt.2, ]
     
     gene.2.cat.gmt.2 <- gene.2.cat.gmt
-    names(gene.2.cat.gmt.2) <- gene.ID.conversion.2[, 2]
+    names(gene.2.cat.gmt.2) <- gene.id.conversion.2[, 2]
     gene.2.cat.gmt.2
     
 }

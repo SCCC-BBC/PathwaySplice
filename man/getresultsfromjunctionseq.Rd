@@ -35,5 +35,4 @@ res <- getResultsFromJunctionSeq(dir.name, sample.file,
                                  count.file,gff.file, 
                                  method.dispFinal = 'max')
 
-
 }
