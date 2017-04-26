@@ -20,7 +20,8 @@
 #' count.file <- 'Counts.10.genes.txt'
 #' gff.file <- 'flat.chr22.10.genes.gff'
 #' res <- getResultsFromJunctionSeq(dir.name, sample.file, 
-#' count.file,gff.file, method.dispFinal = 'max')
+#'                                  count.file,gff.file, 
+#'                                  method.dispFinal = 'max')
 #' 
 #' 
 
@@ -80,7 +81,8 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 #' count.file <- 'Counts.10.genes.txt'
 #' gff.file <- 'flat.chr22.10.genes.gff'
 #' res <- getResultsFromJunctionSeq(dir.name, sample.file, 
-#' count.file, gff.file, method.dispFinal='max')
+#'                                  count.file, gff.file, 
+#'                                  method.dispFinal='max')
 #' # Convert the results of differential usage analysis into gene based results
 #' res1 <- makeGeneWiseTable(res)
 
@@ -409,7 +411,8 @@ lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
 #'
 #' @examples
 #' res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
+#'                         0.05,genomeID='hg19',geneID='ensGene', 
+#'                         method='Wallenius')
 #'
 
 runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL, 
@@ -554,10 +557,12 @@ runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL,
 #' res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 
 #' res1 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Wallenius')
+#'                          0.05,genomeID='hg19',geneID='ensGene',
+#'                          gene2cat=res,method='Wallenius')
 
 #' res2 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Hypergeometric')
+#'                          0.05,genomeID='hg19',geneID='ensGene',
+#'                          gene2cat=res,method='Hypergeometric')
 
 #' dir.name <- tempdir()
 #' output.dir <- file.path(dir.name,'OutputPostAnalysis')
@@ -565,7 +570,8 @@ runPathwaySplice <- function(re.gene.based, adjust = "GL", sub.feature = NULL,
 #' output.file.name.1 <- 'In_ad_not_un.xls'
 #' output.file.name.2 <- 'In_un_not_ad.xls'
 #' res3 <- postProcessGo(4,res1,res2,output.dir,output.dir,
-#' type.boxplot='Only3',output.file.name.1,output.file.name.2)
+#'                       type.boxplot='Only3',
+#'                       output.file.name.1,output.file.name.2)
 
 #' @export
 
@@ -748,13 +754,15 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 #' @examples
 #'
 #' res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#' 0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
+#'                         0.05,genomeID='hg19',geneID='ensGene',
+#'                         method='Wallenius')
 #' 
 #' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 #' 
 #' enmap <- enrichmentMap(res,n=10,SimilarityThreshold=0,
-#' output.file.dir = output.file.dir,label.vertex.by.index = TRUE)
+#'                        output.file.dir = output.file.dir,
+#'                        label.vertex.by.index = TRUE)
 
 enrichmentMap <- function(GoSeqRes, n = 50, fixed = TRUE, vertex.label.font = 1, 
     SimilarityThreshold, output.file.dir, label.vertex.by.index = FALSE, 
