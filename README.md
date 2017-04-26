@@ -73,7 +73,7 @@ res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
 
 output.file.dir <- "~/TestNew"
 
-enmap <- enrichmentMap(res,n=10,SimilarityThreshold=0,
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0,
                       output.file.dir = output.file.dir,
                       label.vertex.by.index = TRUE)
 ```
