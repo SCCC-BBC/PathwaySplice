@@ -31,7 +31,7 @@ sample.file <- "Sample_info.txt"
 count.file <- 'Counts.10.genes.txt'
 gff.file <- 'flat.chr22.10.genes.gff'
 res <- getResultsFromJunctionSeq(dir.name, sample.file, 
-count.file,gff.file, method.dispFinal = 'max')
+                                count.file,gff.file, method.dispFinal = 'max')
 
 # Convert the results of differential usage analysis into gene based resutls
 res1 <- makeGeneWiseTable(res)
@@ -53,10 +53,12 @@ canonical.pathway.file <- '10.cp.gmt.txt'
 res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 
 res1 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Wallenius')
+                          0.05,genomeID='hg19',geneID='ensGene',
+                          gene2cat=res,method='Wallenius')
 
 res2 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-0.05,genomeID='hg19',geneID='ensGene',gene2cat=res,method='Hypergeometric')
+                        0.05,genomeID='hg19',geneID='ensGene',
+                        gene2cat=res,method='Hypergeometric')
 
 #If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
 
@@ -66,10 +68,12 @@ res2 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
 
 ```{r eval=TRUE}
 res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
+                        0.05,genomeID='hg19',geneID='ensGene', 
+                        method='Wallenius')
 
 output.file.dir <- "~/TestNew"
 
 enmap <- enrichmentMap(res,n=10,SimilarityThreshold=0,
-output.file.dir = output.file.dir,label.vertex.by.index = TRUE)
+                      output.file.dir = output.file.dir,
+                      label.vertex.by.index = TRUE)
 ```
