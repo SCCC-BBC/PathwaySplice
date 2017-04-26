@@ -36,6 +36,7 @@ to perform adjutsment
 }
 \examples{
 res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-0.05,genomeID='hg19',geneID='ensGene', method='Wallenius')
+                        0.05,genomeID='hg19',geneID='ensGene', 
+                        method='Wallenius')
 
 }

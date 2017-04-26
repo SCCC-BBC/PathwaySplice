@@ -32,7 +32,8 @@ sample.file <- 'Sample_info.txt'
 count.file <- 'Counts.10.genes.txt'
 gff.file <- 'flat.chr22.10.genes.gff'
 res <- getResultsFromJunctionSeq(dir.name, sample.file, 
-count.file, gff.file, method.dispFinal='max')
+                                 count.file, gff.file, 
+                                 method.dispFinal='max')
 # Convert the results of differential usage analysis into gene based results
 res1 <- makeGeneWiseTable(res)
 }
