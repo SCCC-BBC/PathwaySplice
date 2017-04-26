@@ -8,7 +8,7 @@ makeGeneWiseTable(jscs, gene.list = NULL, FDR.threshold = 0.05,
   verbose = TRUE)
 }
 \arguments{
-\item{jscs}{The object returned from \code{'getresultsfromjunctionseq'}}
+\item{jscs}{The object returned from \code{'getResultsFromJunctionSeq'}}
 
 \item{gene.list}{Gene list of the returned object from JunctionSeq or DEXSeq}
 
