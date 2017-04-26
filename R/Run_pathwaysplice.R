@@ -343,8 +343,7 @@ lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
     type <- match.arg(type)
     
     switch(type, splicing = {
-        cat("Use splicing junctions\n")
-        
+      
         if (var(as.numeric(unlist(mydata.2$numKnown))) != 0)
         {
             
@@ -357,7 +356,7 @@ lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
             cat("There are no variations on the number of splicing junctions\n")
         }
     }, {
-        cat("Use exons\n")
+        
         mylogit.2 <- glm(DE.out ~ as.numeric(numExons), data = mydata.2, 
             family = "binomial")
         re <- summary(mylogit.2)

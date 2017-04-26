@@ -12,46 +12,56 @@ data(TinyData)
 A data set with 252 rows and 17 variables
 }
 \description{
-A tiny gene-based data set by sampling 500 genes from the whole gene list.
+A tiny gene-based data set by sampling 500 features from the count file including
 }
 \details{
+all features.
+
 We used Hartley's QoRTs program to get counts of exons and/or splicing
 
-junctions for each gene. The following is the count from genes
+junctions for each feature. The following is the example table
 
 'ENSG00000135226+ENSG00000215110' for the sample SRR1660311:
 
-ENSG00000135226+ENSG00000215110:A000
+ENSG00000135226+ENSG00000215110:A000 9
 
-ENSG00000135226+ENSG00000215110:E001
+ENSG00000135226+ENSG00000215110:E001 0
 
-ENSG00000135226+ENSG00000215110:E002
+ENSG00000135226+ENSG00000215110:E002 0
 
-ENSG00000135226+ENSG00000215110:E003
-
-...
-
-ENSG00000135226+ENSG00000215110:E005
-
-ENSG00000135226+ENSG00000215110:E006
-
-ENSG00000135226+ENSG00000215110:E007
+ENSG00000135226+ENSG00000215110:E003 0
 
 ...
 
-ENSG00000135226+ENSG00000215110:J016
+ENSG00000135226+ENSG00000215110:E005 2
+
+ENSG00000135226+ENSG00000215110:E006 0
+
+ENSG00000135226+ENSG00000215110:E007 7
 
 ...
 
-ESG00000135226+ENSG00000215110:J028
+ENSG00000135226+ENSG00000215110:J016 0
+
+...
+
+ESG00000135226+ENSG00000215110:J028  0
 
 We applied Hartley's JunctionSeq on counts to calculate Differential
 
 Usage(DU) of exons and/or splicing junction, then converted
 
-DU results to gene based table.
+DU results to gene based table. Since we include the feature that could
 
-This table includes the following information:
+be "aggregate genes" which consist of multiple genes, and certain genes are included
+
+in some "aggregate genes" mutiple time, so we obtain the information of
+
+252 genes from 500 features after we covert DU resutls to gene based
+
+table.
+
+This gene based table includes the following information:
 
 \itemize{
 
