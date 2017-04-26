@@ -61,7 +61,7 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 #'
 #' This function is used to generate the gene-based results
 #'
-#' @param jscs The object returned from \code{'getresultsfromjunctionseq'}
+#' @param jscs The object returned from \code{'getResultsFromJunctionSeq'}
 #' @param gene.list Gene list of the returned object from JunctionSeq or DEXSeq
 #' @param FDR.threshold Threshold to define the differential usage of either exon
 #'        or splicing junction
