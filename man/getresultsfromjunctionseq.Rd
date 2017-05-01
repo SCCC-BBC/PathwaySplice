@@ -27,6 +27,7 @@ This function is used to get analysis results from using JunctionSeq
 }
 \examples{
 
+# This is an example
 dir.name <- system.file('extdata', package='PathwaySplice')
 sample.file <- 'Sample_info.txt'
 count.file <- 'Counts.10.genes.txt'
