@@ -9,27 +9,36 @@ lrTestBias(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
   loc.y = 70, y.lim = 80, boxplot.width)
 }
 \arguments{
-\item{jscs.genewise.object}{Gene based table}
+\item{jscs.genewise.object}{A dataframe with genewise p-value for each gene, 
+returned from \code{makeGeneWiseTable}}
 
-\item{genewise.pvalue}{Whether you use smallest p value or geneWisePadj}
+\item{genewise.pvalue}{Valid options are "geneWisePadj"
+\code{perGenQvalue} from DEXSeq package) and "xxx"}
 
-\item{sig.threshold}{Threshold to define differential gene list}
+\item{sig.threshold}{Threshold to classify genes as significant or not (1 =
+significant, 0 = not signficant)}
 
 \item{type}{Whether you are interested in exon or splicing junction}
 
-\item{loc.x}{Indicates x coordinate of p value from logistic regression}
+\item{loc.x}{x coordinate for position of logistic regression p-value in figure}
 
-\item{loc.y}{Indicates y coordinate of p value from logistic regression}
+\item{loc.y}{y coordinate for position of logistic regression p-value in figure}
 
-\item{y.lim}{Defining the largest number of exons in y axis in boxplot}
+\item{y.lim}{The largest number of exons in y axis in boxplot}
 
 \item{boxplot.width}{Parameter for boxplot width}
 }
 \value{
-Results from logistic regression
+\code{jscs.genewise.object}
 }
 \description{
-Logistic regression to check bias
+This function tests presence of selection bias using logistic regression, and produces a boxplot 
+that compares distributions of gene features for significant genes and non-significant genes.
+}
+\details{
+The logistic regression model Pr(significant gene) ~ number of features within the gene 
+is implemented. Here features refer to exon bins or splicing junction bins, depending on 
+how \code{genewise.pvalue} was obtained
 }
 \examples{
 res <- lrTestBias(tiny.data,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
