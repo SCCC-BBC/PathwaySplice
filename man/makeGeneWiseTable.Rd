@@ -20,7 +20,6 @@ If NULL, the genes included in the table will be unique genes in \code{jscs}}
 }
 \value{
 A dataframe with the following arguments for each gene 
-       from GetResultsFromJunctionSeq with the followings as column names:
   \itemize{
   \item geneID: Gene ID
   \item chr: Chromosome information
