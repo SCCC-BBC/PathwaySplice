@@ -72,7 +72,6 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 #' @param verbose Whether to print process log or not
 #'
 #' @return A dataframe with the following arguments for each gene 
-#'        from GetResultsFromJunctionSeq with the followings as column names:
 #'   \itemize{
 #'   \item geneID: Gene ID
 #'   \item chr: Chromosome information
