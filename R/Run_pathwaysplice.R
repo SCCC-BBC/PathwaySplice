@@ -68,7 +68,29 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 #' @param verbose Whether to print runing process or not
 #'
 #' @return A gene based table converted from the object returned 
-#'        from GetResultsFromJunctionSeq
+#'        from GetResultsFromJunctionSeq with the followings as column names:
+#'   \itemize{
+#'   \item geneID: Gene ID
+#'   \item chr: Chromosome information
+#'   \item start: Starting position
+#'   \item end: End position
+#'   \item strand: Strand information
+#'   \item baseMean: BaseMean based on all samples
+#'   \item geneWisePadj: perGeneQvalue from DEXSeq package 
+#'   \item mostSigID: The feature that have smallest p-value within gene  
+#'   \item mostSigPadjust: p-value for the most significant feature 
+#'   \item numExons: Number of exons within gene
+#'   \item numKnown: Number of splicing junction within gene
+#'   \item numNovel: Number of novel splicing junction within gene
+#'   \item exonsSig: Number of significant exons
+#'   \item knownSig: Number of significant splicing junction
+#'   \item novelSig: Number of significant novel splicing junction
+#'   \item numFeatures: A list that includes number of exons, number of 
+#'   splicing junction and number of novel splicing junction within gene 
+#'   \item numSig: A list that includes number of significant exons, number of 
+#'   significant splicing junction and number of significant novel splicing 
+#'   junction within gene 
+#' }
 #' @export
 #'
 #' @examples
