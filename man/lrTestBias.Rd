@@ -5,7 +5,7 @@
 \title{lrTestBias}
 \usage{
 lrTestBias(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
-  sig.threshold = 0.05, type = c("exon", "splicing"), loc.x = 2,
+  sig.threshold = 0.05, bias.type = c("exon", "splicing"), loc.x = 2,
   loc.y = 70, y.lim = 80, boxplot.width)
 }
 \arguments{
@@ -18,7 +18,7 @@ returned from \code{makeGeneWiseTable}}
 \item{sig.threshold}{Threshold to classify genes as significant or not (1 =
 significant, 0 = not signficant)}
 
-\item{type}{Whether you are interested in exon or splicing junction}
+\item{bias.type}{Whether you are interested in exon or splicing junction}
 
 \item{loc.x}{x coordinate for position of logistic regression p-value in figure}
 
