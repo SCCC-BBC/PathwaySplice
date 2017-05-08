@@ -81,7 +81,7 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 #'   \item baseMean: mean of the counts across samples in each feature
 #'   \item geneWisePadj: perGeneQvalue from DEXSeq package 
 #'   \item mostSigID: The feature that have smallest p-value within gene  
-#'   \item mostSigPadjust: p-value for the most significant feature 
+#'   \item mostSigPadjust: FDR(False Discovery Rate) for the most significant feature 
 #'   \item numExons: Number of exons within gene
 #'   \item numKnown: Number of splicing junction within gene
 #'   \item numNovel: Number of novel splicing junction within gene
@@ -319,7 +319,7 @@ makeGeneWiseTable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05,
     varMetadata(mainTable)["numSig", "labelDescription"] <- "Number sig exonic regions / num sig known SJ / num sig novel SJ"
     
     re <- reformatdata(mainTable)
-    
+    re <- re[,-c(16,17)]
     return(re)
 }
 
@@ -334,7 +334,7 @@ makeGeneWiseTable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05,
 #'   \code{perGenQvalue} from DEXSeq package) and "xxx"
 #' @param sig.threshold Threshold to classify genes as significant or not (1 =
 #'   significant, 0 = not signficant)
-#' @param type Whether you are interested in exon or splicing junction
+#' @param bias.type Whether you are interested in exon or splicing junction
 #' @param loc.x x coordinate for position of logistic regression p-value in figure
 #' @param loc.y y coordinate for position of logistic regression p-value in figure
 #' @param y.lim The largest number of exons in y axis in boxplot
@@ -351,7 +351,7 @@ makeGeneWiseTable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05,
 #' @examples
 #' res <- lrTestBias(tiny.data,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
 lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj", 
-    sig.threshold = 0.05, type = c("exon", "splicing"), loc.x = 2, loc.y = 70, 
+    sig.threshold = 0.05, bias.type = c("exon", "splicing"), loc.x = 2, loc.y = 70, 
     y.lim = 80, boxplot.width)
     {
     
