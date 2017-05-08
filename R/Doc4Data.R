@@ -59,7 +59,7 @@
 #'   \item baseMean: BaseMean based on all samples
 #'   \item geneWisePadj: perGeneQvalue from DEXSeq package 
 #'   \item mostSigID: The feature that have smallest p-value within gene  
-#'   \item mostSigPadjust: p-value for the most significant feature 
+#'   \item mostSigPadjust: FDR(False Discovery Rate) for the most significant feature
 #'   \item numExons: Number of exons within gene
 #'   \item numKnown: Number of splicing junction within gene
 #'   \item numNovel: Number of novel splicing junction within gene
