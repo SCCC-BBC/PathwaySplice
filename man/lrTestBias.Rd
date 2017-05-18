@@ -4,21 +4,12 @@
 \alias{lrTestBias}
 \title{lrTestBias}
 \usage{
-lrTestBias(jscs.genewise.object, genewise.pvalue = "geneWisePadj",
-  sig.threshold = 0.05, bias.type = c("exon", "splicing"), loc.x = 2,
-  loc.y = 70, y.lim = 80, boxplot.width)
+lrTestBias(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
+  boxplot.width = 0.3)
 }
 \arguments{
 \item{jscs.genewise.object}{A dataframe with genewise p-value for each gene, 
 returned from \code{makeGeneWiseTable}}
-
-\item{genewise.pvalue}{Valid options are "geneWisePadj"
-\code{perGenQvalue} from DEXSeq package) and "xxx"}
-
-\item{sig.threshold}{Threshold to classify genes as significant or not (1 =
-significant, 0 = not signficant)}
-
-\item{bias.type}{Whether you are interested in exon or splicing junction}
 
 \item{loc.x}{x coordinate for position of logistic regression p-value in figure}
 
@@ -27,6 +18,14 @@ significant, 0 = not signficant)}
 \item{y.lim}{The largest number of exons in y axis in boxplot}
 
 \item{boxplot.width}{Parameter for boxplot width}
+
+\item{genewise.pvalue}{Valid options are "geneWisePadj"
+\code{perGenQvalue} from DEXSeq package) and "xxx"}
+
+\item{sig.threshold}{Threshold to classify genes as significant or not (1 =
+significant, 0 = not signficant)}
+
+\item{bias.type}{Whether you are interested in exon or splicing junction}
 }
 \value{
 \code{jscs.genewise.object}
@@ -41,5 +40,5 @@ is implemented. Here features refer to exon bins or splicing junction bins, depe
 how \code{genewise.pvalue} was obtained
 }
 \examples{
-res <- lrTestBias(tiny.data,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+res <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
 }

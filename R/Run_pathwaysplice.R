@@ -349,77 +349,54 @@ makeGeneWiseTable <- function(jscs, gene.list = NULL, FDR.threshold = 0.05,
 #' @export
 #' 
 #' @examples
-#' res <- lrTestBias(tiny.data,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
-lrTestBias <- function(jscs.genewise.object, genewise.pvalue = "geneWisePadj", 
-    sig.threshold = 0.05, bias.type = c("exon", "splicing"), loc.x = 2, loc.y = 70, 
-    y.lim = 80, boxplot.width)
+#' res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, 
+                       y.lim = 80, boxplot.width=0.3)
+{
+  
+  mydata <- jscs.genewise.object
+  
+  n.gene <- dim(mydata)[1]
+  
+  DE.out <- ifelse(mydata$sig.gene ==1,"Significant genes","Non-significant genes") 
+  
+  mydata.2 <- cbind(mydata, DE.out)
+  
+  par(mfrow = c(1, 1))
+  
+    if (var(as.numeric(unlist(mydata.2$numFeature))) != 0)
     {
-    
-    mydata <- jscs.genewise.object
-    
-    n.gene <- dim(mydata)[1]
-    
-    DE.out <- rep(0, n.gene)
-    
-    if (genewise.pvalue == "geneWisePadj")
-    {
-        de.index <- which(mydata$geneWisePadj < sig.threshold)
-    }
-    
-    DE.out[de.index] <- 1
-    
-    mydata.2 <- cbind(mydata, DE.out)
-    
-    par(mfrow = c(1, 1))
-    
-    mydata.3 <- mydata.2
-    
-    mydata.3[which(mydata.3$DE.out == 1), ]$DE.out <- "Significant genes"
-    
-    mydata.3[which(mydata.3$DE.out == 0), ]$DE.out <- "Non-significant genes"
-    
-    type <- match.arg(type)
-    
-    switch(type, splicing = {
       
-        if (var(as.numeric(unlist(mydata.2$numKnown))) != 0)
-        {
-            
-            mylogit.2 <- glm(DE.out ~ as.numeric(numKnown), data = mydata.2, 
-                family = "binomial")
-            re <- summary(mylogit.2)
-            pvalue <- re$coefficients[2, 4]
-        } else
-        {
-            cat("There are no variations on the number of splicing junctions\n")
-        }
-    }, {
-        
-        mylogit.2 <- glm(DE.out ~ as.numeric(numExons), data = mydata.2, 
-            family = "binomial")
-        re <- summary(mylogit.2)
-        pvalue <- re$coefficients[2, 4]
-        pvalue <- format(pvalue, width = 8, digits = 4)
-        
-        temp <- data.frame(mydata.3[, c(10, 18)])
-        
-        temp$DE.out <- factor(temp$DE.out)
-        
-        temp$DE.out <- factor(temp$DE.out, levels = levels(temp$DE.out)[c(2, 
-            1)])
-        
-        boxplot(unlist(temp$numExons) ~ unlist(temp$DE.out), boxwex = boxplot.width, 
-            ylab = "Number of features", col = "lightgray", ylim = c(1, y.lim))
-        
-        text(x = loc.x, y = loc.y, labels = c("", paste0("P-value from logistic regression:\n\n", 
-            pvalue)), col = c(NA, "black"))
-        
-    })
-    
-    re <- mydata.3
-    
-    return(re)
-    
+      mylogit.2 <- glm(DE.out ~ as.numeric(numFeature), data = mydata.2, 
+                       family = "binomial")
+      re <- summary(mylogit.2)
+      pvalue <- re$coefficients[2, 4]
+      pvalue <- format(pvalue, width = 8, digits = 4)
+      
+      index.1 <- which(colnames(mydata.2) %in% c("numFeature"))
+      index.2 <- which(colnames(mydata.2) %in% c("DE.out"))
+                  
+      temp <- data.frame(mydata.2[, c(index.1, index.2)])
+      
+      temp$DE.out <- factor(temp$DE.out)
+      
+      temp$DE.out <- factor(temp$DE.out, levels = levels(temp$DE.out)[c(2, 
+                                                                        1)])
+      
+      boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), boxwex = boxplot.width, 
+              ylab = "Number of features", col = "lightgray", ylim = c(1, y.lim))
+      
+      text(x = loc.x, y = loc.y, labels = c("", paste0("P-value from logistic regression:\n\n", 
+                                                       pvalue)), col = c(NA, "black"))
+    } else
+    {
+      cat("There are no variations on the number of features\n")
+    }
+  
+  re <- mydata.2
+  
+  return(re)
+  
 }
 
 #' runPathwaySplice
@@ -1061,6 +1038,8 @@ makeFeatureTable <- function(jscs)
  
   temp3 <- temp2[,c(index.1,index.2,index.3)]
   
+  temp3 <- rapply(temp3, as.character, classes="factor", how="replace")
+  
   row.names(temp3)=seq(1,dim(temp3)[1],1)
   
   return(temp3)
@@ -1070,31 +1049,31 @@ makeFeatureTable <- function(jscs)
 #' 
 makeGeneTable <- function(feature.table,sig.threshold = 0.05)
 {
-  gene.id <- unique(as.character(feature.table$geneID))
+  gene.id <- unique(feature.table$geneID)
   
   y <- lapply(gene.id,function(u,feature.table){
     
-    x <- as.data.frame(feature.table[which(as.character(feature.table$geneID) %in% u),])
+    x <- as.data.frame(feature.table[which(feature.table$geneID %in% u),],stringsAsFactors=FALSE)
     
     num.feature <- dim(x)[1]
     
     xx <- x[which.min(x$pvalue),]
     
-    xxx <- cbind(xx,num.feature)
+    xxx <- cbind.data.frame(xx,num.feature,stringsAsFactors=FALSE)
     
     xxx
     
   },feature.table)
   
-  yy <- do.call(rbind.data.frame,y)
+  yy <- do.call(rbind.data.frame,c(y,stringsAsFactors=FALSE))
   
   sig.gene <- ifelse(yy$pvalue < sig.threshold,1,0) 
   
-  yyy <- cbind(yy,sig.gene)
+  z <- cbind.data.frame(yy$geneID,yy$pvalue,sig.gene,yy$countbinID,yy$num.feature,stringsAsFactors=FALSE)
   
-  z <- as.data.frame(cbind(as.character(yyy$geneID),yyy$pvalue,yyy$sig.gene,yyy$countbinID,yyy$num.feature))
-
   colnames(z) <- c("geneID","geneWisePvalue","sig.gene","mostSigDeFeature","numFeature")
-
+  
+  z <- reformatdata(z)
+  
   return(z)
 }
