@@ -22,7 +22,7 @@ Title
 }
 \examples{
 
-res4 <- runPathwaySplice2(res2,genomeID='hg19',geneID='ensGene', 
+res4 <- PathwaySplice:::runPathwaySplice2(res2,genomeID='hg19',geneID='ensGene', 
                         method='Wallenius')
 
 }

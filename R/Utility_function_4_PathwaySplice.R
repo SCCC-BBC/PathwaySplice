@@ -484,7 +484,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     
 }
 
-getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
+#' gene.4.go <- res2$geneID
+#' go <- getgo3(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))
+
+getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),go.size.cut=c(lower.size=0,upper.size=NULL))
 {
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
@@ -591,8 +594,26 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
     ## we don't like case sensitivity
     names(user2cat) <- toupper(names(user2cat))
     
+    ## add option to choose go based on size of go
+    gene2go <- user2cat[toupper(genes)]
+    gene2go.2 <- gene2go[lapply(gene2go, length) >0]
+    gene2go.select <- lapply(gene2go.2, function(x)
+    {
+      x = x[x != "Other"]
+      x
+    })
+    
+    if(!is.null(go.size.cut[2])){
+      lower.size <- go.size.cut[1]
+      upper.size <- go.size.cut[2]
+    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > lower.size&lapply(gene2go.select, length) <= upper.size]
+    }else{
+      gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0 ]
+    }
+    
     # Now look them up
-    return(user2cat[toupper(genes)])
+    # return(user2cat[toupper(genes)])
+    return(gene2go.select.1)
 }
 
 # Description: Prints progress through a loop copy from Matthew Young's
