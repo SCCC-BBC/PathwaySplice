@@ -173,8 +173,7 @@ writegototable <- function(GO_re, Output_file)
         sep = "\t")
 }
 
-pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
-    "GO:BP", "GO:MF"), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
+pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method, repcnt, use.genes.without.cat)
     {
     ################# Input pre-processing and validation ################### Do some
     ################# validation of input variables
@@ -210,8 +209,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     {
         # When we fetch the data using getgo it will be in the list format
         message("Fetching GO annotations...")
-        gene2cat <- getgo3(rownames(pwf), genome, id, fetch.cats = test.cats)
-        names(gene2cat) <- rownames(pwf)
+        gene2cat <- getgo3(rownames(pwf), genome, id, fetch.cats = test.cats,go.size.cut=go.size.cut)
+        #names(gene2cat) <- rownames(pwf)
         
         # cat('OK') Do the two rebuilds to remove any nulls
         cat2gene <- reversemapping(gene2cat)

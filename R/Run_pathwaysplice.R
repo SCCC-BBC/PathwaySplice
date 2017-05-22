@@ -1092,14 +1092,14 @@ makeGeneTable <- function(feature.table,sig.threshold = 0.05)
 #'
 #' @examples
 #' 
-#' res4 <- PathwaySplice:::runPathwaySplice2(res2,genomeID='hg19',geneID='ensGene', 
-#'                         method='Wallenius')
+#' res4 <- PathwaySplice:::runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
 #' 
-runPathwaySplice2 <- function(res2,genomeID, geneID, method, gene2cat = NULL){
+#'  
+runPathwaySplice2 <- function(res2,genome,id,gene2cat = NULL,test.cats = c("GO:CC","GO:BP","GO:MF"),go.size.cut=c(lower.size=0,upper.size=NULL),method = "Wallenius",repcnt = 2000, use.genes.without.cat = FALSE){
 x <- res2[,3]
 names(x) <- res2[,1]
 pwf <- nullp(x,genomeID,geneID,bias.data = res2[,5], plot.fit = TRUE)
-CatDE <- pathwaysplice(pwf,genomeID,geneID, method = "Hypergeometric", use.genes.without.cat = TRUE)
+CatDE <- pathwaysplice(pwf,genome=genome,id=id,gene2cat=gene2cat,test.cats=test.cats,go.size.cut=go.size.cut,method = method, repcnt= repcnt,use.genes.without.cat = use.genes.without.cat)
 CatDE
 }
 

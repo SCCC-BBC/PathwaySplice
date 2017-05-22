@@ -4,25 +4,27 @@
 \alias{runPathwaySplice2}
 \title{Title}
 \usage{
-runPathwaySplice2(res2, genomeID, geneID, method, gene2cat = NULL)
+runPathwaySplice2(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
+  "GO:BP", "GO:MF"), go.size.cut = c(lower.size = 0, upper.size = NULL),
+  method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
 }
 \arguments{
 \item{res2}{}
 
-\item{genomeID}{}
-
-\item{geneID}{}
+\item{gene2cat}{}
 
 \item{method}{}
 
-\item{gene2cat}{}
+\item{genomeID}{}
+
+\item{geneID}{}
 }
 \description{
 Title
 }
 \examples{
 
-res4 <- PathwaySplice:::runPathwaySplice2(res2,genomeID='hg19',geneID='ensGene', 
-                        method='Wallenius')
+res4 <- PathwaySplice:::runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
 
+ 
 }
