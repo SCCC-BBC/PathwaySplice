@@ -1077,3 +1077,29 @@ makeGeneTable <- function(feature.table,sig.threshold = 0.05)
   
   return(z)
 }
+
+
+#' Title
+#'
+#' @param res2 
+#' @param genomeID 
+#' @param geneID 
+#' @param method 
+#' @param gene2cat 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' res4 <- PathwaySplice:::runPathwaySplice2(res2,genomeID='hg19',geneID='ensGene', 
+#'                         method='Wallenius')
+#' 
+runPathwaySplice2 <- function(res2,genomeID, geneID, method, gene2cat = NULL){
+x <- res2[,3]
+names(x) <- res2[,1]
+pwf <- nullp(x,genomeID,geneID,bias.data = res2[,5], plot.fit = TRUE)
+CatDE <- pathwaysplice(pwf,genomeID,geneID, method = "Hypergeometric", use.genes.without.cat = TRUE)
+CatDE
+}
+
