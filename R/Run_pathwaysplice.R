@@ -1078,14 +1078,17 @@ makeGeneTable <- function(feature.table,sig.threshold = 0.05)
   return(z)
 }
 
-
-#' Title
+#' runPathwaySplice2
 #'
-#' @param res2 
-#' @param genomeID 
-#' @param geneID 
-#' @param method 
-#' @param gene2cat 
+#' @param res2 Gene based table 
+#' @param gene2cat Gene set defined by user
+#' @param genome Genome to be used 
+#' @param id Gene id to be used for labeling genes   
+#' @param test.cats Gene set if user does not define gene set 
+#' @param go.size.cut Size of gene set to be used
+#' @param method Which method to be used for calculating gene set enrichment p value 
+#' @param repcnt Number of sampling if user use sampling method to calculate gene set enrichment p value
+#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value   
 #'
 #' @return
 #' @export

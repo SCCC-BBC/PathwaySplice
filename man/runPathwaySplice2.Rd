@@ -2,25 +2,33 @@
 % Please edit documentation in R/Run_pathwaysplice.R
 \name{runPathwaySplice2}
 \alias{runPathwaySplice2}
-\title{Title}
+\title{runPathwaySplice2}
 \usage{
 runPathwaySplice2(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
   "GO:BP", "GO:MF"), go.size.cut = c(lower.size = 0, upper.size = NULL),
   method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
 }
 \arguments{
-\item{res2}{}
+\item{res2}{Gene based table}
 
-\item{gene2cat}{}
+\item{genome}{Genome to be used}
 
-\item{method}{}
+\item{id}{Gene id to be used for labeling genes}
 
-\item{genomeID}{}
+\item{gene2cat}{Gene set defined by user}
 
-\item{geneID}{}
+\item{test.cats}{Gene set if user does not define gene set}
+
+\item{go.size.cut}{Size of gene set to be used}
+
+\item{method}{Which method to be used for calculating gene set enrichment p value}
+
+\item{repcnt}{Number of sampling if user use sampling method to calculate gene set enrichment p value}
+
+\item{use.genes.without.cat}{Whether to include gene without mapping to get set for calculate gene set enrichment p value}
 }
 \description{
-Title
+runPathwaySplice2
 }
 \examples{
 
