@@ -1088,14 +1088,15 @@ makeGeneTable <- function(feature.table,sig.threshold = 0.05)
 #' @param go.size.cut Size of gene set to be used
 #' @param method Which method to be used for calculating gene set enrichment p value 
 #' @param repcnt Number of sampling if user use sampling method to calculate gene set enrichment p value
-#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value   
+#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background   
+#'    
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #' 
-#' res4 <- PathwaySplice:::runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
+#' res4 <- runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
 #' 
 #'  
 runPathwaySplice2 <- function(res2,genome,id,gene2cat = NULL,test.cats = c("GO:CC","GO:BP","GO:MF"),go.size.cut=c(lower.size=0,upper.size=NULL),method = "Wallenius",repcnt = 2000, use.genes.without.cat = FALSE){
