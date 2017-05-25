@@ -173,8 +173,7 @@ writegototable <- function(GO_re, Output_file)
         sep = "\t")
 }
 
-pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
-    "GO:BP", "GO:MF"), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
+pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method, repcnt, use.genes.without.cat)
     {
     ################# Input pre-processing and validation ################### Do some
     ################# validation of input variables
@@ -210,8 +209,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     {
         # When we fetch the data using getgo it will be in the list format
         message("Fetching GO annotations...")
-        gene2cat <- getgo3(rownames(pwf), genome, id, fetch.cats = test.cats)
-        names(gene2cat) <- rownames(pwf)
+        gene2cat <- getgo3(rownames(pwf), genome, id, fetch.cats = test.cats,go.size.cut=go.size.cut)
+        #names(gene2cat) <- rownames(pwf)
         
         # cat('OK') Do the two rebuilds to remove any nulls
         cat2gene <- reversemapping(gene2cat)
@@ -300,11 +299,19 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     pwf$pwf[is.na(pwf$pwf)] <- pwf$pwf[match(sort(pwf$bias.data[!is.na(pwf$bias.data)])[ceiling(sum(!is.na(pwf$bias.data))/2)], 
         pwf$bias.data)]
     
+<<<<<<< HEAD
     # ###################### Calculating the p-values ######################## 
   
     # Remove all the genes with unknown GOterms
     unknown_go_terms=nrow(pwf)-length(gene2cat)
     if((!use_genes_without_cat) && unknown_go_terms>0 ){
+=======
+    ###################### Calculating the p-values ######################## 
+    # Remove all the genes with unknown GOterms
+    
+    unknown_go_terms=nrow(pwf)-length(gene2cat)
+    if((!use.genes.without.cat) && unknown_go_terms>0 ){
+>>>>>>> 8cd9ffba5504db70c5408739605477db296c5d33
       message(paste("For",unknown_go_terms,"genes, we could not find any categories. These genes will be excluded."))
       message("To force their use, please run with use_genes_without_cat=TRUE (see documentation).")
       message("This was the default behavior for version 1.15.1 and earlier.")
@@ -490,7 +497,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     
 }
 
-getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
+#' gene.4.go <- res2$geneID
+#' go <- getgo3(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))
+
+getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),go.size.cut=c(lower.size=0,upper.size=NULL))
 {
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
@@ -597,8 +607,26 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
     ## we don't like case sensitivity
     names(user2cat) <- toupper(names(user2cat))
     
+    ## add option to choose go based on size of go
+    gene2go <- user2cat[toupper(genes)]
+    gene2go.2 <- gene2go[lapply(gene2go, length) >0]
+    gene2go.select <- lapply(gene2go.2, function(x)
+    {
+      x = x[x != "Other"]
+      x
+    })
+    
+    if(!is.null(go.size.cut[2])){
+      lower.size <- go.size.cut[1]
+      upper.size <- go.size.cut[2]
+    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > lower.size&lapply(gene2go.select, length) <= upper.size]
+    }else{
+      gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0 ]
+    }
+    
     # Now look them up
-    return(user2cat[toupper(genes)])
+    # return(user2cat[toupper(genes)])
+    return(gene2go.select.1)
 }
 
 # Description: Prints progress through a loop copy from Matthew Young's

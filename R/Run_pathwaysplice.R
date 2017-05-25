@@ -1077,3 +1077,33 @@ makeGeneTable <- function(feature.table,sig.threshold = 0.05)
   
   return(z)
 }
+
+#' runPathwaySplice2
+#'
+#' @param res2 Gene based table 
+#' @param gene2cat Gene set defined by user
+#' @param genome Genome to be used 
+#' @param id Gene id to be used for labeling genes   
+#' @param test.cats Gene set if user does not define gene set 
+#' @param go.size.cut Size of gene set to be used
+#' @param method Which method to be used for calculating gene set enrichment p value 
+#' @param repcnt Number of sampling if user use sampling method to calculate gene set enrichment p value
+#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background   
+#'    
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' res4 <- runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
+#' 
+#'  
+runPathwaySplice2 <- function(res2,genome,id,gene2cat = NULL,test.cats = c("GO:CC","GO:BP","GO:MF"),go.size.cut=c(lower.size=0,upper.size=NULL),method = "Wallenius",repcnt = 2000, use.genes.without.cat = FALSE){
+x <- res2[,3]
+names(x) <- res2[,1]
+pwf <- nullp(x,genomeID,geneID,bias.data = res2[,5], plot.fit = TRUE)
+CatDE <- pathwaysplice(pwf,genome=genome,id=id,gene2cat=gene2cat,test.cats=test.cats,go.size.cut=go.size.cut,method = method, repcnt= repcnt,use.genes.without.cat = use.genes.without.cat)
+CatDE
+}
+
