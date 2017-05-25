@@ -299,10 +299,16 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
     pwf$pwf[is.na(pwf$pwf)] <- pwf$pwf[match(sort(pwf$bias.data[!is.na(pwf$bias.data)])[ceiling(sum(!is.na(pwf$bias.data))/2)], 
         pwf$bias.data)]
     
-    ###################### Calculating the p-values ######################## Removelo force their
-    ###################### use, please run with use.genes.without.cat=TRUE (see documentation).')
-    message("This was the default behavior for version 1.15.1 and earlier.")
-    pwf <- pwf[rownames(pwf) %in% names(gene2cat), ]
+    ###################### Calculating the p-values ######################## 
+    # Remove all the genes with unknown GOterms
+    
+    unknown_go_terms=nrow(pwf)-length(gene2cat)
+    if((!use.genes.without.cat) && unknown_go_terms>0 ){
+      message(paste("For",unknown_go_terms,"genes, we could not find any categories. These genes will be excluded."))
+      message("To force their use, please run with use_genes_without_cat=TRUE (see documentation).")
+      message("This was the default behavior for version 1.15.1 and earlier.")
+      pwf=pwf[rownames(pwf) %in% names(gene2cat),]
+    } 
     
     # A few variables are always useful so calculate them
     cats <- names(cat2gene)
