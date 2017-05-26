@@ -23,6 +23,6 @@ A dataframe with the following arguments as cloumns for each gene
 This function convert feature table into gene based table.
 }
 \examples{
-res2 <- PathwaySplice:::makeGeneTable(res1)
+res2 <- makeGeneTable(res1)
   
 }

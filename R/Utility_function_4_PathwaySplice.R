@@ -209,7 +209,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
     {
         # When we fetch the data using getgo it will be in the list format
         message("Fetching GO annotations...")
-        gene2cat <- getgo3(rownames(pwf), genome, id, fetch.cats = test.cats,go.size.cut=go.size.cut)
+        gene2cat <- getGeneSet(rownames(pwf), genome, id, fetch.cats = test.cats,go.size.cut=go.size.cut)
         #names(gene2cat) <- rownames(pwf)
         
         # cat('OK') Do the two rebuilds to remove any nulls
@@ -256,6 +256,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
             # Do the appropriate builds
             cat2gene <- reversemapping(gene2cat)
             gene2cat <- reversemapping(cat2gene)
+            
+            # Add option to choose gene set by its size
+            gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
+    
         }
         # !!!! The following conditional has been flagged as a potential issue when
         # using certain types of input where the category names are the same as
@@ -490,9 +494,9 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
 }
 
 #' gene.4.go <- res2$geneID
-#' go <- getgo3(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))
+#' go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))
 
-getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),go.size.cut=c(lower.size=0,upper.size=NULL))
+getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),go.size.cut)
 {
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
@@ -600,24 +604,9 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),
     names(user2cat) <- toupper(names(user2cat))
     
     ## add option to choose go based on size of go
-    gene2go <- user2cat[toupper(genes)]
-    gene2go.2 <- gene2go[lapply(gene2go, length) >0]
-    gene2go.select <- lapply(gene2go.2, function(x)
-    {
-      x = x[x != "Other"]
-      x
-    })
     
-    if(!is.null(go.size.cut[2])){
-      lower.size <- go.size.cut[1]
-      upper.size <- go.size.cut[2]
-    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > lower.size&lapply(gene2go.select, length) <= upper.size]
-    }else{
-      gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0 ]
-    }
+    gene2go.select.1 <- getGeneSetBySize(user2cat, go.size.cut)
     
-    # Now look them up
-    # return(user2cat[toupper(genes)])
     return(gene2go.select.1)
 }
 
@@ -898,3 +887,36 @@ reformatpath <- function(dir.name)
     
     return(dir.name)
 }
+
+#' getGeneSetBySize
+#'
+#' @param user2cat A list with its name being gene name , and its element being gene sets that gene belongs to  
+#' @param go.size.cut Size of gene set users can define
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+getGeneSetBySize <- function(user2cat,go.size.cut) {
+  
+  gene2go <- user2cat[toupper(genes)]
+  gene2go.2 <- gene2go[lapply(gene2go, length) >0]
+  gene2go.select <- lapply(gene2go.2, function(x)
+  {
+    x = x[x != "Other"]
+    x
+  })
+  
+  if(!is.null(go.size.cut[2])){
+    lower.size <- go.size.cut[1]
+    upper.size <- go.size.cut[2]
+    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > lower.size&lapply(gene2go.select, length) <= upper.size]
+  }else{
+    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0 ]
+  }
+  
+  return(gene2go.select.1)
+  
+}
+
