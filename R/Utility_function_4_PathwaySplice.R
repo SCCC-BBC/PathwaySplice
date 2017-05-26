@@ -209,7 +209,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
     {
         # When we fetch the data using getgo it will be in the list format
         message("Fetching GO annotations...")
-        gene2cat <- getGeneSet(rownames(pwf), genome, id, fetch.cats = test.cats,go.size.cut=go.size.cut)
+        gene2cat <- getGeneSet(rownames(pwf), genome, id, fetch.cats = test.cats)
         #names(gene2cat) <- rownames(pwf)
         
         # cat('OK') Do the two rebuilds to remove any nulls
@@ -257,10 +257,11 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
             cat2gene <- reversemapping(gene2cat)
             gene2cat <- reversemapping(cat2gene)
             
-            # Add option to choose gene set by its size
-            gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
-    
         }
+      
+         # Add option to choose gene set by its size
+           gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
+      
         # !!!! The following conditional has been flagged as a potential issue when
         # using certain types of input where the category names are the same as
         # gene names (which seems like something you should avoid anyway...).
@@ -494,9 +495,9 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
 }
 
 #' gene.4.go <- res2$geneID
-#' go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))
+#' go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"))
 
-getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),go.size.cut)
+getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
 {
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
@@ -603,9 +604,7 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:M
     ## we don't like case sensitivity
     names(user2cat) <- toupper(names(user2cat))
     
-    ## add option to choose go based on size of go
-    
-    gene2go.select.1 <- getGeneSetBySize(user2cat, go.size.cut)
+    gene2go.select.1 <- user2cat
     
     return(gene2go.select.1)
 }

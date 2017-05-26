@@ -3,12 +3,11 @@
 \name{getGeneSet}
 \alias{getGeneSet}
 \title{gene.4.go <- res2$geneID
-go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))}
+go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"))}
 \usage{
-getGeneSet(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"),
-  go.size.cut)
+getGeneSet(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
 }
 \description{
 gene.4.go <- res2$geneID
-go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"),go.size.cut=c(5,10))
+go <- getGeneSet(gene.4.go,"hg19","ensGene",fetch.cats = c("GO:CC"))
 }
