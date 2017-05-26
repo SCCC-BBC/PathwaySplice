@@ -300,8 +300,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
         pwf$bias.data)]
     
     ###################### Calculating the p-values ######################## 
-    # Remove all the genes with unknown GOterms
     
+    # Remove all the genes with unknown GOterms
     unknown_go_terms=nrow(pwf)-length(gene2cat)
     if((!use.genes.without.cat) && unknown_go_terms>0 ){
       message(paste("For",unknown_go_terms,"genes, we could not find any categories. These genes will be excluded."))
