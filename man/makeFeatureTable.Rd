@@ -33,6 +33,6 @@ res <- getResultsFromJunctionSeq(dir.name, sample.file,
                                  method.dispFinal='max')
                                  
 # Convert the results of differential usage analysis into a gene table
-res1 <- PathwaySplice:::makeFeatureTable(res)
+res1 <- makeFeatureTable(res)
 
 }

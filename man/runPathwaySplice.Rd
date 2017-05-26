@@ -4,39 +4,41 @@
 \alias{runPathwaySplice}
 \title{runPathwaySplice}
 \usage{
-runPathwaySplice(re.gene.based, adjust = "GL", sub.feature = NULL,
-  threshold, genomeID, geneID, method, gene2cat = NULL)
+runPathwaySplice(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
+  "GO:BP", "GO:MF"), go.size.cut = c(lower.size = 0, upper.size = NULL),
+  method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
 }
 \arguments{
-\item{re.gene.based}{Gene based results}
+\item{res2}{Gene based table}
 
-\item{adjust}{Bias factor to be adjusted}
+\item{genome}{Genome to be used(hg19 or mm10)}
 
-\item{sub.feature}{Feature to be checked}
+\item{id}{GeneID to be used(entrezgene or ensembl_gene_id)}
 
-\item{threshold}{Threshold to be used for adjustment}
+\item{gene2cat}{Get sets defined by users}
 
-\item{genomeID}{Genome to be used(hg19 or mm10)}
+\item{test.cats}{Gene set if users does not define their gene set}
 
-\item{geneID}{GeneID to be used(entrezgene or ensembl_gene_id)}
+\item{go.size.cut}{Size of gene sets to be defined}
 
 \item{method}{Method to be used for calculating overrepresented p value
 of gene sets(Options include Wallenius,Sampling, and Hypergeometric)}
 
-\item{gene2cat}{Get sets defined by users}
+\item{repcnt}{Number of sampling if user use sampling method to calculate gene set enrichment p value}
+
+\item{use.genes.without.cat}{Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background}
 }
 \value{
 A list that has gene set enrichment analysis results
 }
 \description{
 This function uses gene-based
-table as an input, and selects genes based on subfeature, 
-then chooses to using which bias factor 
-to perform adjutsment
+table as an input, and select gene sets by defining type and size of gene sets
+to perform gene set enrichment analysis
 }
 \examples{
-res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-                        0.05,genomeID='hg19',geneID='ensGene', 
-                        method='Wallenius')
 
+res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
+
+ 
 }

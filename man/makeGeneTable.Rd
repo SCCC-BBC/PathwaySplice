@@ -2,10 +2,27 @@
 % Please edit documentation in R/Run_pathwaysplice.R
 \name{makeGeneTable}
 \alias{makeGeneTable}
-\title{res2 <- PathwaySplice:::makeGeneTable(res1)}
+\title{makeGeneTable}
 \usage{
 makeGeneTable(feature.table, sig.threshold = 0.05)
 }
+\arguments{
+\item{sig.threshold}{}
+
+\item{A}{feature.table object returned from function \code{makeFeatureTable}.}
+}
+\value{
+A dataframe with the following arguments as cloumns for each gene 
+  \itemize{
+  \item geneID: Gene ID
+  \item countbinID: feature ID in the feature differential usage analysis
+  \item pvalue: unadjusted p value of each feature in the feature differential usage analysis
+}
+}
 \description{
+This function convert feature table into gene based table.
+}
+\examples{
 res2 <- PathwaySplice:::makeGeneTable(res1)
+  
 }

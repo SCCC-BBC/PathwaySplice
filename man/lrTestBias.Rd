@@ -19,8 +19,8 @@ returned from \code{makeGeneWiseTable}}
 
 \item{boxplot.width}{Parameter for boxplot width}
 
-\item{genewise.pvalue}{Valid options are "geneWisePadj"
-\code{perGenQvalue} from DEXSeq package) and "xxx"}
+\item{genewise.pvalue}{Valid options are 'geneWisePadj'
+\code{perGenQvalue} from DEXSeq package) and 'xxx'}
 
 \item{sig.threshold}{Threshold to classify genes as significant or not (1 =
 significant, 0 = not signficant)}
