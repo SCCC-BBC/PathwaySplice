@@ -45,7 +45,7 @@ gene.based.table <- makeGeneTable(featureBasedData)
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Wallenius')
 
-res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method=''Hypergeometric)
+res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Hypergeometric')
 
 dir.name <- tempdir()
 output.dir <- file.path(dir.name,'OutputPostAnalysis')

@@ -295,6 +295,9 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
     # Add option to choose gene set by its size
     gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
     
+    cat2gene <- reversemapping(gene2cat)
+    gene2cat <- reversemapping(cat2gene)
+    
     nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
     if (nafrac > 50)
     {

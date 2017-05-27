@@ -18,17 +18,6 @@ returned from \code{makeGeneWiseTable}}
 \item{y.lim}{The largest number of exons in y axis in boxplot}
 
 \item{boxplot.width}{Parameter for boxplot width}
-
-\item{genewise.pvalue}{Valid options are 'geneWisePadj'
-\code{perGenQvalue} from DEXSeq package) and 'xxx'}
-
-\item{sig.threshold}{Threshold to classify genes as significant or not (1 =
-significant, 0 = not signficant)}
-
-\item{bias.type}{Whether you are interested in exon or splicing junction}
-}
-\value{
-\code{jscs.genewise.object}
 }
 \description{
 This function tests presence of selection bias using logistic regression, and produces a boxplot 

@@ -37,8 +37,8 @@ table as an input, and select gene sets by defining type and size of gene sets
 to perform gene set enrichment analysis
 }
 \examples{
-
-res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
+res2 <- makeGeneTable(featureBasedData)
+res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
 
  
 }

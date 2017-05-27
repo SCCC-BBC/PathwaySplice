@@ -7,7 +7,7 @@
 makeGeneTable(feature.table, sig.threshold = 0.05)
 }
 \arguments{
-\item{sig.threshold}{}
+\item{sig.threshold}{Threshold used for setting whether gene is differential or not based on smallest p-value of all features within a gene}
 
 \item{A}{feature.table object returned from function \code{makeFeatureTable}.}
 }
@@ -23,6 +23,6 @@ A dataframe with the following arguments as cloumns for each gene
 This function convert feature table into gene based table.
 }
 \examples{
-res2 <- makeGeneTable(res1)
+res2 <- makeGeneTable(featureBasedData)
   
 }

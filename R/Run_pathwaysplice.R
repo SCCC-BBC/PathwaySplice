@@ -63,11 +63,6 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file, gff.fil
 #' 
 #' @param jscs.genewise.object A dataframe with genewise p-value for each gene, 
 #'   returned from \code{makeGeneWiseTable}
-#' @param genewise.pvalue Valid options are 'geneWisePadj'
-#'   \code{perGenQvalue} from DEXSeq package) and 'xxx'
-#' @param sig.threshold Threshold to classify genes as significant or not (1 =
-#'   significant, 0 = not signficant)
-#' @param bias.type Whether you are interested in exon or splicing junction
 #' @param loc.x x coordinate for position of logistic regression p-value in figure
 #' @param loc.y y coordinate for position of logistic regression p-value in figure
 #' @param y.lim The largest number of exons in y axis in boxplot
@@ -78,7 +73,7 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file, gff.fil
 #' how \code{genewise.pvalue} was obtained
 #'   
 #'       
-#' @return \code{jscs.genewise.object}
+#' @return NULL
 #' @export
 #' 
 #' @examples
@@ -126,10 +121,6 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
         cat("There are no variations on the number of features\n")
     }
     
-    re <- mydata.2
-    
-    return(re)
-    
 }
 
 #' postProcessGo
@@ -160,7 +151,7 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 #' 
 #' res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Wallenius')
 #' 
-#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method=''Hypergeometric)
+#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Hypergeometric')
 #' 
 #' dir.name <- tempdir()
 #' output.dir <- file.path(dir.name,'OutputPostAnalysis')
@@ -630,7 +621,7 @@ makeFeatureTable <- function(jscs)
 #' This function convert feature table into gene based table. 
 #'  
 #' @param A feature.table object returned from function \code{makeFeatureTable}.
-#' @param sig.threshold
+#' @param sig.threshold Threshold used for setting whether gene is differential or not based on smallest p-value of all features within a gene  
 #'
 #' @return A dataframe with the following arguments as cloumns for each gene 
 #'   \itemize{
@@ -642,7 +633,7 @@ makeFeatureTable <- function(jscs)
 #' @export
 #'
 #' @examples
-#' res2 <- makeGeneTable(res1)
+#' res2 <- makeGeneTable(featureBasedData)
 #'   
 makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 {
@@ -685,11 +676,10 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #' table as an input, and select gene sets by defining type and size of gene sets
 #' to perform gene set enrichment analysis
 #'  
-#'  
 #' @param res2 Gene based table 
-#' @param gene2cat Get sets defined by users
 #' @param genome Genome to be used(hg19 or mm10) 
-#' @param id GeneID to be used(entrezgene or ensembl_gene_id)   
+#' @param id GeneID to be used(entrezgene or ensembl_gene_id)
+#' @param gene2cat Get sets defined by users   
 #' @param test.cats Gene set if users does not define their gene set 
 #' @param go.size.cut Size of gene sets to be defined
 #' @param method Method to be used for calculating overrepresented p value
@@ -702,8 +692,8 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #' @export
 #'
 #' @examples
-#' 
-#' res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
+#' res2 <- makeGeneTable(featureBasedData)
+#' res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
 #' 
 #'  
 runPathwaySplice <- function(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
