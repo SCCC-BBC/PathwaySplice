@@ -7,10 +7,9 @@
 testPathwaySplice(featureBasedData, output.file.dir)
 }
 \arguments{
-\item{output.file.dir}{Directory for output}
+\item{featureBasedData}{A gene feature based table from differential analysis}
 
-\item{gene.based.table}{A gene based table converted from 
-DEXSeq or JunctionSeq resutls}
+\item{output.file.dir}{Directory for output}
 }
 \value{
 None

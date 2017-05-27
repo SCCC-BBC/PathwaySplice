@@ -43,9 +43,11 @@ canonical.pathway.file <- '10.cp.gmt.txt'
 res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 gene.based.table <- makeGeneTable(featureBasedData)
 
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Wallenius')
+res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+id='ensGene',gene2cat=res,method='Wallenius')
 
-res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Hypergeometric')
+res2 <- runPathwaySplice(gene.based.table,genome='hg19',
+id='ensGene',gene2cat=res,method='Hypergeometric')
 
 dir.name <- tempdir()
 output.dir <- file.path(dir.name,'OutputPostAnalysis')
