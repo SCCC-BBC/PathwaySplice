@@ -259,8 +259,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
             
         }
       
-         # Add option to choose gene set by its size
-           gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
+      # Add option to choose gene set by its size
+      gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
       
         # !!!! The following conditional has been flagged as a potential issue when
         # using certain types of input where the category names are the same as
@@ -292,6 +292,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
             unique(x)
         })
     }
+    
+   
     
     nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
     if (nafrac > 50)
@@ -603,10 +605,9 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:M
     
     ## we don't like case sensitivity
     names(user2cat) <- toupper(names(user2cat))
+    gene2go <- user2cat[toupper(genes)]
     
-    gene2go.select.1 <- user2cat
-    
-    return(gene2go.select.1)
+    return(gene2go)
 }
 
 # Description: Prints progress through a loop copy from Matthew Young's
@@ -899,7 +900,7 @@ reformatpath <- function(dir.name)
 #' 
 getGeneSetBySize <- function(user2cat,go.size.cut) {
   
-  gene2go <- user2cat[toupper(genes)]
+  gene2go <- user2cat
   gene2go.2 <- gene2go[lapply(gene2go, length) >0]
   gene2go.select <- lapply(gene2go.2, function(x)
   {

@@ -341,17 +341,18 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, ty
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 #' 
 #' @examples
-#'
-#' res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#'                         0.05,genomeID='hg19',geneID='ensGene',
-#'                         method='Wallenius')
+#' 
+#' gene.based.table <- makeGeneTable(featureBasedData)
+#' 
+#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
 #' 
 #' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 #' 
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0,
+#' enmap <- enrichmentMap(res1,n=3,similarity.threshold=0,
 #'                        output.file.dir = output.file.dir,
 #'                        label.vertex.by.index = TRUE)
+#'                        
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
     {
@@ -492,24 +493,26 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' 
 #' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,'OutputTest')
-#' testPathwaySplice(tiny.data,output.file.dir = output.file.dir)
+#' testPathwaySplice(featureBasedData,output.file.dir = output.file.dir)
 #'
 #'
-testPathwaySplice <- function(gene.based.table, output.file.dir)
+testPathwaySplice <- function(featureBasedData, output.file.dir)
 {
+  
+    gene.based.table <- makeGeneTable(featureBasedData)
+  
     # Check bias using logistics regression model
     res <- lrTestBias(gene.based.table, boxplot.width = 0.3)
     
     # Analysis
-    res1 <- runPathwaySplice(gene.based.table, adjust = "exon_SJ", sub.feature = "E", 
-        0.05, genomeID = "hg19", geneID = "ensGene", method = "Wallenius")
-    res2 <- runPathwaySplice(gene.based.table, adjust = "exon_SJ", sub.feature = "E", 
-        0.05, genomeID = "hg19", geneID = "ensGene", method = "Hypergeometric")
+    res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
+      
+    res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Hypergeometric')
     
     # Construct network between gene sets
     
-    res11 <- enrichmentMap(res1, n = 5, output.file.dir = output.file.dir, similarity.threshold = 0)
-    res22 <- enrichmentMap(res2, n = 5, output.file.dir = output.file.dir, similarity.threshold = 0)
+    res11 <- enrichmentMap(res1, n = 3, output.file.dir = output.file.dir, similarity.threshold = 0)
+    res22 <- enrichmentMap(res2, n = 3, output.file.dir = output.file.dir, similarity.threshold = 0)
     
 }
 

@@ -15,10 +15,17 @@ knitr::opts_chunk$set(fig.width=12,fig.height=8,collapse = FALSE, comment = "#>"
 
 # Use PathwaySplice
 
-+ Apply logistic regression model to identify bias factor
++ Convert feature based data to gene based data
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 library(PathwaySplice)
-res <- lrTestBias(tiny.data, loc.x=2, loc.y=150,y.lim=200,boxplot.width=0.3) #loc.x and loc.y indicates location of p-value
+data("featureBasedData")
+res2 <- makeGeneTable(featureBasedData)
+```
+
++ Apply logistic regression model to identify bias factor
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
+res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+#loc.x and loc.y indicates location of p-value
 ```
 
 + Perform analysis using pathwaysplice
@@ -26,10 +33,8 @@ res <- lrTestBias(tiny.data, loc.x=2, loc.y=150,y.lim=200,boxplot.width=0.3) #lo
 
 # This function performes gene set analysis that adjusts for different number of gene subfeatures 
 # (i.e. exons, spicing junctions, or gene length indicated by *adjust*) associated with each gene. 
-# The significant genes are those with perGeneQvalue (from DEXSeq) < *threshold*. 
-res <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-threshold=0.05,genomeID='hg19',geneID='ensGene',method='Wallenius')
-
+# The significant genes are those with perGeneQvalue (from DEXSeq) < *threshold*.
+res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
 ```
 
 + Build up network based on the overlap between gene sets and visualize this network
@@ -41,6 +46,6 @@ threshold=0.05,genomeID='hg19',geneID='ensGene',method='Wallenius')
 
 dir.name <- tempdir() # give output
 output.file.dir <- file.path(dir.name,"OutputEnmap")
-enmap <- enrichmentMap(res,n=5,output.file.dir
+enmap <- enrichmentMap(res4,n=3,output.file.dir
                        =output.file.dir,similarity.threshold=0)
 ```
