@@ -4,13 +4,13 @@
 \alias{testPathwaySplice}
 \title{testPathwaySplice}
 \usage{
-testPathwaySplice(gene.based.table, output.file.dir)
+testPathwaySplice(featureBasedData, output.file.dir)
 }
 \arguments{
+\item{output.file.dir}{Directory for output}
+
 \item{gene.based.table}{A gene based table converted from 
 DEXSeq or JunctionSeq resutls}
-
-\item{output.file.dir}{Directory for output}
 }
 \value{
 None
@@ -23,7 +23,7 @@ enrichment anlysis and build network
 
 dir.name <- tempdir()
 output.file.dir <- file.path(dir.name,'OutputTest')
-testPathwaySplice(tiny.data,output.file.dir = output.file.dir)
+testPathwaySplice(featureBasedData,output.file.dir = output.file.dir)
 
 
 }

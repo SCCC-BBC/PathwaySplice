@@ -24,6 +24,7 @@ res2 <- makeGeneTable(featureBasedData)
 
 + Apply logistic regression model to identify bias factor
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
+res2 <- makeGeneTable(featureBasedData)
 res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
 #loc.x and loc.y indicates location of p-value
 ```
@@ -34,7 +35,8 @@ res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
 # This function performes gene set analysis that adjusts for different number of gene subfeatures 
 # (i.e. exons, spicing junctions, or gene length indicated by *adjust*) associated with each gene. 
 # The significant genes are those with perGeneQvalue (from DEXSeq) < *threshold*.
-res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
+res2 <- makeGeneTable(featureBasedData)
+res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
 ```
 
 + Build up network based on the overlap between gene sets and visualize this network
@@ -46,6 +48,8 @@ res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go
 
 dir.name <- tempdir() # give output
 output.file.dir <- file.path(dir.name,"OutputEnmap")
+res2 <- makeGeneTable(featureBasedData)
+res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
 enmap <- enrichmentMap(res4,n=3,output.file.dir
                        =output.file.dir,similarity.threshold=0)
 ```

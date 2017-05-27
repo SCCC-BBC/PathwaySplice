@@ -40,5 +40,7 @@ is implemented. Here features refer to exon bins or splicing junction bins, depe
 how \code{genewise.pvalue} was obtained
 }
 \examples{
-res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+gene.based.table <- makeGeneTable(featureBasedData)
+res <- lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+
 }

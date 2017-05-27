@@ -82,7 +82,9 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file, gff.fil
 #' @export
 #' 
 #' @examples
-#' res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+#' gene.based.table <- makeGeneTable(featureBasedData)
+#' res <- lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+#' 
 lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80, 
     boxplot.width = 0.3)
     {
@@ -154,15 +156,12 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 #' dir.name <- system.file('extdata', package='PathwaySplice')
 #' canonical.pathway.file <- '10.cp.gmt.txt'
 #' res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
-
-#' res1 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#'                          0.05,genomeID='hg19',geneID='ensGene',
-#'                          gene2cat=res,method='Wallenius')
-
-#' res2 <- runPathwaySplice(tiny.data,adjust='exon_SJ',sub.feature='E',
-#'                          0.05,genomeID='hg19',geneID='ensGene',
-#'                          gene2cat=res,method='Hypergeometric')
-
+#' gene.based.table <- makeGeneTable(featureBasedData)
+#' 
+#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method='Wallenius')
+#' 
+#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',gene2cat=res,method=''Hypergeometric)
+#' 
 #' dir.name <- tempdir()
 #' output.dir <- file.path(dir.name,'OutputPostAnalysis')
 #' 
@@ -344,7 +343,7 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, ty
 #' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
-#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:CC'),go.size.cut=c(5,30),method='Wallenius')
+#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
 #' 
 #' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,'OutputEnmapEx')

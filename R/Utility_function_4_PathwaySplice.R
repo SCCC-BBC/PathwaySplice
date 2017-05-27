@@ -256,11 +256,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
             # Do the appropriate builds
             cat2gene <- reversemapping(gene2cat)
             gene2cat <- reversemapping(cat2gene)
-            
+       
         }
-      
-      # Add option to choose gene set by its size
-      gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
       
         # !!!! The following conditional has been flagged as a potential issue when
         # using certain types of input where the category names are the same as
@@ -291,9 +288,12 @@ pathwaysplice <- function(pwf, genome, id, gene2cat,test.cats,go.size.cut,method
         {
             unique(x)
         })
+        
     }
     
-   
+    
+    # Add option to choose gene set by its size
+    gene2cat <- getGeneSetBySize(gene2cat,go.size.cut)
     
     nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
     if (nafrac > 50)
