@@ -1,10 +1,64 @@
+#' makeGeneTable 
+#' 
+#' This function convert feature table into gene based table. 
+#'  
+#' @param feature.table An object loaded using \code{data(featureBasedData)}.
+#' @param sig.threshold Threshold used for setting whether gene is differential or not based on smallest p-value of all features within a gene  
+#'
+#' @return A dataframe with the following arguments as cloumns for each gene 
+#'   \itemize{
+#'   \item geneID: Gene ID
+#'   \item countbinID: feature ID in the feature differential usage analysis
+#'   \item pvalue: unadjusted p value of each feature in the feature differential usage analysis
+#' }
+#' 
+#' @export
+#'
+#' @examples
+#' data(featureBasedData)
+#' res <- makeGeneTable(featureBasedData)
+#'   
+makeGeneTable <- function(feature.table, sig.threshold = 0.05)
+{
+  gene.id <- unique(feature.table$geneID)
+  
+  y <- lapply(gene.id, function(u, feature.table)
+  {
+    
+    x <- as.data.frame(feature.table[which(feature.table$geneID %in% u), 
+                                     ], stringsAsFactors = FALSE)
+    
+    num.feature <- dim(x)[1]
+    
+    xx <- x[which.min(x$pvalue), ]
+    
+    xxx <- cbind.data.frame(xx, num.feature, stringsAsFactors = FALSE)
+    
+    xxx
+    
+  }, feature.table)
+  
+  yy <- do.call(rbind.data.frame, c(y, stringsAsFactors = FALSE))
+  
+  sig.gene <- ifelse(yy$pvalue < sig.threshold, 1, 0)
+  
+  z <- cbind.data.frame(yy$geneID, yy$pvalue, sig.gene, yy$countbinID, yy$num.feature, 
+                        stringsAsFactors = FALSE)
+  
+  colnames(z) <- c("geneID", "geneWisePvalue", "sig.gene", "mostSigDeFeature", 
+                   "numFeature")
+  
+  z <- reformatdata(z)
+  
+  return(z)
+}
+
 #' lrTestBias
 #' 
 #' This function tests presence of selection bias using logistic regression, and produces a boxplot 
 #' that compares distributions of gene features for significant genes and non-significant genes. 
 #' 
-#' @param jscs.genewise.object A dataframe with genewise p-value for each gene, 
-#'   returned from \code{makeGeneWiseTable}
+#' @param jscs.genewise.object A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}
 #' @param loc.x x coordinate for position of logistic regression p-value in figure
 #' @param loc.y y coordinate for position of logistic regression p-value in figure
 #' @param y.lim The largest number of exons in y axis in boxplot
@@ -66,197 +120,55 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
     
 }
 
-#' postProcessGo
+#' runPathwaySplice
 #'
-#' @param n.go Number of gene sets
-#' @param adjusted Adjusted result 
-#' @param unadjuasted Unadjusted result 
-#' @param venn.dir Path for outputing venn 
-#' @param boxplot.dir Path for outputing boxplot
-#' @param type.boxplot Get boxplot for 5 categories or 3 categories
-#'        6 categories: 'All.adjusted','All.unadjusted',
-#'                      'Top25.adjusted','Top25.unadjusted',
-#'                      'In_ad_not_un','In_un_not_ad'
-#'        3 categories: 'All','Top25.adjusted','Top25.unadjusted
-#' @param In.ad.not.un.file File name for outputing adjused but not
-#'        in unadjusted when using the selected gene sets     
-#' @param In.un.not.ad.file File name for outputing unadjused but not
-#'        in adjusted when using the selected gene sets  
+#' This function uses gene-based
+#' table as an input, and select gene sets by defining type and size of gene sets
+#' to perform gene set enrichment analysis
+#'  
+#' @param res2 Gene based table 
+#' @param genome Genome to be used(hg19 or mm10) 
+#' @param id GeneID to be used(entrezgene or ensembl_gene_id)
+#' @param gene2cat Get sets defined by users   
+#' @param test.cats Gene set if users does not define their gene set 
+#' @param go.size.cut Size of gene sets to be defined
+#' @param method Method to be used for calculating overrepresented p value
+#'        of gene sets(Options include Wallenius,Sampling, and Hypergeometric) 
+#' @param repcnt Number of sampling if user use sampling method to calculate gene set enrichment p value
+#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background   
+#'    
 #'
-#' @return null
-#' 
-#' @examples
-#' 
-#' dir.name <- system.file('extdata', package='PathwaySplice')
-#' canonical.pathway.file <- '10.cp.gmt.txt'
-#' res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
-#' gene.based.table <- makeGeneTable(featureBasedData)
-#' 
-#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-#' id='ensGene',gene2cat=res,method='Wallenius')
-#' 
-#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-#' id='ensGene',gene2cat=res,method='Hypergeometric')
-#' 
-#' dir.name <- tempdir()
-#' output.dir <- file.path(dir.name,'OutputPostAnalysis')
-#' 
-#' output.file.name.1 <- 'In_ad_not_un.xls'
-#' output.file.name.2 <- 'In_un_not_ad.xls'
-#' res3 <- postProcessGo(4,res1,res2,output.dir,output.dir,
-#'                       type.boxplot='Only3',
-#'                       output.file.name.1,output.file.name.2)
+#' @return A list that has gene set enrichment analysis results
 #' @export
-
-postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir, 
-    type.boxplot = c("All", "Only3"), In.ad.not.un.file, In.un.not.ad.file)
-    {
-    
-    if (!dir.exists(venn.dir))
-    {
-        dir.create(venn.dir)
-    }
-    
-    if (!dir.exists(boxplot.dir))
-    {
-        dir.create(boxplot.dir)
-    }
-    
-    n <- n.go
-    
-    example.go.adjusted.by.exon <- adjusted
-    example.go.unadjusted <- unadjuasted
-    
-    if (is.na(example.go.adjusted.by.exon) || is.na(example.go.unadjusted))
-    {
-        cat("One of results is empty\n\n")
-        return()
-    } else
-    {
-        
-        if (dim(example.go.adjusted.by.exon$GO.selected)[1] >= n && dim(example.go.unadjusted$GO.selected)[1] >= 
-            n)
-            {
-            
-            adjusted <- example.go.adjusted.by.exon$GO.selected[1:n, 1]
-            unadjusted <- example.go.unadjusted$GO.selected[1:n, 1]
-            
-            re <- list(adjusted = adjusted, unadjusted = unadjusted)
-            
-            venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(venn.dir, 
-                paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), 
-                height = 3000, width = 3500, resolution = 1000, col = "black", 
-                lty = "dotted", lwd = 1, fill = c("red", "blue"), alpha = 0.5, 
-                label.col = c(rep("black", 3)), cex = 0.5, fontfamily = "serif", 
-                fontface = "bold", cat.col = c("red", "blue"), cat.cex = 0.5, 
-                cat.pos = 0.5, cat.dist = 0.05, cat.fontfamily = "serif")
-            
-            # boxplot
-            common <- intersect(unadjusted, adjusted)
-            
-            In.unadjusted.not.in.adjusted <- setdiff(unadjusted, common)
-            In.adjusted.not.in.unadjusted <- setdiff(adjusted, common)
-            
-            if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
-                0)
-                {
-                index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$GO.selected$category)
-                In.ad.not.un <- example.go.adjusted.by.exon$GO.selected[index1, 
-                  ]$Ave_value_all_gene
-                
-                yy <- cbind(example.go.unadjusted$GO.selected[index1, ]$rank.value.by.over_represented_pvalue, 
-                  example.go.adjusted.by.exon$GO.selected[index1, ]$rank.value.by.over_represented_pvalue)
-                
-                
-                index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$GO.selected$category)
-                In.un.not.ad <- example.go.unadjusted$GO.selected[index2, ]$Ave_value_all_gene
-                
-                yyy <- cbind(example.go.unadjusted$GO.selected[index2, ]$rank.value.by.over_represented_pvalue, 
-                  example.go.adjusted.by.exon$GO.selected[index2, ]$rank.value.by.over_represented_pvalue)
-                
-                rre <- list(yy = yy, yyy = yyy)
-                
-                xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
-                
-                colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
-                
-                cp.top.adjusted.25 <- unlist(example.go.adjusted.by.exon$GO.selected[1:n, 
-                  ]$Ave_value_all_gene)
-                cp.top.unadjusted.25 <- unlist(example.go.unadjusted$GO.selected[1:n, 
-                  ]$Ave_value_all_gene)
-                
-                cp.all.adjusted <- unlist(example.go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
-                cp.all.unadjusted <- unlist(example.go.unadjusted$GO.selected$Ave_value_all_gene)
-                
-                type.boxplot <- match.arg(type.boxplot)
-                
-                switch(type.boxplot, Only3 = {
-                  yy <- rbind(cbind(cp.top.adjusted.25, rep("Adjusted_25", length(cp.top.adjusted.25))), 
-                    cbind(cp.top.unadjusted.25, rep("Unadjusted_25", length(cp.top.unadjusted.25))), 
-                    cbind(cp.all.unadjusted, rep("All", length(cp.all.unadjusted))))
-                  colnames(yy) <- c("y", "grp")
-                  yy <- as.data.frame(yy)
-                  yy$grp <- factor(yy$grp)
-                  yy$grp <- factor(yy$grp, levels = levels(yy$grp)[c(2, 1, 3)])
-                  png(file.path(boxplot.dir, "boxplot.png"))
-                  boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
-                  dev.off()
-                }, {
-                  yy <- rbind(cbind(xx[, 1], rep("In.ad.not.un", length(xx[, 
-                    1]))), cbind(xx[, 2], rep("In.un.not.ad", length(xx[, 2]))), 
-                    cbind(cp.top.adjusted.25, rep("cp.top.adjusted.25", length(cp.top.adjusted.25))), 
-                    cbind(cp.top.unadjusted.25, rep("cp.top.unadjusted.25", 
-                      length(cp.top.unadjusted.25))), cbind(cp.all.adjusted, 
-                      rep("cp.all.adjusted", length(cp.all.adjusted))), cbind(cp.all.unadjusted, 
-                      rep("cp.all.unadjusted", length(cp.all.unadjusted))))
-                  colnames(yy) <- c("y", "grp")
-                  yy <- as.data.frame(yy)
-                  png(file.path(boxplot.dir, "boxplot.png"))
-                  boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
-                  dev.off()
-                })
-                
-                Output_file <- file.path(boxplot.dir, In.ad.not.un.file)
-                writegototable(example.go.adjusted.by.exon$GO.selected[index1, 
-                  ], Output_file)
-                
-                Output_file <- file.path(boxplot.dir, In.un.not.ad.file)
-                writegototable(example.go.unadjusted$GO.selected[index2, ], 
-                  Output_file)
-                
-                return(rre)
-                
-            } else
-            {
-                
-                if (length(In.unadjusted.not.in.adjusted) == 0)
-                {
-                  cat("there is no gene sets in unadjusted resutls but not in adjusted resutls\n")
-                }
-                
-                cat("\n")
-                
-                if (length(In.adjusted.not.in.unadjusted) == 0)
-                {
-                  cat("there is no gene sets in adjusted resutls but not in unadjusted resutls\n")
-                }
-                
-                cat("\n")
-                
-            }
-        } else
-        {
-            
-            cat("The enriched gene sets is less than", n, "\n")
-            
-        }
-    }
+#'
+#' @examples
+#' res <- makeGeneTable(featureBasedData)
+#' res <- runPathwaySplice(res,genome='hg19',id='ensGene',
+#'                          test.cats=c('GO:BP'),
+#'                          go.size.cut=c(5,30),
+#'                          method='Wallenius')
+#' 
+#'  
+runPathwaySplice <- function(res2, genome, id, gene2cat = NULL, 
+                             test.cats = c("GO:CC", "GO:BP", "GO:MF"),
+                             go.size.cut = c(lower.size = 0, upper.size = NULL),
+                             method = "Wallenius",
+                             repcnt = 2000, use.genes.without.cat = FALSE)
+{
+  x <- res2[, 3]
+  names(x) <- res2[, 1]
+  pwf <- nullp(x, genome, id, bias.data = res2[, 5], plot.fit = TRUE)
+  CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
+                         test.cats = test.cats, go.size.cut = go.size.cut, method = method, repcnt = repcnt, 
+                         use.genes.without.cat = use.genes.without.cat)
+  CatDE
+  
 }
 
 #' enrichmentMap
 #'
 #' enrichmentMap is used to draw network based on similarities between GOs
-#'
+#'                                  
 #' @param goseqres Object returned from runpathwaysplice
 #' @param n Maximum number of category to be shown
 #' @param fixed If set to FALSE, will invoke tkplot
@@ -290,19 +202,23 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 #' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
-#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-#' id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),
-#' method='Wallenius')
+#' res <- runPathwaySplice(gene.based.table,genome='hg19',
+#'                          id='ensGene',test.cats=c('GO:BP'),
+#'                          go.size.cut=c(5,30),
+#'                          method='Wallenius')
 #' 
 #' dir.name <- tempdir()
 #' output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 #' 
-#' enmap <- enrichmentMap(res1,n=3,similarity.threshold=0,
+#' enmap <- enrichmentMap(res,n=3,similarity.threshold=0,
 #'                        output.file.dir = output.file.dir,
 #'                        label.vertex.by.index = TRUE)
 #'                        
-enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
-    similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
+enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, 
+                          vertex.label.font = 1, 
+                          similarity.threshold,
+                          output.file.dir, 
+                          label.vertex.by.index = FALSE, ...)
     {
     
     if (!dir.exists(output.file.dir))
@@ -424,47 +340,6 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     return(re2)
 }
 
-#' testPathwaySplice
-#'
-#' Peform one-step analysis for check bias, adjusted gene set 
-#' enrichment anlysis and build network
-#'
-#' @param featureBasedData A gene feature based table from differential analysis
-#' @param output.file.dir Directory for output
-#' 
-#' @return None
-#'
-#' @export
-#'
-#' @examples
-#' 
-#' dir.name <- tempdir()
-#' output.file.dir <- file.path(dir.name,'OutputTest')
-#' testPathwaySplice(featureBasedData,output.file.dir = output.file.dir)
-#'
-#'
-testPathwaySplice <- function(featureBasedData, output.file.dir)
-{
-    
-    gene.based.table <- makeGeneTable(featureBasedData)
-    
-    # Check bias using logistics regression model
-    res <- lrTestBias(gene.based.table, boxplot.width = 0.3)
-    
-    # Analysis
-    res1 <- runPathwaySplice(gene.based.table, genome = "hg19", id = "ensGene", 
-        test.cats = c("GO:BP"), go.size.cut = c(5, 30), method = "Wallenius")
-    
-    res2 <- runPathwaySplice(gene.based.table, genome = "hg19", id = "ensGene", 
-        test.cats = c("GO:BP"), go.size.cut = c(5, 30), method = "Hypergeometric")
-    
-    # Construct network between gene sets
-    
-    res11 <- enrichmentMap(res1, n = 3, output.file.dir = output.file.dir, similarity.threshold = 0)
-    res22 <- enrichmentMap(res2, n = 3, output.file.dir = output.file.dir, similarity.threshold = 0)
-    
-}
-
 #' gmtGene2Cat
 #'
 #' Read a gene set file in GMT format, and return a list with its name
@@ -487,8 +362,9 @@ testPathwaySplice <- function(featureBasedData, output.file.dir)
 #' canonical.pathway.file <- '10.cp.gmt.txt'
 #' res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 #' 
-gmtGene2Cat <- function(dir.name, pathway.file, file.type, gene.anno.file = NULL, 
-    genomeID = c("mm10", "hg19", "hg38"))
+gmtGene2Cat <- function(dir.name, pathway.file, file.type,
+                        gene.anno.file = NULL, 
+                        genomeID = c("mm10", "hg19", "hg38"))
     {
     
     gmt_input_file <- file.path(dir.name, pathway.file)
@@ -524,99 +400,192 @@ gmtGene2Cat <- function(dir.name, pathway.file, file.type, gene.anno.file = NULL
     
 }
 
-#' makeGeneTable 
+#' postProcessGo
+#'
+#' @param n.go Number of gene sets
+#' @param adjusted Adjusted result 
+#' @param unadjuasted Unadjusted result 
+#' @param venn.dir Path for outputing venn 
+#' @param boxplot.dir Path for outputing boxplot
+#' @param type.boxplot Get boxplot for 5 categories or 3 categories
+#'        6 categories: 'All.adjusted','All.unadjusted',
+#'                      'Top25.adjusted','Top25.unadjusted',
+#'                      'In_ad_not_un','In_un_not_ad'
+#'        3 categories: 'All','Top25.adjusted','Top25.unadjusted
+#' @param In.ad.not.un.file File name for outputing adjused but not
+#'        in unadjusted when using the selected gene sets     
+#' @param In.un.not.ad.file File name for outputing unadjused but not
+#'        in adjusted when using the selected gene sets  
+#'
+#' @return null
 #' 
-#' This function convert feature table into gene based table. 
-#'  
-#' @param feature.table An object returned from function \code{makeFeatureTable}.
-#' @param sig.threshold Threshold used for setting whether gene is differential or not based on smallest p-value of all features within a gene  
-#'
-#' @return A dataframe with the following arguments as cloumns for each gene 
-#'   \itemize{
-#'   \item geneID: Gene ID
-#'   \item countbinID: feature ID in the feature differential usage analysis
-#'   \item pvalue: unadjusted p value of each feature in the feature differential usage analysis
-#' }
+#' @examples
 #' 
-#' @export
-#'
-#' @examples
-#' res2 <- makeGeneTable(featureBasedData)
-#'   
-makeGeneTable <- function(feature.table, sig.threshold = 0.05)
-{
-    gene.id <- unique(feature.table$geneID)
-    
-    y <- lapply(gene.id, function(u, feature.table)
-    {
-        
-        x <- as.data.frame(feature.table[which(feature.table$geneID %in% u), 
-            ], stringsAsFactors = FALSE)
-        
-        num.feature <- dim(x)[1]
-        
-        xx <- x[which.min(x$pvalue), ]
-        
-        xxx <- cbind.data.frame(xx, num.feature, stringsAsFactors = FALSE)
-        
-        xxx
-        
-    }, feature.table)
-    
-    yy <- do.call(rbind.data.frame, c(y, stringsAsFactors = FALSE))
-    
-    sig.gene <- ifelse(yy$pvalue < sig.threshold, 1, 0)
-    
-    z <- cbind.data.frame(yy$geneID, yy$pvalue, sig.gene, yy$countbinID, yy$num.feature, 
-        stringsAsFactors = FALSE)
-    
-    colnames(z) <- c("geneID", "geneWisePvalue", "sig.gene", "mostSigDeFeature", 
-        "numFeature")
-    
-    z <- reformatdata(z)
-    
-    return(z)
-}
-
-#' runPathwaySplice
-#'
-#' This function uses gene-based
-#' table as an input, and select gene sets by defining type and size of gene sets
-#' to perform gene set enrichment analysis
-#'  
-#' @param res2 Gene based table 
-#' @param genome Genome to be used(hg19 or mm10) 
-#' @param id GeneID to be used(entrezgene or ensembl_gene_id)
-#' @param gene2cat Get sets defined by users   
-#' @param test.cats Gene set if users does not define their gene set 
-#' @param go.size.cut Size of gene sets to be defined
-#' @param method Method to be used for calculating overrepresented p value
-#'        of gene sets(Options include Wallenius,Sampling, and Hypergeometric) 
-#' @param repcnt Number of sampling if user use sampling method to calculate gene set enrichment p value
-#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background   
-#'    
-#'
-#' @return A list that has gene set enrichment analysis results
-#' @export
-#'
-#' @examples
-#' res2 <- makeGeneTable(featureBasedData)
-#' res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',
-#'                          test.cats=c('GO:BP'),
-#'                          go.size.cut=c(5,30),
+#' dir.name <- system.file('extdata', package='PathwaySplice')
+#' canonical.pathway.file <- '10.cp.gmt.txt'
+#' res <- gmtGene2Cat(dir.name,canonical.pathway.file,
+#'                    'local',genomeID='hg19')
+#' gene.based.table <- makeGeneTable(featureBasedData)
+#' 
+#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+#'                          id='ensGene',gene2cat=res,
 #'                          method='Wallenius')
 #' 
-#'  
-runPathwaySplice <- function(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
-    "GO:BP", "GO:MF"), go.size.cut = c(lower.size = 0, upper.size = NULL), method = "Wallenius", 
-    repcnt = 2000, use.genes.without.cat = FALSE)
-    {
-    x <- res2[, 3]
-    names(x) <- res2[, 1]
-    pwf <- nullp(x, genome, id, bias.data = res2[, 5], plot.fit = TRUE)
-    CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
-        test.cats = test.cats, go.size.cut = go.size.cut, method = method, repcnt = repcnt, 
-        use.genes.without.cat = use.genes.without.cat)
-    CatDE
+#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
+#'                          id='ensGene',gene2cat=res,
+#'                          method='Hypergeometric')
+#' 
+#' dir.name <- tempdir()
+#' output.dir <- file.path(dir.name,'OutputPostAnalysis')
+#' 
+#' output.file.name.1 <- 'In_ad_not_un.xls'
+#' output.file.name.2 <- 'In_un_not_ad.xls'
+#' res3 <- postProcessGo(4,res1,res2,output.dir,output.dir,
+#'                       type.boxplot='Only3',
+#'                       output.file.name.1,output.file.name.2)
+#' @export
+postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, 
+                          boxplot.dir,type.boxplot = c("All", "Only3"),
+                          In.ad.not.un.file, In.un.not.ad.file)
+{
+  
+  if (!dir.exists(venn.dir))
+  {
+    dir.create(venn.dir)
+  }
+  
+  if (!dir.exists(boxplot.dir))
+  {
+    dir.create(boxplot.dir)
+  }
+  
+  n <- n.go
+  
+  example.go.adjusted.by.exon <- adjusted
+  example.go.unadjusted <- unadjuasted
+  
+  if (is.na(example.go.adjusted.by.exon) || is.na(example.go.unadjusted))
+  {
+    cat("One of results is empty\n\n")
+    return()
+  } else
+  {
     
+    if (dim(example.go.adjusted.by.exon$GO.selected)[1] >= n && dim(example.go.unadjusted$GO.selected)[1] >= 
+        n)
+    {
+      
+      adjusted <- example.go.adjusted.by.exon$GO.selected[1:n, 1]
+      unadjusted <- example.go.unadjusted$GO.selected[1:n, 1]
+      
+      re <- list(adjusted = adjusted, unadjusted = unadjusted)
+      
+      venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(venn.dir, 
+                                                                      paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), 
+                                height = 3000, width = 3500, resolution = 1000, col = "black", 
+                                lty = "dotted", lwd = 1, fill = c("red", "blue"), alpha = 0.5, 
+                                label.col = c(rep("black", 3)), cex = 0.5, fontfamily = "serif", 
+                                fontface = "bold", cat.col = c("red", "blue"), cat.cex = 0.5, 
+                                cat.pos = 0.5, cat.dist = 0.05, cat.fontfamily = "serif")
+      
+      # boxplot
+      common <- intersect(unadjusted, adjusted)
+      
+      In.unadjusted.not.in.adjusted <- setdiff(unadjusted, common)
+      In.adjusted.not.in.unadjusted <- setdiff(adjusted, common)
+      
+      if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
+          0)
+      {
+        index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$GO.selected$category)
+        In.ad.not.un <- example.go.adjusted.by.exon$GO.selected[index1, 
+                                                                ]$Ave_value_all_gene
+        
+        yy <- cbind(example.go.unadjusted$GO.selected[index1, ]$rank.value.by.over_represented_pvalue, 
+                    example.go.adjusted.by.exon$GO.selected[index1, ]$rank.value.by.over_represented_pvalue)
+        
+        
+        index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$GO.selected$category)
+        In.un.not.ad <- example.go.unadjusted$GO.selected[index2, ]$Ave_value_all_gene
+        
+        yyy <- cbind(example.go.unadjusted$GO.selected[index2, ]$rank.value.by.over_represented_pvalue, 
+                     example.go.adjusted.by.exon$GO.selected[index2, ]$rank.value.by.over_represented_pvalue)
+        
+        rre <- list(yy = yy, yyy = yyy)
+        
+        xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
+        
+        colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
+        
+        cp.top.adjusted.25 <- unlist(example.go.adjusted.by.exon$GO.selected[1:n, 
+                                                                             ]$Ave_value_all_gene)
+        cp.top.unadjusted.25 <- unlist(example.go.unadjusted$GO.selected[1:n, 
+                                                                         ]$Ave_value_all_gene)
+        
+        cp.all.adjusted <- unlist(example.go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
+        cp.all.unadjusted <- unlist(example.go.unadjusted$GO.selected$Ave_value_all_gene)
+        
+        type.boxplot <- match.arg(type.boxplot)
+        
+        switch(type.boxplot, Only3 = {
+          yy <- rbind(cbind(cp.top.adjusted.25, rep("Adjusted_25", length(cp.top.adjusted.25))), 
+                      cbind(cp.top.unadjusted.25, rep("Unadjusted_25", length(cp.top.unadjusted.25))), 
+                      cbind(cp.all.unadjusted, rep("All", length(cp.all.unadjusted))))
+          colnames(yy) <- c("y", "grp")
+          yy <- as.data.frame(yy)
+          yy$grp <- factor(yy$grp)
+          yy$grp <- factor(yy$grp, levels = levels(yy$grp)[c(2, 1, 3)])
+          png(file.path(boxplot.dir, "boxplot.png"))
+          boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          dev.off()
+        }, {
+          yy <- rbind(cbind(xx[, 1], rep("In.ad.not.un", length(xx[, 
+                                                                   1]))), cbind(xx[, 2], rep("In.un.not.ad", length(xx[, 2]))), 
+                      cbind(cp.top.adjusted.25, rep("cp.top.adjusted.25", length(cp.top.adjusted.25))), 
+                      cbind(cp.top.unadjusted.25, rep("cp.top.unadjusted.25", 
+                                                      length(cp.top.unadjusted.25))), cbind(cp.all.adjusted, 
+                                                                                            rep("cp.all.adjusted", length(cp.all.adjusted))), cbind(cp.all.unadjusted, 
+                                                                                                                                                    rep("cp.all.unadjusted", length(cp.all.unadjusted))))
+          colnames(yy) <- c("y", "grp")
+          yy <- as.data.frame(yy)
+          png(file.path(boxplot.dir, "boxplot.png"))
+          boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          dev.off()
+        })
+        
+        Output_file <- file.path(boxplot.dir, In.ad.not.un.file)
+        writegototable(example.go.adjusted.by.exon$GO.selected[index1, 
+                                                               ], Output_file)
+        
+        Output_file <- file.path(boxplot.dir, In.un.not.ad.file)
+        writegototable(example.go.unadjusted$GO.selected[index2, ], 
+                       Output_file)
+        
+        return(rre)
+        
+      } else
+      {
+        
+        if (length(In.unadjusted.not.in.adjusted) == 0)
+        {
+          cat("there is no gene sets in unadjusted resutls but not in adjusted resutls\n")
+        }
+        
+        cat("\n")
+        
+        if (length(In.adjusted.not.in.unadjusted) == 0)
+        {
+          cat("there is no gene sets in adjusted resutls but not in unadjusted resutls\n")
+        }
+        
+        cat("\n")
+        
+      }
+    } else
+    {
+      
+      cat("The enriched gene sets is less than", n, "\n")
+      
+    }
+  }
 }
