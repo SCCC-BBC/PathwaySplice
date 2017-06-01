@@ -25,14 +25,14 @@ runPathwaySplice2(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
 
 \item{repcnt}{Number of sampling if user use sampling method to calculate gene set enrichment p value}
 
-\item{use.genes.without.cat}{Whether to include gene without mapping to get set for calculate gene set enrichment p value}
+\item{use.genes.without.cat}{Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background}
 }
 \description{
 runPathwaySplice2
 }
 \examples{
 
-res4 <- PathwaySplice:::runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
+res4 <- runPathwaySplice2(res2,genome='hg19',id='ensGene',test.cats=c("GO:CC"),go.size.cut=c(5,30),method='Wallenius')
 
  
 }
