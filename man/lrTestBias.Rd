@@ -18,17 +18,6 @@ returned from \code{makeGeneWiseTable}}
 \item{y.lim}{The largest number of exons in y axis in boxplot}
 
 \item{boxplot.width}{Parameter for boxplot width}
-
-\item{genewise.pvalue}{Valid options are "geneWisePadj"
-\code{perGenQvalue} from DEXSeq package) and "xxx"}
-
-\item{sig.threshold}{Threshold to classify genes as significant or not (1 =
-significant, 0 = not signficant)}
-
-\item{bias.type}{Whether you are interested in exon or splicing junction}
-}
-\value{
-\code{jscs.genewise.object}
 }
 \description{
 This function tests presence of selection bias using logistic regression, and produces a boxplot 
@@ -40,5 +29,7 @@ is implemented. Here features refer to exon bins or splicing junction bins, depe
 how \code{genewise.pvalue} was obtained
 }
 \examples{
-res3 <- lrTestBias(res2,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+gene.based.table <- makeGeneTable(featureBasedData)
+res <- lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+
 }
