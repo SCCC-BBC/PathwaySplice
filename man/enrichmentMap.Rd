@@ -8,7 +8,7 @@ enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
   similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
 }
 \arguments{
-\item{goseqres}{Object returned from runpathwaysplice}
+\item{goseqres}{Object returned from runPathwaySplice}
 
 \item{n}{Maximum number of category to be shown}
 
@@ -42,13 +42,13 @@ TRUE indicates to label vertex by the index of gene sets}
 A list for giving edge and vertex information of enrichment map
 }
 \description{
-enrichmentMap is used to draw network based on similarities between GOs
+enrichmentMap is used to draw Enrichment Map based on similarities defined using Jaccard Coefficient between GOs or gene sets
 }
 \examples{
 
 gene.based.table <- makeGeneTable(featureBasedData)
 
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
                          go.size.cut=c(5,30),
                          method='Wallenius')
@@ -56,7 +56,7 @@ res1 <- runPathwaySplice(gene.based.table,genome='hg19',
 dir.name <- tempdir()
 output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 
-enmap <- enrichmentMap(res1,n=3,similarity.threshold=0,
+enmap <- enrichmentMap(res,n=3,similarity.threshold=0,
                        output.file.dir = output.file.dir,
                        label.vertex.by.index = TRUE)
                        

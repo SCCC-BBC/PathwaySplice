@@ -4,12 +4,12 @@
 \alias{runPathwaySplice}
 \title{runPathwaySplice}
 \usage{
-runPathwaySplice(res2, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
+runPathwaySplice(res, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
   "GO:BP", "GO:MF"), go.size.cut = c(lower.size = 0, upper.size = NULL),
   method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
 }
 \arguments{
-\item{res2}{Gene based table}
+\item{res}{Gene based table}
 
 \item{genome}{Genome to be used(hg19 or mm10)}
 
@@ -33,12 +33,12 @@ A list that has gene set enrichment analysis results
 }
 \description{
 This function uses gene-based
-table as an input, and select gene sets by defining type and size of gene sets
-to perform gene set enrichment analysis
+table converted from makeGeneTable as an input, and select gene sets of certain type and size  
+to perform gene set enrichment analysis adjusted by number of features in gene based table
 }
 \examples{
-res2 <- makeGeneTable(featureBasedData)
-res4 <- runPathwaySplice(res2,genome='hg19',id='ensGene',
+res <- makeGeneTable(featureBasedData)
+res <- runPathwaySplice(res,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
                          go.size.cut=c(5,30),
                          method='Wallenius')

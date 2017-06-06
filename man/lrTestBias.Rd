@@ -8,8 +8,7 @@ lrTestBias(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
   boxplot.width = 0.3)
 }
 \arguments{
-\item{jscs.genewise.object}{A dataframe with genewise p-value for each gene, 
-returned from \code{makeGeneWiseTable}}
+\item{jscs.genewise.object}{A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}}
 
 \item{loc.x}{x coordinate for position of logistic regression p-value in figure}
 
