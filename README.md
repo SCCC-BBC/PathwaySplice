@@ -96,5 +96,3 @@ res3 <- compareResults(5,res1,res2,output.dir,output.dir,
                        type.boxplot='Only3',
                        output.file.name.1,output.file.name.2)
 ```
-
-
