@@ -19,8 +19,8 @@ gsa.read.gmt <- function(filename, type)
         filename <- file.path(dir.name, file.name)
     }
     
-    a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, 
-        fill = TRUE, flush = TRUE, multi.line = FALSE)
+    a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, fill = TRUE, 
+        flush = TRUE, multi.line = FALSE)
     geneset.names <- a[1][[1]]
     geneset.descriptions <- a[2][[1]]
     dd <- scan(filename, what = "", sep = "\t", quote = NULL)
@@ -83,32 +83,38 @@ reversemapping <- function(map)
     return(split(names(tmp), as.vector(tmp)))
 }
 
-reformatdata <- function(re.PJ.gene.based)
+reformatdata <- function(re.gene.based)
 {
-    re <- pData(re.PJ.gene.based)
+    # re <- pData(re.PJ.gene.based)
+    re <- re.gene.based
+    no.re.testable.index <- which(re$mostSigDeFeature == "character(0)")
     
-    no.re.testable.index <- which(as.character(re$mostSigID) == "character(0)")
-    re2 <- re[-no.re.testable.index, ]
+    if (length(no.re.testable.index) > 0)
+    {
+        re2 <- re[-no.re.testable.index, ]
+    } else
+    {
+        re2 <- re
+    }
     
-    All.gene.id.based.on.sub_feature <- unique(unlist(strsplit(re2[, 1], 
-        "\\+")))
+    All.gene.id.based.on.sub_feature <- unique(unlist(strsplit(re2$geneID, "\\+")))
+    
     All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub_feature))
     names(All.gene.id.index) <- All.gene.id.based.on.sub_feature
     
+    re3 <- lapply(All.gene.id.based.on.sub_feature, function(u, re2)
+    {
+        x <- as.data.frame(re2[grep(u, re2$geneID), ], stringsAsFactors = FALSE)
+    }, re2)
     
-    reformat.gene.p <- do.call(rbind, sapply(All.gene.id.based.on.sub_feature, 
-        function(u, re2)
-        {
-            x <- re2[grep(u, re2[, 1]), -1]
-            x <- as.data.frame(t(x))
-            # colnames(x)<-colnames(Data4Goterm) x
-        }, re2))
+    re4 <- do.call(rbind.data.frame, c(re3, stringsAsFactors = FALSE))
     
-    re3 <- as.data.frame(reformat.gene.p)
-    re3 <- cbind(All.gene.id.based.on.sub_feature, re3)
-    colnames(re3)[1] <- "geneID"
+    index.geneID <- which(colnames(re4) %in% c("geneID"))
+    re5 <- cbind.data.frame(All.gene.id.based.on.sub_feature, re4[, -c(index.geneID)], 
+        stringsAsFactors = FALSE)
+    colnames(re5)[1] <- "geneID"
     
-    return(re3)
+    return(re5)
     
 }
 
@@ -130,9 +136,8 @@ heatmap_wPCA = function(Data, g_level = NULL)
         
         
         
-        with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, 
-            colnames(Data), col = "black", add = TRUE, colkey = FALSE, 
-            cex = 0.5))
+        with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, colnames(Data), 
+            col = "black", add = TRUE, colkey = FALSE, cex = 0.5))
     } else
     {
         type_level = 1:ncol(Data)
@@ -152,9 +157,8 @@ heatmap_wPCA = function(Data, g_level = NULL)
         legend("topright", legend = uniq_label, pch = type_level, col = uniq_col, 
             cex = 1, inset = c(0.02))
         
-        with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, 
-            colnames(Data), col = "black", add = TRUE, colkey = FALSE, 
-            cex = 0.5))
+        with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, colnames(Data), 
+            col = "black", add = TRUE, colkey = FALSE, cex = 0.5))
     }
 }
 
@@ -168,11 +172,11 @@ writegototable <- function(GO_re, Output_file)
         sep = "\t")
 }
 
-pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
-    "GO:BP", "GO:MF"), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
+pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.cut, 
+    method, repcnt, use.genes.without.cat)
     {
-    ################# Input pre-processing and validation ################### Do some
-    ################# validation of input variables
+    ################# Input pre-processing and validation ################### Do some validation
+    ################# of input variables
     if (any(!test.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
     {
         stop("Invalid category specified.  Valid categories are GO:CC, GO:BP, GO:MF or KEGG")
@@ -183,8 +187,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
         {
             stop("You must specify the genome and gene ID format when automatically fetching gene to GO category mappings.")
         }
-        # If we're using user specified mappings, this obviously isn't a
-        # problem
+        # If we're using user specified mappings, this obviously isn't a problem
         genome <- "dummy"
         id <- "dummy"
     }
@@ -206,8 +209,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     {
         # When we fetch the data using getgo it will be in the list format
         message("Fetching GO annotations...")
-        gene2cat <- getgo3(rownames(pwf), genome, id, fetch.cats = test.cats)
-        names(gene2cat) <- rownames(pwf)
+        gene2cat <- getGeneSet(rownames(pwf), genome, id, fetch.cats = test.cats)
+        # names(gene2cat) <- rownames(pwf)
         
         # cat('OK') Do the two rebuilds to remove any nulls
         cat2gene <- reversemapping(gene2cat)
@@ -217,16 +220,15 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
         
     } else
     {
-        # The gene2cat input accepts a number of formats, we need to check each
-        # of them in term
+        # The gene2cat input accepts a number of formats, we need to check each of
+        # them in term
         message("Using manually entered categories.")
-        # The options are a flat mapping (that is a data frame or matrix) or a
-        # list, where the list can be either gene->categories or
-        # category->genes
+        # The options are a flat mapping (that is a data frame or matrix) or a list,
+        # where the list can be either gene->categories or category->genes
         if (class(gene2cat) != "list")
         {
-            # it's not a list so it must be a data.frame, work out which column
-            # contains the genes
+            # it's not a list so it must be a data.frame, work out which column contains
+            # the genes
             genecol_sum <- as.numeric(apply(gene2cat, 2, function(u)
             {
                 sum(u %in% rownames(pwf))
@@ -254,37 +256,60 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
             # Do the appropriate builds
             cat2gene <- reversemapping(gene2cat)
             gene2cat <- reversemapping(cat2gene)
+            
         }
-        # !!!! The following conditional has been flagged as a potential issue
-        # when using certain types of input where the category names are the
-        # same as gene names (which seems like something you should avoid
-        # anyway...).  Leave it for now !!!!  We're now garunteed to have a
-        # list (unless the user screwed up the input) but it could be
-        # category->genes rather than the gene->categories that we want.
+        
+        gene2cat <- gene2cat[-which(is.na(names(gene2cat)))]
+        
+        # !!!! The following conditional has been flagged as a potential issue when
+        # using certain types of input where the category names are the same as gene
+        # names (which seems like something you should avoid anyway...).  Leave it
+        # for now !!!!  We're now garunteed to have a list (unless the user screwed
+        # up the input) but it could be category->genes rather than the
+        # gene->categories that we want.
         if (sum(unique(unlist(gene2cat, use.names = FALSE)) %in% rownames(pwf)) > 
             sum(unique(names(gene2cat)) %in% rownames(pwf)))
             {
             gene2cat <- reversemapping(gene2cat)
         }
-        # Alright, we're garunteed a list going in the direction we want now.
-        # Throw out genes which we will not use
+        # Alright, we're garunteed a list going in the direction we want now.  Throw
+        # out genes which we will not use
         gene2cat <- gene2cat[names(gene2cat) %in% rownames(pwf)]
         
-        # Rebuild because it's a fun thing to do
-        cat2gene <- reversemapping(gene2cat)
-        gene2cat <- reversemapping(cat2gene)
+        if (length(gene2cat) > 0)
+        {
+            
+            # Rebuild because it's a fun thing to do
+            cat2gene <- reversemapping(gene2cat)
+            gene2cat <- reversemapping(cat2gene)
+            
+            ## make sure we remove duplicate entries .. e.g. see
+            ## http://permalink.gmane.org/gmane.science.biology.informatics.conductor/46876
+            cat2gene <- lapply(cat2gene, function(x)
+            {
+                unique(x)
+            })
+            gene2cat <- lapply(gene2cat, function(x)
+            {
+                unique(x)
+            })
+        } else
+        {
+            
+            cat("There is no match between gene names of gene2pathway input and gene names of the data set under analysis,please change gene2pathway input\n\n")
+            
+            return(NA)
+            
+        }
         
-        ## make sure we remove duplicate entries .. e.g. see
-        ## http://permalink.gmane.org/gmane.science.biology.informatics.conductor/46876
-        cat2gene <- lapply(cat2gene, function(x)
-        {
-            unique(x)
-        })
-        gene2cat <- lapply(gene2cat, function(x)
-        {
-            unique(x)
-        })
     }
+    
+    
+    # Add option to choose gene set by its size
+    gene2cat <- getGeneSetBySize(gene2cat, go.size.cut)
+    
+    cat2gene <- reversemapping(gene2cat)
+    gene2cat <- reversemapping(cat2gene)
     
     nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
     if (nafrac > 50)
@@ -292,37 +317,42 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
         warning(paste("Missing length data for ", round(nafrac), "% of genes.  Accuarcy of GO test will be reduced.", 
             sep = ""))
     }
-    # Give the genes with unknown length the weight used by the median gene
-    # (not the median weighting!)
+    # Give the genes with unknown length the weight used by the median gene (not
+    # the median weighting!)
     pwf$pwf[is.na(pwf$pwf)] <- pwf$pwf[match(sort(pwf$bias.data[!is.na(pwf$bias.data)])[ceiling(sum(!is.na(pwf$bias.data))/2)], 
         pwf$bias.data)]
     
-    ###################### Calculating the p-values ######################## Removelo force
-    ###################### their use, please run with use.genes.without.cat=TRUE (see
-    ###################### documentation).')
-    message("This was the default behavior for version 1.15.1 and earlier.")
-    pwf <- pwf[rownames(pwf) %in% names(gene2cat), ]
+    ###################### Calculating the p-values ########################
+    
+    # Remove all the genes with unknown GOterms
+    unknown_go_terms = nrow(pwf) - length(gene2cat)
+    if ((!use.genes.without.cat) && unknown_go_terms > 0)
+    {
+        message(paste("For", unknown_go_terms, "genes, we could not find any categories. These genes will be excluded."))
+        message("To force their use, please run with use_genes_without_cat=TRUE (see documentation).")
+        message("This was the default behavior for version 1.15.1 and earlier.")
+        pwf = pwf[rownames(pwf) %in% names(gene2cat), ]
+    }
     
     # A few variables are always useful so calculate them
     cats <- names(cat2gene)
     DE <- rownames(pwf)[pwf$DEgenes == 1]
     num_de <- length(DE)
     num_genes <- nrow(pwf)
-    pvals <- data.frame(category = cats, over_represented_pvalue = NA, 
-        under_represented_pvalue = NA, stringsAsFactors = FALSE, numDEInCat = NA, 
-        numInCat = NA)
+    pvals <- data.frame(category = cats, over_represented_pvalue = NA, under_represented_pvalue = NA, 
+        stringsAsFactors = FALSE, numDEInCat = NA, numInCat = NA)
     if (method == "Sampling")
     {
-        # We need to know the number of DE genes in each category, make this as
-        # a mask that we can use later...
+        # We need to know the number of DE genes in each category, make this as a
+        # mask that we can use later...
         num_DE_mask <- rep(0, length(cats))
         a <- table(unlist(gene2cat[DE], FALSE, FALSE))
         
         num_DE_mask[match(names(a), cats)] <- as.numeric(a)
         num_DE_mask <- as.integer(num_DE_mask)
-        # We have to ensure that genes not associated with a category are
-        # included in the simulation, to do this they need an empty entry in
-        # the gene2cat list
+        # We have to ensure that genes not associated with a category are included
+        # in the simulation, to do this they need an empty entry in the gene2cat
+        # list
         gene2cat <- gene2cat[rownames(pwf)]
         names(gene2cat) <- rownames(pwf)
         message("Running the simulation...")
@@ -330,11 +360,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
         lookup <- matrix(0, nrow = repcnt, ncol = length(cats))
         for (i in 1:repcnt)
         {
-            # A more efficient way of doing weighted random sampling without
-            # replacment than the built in function The order(runif...)[1:n] bit
-            # picks n genes at random, weighting them by the PWF The
-            # table(as.character(unlist(...))) bit then counts the number of times
-            # this random set occured in each category
+            # A more efficient way of doing weighted random sampling without replacment
+            # than the built in function The order(runif...)[1:n] bit picks n genes at
+            # random, weighting them by the PWF The table(as.character(unlist(...))) bit
+            # then counts the number of times this random set occured in each category
             a <- table(as.character(unlist(gene2cat[order(runif(num_genes)^(1/pwf$pwf), 
                 decreasing = TRUE)[1:num_de]], FALSE, FALSE)))
             lookup[i, match(names(a), cats)] <- a
@@ -385,11 +414,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
             # Now calculate the sum of the tails of the Wallenius distribution (the
             # p-values)
             
-            c(dWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, 
-                num_de, weight) + pWNCHypergeo(num_de_incat, num_incat, 
-                num_genes - num_incat, num_de, weight, lower.tail = FALSE), 
-                pWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, 
-                  num_de, weight))
+            c(dWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, num_de, 
+                weight) + pWNCHypergeo(num_de_incat, num_incat, num_genes - 
+                num_incat, num_de, weight, lower.tail = FALSE), pWNCHypergeo(num_de_incat, 
+                num_incat, num_genes - num_incat, num_de, weight))
         }))
     }
     if (method == "Hypergeometric")
@@ -407,12 +435,12 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
             num_de_incat <- sum(degenesnum %in% u)
             # The total number of genes in this category
             num_incat <- length(u)
-            # Calculate the sum of the tails of the hypergeometric distribution
-            # (the p-values)
+            # Calculate the sum of the tails of the hypergeometric distribution (the
+            # p-values)
             c(dhyper(num_de_incat, num_incat, num_genes - num_incat, num_de) + 
-                phyper(num_de_incat, num_incat, num_genes - num_incat, 
-                  num_de, lower.tail = FALSE), phyper(num_de_incat, num_incat, 
-                num_genes - num_incat, num_de))
+                phyper(num_de_incat, num_incat, num_genes - num_incat, num_de, 
+                  lower.tail = FALSE), phyper(num_de_incat, num_incat, num_genes - 
+                num_incat, num_de))
         }))
     }
     
@@ -428,8 +456,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     
     pvals.6 <- sapply(cat2gene, function(u, DE_pwf)
     {
-        # c(sum(degenesnum%in%u),length(u))
-        # c(rownames(pwf)[u[-which(is.na(u))]])
+        # c(sum(degenesnum%in%u),length(u)) c(rownames(pwf)[u[-which(is.na(u))]])
         x <- u[which(u %in% DE_pwf)]
         x
     }, DE_pwf)
@@ -453,8 +480,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
         is.list)], function(x) sapply(x, function(y) paste(unlist(y), collapse = ", ")))
     
     temp.gene.name <- unique(apply(dataset2[, 2], 1, c))
-    temp.gene.name.2 <- unique(gdata::trim(unlist(strsplit(temp.gene.name, 
-        split = ","))))
+    temp.gene.name.2 <- unique(gdata::trim(unlist(strsplit(temp.gene.name, split = ","))))
     
     DE_from_GO <- temp.gene.name.2
     
@@ -464,8 +490,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     # Finally, sort by p-value
     pvals <- pvals[order(pvals$over_represented_pvalue), ]
     
-    # Supplement the table with the GO term name and ontology group but
-    # only if the enrichment categories are actually GO terms
+    # Supplement the table with the GO term name and ontology group but only if
+    # the enrichment categories are actually GO terms
     if (any(grep("^GO:", pvals$category)))
     {
         GOnames <- select(GO.db, keys = pvals$category, columns = c("TERM", 
@@ -477,8 +503,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     # And return
     pvals.2 <- merge(pvals, pvals.6.df, by = "category", sort = FALSE)
     
-    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "category", 
-        sort = FALSE)
+    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "category", sort = FALSE)
     
     pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO, cat2gene = cat2gene)
     
@@ -486,9 +511,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat = NULL, test.cats = c("GO:CC
     
 }
 
-getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", 
-    "GO:MF"))
-    {
+getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
+{
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
     {
@@ -507,26 +531,25 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP",
     # What is the default ID that the organism package uses?
     coreid <- strsplit(orgstring, "\\.")[[1]][3]
     
-    # Now we need to convert it into the naming convention used by the
-    # organism packages
+    # Now we need to convert it into the naming convention used by the organism
+    # packages
     userid <- as.character(.ID_MAP[match(id, names(.ID_MAP))])
     # Multimatch or no match
     if (is.na(userid) | (length(userid) != 1))
     {
         stop("Couldn't grab GO categories automatically.  Please manually specify.")
     }
-    # The (now loaded) organism package contains a mapping between the
-    # internal ID and whatever the default is (usually eg), the rest of
-    # this function is about changing that mapping to point from categories
-    # to the ID specified Fetch the mapping in its current format Because
-    # GO is a directed graph, we need to get not just the genes associated
-    # with each ID, but also those associated with its children.  GO2ALLEGS
-    # does this.
+    # The (now loaded) organism package contains a mapping between the internal
+    # ID and whatever the default is (usually eg), the rest of this function is
+    # about changing that mapping to point from categories to the ID specified
+    # Fetch the mapping in its current format Because GO is a directed graph, we
+    # need to get not just the genes associated with each ID, but also those
+    # associated with its children.  GO2ALLEGS does this.
     core2cat <- NULL
     if (length(grep("^GO", fetch.cats)) != 0)
     {
-        # Get the name of the function which maps gene ids to go terms usually
-        # this will be 'GO2ALLEG'
+        # Get the name of the function which maps gene ids to go terms usually this
+        # will be 'GO2ALLEG'
         gomapFunction <- .ORG_GOMAP_FUNCTION[orgstring]
         if (is.na(gomapFunction)) 
             gomapFunction <- .ORG_GOMAP_FUNCTION["default"]
@@ -551,12 +574,11 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP",
         }
     }
     
-    # Now we MAY have to convert the 'gene_id' column to the format we are
-    # using
+    # Now we MAY have to convert the 'gene_id' column to the format we are using
     if (coreid != userid)
     {
-        # The mapping between user id and core id, don't use the
-        # <USER_ID>2<CORE_ID> object as the naming is not always consistent
+        # The mapping between user id and core id, don't use the <USER_ID>2<CORE_ID>
+        # object as the naming is not always consistent
         user2core <- toTable(get(paste(orgstring, userid, sep = "")))
         # Throw away any user ID that doesn't appear in core2cat
         user2core <- user2core[user2core[, 1] %in% core2cat[, 1], ]
@@ -565,17 +587,17 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP",
         # Now we need to replicate the core IDs that need replicating
         list_core2cat <- list_core2cat[match(user2core[, 1], names(list_core2cat))]
         # Now we can replace the labels on this list with the user ones from
-        # user2core, but there will be duplicates, so we have to unlist, label,
-        # then relist
+        # user2core, but there will be duplicates, so we have to unlist, label, then
+        # relist
         user2cat <- split(unlist(list_core2cat, FALSE, FALSE), rep(user2core[, 
             2], sapply(list_core2cat, length)))
         # Now we only want each category listed once for each entry...
         user2cat <- sapply(user2cat, unique)
-        ### In case you don't believe that this works as it should, here is the
-        ### slow as all hell way for comparison... Make first list
+        ### In case you don't believe that this works as it should, here is the slow
+        ### as all hell way for comparison... Make first list
         ### list_user2core=split(user2core[,1],user2core[,2]) Make the second
-        ### list_core2cat=split(core2cat[,2],core2cat[,1]) Go through each entry
-        ### in first list and expand using second...
+        ### list_core2cat=split(core2cat[,2],core2cat[,1]) Go through each entry in
+        ### first list and expand using second...
         ### user2cat=sapply(list_user2core,function(u){unique(unlist(list_core2cat[u],FALSE,FALSE))})
         
     } else
@@ -594,9 +616,9 @@ getgo3 <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP",
     
     ## we don't like case sensitivity
     names(user2cat) <- toupper(names(user2cat))
+    gene2go <- user2cat[toupper(genes)]
     
-    # Now look them up
-    return(user2cat[toupper(genes)])
+    return(gene2go)
 }
 
 # Description: Prints progress through a loop copy from Matthew Young's
@@ -614,80 +636,17 @@ pp <- function(total, count, i = i)
     cat(round(100 * (count/total)), "%   \r")
 }
 
-plotPWF2 <- function(pwf, binsize = "auto", pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.", 
-    ylab = "Proportion DE", ...)
-    {
-    w <- !is.na(pwf$bias.data)
-    # print(w)
-    o <- order(pwf$bias.data[w])
-    # print(o)
-    
-    rang <- max(pwf$pwf, na.rm = TRUE) - min(pwf$pwf, na.rm = TRUE)
-    if (rang == 0 & binsize == "auto") 
-        binsize = 1000
-    if (binsize == "auto")
-    {
-        binsize <- max(1, min(100, floor(sum(w) * 0.08)))
-        resid <- rang
-        oldwarn <- options()$warn
-        options(warn = -1)
-        while (binsize <= floor(sum(w) * 0.1) & resid/rang > 0.001)
-        {
-            binsize <- binsize + 100
-            splitter <- ceiling(1:length(pwf$DEgenes[w][o])/binsize)
-            de <- sapply(split(pwf$DEgenes[w][o], splitter), mean)
-            binlen <- sapply(split(as.numeric(pwf$bias.data[w][o]), splitter), 
-                mean)
-            resid <- sum((de - approx(pwf$bias.data[w][o], pwf$pwf[w][o], 
-                binlen)$y)^2)/length(binlen)
-        }
-        options(warn <- oldwarn)
-    } else
-    {
-        splitter <- ceiling(1:length(pwf$DEgenes[w][o])/binsize)
-        # print(splitter)
-        de <- sapply(split(pwf$DEgenes[w][o], splitter), mean)
-        # print(de)
-        binlen <- sapply(split(as.numeric(pwf$bias.data[w][o]), splitter), 
-            median)
-        # print(binlen)
-    }
-    xlab <- gsub("<binsize>", as.character(binsize), xlab)
-    if ("xlab" %in% names(list(...)))
-    {
-        if ("ylab" %in% names(list(...)))
-        {
-            plot(binlen, de, ...)
-        } else
-        {
-            plot(binlen, de, ylab = ylab, ...)
-        }
-    } else if ("ylab" %in% names(list(...)))
-    {
-        plot(binlen, de, xlab = xlab, ...)
-    } else
-    {
-        plot(binlen, de, xlab = xlab, ylab = ylab, ...)
-    }
-    lines(pwf$bias.data[w][o], pwf$pwf[w][o], col = pwf_col, lwd = pwf_lwd)
-    
-    return(de)
-    
-}
-
 outputGoBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 {
     
     # select GO term(10<=numInCat<=300 and BP only)
     
-    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & 
-        Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 300 & Re.Go.adjusted.by.exon.SJ[[1]]$ontology == 
-        "BP")
+    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 
+        300 & Re.Go.adjusted.by.exon.SJ[[1]]$ontology == "BP")
     
     Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ[[1]][index.select, 
         ]
-    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, 
-        -3]
+    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, -3]
     temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, 
         scientific = TRUE, digits = 2)
     Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue <- temp
@@ -708,13 +667,12 @@ outputGoBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 {
     
-    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & 
-        Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 300)
+    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 
+        300)
     
     Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ[[1]][index.select, 
         ]
-    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, 
-        -3]
+    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, -3]
     temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, 
         scientific = TRUE, digits = 2)
     Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue <- temp
@@ -830,52 +788,97 @@ getIdx <- function(v, MIN, MAX)
 
 match2Genome <- function(genome_id)
 {
-  ah <- AnnotationHub()
-  switch(genome_id, hg38 = {
-    hs <- query(ah, c("Ensembl", "GRCh38", "Homo sapiens"))
-    res <- hs[["AH53211"]]
-    res <- genes(res, columns = c("gene_name"))
-    xxx <- mcols(res)
-    yyy <- xxx
-  }, hg19 = {
-    edb <- org.Hs.eg.db
-    entrezid <- keys(edb, keytype = "ENTREZID")
-    suppressMessages(xxx <- select(edb, keys = entrezid, columns = c("ENSEMBL", 
-                                                                     "SYMBOL")))
-    yyy <- xxx[, c(3, 2, 1)]
-  }, {
-    hs <- query(ah, c("Ensembl", "GRCm38", "Mus Musculus"))
-    res <- hs[["AH53222"]]
-    res <- genes(res, columns = c("gene_name"))
-    xxx <- S4Vectors::mcols(res)
-    yyy <- xxx
-  })
-  return(yyy)
+    ah <- AnnotationHub()
+    switch(genome_id, hg38 = {
+        hs <- query(ah, c("Ensembl", "GRCh38", "Homo sapiens"))
+        res <- hs[["AH53211"]]
+        res <- genes(res, columns = c("gene_name"))
+        xxx <- mcols(res)
+        yyy <- xxx
+    }, hg19 = {
+        edb <- org.Hs.eg.db
+        entrezid <- keys(edb, keytype = "ENTREZID")
+        suppressMessages(xxx <- select(edb, keys = entrezid, columns = c("ENSEMBL", 
+            "SYMBOL")))
+        yyy <- xxx[, c(3, 2, 1)]
+    }, {
+        hs <- query(ah, c("Ensembl", "GRCm38", "Mus Musculus"))
+        res <- hs[["AH53222"]]
+        res <- genes(res, columns = c("gene_name"))
+        xxx <- S4Vectors::mcols(res)
+        yyy <- xxx
+    })
+    return(yyy)
 }
-
-# examples
-# dir.name <- '/media/H_driver/2016/Yang/MACS/MACS/'
-# converted.dir.name <- PathwaySplice:::reformatpath(dir.name)
 
 reformatpath <- function(dir.name)
 {
-  CheckOPS <- Sys.info()[["sysname"]]
-  
-  if (CheckOPS == "Darwin")
-  {
-    temp <- unlist(strsplit(dir.name, split = "\\/"))
+    CheckOPS <- Sys.info()[["sysname"]]
     
-    if (!is.na(temp[3] == "H_driver"))
+    if (CheckOPS == "Darwin")
     {
-      if (temp[3] == "H_driver")
-      {
-        temp[2] <- "Volumes"
-        temp[3] <- "Bioinformatics$"
-        dir.name <- do.call("file.path", as.list(temp))
-      }
+        temp <- unlist(strsplit(dir.name, split = "\\/"))
+        
+        if (!is.na(temp[3] == "H_driver"))
+        {
+            if (temp[3] == "H_driver")
+            {
+                temp[2] <- "Volumes"
+                temp[3] <- "Bioinformatics$"
+                dir.name <- do.call("file.path", as.list(temp))
+            }
+        }
+        
     }
     
-  }
+    return(dir.name)
+}
+
+getGeneSetBySize <- function(user2cat, go.size.cut)
+{
+    
+    gene2go <- user2cat
+    gene2go.2 <- gene2go[lapply(gene2go, length) > 0]
+    gene2go.select <- lapply(gene2go.2, function(x)
+    {
+        x = x[x != "Other"]
+        x
+    })
+    
+    if (!is.null(go.size.cut[2]))
+    {
+        lower.size <- go.size.cut[1]
+        upper.size <- go.size.cut[2]
+        gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 
+            lower.size & lapply(gene2go.select, length) <= upper.size]
+    } else
+    {
+        gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 
+            0]
+    }
+    
+    return(gene2go.select.1)
+    
+}
+
+makeFeatureTable <- function(jscs)
+{
+    temp <- fData(jscs)
+      
+    temp2 <- temp[which(temp$testable== TRUE),]
+      
+    index.1 <- which(colnames(temp2) %in% c("geneID"))
+    index.2 <- which(colnames(temp2) %in% c("countbinID"))
+      
+    index.3 <- which(colnames(temp2) %in% c("pvalue"))
+    
+    temp3 <- temp2[,c(index.1,index.2,index.3)]
+    
+    temp3 <- rapply(temp3, as.character, classes = "factor", how = "replace")
+    
+    row.names(temp3)=seq(1,dim(temp3)[1],1)
+    
   
-  return(dir.name)
+    
+    return(temp3)
 }
