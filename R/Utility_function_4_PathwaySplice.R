@@ -860,3 +860,25 @@ getGeneSetBySize <- function(user2cat, go.size.cut)
     return(gene2go.select.1)
     
 }
+
+makeFeatureTable <- function(jscs)
+{
+    temp <- fData(jscs)
+      
+    temp2 <- temp[which(temp$testable== TRUE),]
+      
+    index.1 <- which(colnames(temp2) %in% c("geneID"))
+    index.2 <- which(colnames(temp2) %in% c("countbinID"))
+      
+    index.3 <- which(colnames(temp2) %in% c("pvalue"))
+    
+    temp3 <- temp2[,c(index.1,index.2,index.3)]
+    
+    temp3 <- rapply(temp3, as.character, classes = "factor", how = "replace")
+    
+    row.names(temp3)=seq(1,dim(temp3)[1],1)
+    
+  
+    
+    return(temp3)
+}
