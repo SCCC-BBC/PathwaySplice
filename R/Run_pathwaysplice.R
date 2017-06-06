@@ -123,10 +123,10 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 #' runPathwaySplice
 #'
 #' This function uses gene-based
-#' table as an input, and select gene sets by defining type and size of gene sets
-#' to perform gene set enrichment analysis
+#' table converted from makeGeneTable as an input, and select gene sets of certain type and size  
+#' to perform gene set enrichment analysis adjusted by number of features in gene based table
 #'  
-#' @param res2 Gene based table 
+#' @param res Gene based table 
 #' @param genome Genome to be used(hg19 or mm10) 
 #' @param id GeneID to be used(entrezgene or ensembl_gene_id)
 #' @param gene2cat Get sets defined by users   
@@ -149,15 +149,15 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 #'                          method='Wallenius')
 #' 
 #'  
-runPathwaySplice <- function(res2, genome, id, gene2cat = NULL, 
+runPathwaySplice <- function(res, genome, id, gene2cat = NULL, 
                              test.cats = c("GO:CC", "GO:BP", "GO:MF"),
                              go.size.cut = c(lower.size = 0, upper.size = NULL),
                              method = "Wallenius",
                              repcnt = 2000, use.genes.without.cat = FALSE)
 {
-  x <- res2[, 3]
-  names(x) <- res2[, 1]
-  pwf <- nullp(x, genome, id, bias.data = res2[, 5], plot.fit = TRUE)
+  x <- res[, 3]
+  names(x) <- res[, 1]
+  pwf <- nullp(x, genome, id, bias.data = res[, 5], plot.fit = TRUE)
   CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
                          test.cats = test.cats, go.size.cut = go.size.cut, method = method, repcnt = repcnt, 
                          use.genes.without.cat = use.genes.without.cat)
@@ -167,9 +167,9 @@ runPathwaySplice <- function(res2, genome, id, gene2cat = NULL,
 
 #' enrichmentMap
 #'
-#' enrichmentMap is used to draw network based on similarities between GOs
+#' enrichmentMap is used to draw Enrichment Map based on similarities defined using Jaccard Coefficient between GOs or gene sets
 #'                                  
-#' @param goseqres Object returned from runpathwaysplice
+#' @param goseqres Object returned from runPathwaySplice
 #' @param n Maximum number of category to be shown
 #' @param fixed If set to FALSE, will invoke tkplot
 #' @param vertex.label.font Font size of vertex label
@@ -400,7 +400,7 @@ gmtGene2Cat <- function(dir.name, pathway.file, file.type,
     
 }
 
-#' postProcessGo
+#' compareResults
 #'
 #' @param n.go Number of gene sets
 #' @param adjusted Adjusted result 
@@ -440,11 +440,11 @@ gmtGene2Cat <- function(dir.name, pathway.file, file.type,
 #' 
 #' output.file.name.1 <- 'In_ad_not_un.xls'
 #' output.file.name.2 <- 'In_un_not_ad.xls'
-#' res3 <- postProcessGo(4,res1,res2,output.dir,output.dir,
+#' res3 <- compareResults(4,res1,res2,output.dir,output.dir,
 #'                       type.boxplot='Only3',
 #'                       output.file.name.1,output.file.name.2)
 #' @export
-postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir, 
+compareResults <- function(n.go, adjusted, unadjuasted, venn.dir, 
                           boxplot.dir,type.boxplot = c("All", "Only3"),
                           In.ad.not.un.file, In.un.not.ad.file)
 {
@@ -471,12 +471,12 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir,
   } else
   {
     
-    if (dim(example.go.adjusted.by.exon$GO.selected)[1] >= n && dim(example.go.unadjusted$GO.selected)[1] >= 
+    if (dim(example.go.adjusted.by.exon$GO)[1] >= n && dim(example.go.unadjusted$GO)[1] >= 
         n)
     {
       
-      adjusted <- example.go.adjusted.by.exon$GO.selected[1:n, 1]
-      unadjusted <- example.go.unadjusted$GO.selected[1:n, 1]
+      adjusted <- example.go.adjusted.by.exon$GO[1:n, 1]
+      unadjusted <- example.go.unadjusted$GO[1:n, 1]
       
       re <- list(adjusted = adjusted, unadjusted = unadjusted)
       
@@ -497,19 +497,19 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir,
       if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
           0)
       {
-        index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$GO.selected$category)
-        In.ad.not.un <- example.go.adjusted.by.exon$GO.selected[index1, 
+        index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$GO$category)
+        In.ad.not.un <- example.go.adjusted.by.exon$GO[index1, 
                                                                 ]$Ave_value_all_gene
         
-        yy <- cbind(example.go.unadjusted$GO.selected[index1, ]$rank.value.by.over_represented_pvalue, 
-                    example.go.adjusted.by.exon$GO.selected[index1, ]$rank.value.by.over_represented_pvalue)
+        yy <- cbind(example.go.unadjusted$GO[index1, ]$rank.value.by.over_represented_pvalue, 
+                    example.go.adjusted.by.exon$GO[index1, ]$rank.value.by.over_represented_pvalue)
         
         
-        index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$GO.selected$category)
-        In.un.not.ad <- example.go.unadjusted$GO.selected[index2, ]$Ave_value_all_gene
+        index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$GO$category)
+        In.un.not.ad <- example.go.unadjusted$GO[index2, ]$Ave_value_all_gene
         
-        yyy <- cbind(example.go.unadjusted$GO.selected[index2, ]$rank.value.by.over_represented_pvalue, 
-                     example.go.adjusted.by.exon$GO.selected[index2, ]$rank.value.by.over_represented_pvalue)
+        yyy <- cbind(example.go.unadjusted$GO[index2, ]$rank.value.by.over_represented_pvalue, 
+                     example.go.adjusted.by.exon$GO[index2, ]$rank.value.by.over_represented_pvalue)
         
         rre <- list(yy = yy, yyy = yyy)
         
@@ -517,13 +517,13 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir,
         
         colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
         
-        cp.top.adjusted.25 <- unlist(example.go.adjusted.by.exon$GO.selected[1:n, 
+        cp.top.adjusted.25 <- unlist(example.go.adjusted.by.exon$GO[1:n, 
                                                                              ]$Ave_value_all_gene)
-        cp.top.unadjusted.25 <- unlist(example.go.unadjusted$GO.selected[1:n, 
+        cp.top.unadjusted.25 <- unlist(example.go.unadjusted$GO[1:n, 
                                                                          ]$Ave_value_all_gene)
         
-        cp.all.adjusted <- unlist(example.go.adjusted.by.exon$GO.selected$Ave_value_all_gene)
-        cp.all.unadjusted <- unlist(example.go.unadjusted$GO.selected$Ave_value_all_gene)
+        cp.all.adjusted <- unlist(example.go.adjusted.by.exon$GO$Ave_value_all_gene)
+        cp.all.unadjusted <- unlist(example.go.unadjusted$GO$Ave_value_all_gene)
         
         type.boxplot <- match.arg(type.boxplot)
         
@@ -554,11 +554,11 @@ postProcessGo <- function(n.go, adjusted, unadjuasted, venn.dir,
         })
         
         Output_file <- file.path(boxplot.dir, In.ad.not.un.file)
-        writegototable(example.go.adjusted.by.exon$GO.selected[index1, 
+        writegototable(example.go.adjusted.by.exon$GO[index1, 
                                                                ], Output_file)
         
         Output_file <- file.path(boxplot.dir, In.un.not.ad.file)
-        writegototable(example.go.unadjusted$GO.selected[index2, ], 
+        writegototable(example.go.unadjusted$GO[index2, ], 
                        Output_file)
         
         return(rre)
