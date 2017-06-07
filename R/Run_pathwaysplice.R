@@ -68,8 +68,6 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #' is implemented. Here features refer to exon bins or splicing junction bins, depending on 
 #' how \code{genewise.pvalue} was obtained
 #'   
-#'       
-#' @return 
 #' @export
 #' 
 #' @examples
