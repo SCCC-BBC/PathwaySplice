@@ -21,7 +21,7 @@
 #' 
 NULL
 
-#' allFeatureBasedData
+#' Feature10000BasedData
 #' 
 #' A data set from gene feature based differential analysis 
 #' 
@@ -35,11 +35,11 @@ NULL
 #' 
 #' @docType data
 #' @keywords datasets
-#' @name allFeatureBasedData
-#' @usage data(allFeatureBasedData)
+#' @name Feature10000BasedData
+#' @usage data(Feature10000BasedData)
 #'  
-#' @return A data set with 497680 rows and 3 variables
+#' @return A data set with 10000 rows and 3 variables
 #' 
-#' @format A data frame with 497680 rows and 3 variables
+#' @format A data frame with 10000 rows and 3 variables
 #' 
 NULL
