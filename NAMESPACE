@@ -6,7 +6,6 @@ import(igraph)
 import(org.Hs.eg.db)
 import(VennDiagram)
 import(ensembldb)
-import(cummeRbund)
 
 importFrom(AnnotationHub,AnnotationHub,query)
 importFrom(BiocGenerics,sizeFactors)
