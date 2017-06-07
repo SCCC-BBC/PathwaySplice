@@ -6,13 +6,12 @@ import(igraph)
 import(org.Hs.eg.db)
 import(VennDiagram)
 import(ensembldb)
+import(cummeRbund)
 
 importFrom(AnnotationHub,AnnotationHub,query)
-            
 importFrom(BiocGenerics,sizeFactors)
 importFrom(AnnotationDbi,toTable,select)
 importFrom(stats, var)
-
 importFrom(JunctionSeq,runJunctionSeqAnalyses)
 importFrom(BiasedUrn,dWNCHypergeo,pWNCHypergeo)
 importFrom(GO.db,GO.db)
