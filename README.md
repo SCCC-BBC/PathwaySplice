@@ -27,10 +27,10 @@ R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice",ref="development
 # Load feature table to get differential usage results
 
 library(PathwaySplice)
-data(allFeatureBasedData)
+data(Feature10000BasedData)
 
 # Convert the results of differential usage analysis into gene based resutls
-gene.based.table <- makeGeneTable(allFeatureBasedData)
+gene.based.table <- makeGeneTable(Feature10000BasedData)
 ```
 
 + Apply logistic regression model to identify bias factor
