@@ -304,7 +304,6 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.cut,
         
     }
     
-    
     # Add option to choose gene set by its size
     gene2cat <- getGeneSetBySize(gene2cat, go.size.cut)
     
@@ -838,26 +837,27 @@ getGeneSetBySize <- function(user2cat, go.size.cut)
 {
     
     gene2go <- user2cat
-    gene2go.2 <- gene2go[lapply(gene2go, length) > 0]
-    gene2go.select <- lapply(gene2go.2, function(x)
+    gene2go.select <- lapply(gene2go, function(x)
     {
         x = x[x != "Other"]
         x
     })
     
-    if (!is.null(go.size.cut[2]))
+    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0]
+    
+    lower.size <- go.size.cut[1]
+    upper.size <- go.size.cut[2]
+    
+    if (is.finite(lower.size)&is.finite(upper.size))
     {
-        lower.size <- go.size.cut[1]
-        upper.size <- go.size.cut[2]
-        gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 
-            lower.size & lapply(gene2go.select, length) <= upper.size]
-    } else
-    {
-        gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 
-            0]
+        gene2go.select.2 <- gene2go.select.1[lapply(gene2go.select.1, length) > 
+            lower.size & lapply(gene2go.select.1, length) <= upper.size]
+    }else{
+      
+      gene2go.select.2 <- gene2go.select.1
     }
     
-    return(gene2go.select.1)
+    return(gene2go.select.2)
     
 }
 
