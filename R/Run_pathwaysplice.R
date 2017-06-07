@@ -151,7 +151,7 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 #'  
 runPathwaySplice <- function(res, genome, id, gene2cat = NULL, 
                              test.cats = c("GO:CC", "GO:BP", "GO:MF"),
-                             go.size.cut = c(lower.size = 0, upper.size = NULL),
+                             go.size.cut = c(-Inf,Inf),
                              method = "Wallenius",
                              repcnt = 2000, use.genes.without.cat = FALSE)
 {
