@@ -322,14 +322,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.cut,
     pwf$pwf[is.na(pwf$pwf)] <- pwf$pwf[match(sort(pwf$bias.data[!is.na(pwf$bias.data)])[ceiling(sum(!is.na(pwf$bias.data))/2)], 
         pwf$bias.data)]
     
-<<<<<<< HEAD
-    
-    # ###################### Calculating the p-values ######################## 
-  
-    # Remove all the genes with unknown GOterms
-=======
-    ###################### Calculating the p-values ########################
->>>>>>> b1ac8f7b7254be7f328f50926efc39df7f4bcc87
+
     
     # Remove all the genes with unknown GOterms
     unknown_go_terms = nrow(pwf) - length(gene2cat)
