@@ -8,7 +8,7 @@ enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
   similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
 }
 \arguments{
-\item{goseqres}{Object returned from runpathwaysplice}
+\item{goseqres}{Object returned from runPathwaySplice}
 
 \item{n}{Maximum number of category to be shown}
 
@@ -42,7 +42,7 @@ TRUE indicates to label vertex by the index of gene sets}
 A list for giving edge and vertex information of enrichment map
 }
 \description{
-enrichmentMap is used to draw network based on similarities between GOs
+enrichmentMap is used to draw Enrichment Map based on similarities defined using Jaccard Coefficient between GOs or gene sets
 }
 \examples{
 

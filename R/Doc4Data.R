@@ -24,3 +24,26 @@
 #' @example data(featureBasedData)
 #'     
 NULL
+
+#' Feature10000BasedData
+#' 
+#' A data set from gene feature based differential analysis 
+#' 
+#' This gene feature based table includes the following information:
+#' 
+#' \itemize{
+#'   \item geneID: Gene ID
+#'   \item countbinID: ID for features of each gene(it could be exons or splicing junctions)
+#'   \item pvalue: p-value of the features from differential usage analysis 
+#' }
+#' 
+#' @docType data
+#' @keywords datasets
+#' @name Feature10000BasedData
+#' @usage data(Feature10000BasedData)
+#'  
+#' @return A data set with 10000 rows and 3 variables
+#' 
+#' @format A data frame with 10000 rows and 3 variables
+#' 
+NULL

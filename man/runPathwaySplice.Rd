@@ -5,9 +5,8 @@
 \title{runPathwaySplice}
 \usage{
 runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
-  test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.cut = c(lower.size = 0,
-  upper.size = NULL), method = "Wallenius", repcnt = 2000,
-  use.genes.without.cat = FALSE)
+  test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.cut = c(-Inf, Inf),
+  method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
 }
 \arguments{
 \item{genewise.table}{data frame returned from function \code{makeGeneTable}}

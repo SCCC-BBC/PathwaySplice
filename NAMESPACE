@@ -8,11 +8,9 @@ import(VennDiagram)
 import(ensembldb)
 
 importFrom(AnnotationHub,AnnotationHub,query)
-            
 importFrom(BiocGenerics,sizeFactors)
 importFrom(AnnotationDbi,toTable,select)
 importFrom(stats, var)
-
 importFrom(JunctionSeq,runJunctionSeqAnalyses)
 importFrom(BiasedUrn,dWNCHypergeo,pWNCHypergeo)
 importFrom(GO.db,GO.db)
@@ -32,5 +30,5 @@ export(gmtGene2Cat)
 export(lrTestBias)
 export(enrichmentMap)
 export(makeGeneTable)
-export(postProcessGo)
+export(compareResults)
 export(runPathwaySplice)
