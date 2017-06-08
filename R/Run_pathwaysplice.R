@@ -70,7 +70,11 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #'   
 #' @export
 #' 
+#' @return
+#' 
+#'
 #' @examples
+#' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
 #' 
