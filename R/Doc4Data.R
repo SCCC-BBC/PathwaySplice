@@ -1,22 +1,26 @@
 #' featureBasedData
 #' 
-#' A data set from gene feature based differential analysis 
+#' This data set gives results of RNA-seq data in Dolatshad et al. (2015), 
+#' which compared transcriptome of CD34+ cells from myelodysplastic syndrome (MDS) patients 
+#' with SF3B1 mutations vs. healthy controls using RNA sequencing. The \code{JunctionSeq} package was used to determine 
+#' which counting bins were differentially used. Because of the size limit, only a subset of genes were included here for 
+#' demonstration. The details of the analysis can be found in the \code{PathwaySplice} vignette.  
 #' 
-#' This gene feature based table includes the following information:
-#' 
-#' \itemize{
-#'   \item geneID: Gene ID
-#'   \item countbinID: ID for features of each gene(it could be exons or splicing junctions)
-#'   \item pvalue: p-value of the features from differential usage analysis 
-#' }
 #' 
 #' @docType data
 #' @keywords datasets
 #' @name featureBasedData
 #' @usage data(featureBasedData)
 #'  
-#' @return A data set with 307 rows and 3 variables
+#' @format A data frame with variables for gene identifier (geneID), gene feature identifier (countbinID), and 
+#'  p-value for gene feature (pvalue)
 #' 
-#' @format A data frame with 307 rows and 3 variables
+#' @references H Dolatshad, A Pellagatti, M Fernandez-Mercado1, B H Yip, L Malcovati, M Attwood, B Przychodzen
+#' N Sahgal, A A Kanapin, H Lockstone, L Scifo, P Vandenberghe, E Papaemmanuil, C W J Smith, P J Campbell, 
+#' S Ogawa1, J P Maciejewski, M Cazzola, K I Savage1 and J Boultwood1 (2015) \emph{Disruption of SF3B1 results in deregulated 
+#' expression and splicing of key genes and pathways in myelodysplastic syndrome hematopoietic stem and progenitor 
+#' cells.} Leukemia (2015) 29, 1092-1103
 #' 
+#' @example data(featureBasedData)
+#'     
 NULL
