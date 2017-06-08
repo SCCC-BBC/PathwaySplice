@@ -7,22 +7,28 @@
 makeGeneTable(feature.table, sig.threshold = 0.05)
 }
 \arguments{
-\item{feature.table}{An object returned from function \code{makeFeatureTable}.}
+\item{feature.table}{An \code{featureBasedData} object.}
 
-\item{sig.threshold}{Threshold used for setting whether gene is differential or not based on smallest p-value of all features within a gene}
+\item{sig.threshold}{Significance threshold used to determine whether the gene is significant 
+or not}
 }
 \value{
-A dataframe with the following arguments as cloumns for each gene 
+Returns a dataframe with several variables (columns) 
   \itemize{
   \item geneID: Gene ID
-  \item countbinID: feature ID in the feature differential usage analysis
-  \item pvalue: unadjusted p value of each feature in the feature differential usage analysis
+  \item geneWisePvalue: each gene is represented by the smallest p-value among its features
+  \item sig.gene: a gene is significant (1) or not (0) 
+  \item mostSigDeFeature: the most significant gene feature
+  \item numFeature: number of gene features within the gene
 }
 }
 \description{
-This function convert feature table into gene based table.
+This function obtains genewise p-values,
+by representing each gene with the smallest p-value among its features, 
+and then determines genes status as significant or not.
 }
 \examples{
-res2 <- makeGeneTable(featureBasedData)
+data(featureBasedData)
+res <- makeGeneTable(featureBasedData)
   
 }

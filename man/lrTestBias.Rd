@@ -4,32 +4,33 @@
 \alias{lrTestBias}
 \title{lrTestBias}
 \usage{
-lrTestBias(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
+lrTestBias(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80,
   boxplot.width = 0.3)
 }
 \arguments{
-\item{jscs.genewise.object}{A dataframe with genewise p-value for each gene, 
-returned from \code{makeGeneWiseTable}}
+\item{genewise.table}{A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}}
 
 \item{loc.x}{x coordinate for position of logistic regression p-value in figure}
 
 \item{loc.y}{y coordinate for position of logistic regression p-value in figure}
 
-\item{y.lim}{The largest number of exons in y axis in boxplot}
+\item{y.lim}{The largest number of gene features on the y axis in boxplot}
 
-\item{boxplot.width}{Parameter for boxplot width}
+\item{boxplot.width}{width of boxplot}
 }
 \description{
 This function tests presence of selection bias using logistic regression, and produces a boxplot 
-that compares distributions of gene features for significant genes and non-significant genes.
+that compares distributions of bias factors (e.g. number of exons) for significant genes and non-significant genes.
 }
 \details{
-The logistic regression model Pr(significant gene) ~ number of features within the gene 
-is implemented. Here features refer to exon bins or splicing junction bins, depending on 
-how \code{genewise.pvalue} was obtained
+To determine presentce of selection bias, we fit the logistic regression model 
+\code{Pr(a gene is significant) ~ number of features within the gene}. 
+Here features refer to exon bins or splicing junction bins, depending on 
+how genewise pvalues were obtained
 }
 \examples{
-gene.based.table <- makeGeneTable(featureBasedData)
-res <- lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+genewise.table <- makeGeneTable(featureBasedData)
+res <- lrTestBias(genewise.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+
 
 }

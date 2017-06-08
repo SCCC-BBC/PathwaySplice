@@ -48,7 +48,7 @@ enrichmentMap is used to draw network based on similarities between GOs
 
 gene.based.table <- makeGeneTable(featureBasedData)
 
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
                          go.size.cut=c(5,30),
                          method='Wallenius')
@@ -56,7 +56,7 @@ res1 <- runPathwaySplice(gene.based.table,genome='hg19',
 dir.name <- tempdir()
 output.file.dir <- file.path(dir.name,'OutputEnmapEx')
 
-enmap <- enrichmentMap(res1,n=3,similarity.threshold=0,
+enmap <- enrichmentMap(res,n=3,similarity.threshold=0,
                        output.file.dir = output.file.dir,
                        label.vertex.by.index = TRUE)
                        
