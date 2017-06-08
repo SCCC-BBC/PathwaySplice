@@ -4,37 +4,38 @@
 \alias{runPathwaySplice}
 \title{runPathwaySplice}
 \usage{
-runPathwaySplice(res, genome, id, gene2cat = NULL, test.cats = c("GO:CC",
-  "GO:BP", "GO:MF"), go.size.cut = c(-Inf, Inf), method = "Wallenius",
-  repcnt = 2000, use.genes.without.cat = FALSE)
+runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
+  test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.cut = c(-Inf, Inf),
+  method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
 }
 \arguments{
-\item{res}{Gene based table}
+\item{genewise.table}{data frame returned from function \code{makeGeneTable}}
 
-\item{genome}{Genome to be used(hg19 or mm10)}
+\item{genome}{Genome to be used, options are "hg19" or "mm10"}
 
-\item{id}{GeneID to be used(entrezgene or ensembl_gene_id)}
+\item{id}{GeneID, options are "entrezgene" or "ensembl_gene_id"}
 
 \item{gene2cat}{Get sets defined by users}
 
-\item{test.cats}{Gene set if users does not define their gene set}
+\item{test.cats}{Gene sets to be tested if \code{gene2cat} is not defined}
 
-\item{go.size.cut}{Size of gene sets to be defined}
+\item{go.size.cut}{Size limit of the gene sets to be tested}
 
-\item{method}{Method to be used for calculating overrepresented p value
-of gene sets(Options include Wallenius,Sampling, and Hypergeometric)}
+\item{method}{the method used to calculate pathway enrichment p value. 
+Options are "Wallenius", "Sampling", and "Hypergeometric"}
 
-\item{repcnt}{Number of sampling if user use sampling method to calculate gene set enrichment p value}
+\item{repcnt}{Number of random samples to be calculated when "Sampling" is used
+ignored unless \code{method="Sampling"}}
 
-\item{use.genes.without.cat}{Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background}
+\item{use.genes.without.cat}{Whether genes not mapped to any category tested are included in analysis.
+If set to FALSE, genes not mapped to any tested categories are ignored in analysis.}
 }
 \value{
 A list that has gene set enrichment analysis results
 }
 \description{
-This function uses gene-based
-table converted from makeGeneTable as an input, and select gene sets of certain type and size  
-to perform gene set enrichment analysis adjusted by number of features in gene based table
+This function identifies pathways that are enriched with signficant genes, while accounting for 
+different number of exons and/or splicing junctions associated with each gene
 }
 \examples{
 res <- makeGeneTable(featureBasedData)
