@@ -1,15 +1,20 @@
 #' makeGeneTable 
 #' 
-#' This function convert feature table into gene based table. 
+#' This function obtains genewise p-values,
+#' by representing each gene with the smallest p-value among its features, 
+#' and then determines genes status as significant or not. 
 #'  
-#' @param feature.table An object loaded using \code{data(featureBasedData)}.
-#' @param sig.threshold Threshold used for setting whether gene is differential or not based on smallest p-value of all features within a gene  
+#' @param feature.table An \code{featureBasedData} object.
+#' @param sig.threshold Significance threshold used to determine whether the gene is significant 
+#' or not  
 #'
-#' @return A dataframe with the following arguments as cloumns for each gene 
+#' @return Returns a dataframe with several variables (columns) 
 #'   \itemize{
 #'   \item geneID: Gene ID
-#'   \item countbinID: feature ID in the feature differential usage analysis
-#'   \item pvalue: unadjusted p value of each feature in the feature differential usage analysis
+#'   \item geneWisePvalue: each gene is represented by the smallest p-value among its features
+#'   \item sig.gene: a gene is significant (1) or not (0) 
+#'   \item mostSigDeFeature: the most significant gene feature
+#'   \item numFeature: number of gene features within the gene
 #' }
 #' 
 #' @export
@@ -56,31 +61,33 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #' lrTestBias
 #' 
 #' This function tests presence of selection bias using logistic regression, and produces a boxplot 
-#' that compares distributions of gene features for significant genes and non-significant genes. 
+#' that compares distributions of bias factors (e.g. number of exons) for significant genes and non-significant genes. 
 #' 
-#' @param jscs.genewise.object A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}
+#' @param genewise.table A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}
 #' @param loc.x x coordinate for position of logistic regression p-value in figure
 #' @param loc.y y coordinate for position of logistic regression p-value in figure
-#' @param y.lim The largest number of exons in y axis in boxplot
-#' @param boxplot.width Parameter for boxplot width
+#' @param y.lim The largest number of gene features on the y axis in boxplot
+#' @param boxplot.width width of boxplot
 #'   
-#' @details The logistic regression model Pr(significant gene) ~ number of features within the gene 
-#' is implemented. Here features refer to exon bins or splicing junction bins, depending on 
-#' how \code{genewise.pvalue} was obtained
+#' @details To determine presentce of selection bias, we fit the logistic regression model 
+#' \code{Pr(a gene is significant) ~ number of features within the gene}. 
+#' Here features refer to exon bins or splicing junction bins, depending on 
+#' how genewise pvalues were obtained
 #'   
 #'       
 #' @return NULL
 #' @export
 #' 
 #' @examples
-#' gene.based.table <- makeGeneTable(featureBasedData)
-#' res <- lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+#' genewise.table <- makeGeneTable(featureBasedData)
+#' res <- lrTestBias(genewise.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
 #' 
-lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80, 
-    boxplot.width = 0.3)
-    {
-    
-    mydata <- jscs.genewise.object
+#' 
+lrTestBias <- function(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80, boxplot.width = 0.3)
+
+{
+
+    mydata <- genewise.table
     
     n.gene <- dim(mydata)[1]
     
@@ -111,8 +118,11 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
         boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), boxwex = boxplot.width, 
             ylab = "Number of features", col = "lightgray", ylim = c(1, y.lim))
         
-        text(x = loc.x, y = loc.y, labels = c("", paste0("P-value from logistic regression:\n\n", 
-            pvalue)), col = c(NA, "black"))
+        text(x = loc.x, 
+             y = loc.y, 
+             labels = c("", paste0("P-value from logistic regression:\n\n", 
+                                   round(as.numeric(pvalue), digits=3))) 
+            )
     } else
     {
         cat("There are no variations on the number of features\n")
@@ -122,22 +132,22 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 
 #' runPathwaySplice
 #'
-#' This function uses gene-based
-#' table as an input, and select gene sets by defining type and size of gene sets
-#' to perform gene set enrichment analysis
-#'  
-#' @param res2 Gene based table 
-#' @param genome Genome to be used(hg19 or mm10) 
-#' @param id GeneID to be used(entrezgene or ensembl_gene_id)
+#' This function identifies pathways that are enriched with signficant genes, while accounting for 
+#' different number of exons and/or splicing junctions associated with each gene
+#' 
+#' @param genewise.table data frame returned from function \code{makeGeneTable} 
+#' @param genome Genome to be used, options are "hg19" or "mm10" 
+#' @param id GeneID, options are "entrezgene" or "ensembl_gene_id"
 #' @param gene2cat Get sets defined by users   
-#' @param test.cats Gene set if users does not define their gene set 
-#' @param go.size.cut Size of gene sets to be defined
-#' @param method Method to be used for calculating overrepresented p value
-#'        of gene sets(Options include Wallenius,Sampling, and Hypergeometric) 
-#' @param repcnt Number of sampling if user use sampling method to calculate gene set enrichment p value
-#' @param use.genes.without.cat Whether to include gene without mapping to get set for calculate gene set enrichment p value. if set FALSE, use the genes that have mapped gene sets only as background; if set TRUE, use all genes as background   
-#'    
-#'
+#' @param test.cats Gene sets to be tested if \code{gene2cat} is not defined 
+#' @param go.size.cut Size limit of the gene sets to be tested
+#' @param method the method used to calculate pathway enrichment p value. 
+#'        Options are "Wallenius", "Sampling", and "Hypergeometric" 
+#' @param repcnt Number of random samples to be calculated when "Sampling" is used
+#'        ignored unless \code{method="Sampling"}
+#' @param use.genes.without.cat Whether genes not mapped to any category tested are included in analysis.
+#'        If set to FALSE, genes not mapped to any tested categories are ignored in analysis. 
+#'      
 #' @return A list that has gene set enrichment analysis results
 #' @export
 #'
@@ -149,15 +159,15 @@ lrTestBias <- function(jscs.genewise.object, loc.x = 2, loc.y = 70, y.lim = 80,
 #'                          method='Wallenius')
 #' 
 #'  
-runPathwaySplice <- function(res2, genome, id, gene2cat = NULL, 
+runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
                              test.cats = c("GO:CC", "GO:BP", "GO:MF"),
                              go.size.cut = c(lower.size = 0, upper.size = NULL),
                              method = "Wallenius",
                              repcnt = 2000, use.genes.without.cat = FALSE)
 {
-  x <- res2[, 3]
-  names(x) <- res2[, 1]
-  pwf <- nullp(x, genome, id, bias.data = res2[, 5], plot.fit = TRUE)
+  x <-genewise.table[, 3]
+  names(x) <-genewise.table[, 1]
+  pwf <- nullp(x, genome, id, bias.data =genewise.table[, 5], plot.fit = TRUE)
   CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
                          test.cats = test.cats, go.size.cut = go.size.cut, method = method, repcnt = repcnt, 
                          use.genes.without.cat = use.genes.without.cat)
