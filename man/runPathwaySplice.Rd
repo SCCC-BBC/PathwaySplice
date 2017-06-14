@@ -6,14 +6,15 @@
 \usage{
 runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
   test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.cut = c(-Inf, Inf),
-  method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE)
+  method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE,
+  binsize = "auto")
 }
 \arguments{
 \item{genewise.table}{data frame returned from function \code{makeGeneTable}}
 
-\item{genome}{Genome to be used, options are "hg19" or "mm10"}
+\item{genome}{Genome to be used, options are 'hg19' or 'mm10'}
 
-\item{id}{GeneID, options are "entrezgene" or "ensembl_gene_id"}
+\item{id}{GeneID, options are 'entrezgene' or 'ensembl_gene_id'}
 
 \item{gene2cat}{Get sets defined by users}
 
@@ -22,13 +23,15 @@ runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
 \item{go.size.cut}{Size limit of the gene sets to be tested}
 
 \item{method}{the method used to calculate pathway enrichment p value. 
-Options are "Wallenius", "Sampling", and "Hypergeometric"}
+Options are 'Wallenius', 'Sampling', and 'Hypergeometric'}
 
-\item{repcnt}{Number of random samples to be calculated when "Sampling" is used
-ignored unless \code{method="Sampling"}}
+\item{repcnt}{Number of random samples to be calculated when 'Sampling' is used
+ignored unless \code{method='Sampling'}}
 
 \item{use.genes.without.cat}{Whether genes not mapped to any category tested are included in analysis.
 If set to FALSE, genes not mapped to any tested categories are ignored in analysis.}
+
+\item{binsize}{The number of genes in each gene bin(set) defined by user in checking bias plot}
 }
 \value{
 A list that has gene set enrichment analysis results
@@ -42,7 +45,7 @@ res <- makeGeneTable(featureBasedData)
 res <- runPathwaySplice(res,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
                          go.size.cut=c(5,30),
-                         method='Wallenius')
+                         method='Wallenius',binsize=2)
 
  
 }
