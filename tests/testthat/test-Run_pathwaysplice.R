@@ -2,7 +2,7 @@ library(testthat)
 test_that("test lrTestBias",
           {
             res <- makeGeneTable(featureBasedData)
-            res <- lrTestBias(res,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+            lrTestBias(res,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
           })
 test_that("test runPathwaySplice",
           {
