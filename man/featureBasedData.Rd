@@ -9,6 +9,9 @@
 \usage{
 data(featureBasedData)
 }
+\value{
+A data set with 307 rows and 3 variables
+}
 \description{
 This data set gives results of RNA-seq data in Dolatshad et al. (2015), 
 which compared transcriptome of CD34+ cells from myelodysplastic syndrome (MDS) patients 

@@ -19,10 +19,12 @@ compareResults(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
 \item{boxplot.dir}{Path for outputing boxplot}
 
 \item{type.boxplot}{Get boxplot for 5 categories or 3 categories
-6 categories: 'All.adjusted','All.unadjusted',
-              'Top25.adjusted','Top25.unadjusted',
-              'In_ad_not_un','In_un_not_ad'
-3 categories: 'All','Top25.adjusted','Top25.unadjusted}
+
+       6 categories: 'All.adjusted','All.unadjusted',
+                     'Top25.adjusted','Top25.unadjusted',
+                     'In_ad_not_un','In_un_not_ad'
+                     
+       3 categories: 'All','Top25.adjusted','Top25.unadjusted}
 
 \item{In.ad.not.un.file}{File name for outputing adjused but not
 in unadjusted when using the selected gene sets}
@@ -31,7 +33,7 @@ in unadjusted when using the selected gene sets}
 in adjusted when using the selected gene sets}
 }
 \value{
-null
+Nothing to be returned
 }
 \description{
 compareResults
@@ -57,7 +59,7 @@ output.dir <- file.path(dir.name,'OutputPostAnalysis')
 
 output.file.name.1 <- 'In_ad_not_un.xls'
 output.file.name.2 <- 'In_un_not_ad.xls'
-res3 <- compareResults(4,res1,res2,output.dir,output.dir,
+compareResults(4,res1,res2,output.dir,output.dir,
                       type.boxplot='Only3',
                       output.file.name.1,output.file.name.2)
 }
