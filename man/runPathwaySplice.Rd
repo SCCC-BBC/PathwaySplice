@@ -16,9 +16,9 @@ runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
 
 \item{id}{GeneID, options are 'entrezgene' or 'ensembl_gene_id'}
 
-\item{gene2cat}{Get sets defined by users}
+\item{gene2cat}{Get sets defined by users, can be obtained for example from \code{gmtGene2Cat} function}
 
-\item{test.cats}{Gene sets to be tested if \code{gene2cat} is not defined}
+\item{test.cats}{Default gene sets to be tested if \code{gene2cat} is not defined}
 
 \item{go.size.cut}{Size limit of the gene sets to be tested}
 
@@ -31,14 +31,24 @@ ignored unless \code{method='Sampling'}}
 \item{use.genes.without.cat}{Whether genes not mapped to any category tested are included in analysis.
 If set to FALSE, genes not mapped to any tested categories are ignored in analysis.}
 
-\item{binsize}{The number of genes in each gene bin(set) defined by user in checking bias plot}
+\item{binsize}{The number of genes in each gene bin in the bias plot}
 }
 \value{
-A list that has gene set enrichment analysis results
+A dataframe with gene set enrichment analysis results
+\item{geneID}{Gene ID}
+\item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
+\item{sig.gene}{a gene is significant (1) or not (0)} 
+\item{mostSigDeFeature}{the most significant gene feature}
+\item{numFeature}{number of gene features within the gene}
 }
 \description{
 This function identifies pathways that are enriched with signficant genes, while accounting for 
-different number of exons and/or splicing junctions associated with each gene
+different number of exons associated with each gene
+}
+\details{
+This function implements the methodology described in Young et al. (2011) to adjust for 
+         different number of counting bins associated with each gene. In the bias plot, the genes are grouped 
+         by bias.factor into gene bins, the number of signficant genes are then plotted against the gene bins.
 }
 \examples{
 res <- makeGeneTable(featureBasedData)
@@ -48,4 +58,8 @@ res <- runPathwaySplice(res,genome='hg19',id='ensGene',
                          method='Wallenius',binsize=2)
 
  
+}
+\references{
+Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) Gene ontology analysis for RNA-seq: 
+accounting for selection bias. Genome Biology201011:R14
 }

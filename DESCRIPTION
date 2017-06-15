@@ -1,6 +1,6 @@
 Package: PathwaySplice
 Type: Package
-Title: An R Package for Adjusting Bias in Gene Set Enrichment Analysis 
+Title: An R Package for Unbiased Splicing Pathway Analysis 
 Version: 0.99.17
 Author: Aimin Yan
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>

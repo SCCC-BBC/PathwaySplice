@@ -13,7 +13,7 @@ data(featureBasedData)
 A data set with 307 rows and 3 variables
 }
 \description{
-This data set gives results of RNA-seq data in Dolatshad et al. (2015), 
+This dataset gives results of RNA-seq data in Dolatshad et al. (2015), 
 which compared transcriptome of CD34+ cells from myelodysplastic syndrome (MDS) patients 
 with SF3B1 mutations vs. healthy controls using RNA sequencing. The \code{JunctionSeq} package was used to determine 
 which counting bins were differentially used. Because of the size limit, only a subset of genes were included here for 

@@ -4,27 +4,30 @@
 \alias{gmtGene2Cat}
 \title{gmtGene2Cat}
 \usage{
-gmtGene2Cat(dir.name, pathway.file, file.type, gene.anno.file = NULL,
+gmtGene2Cat(dir.name, pathway.file, location.type, gene.anno.file = NULL,
   genomeID = c("mm10", "hg19", "hg38"))
 }
 \arguments{
-\item{dir.name}{Directory for the gene sets in GMT format that is located in}
+\item{dir.name}{Directory where the gene sets file (in GMT format) is located}
 
 \item{pathway.file}{Input file for the gene sets in GMT format}
 
-\item{file.type}{Indicates the gene set file in GMT format is in local or url}
+\item{location.type}{Location of the gene set file. Valid options are "local" or "url"}
 
 \item{gene.anno.file}{Gene annotation file supplied as a file}
 
 \item{genomeID}{Genome ('mm10','hg19' or 'hg38') to be used}
 }
 \value{
-A list with its names being geneID, its elements being the pathways
+A list where each entry is named by a gene and contains a vector of all
+        the pathways associated with the gene
 }
 \description{
-Read a gene set file in GMT format, and return a list with its name
-being a gene id, and each element of this list
-being the pathways that this gene corresponds to
+Obtains all pathways associated with a set of genes
+}
+\details{
+This function reads a gene set file in GMT format, and returns a list with its name
+being a gene id, and each element of the list being the pathways associated with the gene
 }
 \examples{
 

@@ -75,16 +75,14 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #'   
 #' @export
 #' 
-#' @return Nothing to be returned 
-#' 
+#'  
 #'
 #' @examples
-#' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
-#' lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
+#' lrTestBias(gene.based.table)
 #' 
 #' 
-lrTestBias <- function(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80, boxplot.width = 0.3) 
+lrTestBias <- function(genewise.table, boxplot.width = 0.1) 
 {
     
     mydata <- genewise.table
@@ -116,9 +114,9 @@ lrTestBias <- function(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80, boxplo
             1)])
         
         boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), boxwex = boxplot.width, 
-            ylab = "Number of features", col = "lightgray", ylim = c(1, y.lim))
+            ylab = "Number of features", col = "lightgray", ylim = c(1, max(temp$numFeature)))
         
-        text(x = loc.x, y = loc.y, labels = c("", paste0("P-value from logistic regression:\n\n", 
+        text(x = 2, y = max(temp$numFeature)-1, labels = c("", paste0("P-value from logistic regression = ", 
             round(as.numeric(pvalue), digits = 3))))
     } else
     {
@@ -130,13 +128,13 @@ lrTestBias <- function(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80, boxplo
 #' runPathwaySplice
 #'
 #' This function identifies pathways that are enriched with signficant genes, while accounting for 
-#' different number of exons and/or splicing junctions associated with each gene
+#' different number of exons associated with each gene
 #' 
 #' @param genewise.table data frame returned from function \code{makeGeneTable} 
 #' @param genome Genome to be used, options are 'hg19' or 'mm10' 
 #' @param id GeneID, options are 'entrezgene' or 'ensembl_gene_id'
-#' @param gene2cat Get sets defined by users   
-#' @param test.cats Gene sets to be tested if \code{gene2cat} is not defined 
+#' @param gene2cat Get sets defined by users, can be obtained for example from \code{gmtGene2Cat} function   
+#' @param test.cats Default gene sets to be tested if \code{gene2cat} is not defined 
 #' @param go.size.cut Size limit of the gene sets to be tested
 #' @param method the method used to calculate pathway enrichment p value. 
 #'        Options are 'Wallenius', 'Sampling', and 'Hypergeometric' 
@@ -144,10 +142,21 @@ lrTestBias <- function(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80, boxplo
 #'        ignored unless \code{method='Sampling'}
 #' @param use.genes.without.cat Whether genes not mapped to any category tested are included in analysis.
 #'        If set to FALSE, genes not mapped to any tested categories are ignored in analysis.
-#' @param binsize The number of genes in each gene bin(set) defined by user in checking bias plot    
-#'          
+#' @param binsize The number of genes in each gene bin in the bias plot   
+#' 
+#' @details This function implements the methodology described in Young et al. (2011) to adjust for 
+#'          different number of counting bins associated with each gene. In the bias plot, the genes are grouped 
+#'          by bias.factor into gene bins, the number of signficant genes are then plotted against the gene bins. 
+#'              
+#'            
 #'      
-#' @return A list that has gene set enrichment analysis results
+#' @return A list with two dataframes with gene set enrichment analysis results
+#' \item{geneID}{Gene ID}
+#'
+#' 
+#' @references Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) Gene ontology analysis for RNA-seq: 
+#' accounting for selection bias. Genome Biology201011:R14
+#' 
 #' @export
 #'
 #' @examples
@@ -347,17 +356,19 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 
 #' gmtGene2Cat
 #'
-#' Read a gene set file in GMT format, and return a list with its name
-#' being a gene id, and each element of this list
-#' being the pathways that this gene corresponds to
-#'
-#' @param dir.name Directory for the gene sets in GMT format that is located in 
+#' Obtains all pathways associated with a set of genes 
+#' 
+#' @param dir.name Directory where the gene sets file (in GMT format) is located 
 #' @param pathway.file Input file for the gene sets in GMT format
-#' @param file.type Indicates the gene set file in GMT format is in local or url
+#' @param location.type Location of the gene set file. Valid options are "local" or "url"
 #' @param gene.anno.file Gene annotation file supplied as a file 
 #' @param genomeID Genome ('mm10','hg19' or 'hg38') to be used
 #'
-#' @return A list with its names being geneID, its elements being the pathways
+#' @details This function reads a gene set file in GMT format, and returns a list with its name
+#' being a gene id, and each element of the list being the pathways associated with the gene
+#'
+#' @return A list where each entry is named by a gene and contains a vector of all
+#'         the pathways associated with the gene
 #'
 #' @export
 #'
@@ -367,13 +378,13 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' canonical.pathway.file <- '10.cp.gmt.txt'
 #' res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 #' 
-gmtGene2Cat <- function(dir.name, pathway.file, file.type, gene.anno.file = NULL, 
+gmtGene2Cat <- function(dir.name, pathway.file, location.type, gene.anno.file = NULL, 
     genomeID = c("mm10", "hg19", "hg38"))
     {
     
     gmt_input_file <- file.path(dir.name, pathway.file)
     
-    gene.2.cat.gmt <- gene2cat2(gmt_input_file, file.type)
+    gene.2.cat.gmt <- gene2cat2(gmt_input_file, location.type)
     
     names.gene.gmt <- as.data.frame(names(gene.2.cat.gmt))
     colnames(names.gene.gmt) <- "gene_id"
@@ -691,10 +702,10 @@ gsa.read.gmt <- function(filename, type)
     return(out)
 }
 
-gene2cat2 <- function(gmt.input.file, file.type)
+gene2cat2 <- function(gmt.input.file, location.type)
 {
     
-    re <- gsa.read.gmt(gmt.input.file, file.type)
+    re <- gsa.read.gmt(gmt.input.file, location.type)
     gene.name <- unique(do.call(c, re$genesets))
     gene.2.cat <- sapply(gene.name, gene2cat, re)
     names(gene.2.cat) <- gene.name
