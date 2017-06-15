@@ -1500,6 +1500,8 @@ getGeneSetBySize <- function(user2cat, go.size.cut)
     
 }
 
+# res <- PathwaySplice:::makeFeatureTable(res)
+# 
 makeFeatureTable <- function(jscs)
 {
     temp <- fData(jscs)
@@ -1625,4 +1627,59 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2, xlab = "Biased 
     }
     # Add the PWF
     lines(pwf$bias.data[w][o], pwf$pwf[w][o], col = pwf_col, lwd = pwf_lwd)
+}
+
+# getResultsFromJunctionSeq
+# 
+# This function is used to get analysis results from using JunctionSeq
+# 
+# @param dir.name Path name for sample information file
+# @param sample.file Sample information file
+# @param count.file Count file
+# @param gff.file Annotation file
+# @param method.dispFinal Determine the method
+# used to get a 'final' dispersion estimate.
+# 
+# @return The analysis result from JunctionSeq R package
+# 
+# @export
+# 
+# @examples
+# 
+# dir.name <- system.file('extdata', package='PathwaySplice')
+# sample.file <- 'Sample_info.txt'
+# count.file <- 'Counts.10.genes.txt'
+# gff.file <- 'flat.chr22.10.genes.gff'
+# res <- PathwaySplice:::getResultsFromJunctionSeq(dir.name, sample.file,
+# count.file,gff.file, method.dispFinal = 'shrink',analysis.type = "exonsOnly")
+
+getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file, 
+                                      gff.file, method.dispFinal = c("shrink", "max", "fitted", "noShare"),analysis.type)
+{
+    
+            # set up method for calculating dispFinal
+            method.dispFinal <- match.arg(method.dispFinal)
+            
+            # Get sample file
+            dir.name <- reformatpath(dir.name)
+              
+            path.sample.file <- file.path(dir.name, sample.file)
+            decoder.bySample <- read.table(path.sample.file, header = TRUE, stringsAsFactors = FALSE)
+            
+            x <- colnames(decoder.bySample)
+  
+            sample.ID.index <- which(colnames(decoder.bySample)==x[1])
+            group.ID.index <- which(colnames(decoder.bySample)==x[2])
+            Gender.index <- which(colnames(decoder.bySample)==x[3])
+            
+            # Get count file
+            path.count.file <- file.path(dir.name, decoder.bySample[,sample.ID.index],count.file)
+            
+            # Get annotation file
+            path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
+                    
+            # Analysis using exonsOnly,and adjust Gender
+            jscs <- runJunctionSeqAnalyses(sample.files = path.count.file, sample.names = decoder.bySample[,sample.ID.index],condition = decoder.bySample[,group.ID.index], flat.gff.file = path.gff.file, analysis.type = analysis.type, nCores = 1, use.covars = decoder.bySample[, x[3], drop = FALSE], test.formula0 =formula(paste("~ ",paste("sample","countbin",paste0(x[3],":countbin"),sep="+"))), test.formula1 = formula(paste("~ ",paste("sample","countbin",paste0(x[3],":countbin"),"condition:countbin",sep = "+"))), effect.formula =formula(paste("~ ",paste("condition",x[3],"countbin",paste0(x[3],":countbin"),"condition:countbin",sep = "+")), geneLevel.formula = formula(paste("~ ",paste(x[3],"condition",sep = "+")), verbose = TRUE, debug.mode = TRUE, use.multigene.aggregates = TRUE,method.dispFinal = method.dispFinal)))
+           
+            return(jscs)
 }
