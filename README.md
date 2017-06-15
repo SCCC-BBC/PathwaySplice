@@ -92,7 +92,7 @@ enmap2 <- enrichmentMap(res2,n=6,similarity.threshold=0,
 output.file.name.1 <- 'In_ad_not_un.xls'
 output.file.name.2 <- 'In_un_not_ad.xls'
 
-res3 <- compareResults(5,res1,res2,output.dir,output.dir,
+res3 <- compareResults(25,res1,res2,output.file.dir,output.file.dir,
                        type.boxplot='Only3',
                        output.file.name.1,output.file.name.2)
 ```
