@@ -10,12 +10,9 @@ lrTestBias(genewise.table, boxplot.width = 0.1)
 \item{genewise.table}{A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}}
 
 \item{boxplot.width}{width of boxplot}
-
-\item{loc.x}{x coordinate for position of logistic regression p-value in figure}
-
-\item{loc.y}{y coordinate for position of logistic regression p-value in figure}
-
-\item{y.lim}{The largest number of gene features on the y axis in boxplot}
+}
+\value{
+Nothing to be returned
 }
 \description{
 This function tests presence of selection bias using logistic regression, and produces a boxplot 

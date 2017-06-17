@@ -33,6 +33,6 @@ being a gene id, and each element of the list being the pathways associated with
 
 dir.name <- system.file('extdata', package='PathwaySplice')
 canonical.pathway.file <- '10.cp.gmt.txt'
-res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
+cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
 
 }

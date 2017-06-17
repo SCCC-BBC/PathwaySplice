@@ -53,10 +53,9 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          go.size.cut=c(5,30),
                          method='Wallenius')
 
-dir.name <- tempdir()
-output.file.dir <- file.path(dir.name,'OutputEnmapEx')
+output.file.dir <- file.path(tempdir(),'OutputEnmapEx')
 
-enmap <- enrichmentMap(res,n=3,similarity.threshold=0,
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0,
                        output.file.dir = output.file.dir,
                        label.vertex.by.index = TRUE)
                        

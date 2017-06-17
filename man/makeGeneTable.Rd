@@ -13,7 +13,7 @@ makeGeneTable(feature.table, sig.threshold = 0.05)
 or not}
 }
 \value{
-Returns a dataframe with several variables (columns) 
+Returns a genewised table with several variables (columns) 
 \item{geneID}{Gene ID}
 \item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
 \item{sig.gene}{a gene is significant (1) or not (0)} 
@@ -27,6 +27,6 @@ and then determines genes status as significant or not.
 }
 \examples{
 data(featureBasedData)
-res <- makeGeneTable(featureBasedData)
+gene.based.table <- makeGeneTable(featureBasedData)
   
 }

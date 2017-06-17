@@ -10,7 +10,7 @@
 data(featureBasedData)
 }
 \value{
-A data set with 307 rows and 3 variables
+A data set with 79511 feature rows(in 5000 genes) and 3 variables
 }
 \description{
 This dataset gives results of RNA-seq data in Dolatshad et al. (2015), 

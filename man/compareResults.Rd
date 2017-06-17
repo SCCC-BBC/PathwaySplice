@@ -4,19 +4,17 @@
 \alias{compareResults}
 \title{compareResults}
 \usage{
-compareResults(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
-  type.boxplot = c("All", "Only3"), In.ad.not.un.file, In.un.not.ad.file)
+compareResults(n.go, adjusted, unadjusted, output.dir, type.boxplot = c("All",
+  "Only3"), In.ad.not.un.file, In.un.not.ad.file)
 }
 \arguments{
 \item{n.go}{Number of gene sets}
 
 \item{adjusted}{Adjusted result}
 
-\item{unadjuasted}{Unadjusted result}
+\item{unadjusted}{Unadjusted result}
 
-\item{venn.dir}{Path for outputing venn}
-
-\item{boxplot.dir}{Path for outputing boxplot}
+\item{output.dir}{Path for output( including venn,boxplot and two tables)}
 
 \item{type.boxplot}{Get boxplot for 5 categories or 3 categories
 
@@ -42,24 +40,24 @@ compareResults
 
 dir.name <- system.file('extdata', package='PathwaySplice')
 canonical.pathway.file <- '10.cp.gmt.txt'
-res <- gmtGene2Cat(dir.name,canonical.pathway.file,
+cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
                    'local',genomeID='hg19')
 gene.based.table <- makeGeneTable(featureBasedData)
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=res,
+                         id='ensGene',gene2cat=cpp,
                          method='Wallenius')
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=res,
+                         id='ensGene',gene2cat=cpp,
                          method='Hypergeometric')
 
-dir.name <- tempdir()
-output.dir <- file.path(dir.name,'OutputPostAnalysis')
+output.dir <- file.path(tempdir(),'OutputPostAnalysis')
 
 output.file.name.1 <- 'In_ad_not_un.xls'
 output.file.name.2 <- 'In_un_not_ad.xls'
-compareResults(4,res1,res2,output.dir,output.dir,
+
+compareResults(4,res1,res2,output.dir,
                       type.boxplot='Only3',
                       output.file.name.1,output.file.name.2)
 }

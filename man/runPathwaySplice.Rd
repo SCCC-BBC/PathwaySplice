@@ -34,12 +34,18 @@ If set to FALSE, genes not mapped to any tested categories are ignored in analys
 \item{binsize}{The number of genes in each gene bin in the bias plot}
 }
 \value{
-A dataframe with gene set enrichment analysis results
-\item{geneID}{Gene ID}
-\item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
-\item{sig.gene}{a gene is significant (1) or not (0)} 
-\item{mostSigDeFeature}{the most significant gene feature}
-\item{numFeature}{number of gene features within the gene}
+runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
+\item{category}{The column for the name of the gene category} 
+\item{over_represented_pvalue}{The column for the p-vaue for the associated category being over represented amongst differentially genes} 
+\item{under_represented_pvalue}{The column for the p-vaue for the associated category being under represented amongst differentially genes} 
+\item{numDEInCat}{The column for the number of differentially genes in the category} 
+\item{numInCat}{The column for the number of total genes in the category}                                          
+\item{term}{The column for the GO term if any of the categories is a GO term} 
+\item{ontology}{The column for the GO term's ontology if any of the categories is a GO term}
+\item{DEgene_ID}{The column for the Ensembl gene ID of differentially genes in the category}
+\item{DEgene_symbol}{The column for the gene symbol of differentially genes in the category}
+\item{Ave_value_DE}{The column for the average numFeature value of differentially genes in the category}
+\item{Ave_value_all_gene}{The column for the average numFeature value of total genes in the category}
 }
 \description{
 This function identifies pathways that are enriched with signficant genes, while accounting for 
@@ -51,8 +57,8 @@ This function implements the methodology described in Young et al. (2011) to adj
          by bias.factor into gene bins, the number of signficant genes are then plotted against the gene bins.
 }
 \examples{
-res <- makeGeneTable(featureBasedData)
-res <- runPathwaySplice(res,genome='hg19',id='ensGene',
+gene.based.table <- makeGeneTable(featureBasedData)
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
                          go.size.cut=c(5,30),
                          method='Wallenius',binsize=2)
