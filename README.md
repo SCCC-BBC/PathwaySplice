@@ -44,16 +44,17 @@ lrTestBias(gene.based.table,boxplot.width=0.3)
 ```{r eval=TRUE}
 dir.name <- system.file('extdata', package='PathwaySplice')
 canonical.pathway.file <- '10.cp.gmt.txt'
+
 cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
                    'local',genomeID='hg19')
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,
-                         method='Wallenius',go.size.cut=c(0,20))
+                         method='Wallenius',go.size.limit=c(0,20))
                          
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,
-                         method='Hypergeometric',go.size.cut=c(0,20))
+                         method='Hypergeometric',go.size.limit=c(0,20))
 
 output.file.name.1 <- 'In_ad_not_un_cp.xls'
 output.file.name.2 <- 'In_un_not_ad_cp.xls'
@@ -63,6 +64,26 @@ compareResults(10,res1,res2,output.file.dir,
 
 #If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
 
+dir.name.1 <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
+pathway.file <- "h.all.v6.0.symbols.gmt.txt"
+
+cpp <- gmtGene2Cat(dir.name.1,pathway.file,'local',genomeID='hg19')
+
+res3 <- runPathwaySplice(gene.based.table,genome='hg19',
+                         id='ensGene',gene2cat=cpp,
+                         method='Wallenius')
+                         
+res4 <- runPathwaySplice(gene.based.table,genome='hg19',
+                         id='ensGene',gene2cat=cpp,
+                         method='Hypergeometric')
+
+output.file.name.3 <- 'In_ad_not_un_hp.xls'
+output.file.name.4 <- 'In_un_not_ad_hp.xls'
+
+compareResults(10,res3,res4,output.file.dir,
+                  type.boxplot='Only3',
+                  output.file.name.3,output.file.name.4)
+                  
 ```
 
 + Build up network based on the overlap between gene sets and visualize this network
@@ -70,14 +91,14 @@ compareResults(10,res1,res2,output.file.dir,
 ```{r eval=TRUE}
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',test.cats=c('GO:BP'),
-                        go.size.cut=c(5,30),
+                        go.size.limit=c(5,30),
                         method='Wallenius')
            
 PathwaySplice:::writeTibble(res1,output.file.dir)
             
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',test.cats=c('GO:BP'),
-                        go.size.cut=c(5,30),
+                        go.size.limit=c(5,30),
                         method='Hypergeometric')
                         
 enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
