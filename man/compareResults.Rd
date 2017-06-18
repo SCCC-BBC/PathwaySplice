@@ -39,17 +39,20 @@ compareResults
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
+
 canonical.pathway.file <- '10.cp.gmt.txt'
+
 cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
                    'local',genomeID='hg19')
+                   
 gene.based.table <- makeGeneTable(featureBasedData)
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,
+                         id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
                          method='Wallenius')
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,
+                         id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
                          method='Hypergeometric')
 
 output.dir <- file.path(tempdir(),'OutputPostAnalysis')
