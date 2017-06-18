@@ -450,17 +450,20 @@ gmtGene2Cat <- function(dir.name, pathway.file, location.type, gene.anno.file = 
 #' @examples
 #' 
 #' dir.name <- system.file('extdata', package='PathwaySplice')
+#' 
 #' canonical.pathway.file <- '10.cp.gmt.txt'
+#' 
 #' cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
 #'                    'local',genomeID='hg19')
+#'                    
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
 #' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=cpp,
+#'                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
 #'                          method='Wallenius')
 #' 
 #' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=cpp,
+#'                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
 #'                          method='Hypergeometric')
 #' 
 #' output.dir <- file.path(tempdir(),'OutputPostAnalysis')
@@ -663,16 +666,24 @@ gene2cat <- function(gene.name, re)
     gene2cat
 }
 
-gsa.read.gmt <- function(filename, type)
+gsa.read.gmt <- function(filename, file.location.option=c("url","local"))
 {
-    if (type != "url")
-    {
-        dir.name <- dirname(filename)
-        dir.name <- reformatpath(dir.name)
-        file.name <- basename(filename)
-        filename <- file.path(dir.name, file.name)
-    }
-    
+  
+  file.location.option <- match.arg(file.location.option)
+  
+  switch (file.location.option,
+          
+          url = {
+            filename <- filename
+          },
+          {
+            dir.name <- dirname(filename)
+            dir.name <- reformatpath(dir.name)
+            file.name <- basename(filename)
+            filename <- file.path(dir.name, file.name)
+          }
+  )
+  
     a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, fill = TRUE, 
         flush = TRUE, multi.line = FALSE)
     geneset.names <- a[1][[1]]
@@ -960,6 +971,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     
     # Add option to choose gene set by its size
     gene2cat <- getGeneSetBySize(gene2cat, go.size.limit)
+    
+    if(length(gene2cat)==0){
+      stop("No gene set is satisfied by the selected size. Change gene set or choose new size.")
+    }
     
     cat2gene <- reversemapping(gene2cat)
     gene2cat <- reversemapping(cat2gene)
