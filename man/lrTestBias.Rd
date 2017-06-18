@@ -22,7 +22,7 @@ that compares distributions of bias factors (e.g. number of exons) for significa
 To determine presentce of selection bias, we fit the logistic regression model 
 \code{Pr(a gene is significant) ~ number of features within the gene}. 
 Here features refer to exon bins or splicing junction bins, depending on 
-how genewise pvalues were obtained
+how genewise pvalues were obtained in the \code{genewise.table}
 }
 \examples{
 gene.based.table <- makeGeneTable(featureBasedData)

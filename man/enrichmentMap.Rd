@@ -10,23 +10,13 @@ enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 \arguments{
 \item{goseqres}{Object returned from runPathwaySplice}
 
-\item{n}{Maximum number of category to be shown}
+\item{n}{The top \emph{n} categories are shown in enrichment map}
 
 \item{fixed}{If set to FALSE, will invoke tkplot}
 
 \item{vertex.label.font}{Font size of vertex label}
 
-\item{similarity.threshold}{Threshold for defining Jaccard Coefficient(JC)
-
-JC ranges from 0 to 1:
-
-JC=0, indicates there are no overlap on genes between
-       two gene sets
-
-JC=1, indicates two gene sets are identical  
-
-similarity.threshold=0, indicates the enrichment map includes
-all gene sets with their mutual JC greater than 0}
+\item{similarity.threshold}{Gene sets with Jaccard Coefficient > similarity.threshold will be connected on the enrichment map}
 
 \item{output.file.dir}{Output dir for the gene set information file on network}
 
@@ -42,7 +32,13 @@ TRUE indicates to label vertex by the index of gene sets}
 A list for giving edge and vertex information of enrichment map
 }
 \description{
-enrichmentMap is used to draw Enrichment Map based on similarities defined using Jaccard Coefficient between GOs or gene sets
+This function draws an enrichment map based on similarities 
+between gene sets based on Jaccard similarity Coefficient
+}
+\details{
+The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
+there are no overlapping genes between two gene sets, 
+JC=1 indicates two gene sets are identical.
 }
 \examples{
 
@@ -50,7 +46,7 @@ gene.based.table <- makeGeneTable(featureBasedData)
 
 res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
-                         go.size.cut=c(5,30),
+                         go.size.limit=c(5,30),
                          method='Wallenius')
 
 output.file.dir <- file.path(tempdir(),'OutputEnmapEx')

@@ -5,7 +5,7 @@
 \title{runPathwaySplice}
 \usage{
 runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
-  test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.cut = c(-Inf, Inf),
+  test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 200),
   method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE,
   binsize = "auto")
 }
@@ -20,7 +20,7 @@ runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
 
 \item{test.cats}{Default gene sets to be tested if \code{gene2cat} is not defined}
 
-\item{go.size.cut}{Size limit of the gene sets to be tested}
+\item{go.size.limit}{Size limit of the gene sets to be tested}
 
 \item{method}{the method used to calculate pathway enrichment p value. 
 Options are 'Wallenius', 'Sampling', and 'Hypergeometric'}
@@ -49,23 +49,26 @@ runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
 }
 \description{
 This function identifies pathways that are enriched with signficant genes, while accounting for 
-different number of exons associated with each gene
+different number of gene features (e.g. exons) associated with each gene
 }
 \details{
 This function implements the methodology described in Young et al. (2011) to adjust for 
-         different number of counting bins associated with each gene. In the bias plot, the genes are grouped 
+         different number of gene features (i.e. counting bins, see Fig 1 in Anders et al. 2012) associated with each gene. In the bias plot, the genes are grouped 
          by bias.factor into gene bins, the number of signficant genes are then plotted against the gene bins.
 }
 \examples{
 gene.based.table <- makeGeneTable(featureBasedData)
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
-                         go.size.cut=c(5,30),
+                         go.size.limit=c(5,30),
                          method='Wallenius',binsize=2)
 
  
 }
 \references{
-Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) Gene ontology analysis for RNA-seq: 
-accounting for selection bias. Genome Biology201011:R14
+Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 
+accounting for selection bias}. Genome Biology 11:R14
+
+Anders S, Reyes A, Huber W (2012) \emph{Dececting differential usage of exons from RNA-seq data.} 
+Genome Research 22(10): 2008-2017
 }

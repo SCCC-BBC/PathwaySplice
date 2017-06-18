@@ -26,7 +26,7 @@ A list where each entry is named by a gene and contains a vector of all
 Obtains all pathways associated with a set of genes
 }
 \details{
-This function reads a gene set file in GMT format, and returns a list with its name
+This function reads a gene set file in GMT format (http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), and returns a list with its name
 being a gene id, and each element of the list being the pathways associated with the gene
 }
 \examples{

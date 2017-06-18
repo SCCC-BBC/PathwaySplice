@@ -68,7 +68,7 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #' @details To determine presentce of selection bias, we fit the logistic regression model 
 #' \code{Pr(a gene is significant) ~ number of features within the gene}. 
 #' Here features refer to exon bins or splicing junction bins, depending on 
-#' how genewise pvalues were obtained
+#' how genewise pvalues were obtained in the \code{genewise.table}
 #'   
 #'   
 #' @return Nothing to be returned
@@ -129,14 +129,14 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' runPathwaySplice
 #'
 #' This function identifies pathways that are enriched with signficant genes, while accounting for 
-#' different number of exons associated with each gene
+#' different number of gene features (e.g. exons) associated with each gene
 #' 
 #' @param genewise.table data frame returned from function \code{makeGeneTable} 
 #' @param genome Genome to be used, options are 'hg19' or 'mm10' 
 #' @param id GeneID, options are 'entrezgene' or 'ensembl_gene_id'
 #' @param gene2cat Get sets defined by users, can be obtained for example from \code{gmtGene2Cat} function   
 #' @param test.cats Default gene sets to be tested if \code{gene2cat} is not defined 
-#' @param go.size.cut Size limit of the gene sets to be tested
+#' @param go.size.limit Size limit of the gene sets to be tested
 #' @param method the method used to calculate pathway enrichment p value. 
 #'        Options are 'Wallenius', 'Sampling', and 'Hypergeometric' 
 #' @param repcnt Number of random samples to be calculated when 'Sampling' is used
@@ -147,7 +147,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' 
 #' 
 #' @details This function implements the methodology described in Young et al. (2011) to adjust for 
-#'          different number of counting bins associated with each gene. In the bias plot, the genes are grouped 
+#'          different number of gene features (i.e. counting bins, see Fig 1 in Anders et al. 2012) associated with each gene. In the bias plot, the genes are grouped 
 #'          by bias.factor into gene bins, the number of signficant genes are then plotted against the gene bins. 
 #'              
 #' @return runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
@@ -164,8 +164,11 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' \item{Ave_value_all_gene}{The column for the average numFeature value of total genes in the category}
 #'
 #' 
-#' @references Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) Gene ontology analysis for RNA-seq: 
-#' accounting for selection bias. Genome Biology201011:R14
+#' @references Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 
+#' accounting for selection bias}. Genome Biology 11:R14
+#' 
+#' Anders S, Reyes A, Huber W (2012) \emph{Dececting differential usage of exons from RNA-seq data.} 
+#' Genome Research 22(10): 2008-2017
 #' 
 #' @export
 #'
@@ -173,12 +176,12 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                          test.cats=c('GO:BP'),
-#'                          go.size.cut=c(5,30),
+#'                          go.size.limit=c(5,30),
 #'                          method='Wallenius',binsize=2)
 #' 
 #'  
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
-    "GO:BP", "GO:MF"), go.size.cut = c(-Inf, Inf), method = "Wallenius", repcnt = 2000, 
+    "GO:BP", "GO:MF"), go.size.limit = c(10, 200), method = "Wallenius", repcnt = 2000, 
     use.genes.without.cat = FALSE, binsize = "auto")
     {
     x <- genewise.table$sig.gene
@@ -186,7 +189,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
     pwf <- nullpSplice(x, genome, id, bias.data = genewise.table$numFeature, plot.fit = TRUE, 
         binsize)
     CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
-        test.cats = test.cats, go.size.cut = go.size.cut, method = method, repcnt = repcnt, 
+        test.cats = test.cats, go.size.limit = go.size.limit, method = method, repcnt = repcnt, 
         use.genes.without.cat = use.genes.without.cat)
     res1 <- getStaisitcs4Go(CatDE,genewise.table) 
     res2 <- reformatPathwayOut(res1)
@@ -195,24 +198,15 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 
 #' enrichmentMap
 #'
-#' enrichmentMap is used to draw Enrichment Map based on similarities defined using Jaccard Coefficient between GOs or gene sets
+#' This function draws an enrichment map based on similarities 
+#' between gene sets based on Jaccard similarity Coefficient 
 #'                                  
 #' @param goseqres Object returned from runPathwaySplice
-#' @param n Maximum number of category to be shown
+#' @param n The top \emph{n} categories are shown in enrichment map
 #' @param fixed If set to FALSE, will invoke tkplot
 #' @param vertex.label.font Font size of vertex label
-#' @param similarity.threshold Threshold for defining Jaccard Coefficient(JC)
-#'        
-#'        JC ranges from 0 to 1:
-#'        
-#'        JC=0, indicates there are no overlap on genes between
-#'               two gene sets
-#'        
-#'        JC=1, indicates two gene sets are identical  
-#'        
-#'        similarity.threshold=0, indicates the enrichment map includes
-#'        all gene sets with their mutual JC greater than 0
-#'        
+#' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold will be connected on the enrichment map
+#'                
 #' @param output.file.dir Output dir for the gene set information file on network
 #' @param label.vertex.by.index Which way to be used for labeling vertex on network
 #'        
@@ -221,6 +215,11 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'        TRUE indicates to label vertex by the index of gene sets    
 #'          
 #' @param ... Additional parameter 
+#' 
+#' @details  The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
+#' there are no overlapping genes between two gene sets, 
+#' JC=1 indicates two gene sets are identical. 
+#' 
 #' @export
 #' @return A list for giving edge and vertex information of enrichment map
 #' 
@@ -232,7 +231,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',test.cats=c('GO:BP'),
-#'                          go.size.cut=c(5,30),
+#'                          go.size.limit=c(5,30),
 #'                          method='Wallenius')
 #' 
 #' output.file.dir <- file.path(tempdir(),'OutputEnmapEx')
@@ -376,7 +375,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' @param gene.anno.file Gene annotation file supplied as a file 
 #' @param genomeID Genome ('mm10','hg19' or 'hg38') to be used
 #'
-#' @details This function reads a gene set file in GMT format, and returns a list with its name
+#' @details This function reads a gene set file in GMT format (http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), and returns a list with its name
 #' being a gene id, and each element of the list being the pathways associated with the gene
 #'
 #' @return A list where each entry is named by a gene and contains a vector of all
@@ -827,7 +826,7 @@ writegototable <- function(GO_re, Output_file)
         sep = "\t")
 }
 
-pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.cut, 
+pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit, 
     method, repcnt, use.genes.without.cat)
     {
     ################# Input pre-processing and validation ################### Do some validation
@@ -960,7 +959,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.cut,
     }
     
     # Add option to choose gene set by its size
-    gene2cat <- getGeneSetBySize(gene2cat, go.size.cut)
+    gene2cat <- getGeneSetBySize(gene2cat, go.size.limit)
     
     cat2gene <- reversemapping(gene2cat)
     gene2cat <- reversemapping(cat2gene)
@@ -1492,7 +1491,7 @@ reformatpath <- function(dir.name)
     return(dir.name)
 }
 
-getGeneSetBySize <- function(user2cat, go.size.cut)
+getGeneSetBySize <- function(user2cat, go.size.limit)
 {
     
     gene2go <- user2cat
@@ -1504,8 +1503,8 @@ getGeneSetBySize <- function(user2cat, go.size.cut)
     
     gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0]
     
-    lower.size <- go.size.cut[1]
-    upper.size <- go.size.cut[2]
+    lower.size <- go.size.limit[1]
+    upper.size <- go.size.limit[2]
     
     if (is.finite(lower.size) & is.finite(upper.size))
     {
