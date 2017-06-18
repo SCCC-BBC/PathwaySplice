@@ -8,7 +8,7 @@ test_that("test lrTestBias",
 test_that("test runPathwaySplice",
           {
           gene.based.table <- makeGeneTable(featureBasedData)
-          res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Hypergeometric')
+          res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.limit = c(5,30),method='Hypergeometric')
            })
 test_that("test runPathwaySplice without size selection",
           {
@@ -21,11 +21,11 @@ test_that("test compareResults",
             
             res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                                       id='ensGene',test.cats=c('GO:BP'),
-                                      go.size.cut=c(10,300),method='Wallenius')
+                                      go.size.limit = c(10,300),method='Wallenius')
             
             res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                                     id='ensGene',test.cats=c('GO:BP'),
-                                    go.size.cut=c(10,300),method='Hypergeometric')
+                                    go.size.limit = c(10,300),method='Hypergeometric')
             
             output.file.dir <- "~/TestNew"
             output.file.name.1 <- 'In_ad_not_un.xls'
