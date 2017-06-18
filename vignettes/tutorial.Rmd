@@ -34,7 +34,7 @@ lrTestBias(gene.based.table,boxplot.width=0.3)
 # (i.e. exons and/or spicing junctions) associated with each gene. 
 # The significant genes are those with smallest p-value of gene feature  < *threshold*.
 
-res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.cut=c(5,30),method='Wallenius')
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(5,30),method='Wallenius')
 ```
 
 + Build up network based on the overlap between gene sets and visualize this network
