@@ -2,19 +2,26 @@ Package: PathwaySplice
 Type: Package
 Title: An R Package for Unbiased Splicing Pathway Analysis 
 Version: 0.99.17
-Author: Aimin Yan
+Author: Aimin Yan, Xi Chen, Lily Wang
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
 Depends: R (>= 3.4.0)
-Imports: goseq,Biobase,DOSE,reshape2,igraph,org.Hs.eg.db,BiocGenerics,AnnotationDbi,JunctionSeq,
-        BiasedUrn,GO.db,gdata,geneLenDataBase,grDevices,graphics,stats,utils,VennDiagram,RColorBrewer,
-        ensembldb,AnnotationHub,S4Vectors,dplyr
-Suggests: testthat,knitr,rmarkdown
+Imports: goseq, Biobase, DOSE, reshape2, igraph, org.Hs.eg.db, BiocGenerics, AnnotationDbi, JunctionSeq,
+         BiasedUrn, GO.db,gdata, geneLenDataBase, grDevices, graphics, stats, utils, VennDiagram, RColorBrewer,
+         ensembldb, AnnotationHub, S4Vectors, dplyr
+Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
-biocViews: AlternativeSplicing,DifferentialSplicing,GeneSetEnrichment,GO,RNASeq,Sequencing,Software,
-           Visualization,NetworkEnrichment,Network
-Description: PathwaySplice is used to perform gene set enrichment analysis for differential
-             usage based gene list, and to construct and visualize network from enrichment
-             analysis results.
+biocViews: AlternativeSplicing, DifferentialSplicing, GeneSetEnrichment, GO, RNASeq, Sequencing, Software,
+            Visualization, NetworkEnrichment, Network
+Description: Pathway analysis of alternative splicing would be biased without accounting for the different 
+number of exons associ-ated with each gene, because genes with higher number of exons are more likely to be included 
+in the “significant” gene list in alternative splicing. PathwaySplice is an R package that (1) performs pathway 
+analysis that ex-plicitly adjusts for the number of exons associated with each gene; (2) visualizes selection bias 
+due to different num-ber of exons for each gene; (3) formally tests for presence of bias using logistic regression 
+(4) supports gene sets based on the Gene Ontology terms, as well as more broadly defined gene sets (e.g. MSigDB) 
+or user defined gene sets; (4) identifies the significant genes driving pathway significance 
+(5) organizes significant pathways with an en-richment map, where pathways with large number of overlapping genes are
+grouped together in a network graph.
+
 License: LGPL(>=2)
 LazyData: TRUE
 RoxygenNote: 6.0.1
