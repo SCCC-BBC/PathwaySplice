@@ -65,6 +65,7 @@ compareResults(10,res1,res2,output.file.dir,
 #If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
 
 dir.name.1 <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
+dir.name.1 <- "C:/Users/lxw391/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
 pathway.file <- "h.all.v6.0.symbols.gmt.txt"
 
 cpp <- gmtGene2Cat(dir.name.1,pathway.file,'local',genomeID='hg19')

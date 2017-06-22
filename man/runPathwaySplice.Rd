@@ -35,12 +35,12 @@ If set to FALSE, genes not mapped to any tested categories are ignored in analys
 }
 \value{
 runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
-\item{category}{The column for the name of the gene category} 
-\item{over_represented_pvalue}{The column for the p-vaue for the associated category being over represented amongst differentially genes} 
-\item{under_represented_pvalue}{The column for the p-vaue for the associated category being under represented amongst differentially genes} 
-\item{numDEInCat}{The column for the number of differentially genes in the category} 
-\item{numInCat}{The column for the number of total genes in the category}                                          
-\item{term}{The column for the GO term if any of the categories is a GO term} 
+\item{category}{Name of the gene set (e.g. a pathway or a gene category)} 
+\item{over_represented_pvalue}{P-vaue for the associated category being over represented among significant genes} 
+\item{under_represented_pvalue}{P-vaue for the associated category being under represented among significant genes} 
+\item{numDEInCat}{The number of significant genes in the category} 
+\item{numInCat}{The total number of genes in the category}                                          
+\item{term}{The GO term if any of the categories is a GO term} 
 \item{ontology}{The column for the GO term's ontology if any of the categories is a GO term}
 \item{DEgene_ID}{The column for the Ensembl gene ID of differentially genes in the category}
 \item{DEgene_symbol}{The column for the gene symbol of differentially genes in the category}
@@ -54,7 +54,8 @@ different number of gene features (e.g. exons) associated with each gene
 \details{
 This function implements the methodology described in Young et al. (2011) to adjust for 
          different number of gene features (i.e. counting bins, see Fig 1 in Anders et al. 2012) associated with each gene. In the bias plot, the genes are grouped 
-         by bias.factor into gene bins, the number of signficant genes are then plotted against the gene bins.
+         by \code{numFeature} in \code{genewise.table} into gene bins, 
+         the proportions of signficant genes are then plotted against the gene bins.
 }
 \examples{
 gene.based.table <- makeGeneTable(featureBasedData)
