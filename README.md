@@ -43,7 +43,8 @@ lrTestBias(gene.based.table,boxplot.width=0.3)
 + Perform pathwaysplice using Canonical Pathways
 ```{r eval=TRUE}
 dir.name <- system.file('extdata', package='PathwaySplice')
-canonical.pathway.file <- '10.cp.gmt.txt'
+#canonical.pathway.file <- '10.cp.gmt.txt'
+canonical.pathway.file <- "h.all.v6.0.symbols.gmt.txt"
 
 cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
                    'local',genomeID='hg19')
