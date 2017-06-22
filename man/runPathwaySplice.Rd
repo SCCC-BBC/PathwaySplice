@@ -40,11 +40,10 @@ runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
 \item{under_represented_pvalue}{P-vaue for the associated category being under represented among significant genes} 
 \item{numDEInCat}{The number of significant genes in the category} 
 \item{numInCat}{The total number of genes in the category}                                          
-\item{term}{The GO term if any of the categories is a GO term} 
+\item{description}{The GO term if any of the categories is a GO term} 
 \item{ontology}{The column for the GO term's ontology if any of the categories is a GO term}
 \item{DEgene_ID}{The column for the Ensembl gene ID of differentially genes in the category}
 \item{DEgene_symbol}{The column for the gene symbol of differentially genes in the category}
-\item{Ave_value_DE}{The column for the average numFeature value of differentially genes in the category}
 \item{Ave_value_all_gene}{The column for the average numFeature value of total genes in the category}
 }
 \description{

@@ -157,11 +157,10 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' \item{under_represented_pvalue}{P-vaue for the associated category being under represented among significant genes} 
 #' \item{numDEInCat}{The number of significant genes in the category} 
 #' \item{numInCat}{The total number of genes in the category}                                          
-#' \item{term}{The GO term if any of the categories is a GO term} 
+#' \item{description}{The GO term if any of the categories is a GO term} 
 #' \item{ontology}{The column for the GO term's ontology if any of the categories is a GO term}
 #' \item{DEgene_ID}{The column for the Ensembl gene ID of differentially genes in the category}
 #' \item{DEgene_symbol}{The column for the gene symbol of differentially genes in the category}
-#' \item{Ave_value_DE}{The column for the average numFeature value of differentially genes in the category}
 #' \item{Ave_value_all_gene}{The column for the average numFeature value of total genes in the category}
 #'
 #' 
@@ -194,7 +193,8 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
         use.genes.without.cat = use.genes.without.cat)
     res1 <- getStaisitcs4Go(CatDE,genewise.table) 
     res2 <- reformatPathwayOut(res1)
-    res2
+    res3 <- within(res2, rm("Ave_value_DE"))
+    res3
 }
 
 #' enrichmentMap
@@ -204,7 +204,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                                  
 #' @param goseqres Object returned from runPathwaySplice
 #' @param n The top \emph{n} categories are shown in enrichment map
-#' @param fixed If set to FALSE, will invoke tkplot
+#' @param fixed If set to FALSE, will invoke tkplot to let user to plot enrichment map using an interactive graph drawing facility in R. note: user needs to have XQuartz and tcltk be install
 #' @param vertex.label.font Font size of vertex label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold will be connected on the enrichment map
 #'                
@@ -217,7 +217,11 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'          
 #' @param ... Additional parameter 
 #' 
-#' @details  The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
+#' @details  
+#' In the enrichment map, vertex color corresponds to over represented pvalue;
+#' vertex size corresponds to the number of 'significant' gene in gene set;
+#' edge width corresponds to Jaccard similarity coefficient.
+#' The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 #' there are no overlapping genes between two gene sets, 
 #' JC=1 indicates two gene sets are identical. 
 #' 
@@ -237,9 +241,13 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' 
 #' output.file.dir <- file.path(tempdir(),'OutputEnmapEx')
 #' 
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0,
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #'                        output.file.dir = output.file.dir,
 #'                        label.vertex.by.index = TRUE)
+#'                        
+#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+#'                        output.file.dir = output.file.dir,
+#'                        label.vertex.by.index = TRUE)                     
 #'                        
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
@@ -370,9 +378,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #'
 #' Obtains all pathways associated with a set of genes 
 #' 
-#' @param dir.name Directory where the gene sets file (in GMT format) is located 
 #' @param pathway.file Input file for the gene sets in GMT format
-#' @param location.type Location of the gene set file. Valid options are "local" or "url"
 #' @param gene.anno.file Gene annotation file supplied as a file 
 #' @param genomeID Genome ('mm10','hg19' or 'hg38') to be used
 #'
@@ -387,27 +393,27 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' @examples
 #' 
 #' dir.name <- system.file('extdata', package='PathwaySplice')
-#' canonical.pathway.file <- '10.cp.gmt.txt'
-#' cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
+#' canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+#' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
 #' 
-gmtGene2Cat <- function(dir.name, pathway.file, location.type, gene.anno.file = NULL, 
+gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL, 
     genomeID = c("mm10", "hg19", "hg38"))
     {
     
-    gmt_input_file <- file.path(dir.name, pathway.file)
+    gmt_input_file <- pathway.file
     
-    gene.2.cat.gmt <- gene2cat2(gmt_input_file, location.type)
+    gene.2.cat.gmt <- gene2cat2(gmt_input_file)
     
     names.gene.gmt <- as.data.frame(names(gene.2.cat.gmt))
     colnames(names.gene.gmt) <- "gene_id"
     
     if (!is.null(gene.anno.file))
     {
-        gene.anno.dir <- dirname(gene_anno_file)
-        gene.annno.dir <- reformatpath(gene.anno.dir)
-        file.name <- basename(gene_anno_file)
+        # gene.anno.dir <- dirname(gene_anno_file)
+        # gene.annno.dir <- reformatpath(gene.anno.dir)
+        # file.name <- basename(gene_anno_file)
         
-        gene_anno_file <- file.path(dir.name, file.name)
+        gene_anno_file <- gene.anno.file
         
         gene.id.conversion <- read.csv(gene_anno_file)
     } else
@@ -451,11 +457,9 @@ gmtGene2Cat <- function(dir.name, pathway.file, location.type, gene.anno.file = 
 #' @examples
 #' 
 #' dir.name <- system.file('extdata', package='PathwaySplice')
+#' canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
 #' 
-#' canonical.pathway.file <- '10.cp.gmt.txt'
-#' 
-#' cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
-#'                    'local',genomeID='hg19')
+#' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
 #'                    
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
@@ -667,23 +671,23 @@ gene2cat <- function(gene.name, re)
     gene2cat
 }
 
-gsa.read.gmt <- function(filename, file.location.option=c("url","local"))
+gsa.read.gmt <- function(filename)
 {
   
-  file.location.option <- match.arg(file.location.option)
-  
-  switch (file.location.option,
-          
-          url = {
-            filename <- filename
-          },
-          {
-            dir.name <- dirname(filename)
-            dir.name <- reformatpath(dir.name)
-            file.name <- basename(filename)
-            filename <- file.path(dir.name, file.name)
-          }
-  )
+  # file.location.option <- match.arg(file.location.option)
+  # 
+  # switch (file.location.option,
+  #         
+  #         url = {
+  #           filename <- filename
+  #         },
+  #         {
+  #           dir.name <- dirname(filename)
+  #           dir.name <- reformatpath(dir.name)
+  #           file.name <- basename(filename)
+  #           filename <- file.path(dir.name, file.name)
+  #         }
+  # )
   
     a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, fill = TRUE, 
         flush = TRUE, multi.line = FALSE)
@@ -718,10 +722,10 @@ gsa.read.gmt <- function(filename, file.location.option=c("url","local"))
     return(out)
 }
 
-gene2cat2 <- function(gmt.input.file, location.type)
+gene2cat2 <- function(gmt.input.file)
 {
     
-    re <- gsa.read.gmt(gmt.input.file, location.type)
+    re <- gsa.read.gmt(gmt.input.file)
     gene.name <- unique(do.call(c, re$genesets))
     gene.2.cat <- sapply(gene.name, gene2cat, re)
     names(gene.2.cat) <- gene.name
@@ -1165,8 +1169,17 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     {
         GOnames <- select(GO.db, keys = pvals$category, columns = c("TERM", 
             "ONTOLOGY"))[, 2:3]
+        
+        #GOnames <- select(GO.db, keys = pvals$category, columns = c("Description",
+        #    "ONTOLOGY"))[, 2:3]
+        
         colnames(GOnames) <- tolower(colnames(GOnames))
+        
+        colnames(GOnames)[colnames(GOnames)=="term"] <- "description"
+        
         pvals <- cbind(pvals, GOnames)
+        
+        
     }
     
     # And return
@@ -1360,7 +1373,6 @@ outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 }
 
 # res11 <- getStaisitcs4Go(res1,gene.based.table)
-
 getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
 {
     
@@ -1428,6 +1440,10 @@ getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
     
     GO.data.3$Ave_value_DE <-  unlist(GO.data.3$Ave_value_DE)
     GO.data.3$Ave_value_all_gene <-  unlist(GO.data.3$Ave_value_all_gene)
+    
+    #GO.data.3$Ave_value_DE <- 
+      
+    #within(GO.data.3, rm(Ave_value_DE))
     
     re3 <- list(GO.wall.DE_interest = GO.data.3, pwf.DE_interest = GO.wall.DE_interest[[2]])
     

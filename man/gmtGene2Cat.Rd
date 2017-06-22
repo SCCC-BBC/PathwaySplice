@@ -4,15 +4,11 @@
 \alias{gmtGene2Cat}
 \title{gmtGene2Cat}
 \usage{
-gmtGene2Cat(dir.name, pathway.file, location.type, gene.anno.file = NULL,
-  genomeID = c("mm10", "hg19", "hg38"))
+gmtGene2Cat(pathway.file, gene.anno.file = NULL, genomeID = c("mm10",
+  "hg19", "hg38"))
 }
 \arguments{
-\item{dir.name}{Directory where the gene sets file (in GMT format) is located}
-
 \item{pathway.file}{Input file for the gene sets in GMT format}
-
-\item{location.type}{Location of the gene set file. Valid options are "local" or "url"}
 
 \item{gene.anno.file}{Gene annotation file supplied as a file}
 
@@ -32,7 +28,7 @@ being a gene id, and each element of the list being the pathways associated with
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
-canonical.pathway.file <- '10.cp.gmt.txt'
-cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
+canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
 
 }
