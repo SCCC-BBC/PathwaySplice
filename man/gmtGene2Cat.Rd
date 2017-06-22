@@ -10,7 +10,11 @@ gmtGene2Cat(pathway.file, gene.anno.file = NULL, genomeID = c("mm10",
 \arguments{
 \item{pathway.file}{Input file for the gene sets in GMT format}
 
-\item{gene.anno.file}{Gene annotation file supplied as a file}
+\item{gene.anno.file}{Gene annotation file supplied as a file 
+if the database for annotation is not available.
+User can prepare this file using the format of 
+this link(\url{https://raw.githubusercontent.com/aiminy/
+GOSJ/master/data/genes_table_02052016.csv})}
 
 \item{genomeID}{Genome ('mm10','hg19' or 'hg38') to be used}
 }
@@ -22,8 +26,11 @@ A list where each entry is named by a gene and contains a vector of all
 Obtains all pathways associated with a set of genes
 }
 \details{
-This function reads a gene set file in GMT format (http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), and returns a list with its name
-being a gene id, and each element of the list being the pathways associated with the gene
+This function reads a gene set file in GMT format 
+(\url{http://software.broadinstitute.org/cancer/software/gsea/wiki/
+index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}),
+and returns a list with its name being a gene id, and each element of 
+the list being the pathways associated with the gene
 }
 \examples{
 
@@ -33,9 +40,10 @@ canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
 cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
 
 #url
+hallmark.file.url <- paste0("https://raw.githubusercontent.com/SCCC-BBC",
+                   "/PathwaySplice/development/inst/extdata",
+                     "/h.all.v6.0.symbols.gmt.txt")
 
-canonical.pathway.file <- "https://raw.githubusercontent.com/SCCC-BBC/PathwaySplice/development/inst/extdata/h.all.v6.0.symbols.gmt.txt"
-
-cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
+cpp <- gmtGene2Cat(hallmark.file.url,genomeID='hg19')
 
 }

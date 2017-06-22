@@ -5,18 +5,22 @@
 \title{enrichmentMap}
 \usage{
 enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
-  similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
+  similarity.threshold, output.file.dir = tempdir(),
+  label.vertex.by.index = FALSE, ...)
 }
 \arguments{
 \item{goseqres}{Object returned from runPathwaySplice}
 
 \item{n}{The top \emph{n} categories are shown in enrichment map}
 
-\item{fixed}{If set to FALSE, will invoke tkplot to let user to plot enrichment map using an interactive graph drawing facility in R. note: user needs to have XQuartz and tcltk be install}
+\item{fixed}{If set to FALSE, will invoke tkplot to let user to plot enrichment map 
+using an interactive graph drawing facility in R. Note: user needs to 
+have XQuartz and tcltk be install}
 
 \item{vertex.label.font}{Font size of vertex label}
 
-\item{similarity.threshold}{Gene sets with Jaccard Coefficient > similarity.threshold will be connected on the enrichment map}
+\item{similarity.threshold}{Gene sets with Jaccard Coefficient > similarity.threshold 
+will be connected on the enrichment map}
 
 \item{output.file.dir}{Output dir for the gene set information file on network}
 
@@ -39,6 +43,7 @@ between gene sets based on Jaccard similarity Coefficient
 In the enrichment map, vertex color corresponds to over represented pvalue;
 vertex size corresponds to the number of 'significant' gene in gene set;
 edge width corresponds to Jaccard similarity coefficient.
+
 The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 there are no overlapping genes between two gene sets, 
 JC=1 indicates two gene sets are identical.
@@ -52,15 +57,10 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          go.size.limit=c(5,30),
                          method='Wallenius')
 
-output.file.dir <- file.path(tempdir(),'OutputEnmapEx')
-
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-                       output.file.dir = output.file.dir,
-                       label.vertex.by.index = TRUE)
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
                        
 enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-                       output.file.dir = output.file.dir,
-                       label.vertex.by.index = TRUE)                     
+                       label.vertex.by.index = FALSE)                     
                        
 }
 \author{

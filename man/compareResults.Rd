@@ -4,8 +4,9 @@
 \alias{compareResults}
 \title{compareResults}
 \usage{
-compareResults(n.go, adjusted, unadjusted, output.dir, type.boxplot = c("All",
-  "Only3"), In.ad.not.un.file, In.un.not.ad.file)
+compareResults(n.go, adjusted, unadjusted, output.dir = tempdir(),
+  type.boxplot = c("All", "Only3"), In.ad.not.un.file = tempfile(),
+  In.un.not.ad.file = tempfile())
 }
 \arguments{
 \item{n.go}{Number of gene sets}
@@ -47,18 +48,12 @@ gene.based.table <- makeGeneTable(featureBasedData)
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
-                         method='Wallenius')
+                         method='Wallenius',output.file=tempfile())
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
-                         method='Hypergeometric')
+                         method='Hypergeometric',output.file=tempfile())
 
-output.dir <- file.path(tempdir(),'OutputPostAnalysis')
+compareResults(4,res1,res2,tempdir(),type.boxplot='Only3')
 
-output.file.name.1 <- 'In_ad_not_un.xls'
-output.file.name.2 <- 'In_un_not_ad.xls'
-
-compareResults(4,res1,res2,output.dir,
-                      type.boxplot='Only3',
-                      output.file.name.1,output.file.name.2)
 }

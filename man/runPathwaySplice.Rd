@@ -7,7 +7,7 @@
 runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
   test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 200),
   method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE,
-  binsize = "auto")
+  binsize = "auto", output.file = tempfile())
 }
 \arguments{
 \item{genewise.table}{data frame returned from function \code{makeGeneTable}}
@@ -32,6 +32,8 @@ ignored unless \code{method='Sampling'}}
 If set to FALSE, genes not mapped to any tested categories are ignored in analysis.}
 
 \item{binsize}{The number of genes in each gene bin in the bias plot}
+
+\item{output.file}{File name for outputting the analysis result}
 }
 \value{
 runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
@@ -62,8 +64,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
                          go.size.limit=c(5,30),
                          method='Wallenius',binsize=2)
-
- 
+                         
 }
 \references{
 Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 
