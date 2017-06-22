@@ -39,11 +39,9 @@ compareResults
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
+canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
 
-canonical.pathway.file <- '10.cp.gmt.txt'
-
-cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
-                   'local',genomeID='hg19')
+cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
                    
 gene.based.table <- makeGeneTable(featureBasedData)
 
