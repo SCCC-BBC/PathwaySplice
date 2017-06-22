@@ -392,8 +392,15 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #'
 #' @examples
 #' 
+#' #local
 #' dir.name <- system.file('extdata', package='PathwaySplice')
 #' canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+#' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
+#' 
+#' #url
+#' 
+#' canonical.pathway.file <- "https://raw.githubusercontent.com/SCCC-BBC/PathwaySplice/development/inst/extdata/h.all.v6.0.symbols.gmt.txt"
+#' 
 #' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
 #' 
 gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL, 
