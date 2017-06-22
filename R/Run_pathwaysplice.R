@@ -65,8 +65,10 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05)
 #' @param genewise.table A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}
 #' @param boxplot.width width of boxplot
 #'   
-#' @details To determine presentce of selection bias, we fit the logistic regression model 
-#' \code{Pr(a gene is significant) ~ number of features within the gene}. 
+#' @details To determine presentce of selection bias, we fit the following logistic regression model:
+#'  
+#' \code{Pr(a gene is significant) ~ number of features within the gene} 
+#' 
 #' Here features refer to exon bins or splicing junction bins, depending on 
 #' how genewise pvalues were obtained in the \code{genewise.table}
 #'   
@@ -144,6 +146,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' @param use.genes.without.cat Whether genes not mapped to any category tested are included in analysis.
 #'        If set to FALSE, genes not mapped to any tested categories are ignored in analysis.
 #' @param binsize The number of genes in each gene bin in the bias plot
+#' @param output.file File name for outputting the analysis result 
 #' 
 #' 
 #' @details This function implements the methodology described in Young et al. (2011) to adjust for 
@@ -178,11 +181,10 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                          test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),
 #'                          method='Wallenius',binsize=2)
-#' 
-#'  
+#'                          
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
     "GO:BP", "GO:MF"), go.size.limit = c(10, 200), method = "Wallenius", repcnt = 2000, 
-    use.genes.without.cat = FALSE, binsize = "auto")
+    use.genes.without.cat = FALSE, binsize = "auto",output.file=tempfile())
     {
     x <- genewise.table$sig.gene
     names(x) <- genewise.table$geneID
@@ -194,6 +196,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
     res1 <- getStaisitcs4Go(CatDE,genewise.table) 
     res2 <- reformatPathwayOut(res1)
     res3 <- within(res2, rm("Ave_value_DE"))
+    writeTibble(res3,output.file)
     res3
 }
 
@@ -204,10 +207,12 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                                  
 #' @param goseqres Object returned from runPathwaySplice
 #' @param n The top \emph{n} categories are shown in enrichment map
-#' @param fixed If set to FALSE, will invoke tkplot to let user to plot enrichment map using an interactive graph drawing facility in R. note: user needs to have XQuartz and tcltk be install
+#' @param fixed If set to FALSE, will invoke tkplot to let user to plot enrichment map 
+#'              using an interactive graph drawing facility in R. Note: user needs to 
+#'              have XQuartz and tcltk be install
 #' @param vertex.label.font Font size of vertex label
-#' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold will be connected on the enrichment map
-#'                
+#' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold 
+#'                             will be connected on the enrichment map
 #' @param output.file.dir Output dir for the gene set information file on network
 #' @param label.vertex.by.index Which way to be used for labeling vertex on network
 #'        
@@ -217,10 +222,12 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'          
 #' @param ... Additional parameter 
 #' 
-#' @details  
+#' @details
+#'   
 #' In the enrichment map, vertex color corresponds to over represented pvalue;
 #' vertex size corresponds to the number of 'significant' gene in gene set;
 #' edge width corresponds to Jaccard similarity coefficient.
+#' 
 #' The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 #' there are no overlapping genes between two gene sets, 
 #' JC=1 indicates two gene sets are identical. 
@@ -239,18 +246,13 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                          go.size.limit=c(5,30),
 #'                          method='Wallenius')
 #' 
-#' output.file.dir <- file.path(tempdir(),'OutputEnmapEx')
-#' 
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#'                        output.file.dir = output.file.dir,
-#'                        label.vertex.by.index = TRUE)
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
 #'                        
 #' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-#'                        output.file.dir = output.file.dir,
-#'                        label.vertex.by.index = TRUE)                     
+#'                        label.vertex.by.index = FALSE)                     
 #'                        
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
-    similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
+    similarity.threshold, output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
     {
     
     if (!dir.exists(output.file.dir))
@@ -270,7 +272,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     
     if (any(grep("^GO:", y$category)))
     {
-        vertexname <- paste0(y$term, ":", y$numDEInCat)
+        vertexname <- paste0(y$description, ":", y$numDEInCat)
         
         if (label.vertex.by.index == TRUE)
         {
@@ -380,10 +382,17 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' 
 #' @param pathway.file Input file for the gene sets in GMT format
 #' @param gene.anno.file Gene annotation file supplied as a file 
+#'                       if the database for annotation is not available.
+#'                       User can prepare this file using the format of 
+#'                       this link(\url{https://raw.githubusercontent.com/aiminy/
+#'                       GOSJ/master/data/genes_table_02052016.csv})
 #' @param genomeID Genome ('mm10','hg19' or 'hg38') to be used
 #'
-#' @details This function reads a gene set file in GMT format (http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29), and returns a list with its name
-#' being a gene id, and each element of the list being the pathways associated with the gene
+#' @details This function reads a gene set file in GMT format 
+#' (\url{http://software.broadinstitute.org/cancer/software/gsea/wiki/
+#' index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}),
+#' and returns a list with its name being a gene id, and each element of 
+#' the list being the pathways associated with the gene
 #'
 #' @return A list where each entry is named by a gene and contains a vector of all
 #'         the pathways associated with the gene
@@ -398,10 +407,11 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
 #' 
 #' #url
+#' hallmark.file.url <- paste0("https://raw.githubusercontent.com/SCCC-BBC",
+#'                    "/PathwaySplice/development/inst/extdata",
+#'                      "/h.all.v6.0.symbols.gmt.txt")
 #' 
-#' canonical.pathway.file <- "https://raw.githubusercontent.com/SCCC-BBC/PathwaySplice/development/inst/extdata/h.all.v6.0.symbols.gmt.txt"
-#' 
-#' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
+#' cpp <- gmtGene2Cat(hallmark.file.url,genomeID='hg19')
 #' 
 gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL, 
     genomeID = c("mm10", "hg19", "hg38"))
@@ -472,23 +482,18 @@ gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL,
 #' 
 #' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
-#'                          method='Wallenius')
+#'                          method='Wallenius',output.file=tempfile())
 #' 
 #' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
-#'                          method='Hypergeometric')
+#'                          method='Hypergeometric',output.file=tempfile())
 #' 
-#' output.dir <- file.path(tempdir(),'OutputPostAnalysis')
-#' 
-#' output.file.name.1 <- 'In_ad_not_un.xls'
-#' output.file.name.2 <- 'In_un_not_ad.xls'
-#' 
-#' compareResults(4,res1,res2,output.dir,
-#'                       type.boxplot='Only3',
-#'                       output.file.name.1,output.file.name.2)
+#' compareResults(4,res1,res2,tempdir(),type.boxplot='Only3')
+#'
 #' @export
-compareResults <- function(n.go, adjusted,unadjusted,output.dir, 
-    type.boxplot = c("All", "Only3"), In.ad.not.un.file, In.un.not.ad.file)
+#' 
+compareResults <- function(n.go, adjusted,unadjusted,output.dir=tempdir(), 
+    type.boxplot = c("All", "Only3"), In.ad.not.un.file=tempfile(), In.un.not.ad.file=tempfile())
     {
     
     if (!dir.exists(output.dir))
@@ -587,11 +592,15 @@ compareResults <- function(n.go, adjusted,unadjusted,output.dir,
                   dev.off()
                 })
                 
-                Output_file <- file.path(output.dir, In.ad.not.un.file)
-                writegototable(example.go.adjusted.by.exon[index1, ], Output_file)
+                # Output_file <- file.path(output.dir, In.ad.not.un.file)
+                # writegototable(example.go.adjusted.by.exon[index1, ], Output_file)
                 
-                Output_file <- file.path(output.dir, In.un.not.ad.file)
-                writegototable(example.go.unadjusted[index2, ], Output_file)
+                writegototable(example.go.adjusted.by.exon[index1, ], In.ad.not.un.file)
+                
+                # Output_file <- file.path(output.dir, In.un.not.ad.file)
+                # writegototable(example.go.unadjusted[index2, ], Output_file)
+                
+                writegototable(example.go.adjusted.by.exon[index1, ], In.un.not.ad.file)
                 
             } else
             {
@@ -1769,12 +1778,12 @@ reformatPathwayOut <- function(pathway.in){
   
 }
 
-# PathwaySplice:::writeTibble(res.reforamt,"~/OutputTestPathwaySplice")
-writeTibble <- function(tibble.input,output.dir){ 
+# PathwaySplice:::writeTibble(res.reforamt)
+writeTibble <- function(tibble.input,output.file.name=tempfile()){ 
 
-  if (!dir.exists(output.dir))
+  if (!dir.exists(dirname(output.file.name)))
   {
-    dir.create(output.dir,recursive = TRUE)
+    dir.create(dirname(output.file.name),recursive = TRUE)
   }
   
 flatten_list = function(x){
@@ -1786,6 +1795,6 @@ flatten_list = function(x){
 
 tibble.input %>%
   mutate_each(funs(flatten_list)) %>%
-  write.csv(file.path(output.dir,"pathway.csv"))
+  write.csv(output.file.name)
 
 }
