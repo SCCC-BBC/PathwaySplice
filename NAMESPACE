@@ -24,7 +24,7 @@ importFrom(utils,write.table)
 importFrom(RColorBrewer,brewer.pal)
 importFrom(S4Vectors,mcols)
 importFrom(dplyr,data_frame,as_data_frame,mutate_each,"%>%",funs)
-importFrom(igraph,graph.empty,add_vertices,graph.data.frame,delete.edges,E,V,get.edgelist)
+importFrom(igraph,graph.empty,add_vertices,graph.data.frame,delete.edges,E,V,get.edgelist,write.graph)
         
 export(.onAttach)
 export(gmtGene2Cat)
