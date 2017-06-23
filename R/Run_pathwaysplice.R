@@ -202,8 +202,8 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 
 #' enrichmentMap
 #'
-#' This function draws an enrichment map based on similarities 
-#' between gene sets based on Jaccard similarity Coefficient 
+#' This function draws an enrichment map using the similarities 
+#' between gene sets measured by Jaccard Coefficient(JC) 
 #'                                  
 #' @param goseqres Object returned from runPathwaySplice
 #' @param n The top \emph{n} categories are shown in enrichment map
@@ -213,7 +213,8 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param vertex.label.font Font size of vertex label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold 
 #'                             will be connected on the enrichment map
-#' @param output.file.dir Output dir for the gene set information file on network
+#' @param output.file.dir Output dir for the gene set information file on network. 
+#'                       User can find a negtwork file in GML format in this directory that can be   #'                       used as an input for Cytoscape
 #' @param label.vertex.by.index Which way to be used for labeling vertex on network
 #'        
 #'        FALSE indicates to label vertex by the name of gene sets
@@ -246,11 +247,6 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                          go.size.limit=c(5,30),
 #'                          method='Wallenius')
 #' 
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
-#'                        
-#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-#'                        label.vertex.by.index = FALSE)                     
-#'                        
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold, output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
     {
@@ -370,6 +366,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     netplot(g, vertex.label.font = vertex.label.font, vertex.label.color = "black", 
         fixed = fixed, ...)
     
+    write.graph(g, file.path(output.file.dir,"g.gml"), format = "gml")
     invisible(g)
     
     re2 <- map_data
