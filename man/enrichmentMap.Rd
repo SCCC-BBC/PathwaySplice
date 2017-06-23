@@ -22,7 +22,8 @@ have XQuartz and tcltk be install}
 \item{similarity.threshold}{Gene sets with Jaccard Coefficient > similarity.threshold 
 will be connected on the enrichment map}
 
-\item{output.file.dir}{Output dir for the gene set information file on network}
+\item{output.file.dir}{Output dir for the gene set information file on network. 
+User can find a negtwork file in GML format in this directory that can be   #'                       used as an input for Cytoscape}
 
 \item{label.vertex.by.index}{Which way to be used for labeling vertex on network
 
@@ -36,8 +37,8 @@ TRUE indicates to label vertex by the index of gene sets}
 A list for giving edge and vertex information of enrichment map
 }
 \description{
-This function draws an enrichment map based on similarities 
-between gene sets based on Jaccard similarity Coefficient
+This function draws an enrichment map using the similarities 
+between gene sets measured by Jaccard Coefficient(JC)
 }
 \details{
 In the enrichment map, vertex color corresponds to over represented pvalue;
@@ -57,11 +58,6 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          go.size.limit=c(5,30),
                          method='Wallenius')
 
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
-                       
-enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-                       label.vertex.by.index = FALSE)                     
-                       
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
