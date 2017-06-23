@@ -214,7 +214,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold 
 #'                             will be connected on the enrichment map
 #' @param output.file.dir Output dir for the gene set information file on network. 
-#'                       User can find a negtwork file in GML format in this directory that can be   #'                       used as an input for Cytoscape
+#'                       User can find a network file in GML format in this directory that can be                             used as an input for Cytoscape
 #' @param label.vertex.by.index Which way to be used for labeling vertex on network
 #'        
 #'        FALSE indicates to label vertex by the name of gene sets

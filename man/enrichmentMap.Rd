@@ -23,7 +23,7 @@ have XQuartz and tcltk be install}
 will be connected on the enrichment map}
 
 \item{output.file.dir}{Output dir for the gene set information file on network. 
-User can find a negtwork file in GML format in this directory that can be   #'                       used as an input for Cytoscape}
+User can find a network file in GML format in this directory that can be                             used as an input for Cytoscape}
 
 \item{label.vertex.by.index}{Which way to be used for labeling vertex on network
 
