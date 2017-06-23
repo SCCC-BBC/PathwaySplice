@@ -117,4 +117,14 @@ output.file.name.2 <- 'In_un_not_ad_bp.xls'
 compareResults(20,res1,res2,output.file.dir,
               type.boxplot='Only3',
               output.file.name.1,output.file.name.2)
+
+#Label network by index of gene set, and output the network file in GML format that
+#can be used as an input in Cytoscape  
+enmap <- enrichmentMap(res1,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE,output.file.dir=file.path(output.file.dir,"OutEnmap"))
+
+#Label network by description of gene set, and output the network file in GML format
+#that can be used as an input in Cytoscape                       
+enmap <- enrichmentMap(res1,n=10,fixed = FALSE,similarity.threshold=0.3,
+                       label.vertex.by.index = FALSE,
+                       output.file.dir=file.path(output.file.dir,"OutEnmap"))
 ```
