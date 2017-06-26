@@ -136,35 +136,38 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' @param genewise.table data frame returned from function \code{makeGeneTable} 
 #' @param genome Genome to be used, options are 'hg19' or 'mm10' 
 #' @param id GeneID, options are 'entrezgene' or 'ensembl_gene_id'
-#' @param gene2cat Get sets defined by users, can be obtained for example from \code{gmtGene2Cat} function   
-#' @param test.cats Default gene sets to be tested if \code{gene2cat} is not defined 
+#' @param gene2cat Get sets to be tested, these are defined by users, can be obtained from \code{gmtGene2Cat} function   
+#' @param test.cats Default gene ontology gene sets to be tested if \code{gene2cat} is not defined 
 #' @param go.size.limit Size limit of the gene sets to be tested
 #' @param method the method used to calculate pathway enrichment p value. 
 #'        Options are 'Wallenius', 'Sampling', and 'Hypergeometric' 
-#' @param repcnt Number of random samples to be calculated when 'Sampling' is used
+#' @param repcnt Number of random samples to be calculated when 'Sampling' is used, this argument
 #'        ignored unless \code{method='Sampling'}
 #' @param use.genes.without.cat Whether genes not mapped to any category tested are included in analysis.
-#'        If set to FALSE, genes not mapped to any tested categories are ignored in analysis.
+#'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.
 #' @param binsize The number of genes in each gene bin in the bias plot
-#' @param output.file File name for outputting the analysis result 
-#' 
-#' 
+#' @param output.file File name for the analysis result in .csv format. See package vignette for details.  
+#'  
 #' @details This function implements the methodology described in Young et al. (2011) to adjust for 
-#'          different number of gene features (i.e. counting bins, see Fig 1 in Anders et al. 2012) associated with each gene. In the bias plot, the genes are grouped 
-#'          by \code{numFeature} in \code{genewise.table} into gene bins, 
+#'          different number of gene features (column \code{numFeature} in \code{gene.based.table}). 
+#'          For example, gene features can be non-overlapping exon counting bins associated with each gene (Fig 1 in Anders et al. 2012).
+#'          In the bias plot, the genes are grouped by \code{numFeature} in \code{genewise.table} into gene bins, 
 #'          the proportions of signficant genes are then plotted against the gene bins. 
 #'              
-#' @return runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
-#' \item{category}{Name of the gene set (e.g. a pathway or a gene category)} 
-#' \item{over_represented_pvalue}{P-vaue for the associated category being over represented among significant genes} 
-#' \item{under_represented_pvalue}{P-vaue for the associated category being under represented among significant genes} 
+#' @return runPathwaySplice returns a tibble data frame with the following information:
+#' \item{category}{Name of the gene set. Note here we used the terms category, gene set, 
+#' and pathway interchangeably} 
+#' \item{over_represented_pvalue}{P-vaue for the associated category being over-represented among significant genes} 
+#' \item{under_represented_pvalue}{P-vaue for the associated category being under-represented among significant genes} 
 #' \item{numDEInCat}{The number of significant genes in the category} 
 #' \item{numInCat}{The total number of genes in the category}                                          
-#' \item{description}{The GO term if any of the categories is a GO term} 
-#' \item{ontology}{The column for the GO term's ontology if any of the categories is a GO term}
-#' \item{DEgene_ID}{The column for the Ensembl gene ID of differentially genes in the category}
-#' \item{DEgene_symbol}{The column for the gene symbol of differentially genes in the category}
-#' \item{Ave_value_all_gene}{The column for the average numFeature value of total genes in the category}
+#' \item{description}{Description of the gene category} 
+#' \item{ontology}{The domain of the gene ontology terms if GO categories were tested. 
+#'       Go categories can be classified into three domains: cellular component, biological process, molecular function. 
+#' \item{DEgene_ID}{Ensembl gene ID of significant genes in the category}
+#' \item{DEgene_symbol}{Gene symbols of signficant genes in the category}
+#' \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the category, 
+#'      note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
 #'
 #' 
 #' @references Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 
@@ -180,7 +183,8 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                          test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),
-#'                          method='Wallenius',binsize=2)
+#'                          method='Wallenius',binsize=20)
+#'                      
 #'                          
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
     "GO:BP", "GO:MF"), go.size.limit = c(10, 200), method = "Wallenius", repcnt = 2000, 
@@ -377,19 +381,20 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #'
 #' Obtains all pathways associated with a set of genes 
 #' 
-#' @param pathway.file Input file for the gene sets in GMT format
-#' @param gene.anno.file Gene annotation file supplied as a file 
-#'                       if the database for annotation is not available.
-#'                       User can prepare this file using the format of 
-#'                       this link(\url{https://raw.githubusercontent.com/aiminy/
-#'                       GOSJ/master/data/genes_table_02052016.csv})
-#' @param genomeID Genome ('mm10','hg19' or 'hg38') to be used
+#' @param pathway.file Input file for the gene sets in GMT format, must be in \emph{gene symbols}
+#' @param gene.anno.file Gene annotation file that facilitate gene id conversions when 
+#' gene ids in RNA-Seq data and \code{pathway.file} differ. If not specified, \code{gmtGene2cat} 
+#' relies on gene annotations provided by R package \code{AnnotationHub}.    
+#' 
+#' 
+#' @param genomeID Genome to be used. Options are 'mm10','hg19' or 'hg38'. 
 #'
-#' @details This function reads a gene set file in GMT format 
-#' (\url{http://software.broadinstitute.org/cancer/software/gsea/wiki/
-#' index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}),
+#' @details This function reads a gene set file in \href{http://software.broadinstitute.org/cancer/software/gsea/wiki/
+#' index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}{GMT format},
 #' and returns a list with its name being a gene id, and each element of 
-#' the list being the pathways associated with the gene
+#' the list being the pathways associated with the gene. When gene ids in RNA-Seq data differ from those in pathway database,
+#' \code{gene.anno.file} facilitate gene id conversions. Users can prepare this file in the format of the example gene annotation file at 
+#'              (\url{https://raw.githubusercontent.com/aiminy/GOSJ/master/data/genes_table_02052016.csv})
 #'
 #' @return A list where each entry is named by a gene and contains a vector of all
 #'         the pathways associated with the gene
@@ -398,18 +403,20 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #'
 #' @examples
 #' 
-#' #local
+#' #using local file for pathways database
 #' dir.name <- system.file('extdata', package='PathwaySplice')
-#' canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
-#' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
+#' hallmark.local.pathways <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+#' hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
 #' 
-#' #url
-#' hallmark.file.url <- paste0("https://raw.githubusercontent.com/SCCC-BBC",
+#' #using url for pathways database linked to a website
+#' hallmark.url.pathways <- paste0("https://raw.githubusercontent.com/SCCC-BBC",
 #'                    "/PathwaySplice/development/inst/extdata",
 #'                      "/h.all.v6.0.symbols.gmt.txt")
 #' 
-#' cpp <- gmtGene2Cat(hallmark.file.url,genomeID='hg19')
+#' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')
 #' 
+
+
 gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL, 
     genomeID = c("mm10", "hg19", "hg38"))
     {
