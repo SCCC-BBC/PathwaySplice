@@ -46,16 +46,17 @@ dir.name <- system.file('extdata', package='PathwaySplice')
 #canonical.pathway.file <- '10.cp.gmt.txt'
 canonical.pathway.file <- "h.all.v6.0.symbols.gmt.txt"
 
-cpp <- gmtGene2Cat(dir.name,canonical.pathway.file,
-                   'local',genomeID='hg19')
+cpp <- gmtGene2Cat(file.path(dir.name,canonical.pathway.file),genomeID='hg19')
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,
-                         method='Wallenius',go.size.limit=c(0,20))
+                         method='Wallenius',go.size.limit=c(0,20),
+                         output.file=file.path(output.file.dir,"hm_adjusted_1.csv"))
                          
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,
-                         method='Hypergeometric',go.size.limit=c(0,20))
+                         method='Hypergeometric',go.size.limit=c(0,20),
+                         output.file=file.path(output.file.dir,"hm_unadjusted_2.csv"))
 
 output.file.name.1 <- 'In_ad_not_un_cp.xls'
 output.file.name.2 <- 'In_un_not_ad_cp.xls'
@@ -66,18 +67,20 @@ compareResults(10,res1,res2,output.file.dir,
 #If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
 
 dir.name.1 <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
-dir.name.1 <- "C:/Users/lxw391/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
+#dir.name.1 <- "C:/Users/lxw391/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
 pathway.file <- "h.all.v6.0.symbols.gmt.txt"
 
-cpp <- gmtGene2Cat(dir.name.1,pathway.file,'local',genomeID='hg19')
+cpp <- gmtGene2Cat(file.path(dir.name.1,pathway.file),genomeID='hg19')
 
 res3 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,
-                         method='Wallenius')
+                         method='Wallenius',
+                         output.file=file.path(output.file.dir,"hm_unadjusted_3.csv"))
                          
 res4 <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=cpp,
-                         method='Hypergeometric')
+                         method='Hypergeometric',
+                         output.file=file.path(output.file.dir,"hm_unadjusted_4.csv"))
 
 output.file.name.3 <- 'In_ad_not_un_hp.xls'
 output.file.name.4 <- 'In_un_not_ad_hp.xls'
@@ -94,14 +97,16 @@ compareResults(10,res3,res4,output.file.dir,
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',test.cats=c('GO:BP'),
                         go.size.limit=c(5,30),
-                        method='Wallenius')
+                        method='Wallenius',
+                        output.file=file.path(output.file.dir,"bp_adjusted.csv"))
            
 PathwaySplice:::writeTibble(res1,output.file.dir)
             
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',test.cats=c('GO:BP'),
                         go.size.limit=c(5,30),
-                        method='Hypergeometric')
+                        method='Hypergeometric',
+                        output.file=file.path(output.file.dir,"bp_unadjusted.csv"))
                         
 enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
                        output.file.dir = output.file.dir,
