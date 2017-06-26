@@ -16,37 +16,24 @@ runPathwaySplice(genewise.table, genome, id, gene2cat = NULL,
 
 \item{id}{GeneID, options are 'entrezgene' or 'ensembl_gene_id'}
 
-\item{gene2cat}{Get sets defined by users, can be obtained for example from \code{gmtGene2Cat} function}
+\item{gene2cat}{Get sets to be tested, these are defined by users, can be obtained from \code{gmtGene2Cat} function}
 
-\item{test.cats}{Default gene sets to be tested if \code{gene2cat} is not defined}
+\item{test.cats}{Default gene ontology gene sets to be tested if \code{gene2cat} is not defined}
 
 \item{go.size.limit}{Size limit of the gene sets to be tested}
 
 \item{method}{the method used to calculate pathway enrichment p value. 
 Options are 'Wallenius', 'Sampling', and 'Hypergeometric'}
 
-\item{repcnt}{Number of random samples to be calculated when 'Sampling' is used
+\item{repcnt}{Number of random samples to be calculated when 'Sampling' is used, this argument
 ignored unless \code{method='Sampling'}}
 
 \item{use.genes.without.cat}{Whether genes not mapped to any category tested are included in analysis.
-If set to FALSE, genes not mapped to any tested categories are ignored in analysis.}
+Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.}
 
 \item{binsize}{The number of genes in each gene bin in the bias plot}
 
-\item{output.file}{File name for outputting the analysis result}
-}
-\value{
-runPathwaySplice returns a tibble(data frame) with 11 columns as the following:
-\item{category}{Name of the gene set (e.g. a pathway or a gene category)} 
-\item{over_represented_pvalue}{P-vaue for the associated category being over represented among significant genes} 
-\item{under_represented_pvalue}{P-vaue for the associated category being under represented among significant genes} 
-\item{numDEInCat}{The number of significant genes in the category} 
-\item{numInCat}{The total number of genes in the category}                                          
-\item{description}{The GO term if any of the categories is a GO term} 
-\item{ontology}{The column for the GO term's ontology if any of the categories is a GO term}
-\item{DEgene_ID}{The column for the Ensembl gene ID of differentially genes in the category}
-\item{DEgene_symbol}{The column for the gene symbol of differentially genes in the category}
-\item{Ave_value_all_gene}{The column for the average numFeature value of total genes in the category}
+\item{output.file}{File name for the analysis result in .csv format. See package vignette for details.}
 }
 \description{
 This function identifies pathways that are enriched with signficant genes, while accounting for 
@@ -54,8 +41,9 @@ different number of gene features (e.g. exons) associated with each gene
 }
 \details{
 This function implements the methodology described in Young et al. (2011) to adjust for 
-         different number of gene features (i.e. counting bins, see Fig 1 in Anders et al. 2012) associated with each gene. In the bias plot, the genes are grouped 
-         by \code{numFeature} in \code{genewise.table} into gene bins, 
+         different number of gene features (column \code{numFeature} in \code{gene.based.table}). 
+         For example, gene features can be non-overlapping exon counting bins associated with each gene (Fig 1 in Anders et al. 2012).
+         In the bias plot, the genes are grouped by \code{numFeature} in \code{genewise.table} into gene bins, 
          the proportions of signficant genes are then plotted against the gene bins.
 }
 \examples{
@@ -63,7 +51,8 @@ gene.based.table <- makeGeneTable(featureBasedData)
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
                          go.size.limit=c(5,30),
-                         method='Wallenius',binsize=2)
+                         method='Wallenius',binsize=20)
+                     
                          
 }
 \references{
