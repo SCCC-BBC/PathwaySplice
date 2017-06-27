@@ -143,7 +143,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'        Options are 'Wallenius', 'Sampling', and 'Hypergeometric' 
 #' @param repcnt Number of random samples to be calculated when 'Sampling' is used, this argument
 #'        ignored unless \code{method='Sampling'}
-#' @param use.genes.without.cat Whether genes not mapped to any category tested are included in analysis.
+#' @param use.genes.without.cat Whether genes not mapped to any gene_set tested are included in analysis.
 #'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.
 #' @param binsize The number of genes in each gene bin in the bias plot
 #' @param output.file File name for the analysis result in .csv format. See package vignette for details.  
@@ -154,19 +154,19 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'          In the bias plot, the genes are grouped by \code{numFeature} in \code{genewise.table} into gene bins, 
 #'          the proportions of signficant genes are then plotted against the gene bins. 
 #'              
-#' @return runPathwaySplice returns a tibble data frame with the following information:
-#' \item{category}{Name of the gene set. Note here we used the terms category, gene set, 
+#' @return runPathwaySplice returns a \href{https://cran.r-project.org/package=dplyr}{tibble} with the following information:
+#' \item{gene_set}{Name of the gene set. Note here we used the terms gene_set, gene set, 
 #' and pathway interchangeably} 
-#' \item{over_represented_pvalue}{P-vaue for the associated category being over-represented among significant genes} 
-#' \item{under_represented_pvalue}{P-vaue for the associated category being under-represented among significant genes} 
-#' \item{numDEInCat}{The number of significant genes in the category} 
-#' \item{numInCat}{The total number of genes in the category}                                          
-#' \item{description}{Description of the gene category} 
+#' \item{over_represented_pvalue}{P-vaue for the associated gene_set being over-represented among significant genes} 
+#' \item{under_represented_pvalue}{P-vaue for the associated gene_set being under-represented among significant genes} 
+#' \item{numDEInCat}{The number of significant genes in the gene_set} 
+#' \item{numInCat}{The total number of genes in the gene_set}                                          
+#' \item{description}{Description of the gene gene_set} 
 #' \item{ontology}{The domain of the gene ontology terms if GO categories were tested. 
-#'       Go categories can be classified into three domains: cellular component, biological process, molecular function. 
-#' \item{DEgene_ID}{Ensembl gene ID of significant genes in the category}
-#' \item{DEgene_symbol}{Gene symbols of signficant genes in the category}
-#' \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the category, 
+#'       Go categories can be classified into three domains: cellular component, biological process, molecular function.} 
+#' \item{DEgene_ensembl}{Ensembl gene ID of significant genes in the gene_set}
+#' \item{DEgene_symbol}{Gene symbols of signficant genes in the gene_set}
+#' \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the gene_set, 
 #'      note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
 #'
 #' 
@@ -262,15 +262,15 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
   
     goseqres <- as.data.frame(goseqres)
   
-    GO.name <- goseqres$category
-    temp <- goseqres$DEgene_ID
+    GO.name <- goseqres$gene_set
+    temp <- goseqres$DEgene_ensembl
     names(temp) <- GO.name
     x <- goseqres
     geneSets <- temp
     
     y <- as.data.frame(x)
     
-    if (any(grep("^GO:", y$category)))
+    if (any(grep("^GO:", y$gene_set)))
     {
         vertexname <- paste0(y$description, ":", y$numDEInCat)
         
@@ -287,7 +287,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         }
     } else
     {
-        vertexname <- paste0(y$category, ":", y$numDEInCat)
+        vertexname <- paste0(y$gene_set, ":", y$numDEInCat)
         
         if (label.vertex.by.index == TRUE)
         {
@@ -389,12 +389,12 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 #' 
 #' @param genomeID Genome to be used. Options are 'mm10','hg19' or 'hg38'. 
 #'
-#' @details This function reads a gene set file in \href{http://software.broadinstitute.org/cancer/software/gsea/wiki/
-#' index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}{GMT format},
+#' @details This function reads a gene set file in \href{https://software.broadinstitute.org/cancer/
+#' software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}{GMT format},
 #' and returns a list with its name being a gene id, and each element of 
 #' the list being the pathways associated with the gene. When gene ids in RNA-Seq data differ from those in pathway database,
-#' \code{gene.anno.file} facilitate gene id conversions. Users can prepare this file in the format of the example gene annotation file at 
-#'              (\url{https://raw.githubusercontent.com/aiminy/GOSJ/master/data/genes_table_02052016.csv})
+#' \code{gene.anno.file} facilitate gene id conversions. Users can prepare this file based on the format of the example gene annotation file at 
+#'              \href{https://raw.githubusercontent.com/aiminy/GOSJ/master/data/gene_annotation.txt}{this link.}
 #'
 #' @return A list where each entry is named by a gene and contains a vector of all
 #'         the pathways associated with the gene
@@ -543,14 +543,14 @@ compareResults <- function(n.go, adjusted,unadjusted,output.dir=tempdir(),
             if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
                 0)
                 {
-                index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$category)
+                index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$gene_set)
                 In.ad.not.un <- example.go.adjusted.by.exon[index1, ]$Ave_value_all_gene
                 
                 yy <- cbind(example.go.unadjusted[index1, ]$rank.value.by.over_represented_pvalue, 
                   example.go.adjusted.by.exon[index1, ]$rank.value.by.over_represented_pvalue)
                 
                 
-                index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$category)
+                index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$gene_set)
                 In.un.not.ad <- example.go.unadjusted[index2, ]$Ave_value_all_gene
                 
                 yyy <- cbind(example.go.unadjusted[index2, ]$rank.value.by.over_represented_pvalue, 
@@ -869,13 +869,13 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     ################# of input variables
     if (any(!test.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
     {
-        stop("Invalid category specified.  Valid categories are GO:CC, GO:BP, GO:MF or KEGG")
+        stop("Invalid gene_set specified.  Valid categories are GO:CC, GO:BP, GO:MF or KEGG")
     }
     if ((missing(genome) | missing(id)))
     {
         if (is.null(gene2cat))
         {
-            stop("You must specify the genome and gene ID format when automatically fetching gene to GO category mappings.")
+            stop("You must specify the genome and gene ID format when automatically fetching gene to GO gene_set mappings.")
         }
         # If we're using user specified mappings, this obviously isn't a problem
         genome <- "dummy"
@@ -914,7 +914,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         # them in term
         message("Using manually entered categories.")
         # The options are a flat mapping (that is a data frame or matrix) or a list,
-        # where the list can be either gene->categories or category->genes
+        # where the list can be either gene->categories or gene_set->genes
         if (class(gene2cat) != "list")
         {
             # it's not a list so it must be a data.frame, work out which column contains
@@ -952,10 +952,10 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         gene2cat <- gene2cat[-which(is.na(names(gene2cat)))]
         
         # !!!! The following conditional has been flagged as a potential issue when
-        # using certain types of input where the category names are the same as gene
+        # using certain types of input where the gene_set names are the same as gene
         # names (which seems like something you should avoid anyway...).  Leave it
         # for now !!!!  We're now garunteed to have a list (unless the user screwed
-        # up the input) but it could be category->genes rather than the
+        # up the input) but it could be gene_set->genes rather than the
         # gene->categories that we want.
         if (sum(unique(unlist(gene2cat, use.names = FALSE)) %in% rownames(pwf)) > 
             sum(unique(names(gene2cat)) %in% rownames(pwf)))
@@ -1032,18 +1032,18 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     DE <- rownames(pwf)[pwf$DEgenes == 1]
     num_de <- length(DE)
     num_genes <- nrow(pwf)
-    pvals <- data.frame(category = cats, over_represented_pvalue = NA, under_represented_pvalue = NA, 
+    pvals <- data.frame(gene_set = cats, over_represented_pvalue = NA, under_represented_pvalue = NA, 
         stringsAsFactors = FALSE, numDEInCat = NA, numInCat = NA)
     if (method == "Sampling")
     {
-        # We need to know the number of DE genes in each category, make this as a
+        # We need to know the number of DE genes in each gene_set, make this as a
         # mask that we can use later...
         num_DE_mask <- rep(0, length(cats))
         a <- table(unlist(gene2cat[DE], FALSE, FALSE))
         
         num_DE_mask[match(names(a), cats)] <- as.numeric(a)
         num_DE_mask <- as.integer(num_DE_mask)
-        # We have to ensure that genes not associated with a category are included
+        # We have to ensure that genes not associated with a gene_set are included
         # in the simulation, to do this they need an empty entry in the gene2cat
         # list
         gene2cat <- gene2cat[rownames(pwf)]
@@ -1056,7 +1056,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
             # A more efficient way of doing weighted random sampling without replacment
             # than the built in function The order(runif...)[1:n] bit picks n genes at
             # random, weighting them by the PWF The table(as.character(unlist(...))) bit
-            # then counts the number of times this random set occured in each category
+            # then counts the number of times this random set occured in each gene_set
             a <- table(as.character(unlist(gene2cat[order(runif(num_genes)^(1/pwf$pwf), 
                 decreasing = TRUE)[1:num_de]], FALSE, FALSE)))
             lookup[i, match(names(a), cats)] <- a
@@ -1085,17 +1085,17 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         # calculate it once
         alpha <- sum(pwf$pwf)
         
-        # Each category will have a different weighting so needs its own test
+        # Each gene_set will have a different weighting so needs its own test
         pvals[, 2:3] <- t(sapply(cat2genenum, function(u)
         {
-            # The number of DE genes in this category
+            # The number of DE genes in this gene_set
             num_de_incat <- sum(degenesnum %in% u)
             
-            # The total number of genes in this category
+            # The total number of genes in this gene_set
             num_incat <- length(u)
             
             # This is just a quick way of calculating weight=avg(PWF within
-            # category)/avg(PWF outside of category)
+            # gene_set)/avg(PWF outside of gene_set)
             avg_weight <- mean(pwf$pwf[u])
             weight <- (avg_weight * (num_genes - num_incat))/(alpha - num_incat * 
                 avg_weight)
@@ -1121,12 +1121,12 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         degenesnum <- which(pwf$DEgenes == 1)
         # Turn all genes into a reference to the pwf object
         cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
-        # Simple hypergeometric test, one category at a time
+        # Simple hypergeometric test, one gene_set at a time
         pvals[, 2:3] <- t(sapply(cat2genenum, function(u)
         {
-            # The number of DE genes in this category
+            # The number of DE genes in this gene_set
             num_de_incat <- sum(degenesnum %in% u)
-            # The total number of genes in this category
+            # The total number of genes in this gene_set
             num_incat <- length(u)
             # Calculate the sum of the tails of the hypergeometric distribution (the
             # p-values)
@@ -1177,20 +1177,20 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     
     DE_from_GO <- temp.gene.name.2
     
-    colnames(pvals.6.df) <- c("category", "DEgene_ID")
-    colnames(pvals.6.gene.symbol.df) <- c("category", "DEgene_symbol")
+    colnames(pvals.6.df) <- c("gene_set", "DEgene_ensembl")
+    colnames(pvals.6.gene.symbol.df) <- c("gene_set", "DEgene_symbol")
     
     # Finally, sort by p-value
     pvals <- pvals[order(pvals$over_represented_pvalue), ]
     
     # Supplement the table with the GO term name and ontology group but only if
     # the enrichment categories are actually GO terms
-    if (any(grep("^GO:", pvals$category)))
+    if (any(grep("^GO:", pvals$gene_set)))
     {
-        GOnames <- select(GO.db, keys = pvals$category, columns = c("TERM", 
+        GOnames <- select(GO.db, keys = pvals$gene_set, columns = c("TERM", 
             "ONTOLOGY"))[, 2:3]
         
-        #GOnames <- select(GO.db, keys = pvals$category, columns = c("Description",
+        #GOnames <- select(GO.db, keys = pvals$gene_set, columns = c("Description",
         #    "ONTOLOGY"))[, 2:3]
         
         colnames(GOnames) <- tolower(colnames(GOnames))
@@ -1203,9 +1203,9 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     }
     
     # And return
-    pvals.2 <- merge(pvals, pvals.6.df, by = "category", sort = FALSE)
+    pvals.2 <- merge(pvals, pvals.6.df, by = "gene_set", sort = FALSE)
     
-    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "category", sort = FALSE)
+    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "gene_set", sort = FALSE)
     
     pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO, cat2gene = cat2gene)
     
@@ -1218,7 +1218,7 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:M
     # Check for valid input
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
     {
-        stop("Invaled category specified.  Categories can only be GO:CC, GO:BP, GO:MF or KEGG")
+        stop("Invaled gene_set specified.  Categories can only be GO:CC, GO:BP, GO:MF or KEGG")
     }
     # Convert from genome ID to org.__.__.db format
     orgstring <- as.character(.ORG_PACKAGES[match(gsub("[0-9]+", "", genome), 
@@ -1260,13 +1260,13 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:M
         # core2cat=x[x$Ontology%in%gsub('^GO:','',fetch.cats),1:2]
         x[!x$Ontology %in% gsub("^GO:", "", fetch.cats), 2] <- "Other"
         core2cat <- x[, 1:2]
-        colnames(core2cat) <- c("gene_id", "category")
+        colnames(core2cat) <- c("gene_id", "gene_set")
     }
     if (length(grep("^KEGG", fetch.cats)) != 0)
     {
         x <- toTable(get(paste(orgstring, "PATH", sep = "")))
         # Either add it to existing table or create a new one
-        colnames(x) <- c("gene_id", "category")
+        colnames(x) <- c("gene_id", "gene_set")
         if (!is.null(core2cat))
         {
             core2cat <- rbind(core2cat, x)
@@ -1293,7 +1293,7 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:M
         # relist
         user2cat <- split(unlist(list_core2cat, FALSE, FALSE), rep(user2core[, 
             2], sapply(list_core2cat, length)))
-        # Now we only want each category listed once for each entry...
+        # Now we only want each gene_set listed once for each entry...
         user2cat <- sapply(user2cat, unique)
         ### In case you don't believe that this works as it should, here is the slow
         ### as all hell way for comparison... Make first list
@@ -1398,7 +1398,7 @@ getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
     
     GO.data <- GO.wall.DE_interest[[1]]
   
-    y <- as.list(GO.data$DEgene_ID)
+    y <- as.list(GO.data$DEgene_ensembl)
     
     re <- lapply(1:length(y), function(u, y, mds.11.sample)
     {
@@ -1454,9 +1454,9 @@ getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
     names(rre) <- names(cat2gene)
     rre2 <- list_to_df(rre)
     
-    colnames(rre2) <- c("category", "Ave_value_all_gene")
+    colnames(rre2) <- c("gene_set", "Ave_value_all_gene")
     
-    GO.data.3 <- merge(GO.data.2, rre2, by = "category", sort = FALSE)
+    GO.data.3 <- merge(GO.data.2, rre2, by = "gene_set", sort = FALSE)
     
     GO.data.3$Ave_value_DE <-  unlist(GO.data.3$Ave_value_DE)
     GO.data.3$Ave_value_all_gene <-  unlist(GO.data.3$Ave_value_all_gene)
