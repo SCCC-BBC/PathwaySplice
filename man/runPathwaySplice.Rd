@@ -28,12 +28,28 @@ Options are 'Wallenius', 'Sampling', and 'Hypergeometric'}
 \item{repcnt}{Number of random samples to be calculated when 'Sampling' is used, this argument
 ignored unless \code{method='Sampling'}}
 
-\item{use.genes.without.cat}{Whether genes not mapped to any category tested are included in analysis.
+\item{use.genes.without.cat}{Whether genes not mapped to any gene_set tested are included in analysis.
 Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.}
 
 \item{binsize}{The number of genes in each gene bin in the bias plot}
 
 \item{output.file}{File name for the analysis result in .csv format. See package vignette for details.}
+}
+\value{
+runPathwaySplice returns a \href{https://cran.r-project.org/package=dplyr}{tibble} with the following information:
+\item{gene_set}{Name of the gene set. Note here we used the terms gene_set, gene set, 
+and pathway interchangeably} 
+\item{over_represented_pvalue}{P-vaue for the associated gene_set being over-represented among significant genes} 
+\item{under_represented_pvalue}{P-vaue for the associated gene_set being under-represented among significant genes} 
+\item{numDEInCat}{The number of significant genes in the gene_set} 
+\item{numInCat}{The total number of genes in the gene_set}                                          
+\item{description}{Description of the gene gene_set} 
+\item{ontology}{The domain of the gene ontology terms if GO categories were tested. 
+      Go categories can be classified into three domains: cellular component, biological process, molecular function.} 
+\item{DEgene_ensembl}{Ensembl gene ID of significant genes in the gene_set}
+\item{DEgene_symbol}{Gene symbols of signficant genes in the gene_set}
+\item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the gene_set, 
+     note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
 }
 \description{
 This function identifies pathways that are enriched with signficant genes, while accounting for 
