@@ -693,22 +693,6 @@ gene2cat <- function(gene.name, re)
 
 gsa.read.gmt <- function(filename)
 {
-  
-  # file.location.option <- match.arg(file.location.option)
-  # 
-  # switch (file.location.option,
-  #         
-  #         url = {
-  #           filename <- filename
-  #         },
-  #         {
-  #           dir.name <- dirname(filename)
-  #           dir.name <- reformatpath(dir.name)
-  #           file.name <- basename(filename)
-  #           filename <- file.path(dir.name, file.name)
-  #         }
-  # )
-  
     a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, fill = TRUE, 
         flush = TRUE, multi.line = FALSE)
     geneset.names <- a[1][[1]]
@@ -775,7 +759,6 @@ reversemapping <- function(map)
 
 reformatdata <- function(re.gene.based)
 {
-    # re <- pData(re.PJ.gene.based)
     re <- re.gene.based
     no.re.testable.index <- which(re$mostSigDeFeature == "character(0)")
     
@@ -1460,10 +1443,6 @@ getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
     
     GO.data.3$Ave_value_DE <-  unlist(GO.data.3$Ave_value_DE)
     GO.data.3$Ave_value_all_gene <-  unlist(GO.data.3$Ave_value_all_gene)
-    
-    #GO.data.3$Ave_value_DE <- 
-      
-    #within(GO.data.3, rm(Ave_value_DE))
     
     re3 <- list(GO.wall.DE_interest = GO.data.3, pwf.DE_interest = GO.wall.DE_interest[[2]])
     
