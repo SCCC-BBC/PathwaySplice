@@ -252,9 +252,12 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',test.cats=c('GO:BP'),
-#'                          go.size.limit=c(5,30),
-#'                          method='Wallenius')
+#'                          go.size.limit=c(5,30),method='Wallenius')
+#'                          
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
 #' 
+#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE)
+  
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold, output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
     {
