@@ -58,9 +58,11 @@ gene.based.table <- makeGeneTable(featureBasedData)
 
 res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
-                         go.size.limit=c(5,30),
-                         method='Wallenius')
+                         go.size.limit=c(5,30),method='Wallenius')
+                         
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
 
+enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE)
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package

@@ -14,7 +14,7 @@ or not}
 }
 \value{
 Returns a genewised table with several variables (columns) 
-\item{geneID}{Gene ID}
+\item{geneID}{Gene identifiers in ensembl gene IDs}
 \item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
 \item{sig.gene}{a gene is significant (1) or not (0)} 
 \item{mostSigDeFeature}{the most significant gene feature}
