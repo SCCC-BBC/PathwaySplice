@@ -9,7 +9,7 @@
 #' or not  
 #'
 #' @return Returns a genewised table with several variables (columns) 
-#' \item{geneID}{Gene ID}
+#' \item{geneID}{Gene identifiers in ensembl gene IDs}
 #' \item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
 #' \item{sig.gene}{a gene is significant (1) or not (0)} 
 #' \item{mostSigDeFeature}{the most significant gene feature}
@@ -259,7 +259,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE)
   
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
-    similarity.threshold, output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
+    similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
     {
     
     if (!dir.exists(output.file.dir))
@@ -350,7 +350,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         wd <- wd[wd[, 1] != wd[, 2], ]
         wd <- wd[!is.na(wd[, 3]), ]
         g <- graph.data.frame(wd[, -3], directed = FALSE)
-        igraph::E(g)$width <- sqrt(wd[, 3] * 5)
+        igraph::E(g)$width <- sqrt(wd[, 3] * 5)*scaling.factor
         
         g <- delete.edges(g, igraph::E(g)[wd[, 3] < similarity.threshold])
         
