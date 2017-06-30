@@ -39,6 +39,7 @@ gene.based.table <- makeGeneTable(featureBasedData)
 ```{r eval=TRUE}
 lrTestBias(gene.based.table,boxplot.width=0.3)
 ```
+output.file.dir <-"C:/Temp"
 
 + Perform pathwaysplice using Canonical Pathways
 ```{r eval=TRUE}
@@ -112,9 +113,7 @@ enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
                        output.file.dir = output.file.dir,
                       label.vertex.by.index = TRUE)
                       
-enmap2 <- enrichmentMap(res2,n=6,similarity.threshold=0,
-                       output.file.dir = output.file.dir,
-                      label.vertex.by.index = TRUE)
+
                       
 output.file.name.1 <- 'In_ad_not_un_bp.xls'
 output.file.name.2 <- 'In_un_not_ad_bp.xls'
