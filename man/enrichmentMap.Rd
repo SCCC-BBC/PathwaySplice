@@ -15,7 +15,8 @@ enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 
 \item{fixed}{If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
 to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
-Note: users will need to have XQuartz and tcltk installed.}
+Note: users will need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
+if users run this function on OS X. tcltk R package is also required, but in most distributions of R tcltk is already included}
 
 \item{vertex.label.font}{Font size of node label}
 
@@ -58,9 +59,11 @@ gene.based.table <- makeGeneTable(featureBasedData)
 
 res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
-                         go.size.limit=c(5,30),
-                         method='Wallenius')
+                         go.size.limit=c(5,30),method='Wallenius')
+                         
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
 
+enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE)
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
