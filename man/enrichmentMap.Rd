@@ -9,45 +9,48 @@ enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
   label.vertex.by.index = FALSE, ...)
 }
 \arguments{
-\item{goseqres}{Object returned from runPathwaySplice}
+\item{goseqres}{Pathway analysis results, an object returned by \code{runPathwaySplice}}
 
-\item{n}{The top \emph{n} categories are shown in enrichment map}
+\item{n}{The top \emph{n} most significant gene sets are shown on enrichment map}
 
-\item{fixed}{If set to FALSE, will invoke tkplot to let user to plot enrichment map 
-using an interactive graph drawing facility in R. Note: user needs to 
-have XQuartz and tcltk be install}
+\item{fixed}{If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
+to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
+Note: users will need to have XQuartz and tcltk installed.}
 
-\item{vertex.label.font}{Font size of vertex label}
+\item{vertex.label.font}{Font size of node label}
 
-\item{similarity.threshold}{Gene sets with Jaccard Coefficient > similarity.threshold 
+\item{similarity.threshold}{Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 will be connected on the enrichment map}
 
-\item{output.file.dir}{Output dir for the gene set information file on network. 
-User can find a network file in GML format in this directory that can be                             used as an input for Cytoscape}
+\item{output.file.dir}{Output files directory, see \code{Details} section below.}
 
-\item{label.vertex.by.index}{Which way to be used for labeling vertex on network
+\item{label.vertex.by.index}{Options for labeling nodes on network. 
 
-FALSE indicates to label vertex by the name of gene sets
+FALSE indicates to label nodes by gene set names
 
-TRUE indicates to label vertex by the index of gene sets}
+TRUE indicates to label nodes by the index of gene sets}
 
 \item{...}{Additional parameter}
 }
 \value{
-A list for giving edge and vertex information of enrichment map
+A list with edge and node information used to plot enrichment map
 }
 \description{
-This function draws an enrichment map using the similarities 
-between gene sets measured by Jaccard Coefficient(JC)
+This function draws an enrichment map based on the overlap of gene sets 
+as measured by the Jaccard Coefficient(JC)
 }
 \details{
-In the enrichment map, vertex color corresponds to over represented pvalue;
-vertex size corresponds to the number of 'significant' gene in gene set;
-edge width corresponds to Jaccard similarity coefficient.
+In the enrichment map, the \emph{node colors} are controlled by gene set p-values, where smaller p-values correspond to dark red color; 
+\emph{node sizes} are controlled by the number of significant genes in gene set;
+and \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
 
 The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 there are no overlapping genes between two gene sets, 
-JC=1 indicates two gene sets are identical.
+JC=1 indicates two gene sets are identical. 
+
+The output directory will include two files: 
+(1) a gene set information file that includes full names of the gene sets and the gene set indices shown on the network 
+(2) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
 }
 \examples{
 

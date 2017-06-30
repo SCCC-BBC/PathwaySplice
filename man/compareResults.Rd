@@ -2,7 +2,7 @@
 % Please edit documentation in R/Run_pathwaysplice.R
 \name{compareResults}
 \alias{compareResults}
-\title{compareResults}
+\title{Compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis.}
 \usage{
 compareResults(n.go, adjusted, unadjusted, output.dir = tempdir(),
   type.boxplot = c("All", "Only3"), In.ad.not.un.file = tempfile(),
@@ -11,11 +11,13 @@ compareResults(n.go, adjusted, unadjusted, output.dir = tempdir(),
 \arguments{
 \item{n.go}{Number of gene sets}
 
-\item{adjusted}{Adjusted result}
+\item{adjusted}{An object returned by \code{runPathwaySplice}, should correspond to
+gene set anlaysis results adjusting for biases in splicing analysis}
 
-\item{unadjusted}{Unadjusted result}
+\item{unadjusted}{An object returned by \code{runPathwaySplice}, should correspond to 
+gene set analysis results NOT adjusting for biases.}
 
-\item{output.dir}{Path for output( including venn,boxplot and two tables)}
+\item{output.dir}{Directory for output files}
 
 \item{type.boxplot}{Get boxplot for 5 categories or 3 categories
 
@@ -32,28 +34,32 @@ in unadjusted when using the selected gene sets}
 in adjusted when using the selected gene sets}
 }
 \value{
-Nothing to be returned
+The output include 3 files in \code{output.dir}: 
+(1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
+(2) a box plot xxx 
+(3) xxx
 }
 \description{
-compareResults
+Compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis.
 }
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
-canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+hallmark.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
 
-cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
+hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
                    
 gene.based.table <- makeGeneTable(featureBasedData)
 
 res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
-                         method='Wallenius',output.file=tempfile())
+                         id='ensGene',gene2cat=hallmark,  
+                         go.size.limit = c(2, 200),
+                         method='Wallenius', output.file=tempfile())
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
+                         id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
                          method='Hypergeometric',output.file=tempfile())
 
-compareResults(4,res1,res2,tempdir(),type.boxplot='Only3')
+compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
 
 }

@@ -155,7 +155,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'          the proportions of signficant genes are then plotted against the gene bins. 
 #'              
 #' @return runPathwaySplice returns a \href{https://cran.r-project.org/package=dplyr}{tibble} with the following information:
-#' \item{gene_set}{Name of the gene set. Note here we used the terms gene_set, gene set, 
+#' \item{gene_set}{Name of the gene set. Note in this document we used the terms gene_set, category, 
 #' and pathway interchangeably} 
 #' \item{over_represented_pvalue}{P-vaue for the associated gene_set being over-represented among significant genes} 
 #' \item{under_represented_pvalue}{P-vaue for the associated gene_set being under-represented among significant genes} 
@@ -206,39 +206,43 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 
 #' enrichmentMap
 #'
-#' This function draws an enrichment map using the similarities 
-#' between gene sets measured by Jaccard Coefficient(JC) 
+#' This function draws an enrichment map based on the overlap of gene sets 
+#' as measured by the Jaccard Coefficient(JC) 
 #'                                  
-#' @param goseqres Object returned from runPathwaySplice
-#' @param n The top \emph{n} categories are shown in enrichment map
-#' @param fixed If set to FALSE, will invoke tkplot to let user to plot enrichment map 
-#'              using an interactive graph drawing facility in R. Note: user needs to 
-#'              have XQuartz and tcltk be install
-#' @param vertex.label.font Font size of vertex label
-#' @param similarity.threshold Gene sets with Jaccard Coefficient > similarity.threshold 
+#' @param goseqres Pathway analysis results, an object returned by \code{runPathwaySplice}
+#' @param n The top \emph{n} most significant gene sets are shown on enrichment map
+#' @param fixed If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
+#' to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
+#' Note: users will need to have XQuartz and tcltk installed. 
+#' @param vertex.label.font Font size of node label
+#' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
-#' @param output.file.dir Output dir for the gene set information file on network. 
-#'                       User can find a network file in GML format in this directory that can be                             used as an input for Cytoscape
-#' @param label.vertex.by.index Which way to be used for labeling vertex on network
+#' @param output.file.dir Output files directory, see \code{Details} section below. 
+#' 
+#' @param label.vertex.by.index Options for labeling nodes on network. 
 #'        
-#'        FALSE indicates to label vertex by the name of gene sets
+#'        FALSE indicates to label nodes by gene set names
 #'        
-#'        TRUE indicates to label vertex by the index of gene sets    
+#'        TRUE indicates to label nodes by the index of gene sets    
 #'          
 #' @param ... Additional parameter 
 #' 
 #' @details
 #'   
-#' In the enrichment map, vertex color corresponds to over represented pvalue;
-#' vertex size corresponds to the number of 'significant' gene in gene set;
-#' edge width corresponds to Jaccard similarity coefficient.
+#' In the enrichment map, the \emph{node colors} are controlled by gene set p-values, where smaller p-values correspond to dark red color; 
+#' \emph{node sizes} are controlled by the number of significant genes in gene set;
+#' and \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
 #' 
 #' The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 #' there are no overlapping genes between two gene sets, 
 #' JC=1 indicates two gene sets are identical. 
 #' 
+#' The output directory will include two files: 
+#' (1) a gene set information file that includes full names of the gene sets and the gene set indices shown on the network 
+#' (2) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
+#' 
 #' @export
-#' @return A list for giving edge and vertex information of enrichment map
+#' @return A list with edge and node information used to plot enrichment map
 #' 
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 #' 
@@ -454,12 +458,14 @@ gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL,
     
 }
 
-#' compareResults
+#' Compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis. 
 #'
 #' @param n.go Number of gene sets
-#' @param adjusted Adjusted result 
-#' @param unadjusted Unadjusted result 
-#' @param output.dir Path for output( including venn,boxplot and two tables)
+#' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
+#' gene set anlaysis results adjusting for biases in splicing analysis
+#' @param unadjusted An object returned by \code{runPathwaySplice}, should correspond to 
+#' gene set analysis results NOT adjusting for biases. 
+#' @param output.dir Directory for output files 
 #' @param type.boxplot Get boxplot for 5 categories or 3 categories
 #' 
 #'        6 categories: 'All.adjusted','All.unadjusted',
@@ -473,26 +479,30 @@ gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL,
 #' @param In.un.not.ad.file File name for outputing unadjused but not
 #'        in adjusted when using the selected gene sets  
 #'
-#' @return Nothing to be returned
+#' @return The output include 3 files in \code{output.dir}: 
+#' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
+#' (2) a box plot xxx 
+#' (3) xxx
 #' 
 #' @examples
 #' 
 #' dir.name <- system.file('extdata', package='PathwaySplice')
-#' canonical.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+#' hallmark.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
 #' 
-#' cpp <- gmtGene2Cat(canonical.pathway.file,genomeID='hg19')
+#' hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
 #'                    
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
 #' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
-#'                          method='Wallenius',output.file=tempfile())
+#'                          id='ensGene',gene2cat=hallmark,  
+#'                          go.size.limit = c(2, 200),
+#'                          method='Wallenius', output.file=tempfile())
 #' 
 #' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=cpp,go.size.limit = c(2, 200),
+#'                          id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
-#' compareResults(4,res1,res2,tempdir(),type.boxplot='Only3')
+#' compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
 #'
 #' @export
 #' 

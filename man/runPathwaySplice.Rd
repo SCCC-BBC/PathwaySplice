@@ -37,7 +37,7 @@ Default is set to FALSE, where genes not mapped to any tested categories are ign
 }
 \value{
 runPathwaySplice returns a \href{https://cran.r-project.org/package=dplyr}{tibble} with the following information:
-\item{gene_set}{Name of the gene set. Note here we used the terms gene_set, gene set, 
+\item{gene_set}{Name of the gene set. Note in this document we used the terms gene_set, category, 
 and pathway interchangeably} 
 \item{over_represented_pvalue}{P-vaue for the associated gene_set being over-represented among significant genes} 
 \item{under_represented_pvalue}{P-vaue for the associated gene_set being under-represented among significant genes} 
