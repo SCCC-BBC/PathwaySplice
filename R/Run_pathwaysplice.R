@@ -213,7 +213,8 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param n The top \emph{n} most significant gene sets are shown on enrichment map
 #' @param fixed If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
 #' to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
-#' Note: users will need to have XQuartz and tcltk installed. 
+#' Note: users will need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
+#' if users run this function on OS X. tcltk R package is also required, but in most distributions of R tcltk is already included
 #' @param vertex.label.font Font size of node label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
