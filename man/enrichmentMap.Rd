@@ -5,7 +5,7 @@
 \title{enrichmentMap}
 \usage{
 enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
-  similarity.threshold, output.file.dir = tempdir(),
+  similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(),
   label.vertex.by.index = FALSE, ...)
 }
 \arguments{

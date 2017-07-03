@@ -57,7 +57,7 @@ res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Wallenius', output.file=tempfile())
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
+                         id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
                          method='Hypergeometric',output.file=tempfile())
 
 compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
