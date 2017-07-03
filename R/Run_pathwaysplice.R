@@ -202,6 +202,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
     res3 <- within(res2, rm("Ave_value_DE"))
     writeTibble(res3,output.file)
     res3
+    #CatDE
 }
 
 #' enrichmentMap
@@ -503,7 +504,7 @@ gmtGene2Cat <- function(pathway.file,gene.anno.file = NULL,
 #'                          method='Wallenius', output.file=tempfile())
 #' 
 #' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
+#'                          id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
 #' compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
@@ -694,6 +695,193 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 # TxDb Length databases
 .TXDB_ORGS = c("ce6", "dm3", "hg18", "hg19", "hg38", "mm10", "mm9", "rn4", "rn5", 
     "sacCer2", "sacCer3")
+
+#' compareResults2
+#' 
+#' compareResults2 compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis. 
+#'
+#' @param n.go Number of gene sets
+#' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
+#' gene set anlaysis results adjusting for biases in splicing analysis
+#' @param unadjusted An object returned by \code{runPathwaySplice}, should correspond to 
+#' gene set analysis results NOT adjusting for biases. 
+#' @param output.dir Directory for output files 
+#' @param type.boxplot Get boxplot for 5 categories or 3 categories
+#' 
+#'        6 categories: 'All.adjusted','All.unadjusted',
+#'                      'Top25.adjusted','Top25.unadjusted',
+#'                      'In_ad_not_un','In_un_not_ad'
+#'                      
+#'        3 categories: 'All','Top25.adjusted','Top25.unadjusted
+#'        
+#' @param In.ad.not.un.file File name for outputing adjused but not
+#'        in unadjusted when using the selected gene sets     
+#' @param In.un.not.ad.file File name for outputing unadjused but not
+#'        in adjusted when using the selected gene sets  
+#'
+#' @return The output include 3 files in \code{output.dir}: 
+#' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
+#' (2) a box plot xxx 
+#' (3) xxx
+#' 
+#' @examples
+#' 
+#' dir.name <- system.file('extdata', package='PathwaySplice')
+#' hallmark.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+#' 
+#' hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
+#'                    
+#' gene.based.table <- makeGeneTable(featureBasedData)
+#' 
+#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+#'                          id='ensGene',gene2cat=hallmark,  
+#'                          go.size.limit = c(2, 200),
+#'                          method='Wallenius', output.file=tempfile())
+#' 
+#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
+#'                          id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
+#'                          method='Hypergeometric',output.file=tempfile())
+#' 
+#' compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
+#'
+#' @export
+#' 
+compareResults2 <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=tempdir(), 
+                           type.boxplot = c("All", "Only3"), In.ad.not.un.file=tempfile(), In.un.not.ad.file=tempfile())
+{
+  
+  if (!dir.exists(output.dir))
+  {
+    dir.create(output.dir,recursive = TRUE)
+  }
+  
+  n <- n.go
+  
+  example.go.adjusted.by.exon <- as.data.frame(adjusted)
+  example.go.unadjusted <- as.data.frame(unadjusted)
+  
+  if (is.na(example.go.adjusted.by.exon) || is.na(example.go.unadjusted))
+  {
+    cat("One of results is empty\n\n")
+    return()
+  } else
+  {
+    
+    if (dim(example.go.adjusted.by.exon)[1] >= n && dim(example.go.unadjusted)[1] >= 
+        n)
+    {
+      
+      adjusted <- example.go.adjusted.by.exon[1:n, 1]
+      unadjusted <- example.go.unadjusted[1:n, 1]
+      
+      re <- list(adjusted = adjusted, unadjusted = unadjusted)
+      
+      venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
+                                                                      paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), 
+                                height = 3000, width = 3500, resolution = 1000, col = "black", 
+                                lty = "dotted", lwd = 1, fill = c("red", "blue"), alpha = 0.5, 
+                                label.col = c(rep("black", 3)), cex = 0.5, fontfamily = "serif", 
+                                fontface = "bold", cat.col = c("red", "blue"), cat.cex = 0.5, 
+                                cat.pos = 0.5, cat.dist = 0.05, cat.fontfamily = "serif")
+      
+      # boxplot
+      common <- intersect(unadjusted, adjusted)
+      
+      In.unadjusted.not.in.adjusted <- setdiff(unadjusted, common)
+      In.adjusted.not.in.unadjusted <- setdiff(adjusted, common)
+      
+      if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
+          0)
+      {
+        index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$gene_set)
+        In.ad.not.un <- example.go.adjusted.by.exon[index1, ]$Ave_value_all_gene
+        
+        yy <- cbind(example.go.unadjusted[index1, ]$rank.value.by.over_represented_pvalue, 
+                    example.go.adjusted.by.exon[index1, ]$rank.value.by.over_represented_pvalue)
+        
+        
+        index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$gene_set)
+        In.un.not.ad <- example.go.unadjusted[index2, ]$Ave_value_all_gene
+        
+        yyy <- cbind(example.go.unadjusted[index2, ]$rank.value.by.over_represented_pvalue, 
+                     example.go.adjusted.by.exon[index2, ]$rank.value.by.over_represented_pvalue)
+        
+        xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
+        
+        colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
+        
+        cp.topN.adjusted <- unlist(example.go.adjusted.by.exon[1:n, 
+                                                               ]$Ave_value_all_gene)
+        cp.topN.unadjusted <- unlist(example.go.unadjusted[1:n, 
+                                                           ]$Ave_value_all_gene)
+        
+        cp.all.adjusted <- unlist(example.go.adjusted.by.exon$Ave_value_all_gene)
+        cp.all.unadjusted <- unlist(example.go.unadjusted$Ave_value_all_gene)
+        
+        type.boxplot <- match.arg(type.boxplot)
+        
+        switch(type.boxplot, Only3 = {
+          yy <- rbind(cbind(cp.topN.adjusted, rep(paste0("Adjusted_",n.go), length(cp.topN.adjusted))), 
+                      cbind(cp.topN.unadjusted, rep(paste0("Unadjusted_",n.go), length(cp.topN.unadjusted))), 
+                      cbind(cp.all.unadjusted, rep("All", length(cp.all.unadjusted))))
+          colnames(yy) <- c("y", "grp")
+          yy <- as.data.frame(yy)
+          yy$grp <- factor(yy$grp)
+          yy$grp <- factor(yy$grp, levels = levels(yy$grp)[c(2, 1, 3)])
+          png(file.path(output.dir, "boxplot.png"))
+          boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          dev.off()
+        }, {
+          yy <- rbind(cbind(xx[, 1], rep("In.ad.not.un", length(xx[, 
+                                                                   1]))), cbind(xx[, 2], rep("In.un.not.ad", length(xx[, 2]))), 
+                      cbind(cp.topN.adjusted, rep(paste0("cp.top.adjusted.",n.go), length(cp.topN.adjusted))), 
+                      cbind(cp.topN.unadjusted, rep(paste0("cp.top.unadjusted.",n.go), 
+                                                    length(cp.topN.unadjusted))), cbind(cp.all.adjusted, 
+                                                                                        rep("cp.all.adjusted", length(cp.all.adjusted))), cbind(cp.all.unadjusted, 
+                                                                                                                                                rep("cp.all.unadjusted", length(cp.all.unadjusted))))
+          colnames(yy) <- c("y", "grp")
+          yy <- as.data.frame(yy)
+          png(file.path(output.dir, "boxplot.png"))
+          boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          dev.off()
+        })
+        
+        # Output_file <- file.path(output.dir, In.ad.not.un.file)
+        # writegototable(example.go.adjusted.by.exon[index1, ], Output_file)
+        
+        writegototable(example.go.adjusted.by.exon[index1, ], In.ad.not.un.file)
+        
+        # Output_file <- file.path(output.dir, In.un.not.ad.file)
+        # writegototable(example.go.unadjusted[index2, ], Output_file)
+        
+        writegototable(example.go.adjusted.by.exon[index1, ], In.un.not.ad.file)
+        
+      } else
+      {
+        
+        if (length(In.unadjusted.not.in.adjusted) == 0)
+        {
+          cat("there is no gene sets in unadjusted resutls but not in adjusted resutls\n")
+        }
+        
+        cat("\n")
+        
+        if (length(In.adjusted.not.in.unadjusted) == 0)
+        {
+          cat("there is no gene sets in adjusted resutls but not in unadjusted resutls\n")
+        }
+        
+        cat("\n")
+        
+      }
+    } else
+    {
+      
+      cat("The enriched gene sets is less than", n, "\n")
+      
+    }
+  }
+}
 
 # Utility functions for PathwaySplice
 gene2cat <- function(gene.name, re)
@@ -1159,11 +1347,30 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         y
     }, xxx)
     
+    gene_pwf <- rownames(pwf)
+    
+    pvals.7 <- sapply(cat2gene, function(u, gene_pwf)
+    {
+      # c(sum(degenesnum%in%u),length(u)) c(rownames(pwf)[u[-which(is.na(u))]])
+      x <- u[which(u %in% gene_pwf)]
+      x
+    }, gene_pwf)
+    
+    #xxx <- match2Genome(genome)
+    
+    pvals.7.gene.symbol <- sapply(pvals.7, function(u, xxx)
+    {
+      y <- xxx[match(u, as.character(xxx[, 2])), 1]
+      y
+    }, xxx)
+    
     
     # Convert list to data frame
     pvals.6.df <- list_to_df(pvals.6)
-    
     pvals.6.gene.symbol.df <- list_to_df(pvals.6.gene.symbol)
+    
+    pvals.7.df <- list_to_df(pvals.7)
+    pvals.7.gene.symbol.df <- list_to_df(pvals.7.gene.symbol)
     
     dataset2 <- pvals.6.gene.symbol.df
     dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, 
@@ -1176,6 +1383,9 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     
     colnames(pvals.6.df) <- c("gene_set", "DEgene_ensembl")
     colnames(pvals.6.gene.symbol.df) <- c("gene_set", "DEgene_symbol")
+    
+    colnames(pvals.7.df) <- c("gene_set", "All_gene_ensembl")
+    colnames(pvals.7.gene.symbol.df) <- c("gene_set", "All_gene_symbol")
     
     # Finally, sort by p-value
     pvals <- pvals[order(pvals$over_represented_pvalue), ]
@@ -1200,13 +1410,20 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     }
     
     # And return
-    pvals.2 <- merge(pvals, pvals.6.df, by = "gene_set", sort = FALSE)
+    re.2 <- merge(pvals, pvals.6.df, by = "gene_set", sort = FALSE)
     
-    pvals.3 <- merge(pvals.2, pvals.6.gene.symbol.df, by = "gene_set", sort = FALSE)
+    re.3 <- merge(re.2, pvals.6.gene.symbol.df, by = "gene_set", sort = FALSE)
     
-    pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO, cat2gene = cat2gene)
+    re.4 <- merge(re.3, pvals.7.df, by = "gene_set", sort = FALSE)
     
-    return(pvals.4)
+    re.5 <- merge(re.4, pvals.7.gene.symbol.df, by = "gene_set", sort = FALSE)
+    
+
+    #pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO, cat2gene = cat2gene)
+    
+    re.6 <- list(GO = re.5, DE_GO = DE_from_GO, cat2gene = cat2gene)
+    
+    return(re.6)
     
 }
 
