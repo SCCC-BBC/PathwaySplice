@@ -742,7 +742,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                          id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
-#' compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
+#' compareResults2(20,res1,res2,gene.based.table,type.boxplot='Only3')
 #'
 #' @export
 #' 
@@ -794,29 +794,37 @@ compareResults2 <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir
           0)
       {
         index1 <- match(In.adjusted.not.in.unadjusted, example.go.adjusted.by.exon$gene_set)
-        In.ad.not.un <- example.go.adjusted.by.exon[index1, ]$Ave_value_all_gene
+        index1.name <- unique(unlist(example.go.adjusted.by.exon[index1,]$All_gene_ensembl))
+        In.ad.not.un <- gene.based.table[match(index1.name,gene.based.table$geneID),]$numFeature
         
         yy <- cbind(example.go.unadjusted[index1, ]$rank.value.by.over_represented_pvalue, 
                     example.go.adjusted.by.exon[index1, ]$rank.value.by.over_represented_pvalue)
         
         
         index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$gene_set)
-        In.un.not.ad <- example.go.unadjusted[index2, ]$Ave_value_all_gene
+        index2.name <- unique(unlist(example.go.unadjusted[index2,]$All_gene_ensembl))
+        In.un.not.ad <- gene.based.table[match(index2.name,gene.based.table$geneID),]$numFeature
         
         yyy <- cbind(example.go.unadjusted[index2, ]$rank.value.by.over_represented_pvalue, 
                      example.go.adjusted.by.exon[index2, ]$rank.value.by.over_represented_pvalue)
         
-        xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
+        # xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
+        # 
+        # #colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
+        # 
+        # colnames(xx) <- c("adjusted.only", "unadjusted.only")
         
-        colnames(xx) <- c("In.ad.not.un", "In.un.not.ad")
+        cp.topN.adjusted.name <- unique(unlist(example.go.adjusted.by.exon[1:n,]$All_gene_ensembl))
+        cp.topN.adjusted <- gene.based.table[match(cp.topN.adjusted.name,gene.based.table$geneID),]$numFeature
         
-        cp.topN.adjusted <- unlist(example.go.adjusted.by.exon[1:n, 
-                                                               ]$Ave_value_all_gene)
-        cp.topN.unadjusted <- unlist(example.go.unadjusted[1:n, 
-                                                           ]$Ave_value_all_gene)
+        cp.topN.unadjusted.name <- unique(unlist(example.go.unadjusted[1:n,]$All_gene_ensembl))
+        cp.topN.unadjusted <- gene.based.table[match(cp.topN.unadjusted.name,gene.based.table$geneID),]$numFeature
         
-        cp.all.adjusted <- unlist(example.go.adjusted.by.exon$Ave_value_all_gene)
-        cp.all.unadjusted <- unlist(example.go.unadjusted$Ave_value_all_gene)
+        adjusted.name <- unique(unlist(example.go.adjusted.by.exon$All_gene_ensembl))
+        cp.all.adjusted <- gene.based.table[match(adjusted.name,gene.based.table$geneID),]$numFeature
+        
+        unadjusted.name <- unique(unlist(example.go.unadjusted$All_gene_ensembl))
+        cp.all.unadjusted <- gene.based.table[match(unadjusted.name,gene.based.table$geneID),]$numFeature
         
         type.boxplot <- match.arg(type.boxplot)
         
@@ -832,8 +840,7 @@ compareResults2 <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir
           boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
           dev.off()
         }, {
-          yy <- rbind(cbind(xx[, 1], rep("In.ad.not.un", length(xx[, 
-                                                                   1]))), cbind(xx[, 2], rep("In.un.not.ad", length(xx[, 2]))), 
+          yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", length(In.ad.not.un))), cbind(In.un.not.ad , rep("unadjusted.only", length(In.un.not.ad))), 
                       cbind(cp.topN.adjusted, rep(paste0("cp.top.adjusted.",n.go), length(cp.topN.adjusted))), 
                       cbind(cp.topN.unadjusted, rep(paste0("cp.top.unadjusted.",n.go), 
                                                     length(cp.topN.unadjusted))), cbind(cp.all.adjusted, 
