@@ -61,7 +61,7 @@ res2 <- runPathwaySplice(gene.based.table,genome='hg19',
 
 output.file.name.1 <- 'In_ad_not_un_cp.xls'
 output.file.name.2 <- 'In_un_not_ad_cp.xls'
-compareResults2(30,res1,res2,gene.based.table,output.file.dir,
+compareResults(30,res1,res2,gene.based.table,output.file.dir,
                   type.boxplot='Only3',
                   output.file.name.1,output.file.name.2)
 
