@@ -2,11 +2,11 @@
 % Please edit documentation in R/Run_pathwaysplice.R
 \name{compareResults}
 \alias{compareResults}
-\title{Compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis.}
+\title{compareResults}
 \usage{
-compareResults(n.go, adjusted, unadjusted, output.dir = tempdir(),
-  type.boxplot = c("All", "Only3"), In.ad.not.un.file = tempfile(),
-  In.un.not.ad.file = tempfile())
+compareResults(n.go, adjusted, unadjusted, gene.based.table,
+  output.dir = tempdir(), type.boxplot = c("All", "Only3"),
+  In.ad.not.un.file = tempfile(), In.un.not.ad.file = tempfile())
 }
 \arguments{
 \item{n.go}{Number of gene sets}
@@ -15,32 +15,35 @@ compareResults(n.go, adjusted, unadjusted, output.dir = tempdir(),
 gene set anlaysis results adjusting for biases in splicing analysis}
 
 \item{unadjusted}{An object returned by \code{runPathwaySplice}, should correspond to 
-gene set analysis results NOT adjusting for biases.}
+gene set analysis results NOT adjusting for biases}
+
+\item{gene.based.table}{An object returned by \code{makeGeneTable}, should correspond to 
+a genewised table}
 
 \item{output.dir}{Directory for output files}
 
 \item{type.boxplot}{Get boxplot for 5 categories or 3 categories
 
-       6 categories: 'All.adjusted','All.unadjusted',
-                     'Top25.adjusted','Top25.unadjusted',
-                     'In_ad_not_un','In_un_not_ad'
+       5 categories: 'All categories',
+                     'adjusted.top','unadjusted.top',
+                     'adjusted.only','unadjusted.only'
                      
-       3 categories: 'All','Top25.adjusted','Top25.unadjusted}
+       3 categories: 'All categories','adjusted.top','unadjusted.top'}
 
-\item{In.ad.not.un.file}{File name for outputing adjused but not
+\item{adjusted.only.file}{File name for outputing adjused but not
 in unadjusted when using the selected gene sets}
 
-\item{In.un.not.ad.file}{File name for outputing unadjused but not
+\item{unadjusted.only.file}{File name for outputing unadjused but not
 in adjusted when using the selected gene sets}
 }
 \value{
 The output include 3 files in \code{output.dir}: 
 (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
-(2) a box plot xxx 
-(3) xxx
+(2) a box plot to show the distribution of number of features within all genes, the ones of with and without adjusting for bias factors
+(3) a file to listing the gene names belonging to different sections of the venn diagram
 }
 \description{
-Compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis.
+compareResults compares distribution of number of features within genes with and without adjusting for bias factors in splicing pathway analysis.
 }
 \examples{
 
@@ -57,9 +60,9 @@ res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Wallenius', output.file=tempfile())
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
+                         id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
                          method='Hypergeometric',output.file=tempfile())
 
-compareResults(50,res1,res2,tempdir(),type.boxplot='Only3')
+compareResults(20,res1,res2,gene.based.table,type.boxplot='Only3')
 
 }
