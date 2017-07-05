@@ -513,31 +513,33 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 
 #' compareResults
 #' 
-#' compareResults compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis. 
+#' compareResults compares distribution of number of features within genes with and without adjusting for bias factors in splicing pathway analysis. 
 #'
 #' @param n.go Number of gene sets
 #' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
 #' gene set anlaysis results adjusting for biases in splicing analysis
 #' @param unadjusted An object returned by \code{runPathwaySplice}, should correspond to 
-#' gene set analysis results NOT adjusting for biases. 
+#' gene set analysis results NOT adjusting for biases
+#' @param gene.based.table An object returned by \code{makeGeneTable}, should correspond to 
+#' a genewised table
 #' @param output.dir Directory for output files 
 #' @param type.boxplot Get boxplot for 5 categories or 3 categories
 #' 
-#'        6 categories: 'All.adjusted','All.unadjusted',
-#'                      'Top25.adjusted','Top25.unadjusted',
-#'                      'In_ad_not_un','In_un_not_ad'
+#'        5 categories: 'All categories',
+#'                      'adjusted.top','unadjusted.top',
+#'                      'adjusted.only','unadjusted.only'
 #'                      
-#'        3 categories: 'All','Top25.adjusted','Top25.unadjusted
+#'        3 categories: 'All categories','adjusted.top','unadjusted.top'
 #'        
-#' @param In.ad.not.un.file File name for outputing adjused but not
+#' @param adjusted.only.file File name for outputing adjused but not
 #'        in unadjusted when using the selected gene sets     
-#' @param In.un.not.ad.file File name for outputing unadjused but not
+#' @param unadjusted.only.file File name for outputing unadjused but not
 #'        in adjusted when using the selected gene sets  
 #'
 #' @return The output include 3 files in \code{output.dir}: 
 #' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
-#' (2) a box plot xxx 
-#' (3) xxx
+#' (2) a box plot to show the distribution of number of features within all genes, the ones of with and without adjusting for bias factors
+#' (3) a file to listing the gene names belonging to different sections of the venn diagram    
 #' 
 #' @examples
 #' 
