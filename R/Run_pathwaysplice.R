@@ -607,6 +607,10 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
       In.unadjusted.not.in.adjusted <- setdiff(unadjusted, common)
       In.adjusted.not.in.unadjusted <- setdiff(adjusted, common)
       
+      cat(length(common),"\n")
+      cat(length(In.unadjusted.not.in.adjusted),"\n")
+      cat(length(In.adjusted.not.in.unadjusted),"\n")
+      
       if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
           0)
       {
@@ -669,16 +673,39 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
           dev.off()
         })
+
+         na.pad <- function(x,len){
+           x[1:len]
+         }
         
-        # Output_file <- file.path(output.dir, In.ad.not.un.file)
-        # writegototable(example.go.adjusted.by.exon[index1, ], Output_file)
+         makePaddedDataFrame <- function(l,...){
+           maxlen <- max(sapply(l,length))
+           data.frame(lapply(l,na.pad,len=maxlen),...)
+         }
         
-        writegototable(example.go.adjusted.by.exon[index1, ], In.ad.not.un.file)
+          x <- In.adjusted.not.in.unadjusted
+          y <- In.unadjusted.not.in.adjusted
+          z <- common
         
-        # Output_file <- file.path(output.dir, In.un.not.ad.file)
-        # writegototable(example.go.unadjusted[index2, ], Output_file)
+          venn.res <- makePaddedDataFrame(list(x=x,y=y,z=z))
+          colnames(venn.res) <- c("adjusted.only","unadjusted.only","common")
+          
+          write.table(venn.res, file = file.path(output.dir,"results4venn.csv"),
+                      quote = FALSE, sep = ",",eol = "\n", na = " ", dec = ".", 
+                      row.names = FALSE,
+                      col.names = TRUE)
+          
+          #writeTibble(venn.res,file.path(output.dir,"results4venn.csv"))
+          
+          Output_file <- file.path(output.dir, In.ad.not.un.file)
+          writegototable(example.go.adjusted.by.exon[index1, ], Output_file)
         
-        writegototable(example.go.adjusted.by.exon[index1, ], In.un.not.ad.file)
+        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,In.ad.not.un.file))
+        
+         Output_file <- file.path(output.dir, In.un.not.ad.file)
+         writegototable(example.go.unadjusted[index2, ], Output_file)
+        
+        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,In.un.not.ad.file))
         
       } else
       {
