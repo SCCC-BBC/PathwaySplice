@@ -511,9 +511,9 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 .TXDB_ORGS = c("ce6", "dm3", "hg18", "hg19", "hg38", "mm10", "mm9", "rn4", "rn5", 
     "sacCer2", "sacCer3")
 
-#' compareResults2
+#' compareResults
 #' 
-#' compareResults2 compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis. 
+#' compareResults compares distribution of xx with and without adjusting for bias factors in splicing pathway analysis. 
 #'
 #' @param n.go Number of gene sets
 #' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
@@ -557,11 +557,11 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                          id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
-#' compareResults2(20,res1,res2,gene.based.table,type.boxplot='Only3')
+#' compareResults(20,res1,res2,gene.based.table,type.boxplot='Only3')
 #'
 #' @export
 #' 
-compareResults2 <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=tempdir(), 
+compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=tempdir(), 
                            type.boxplot = c("All", "Only3"), In.ad.not.un.file=tempfile(), In.un.not.ad.file=tempfile())
 {
   
