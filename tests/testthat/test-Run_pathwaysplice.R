@@ -28,11 +28,8 @@ test_that("test compareResults",
                                     go.size.limit = c(10,300),method='Hypergeometric')
             
             output.file.dir <- "~/TestNew"
-            output.file.name.1 <- 'In_ad_not_un.xls'
-            output.file.name.2 <- 'In_un_not_ad.xls'
-
-            res3 <- compareResults(25,res1,res2,output.file.dir,
-                                  type.boxplot='Only3',
-                                  output.file.name.1,output.file.name.2)
+            
+            res3 <- compareResults(25,res1,res2,gene.based.table,output.file.dir,
+                                  type.boxplot='Only3')
 })
 
