@@ -59,11 +59,8 @@ res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Hypergeometric',go.size.limit=c(0,20),
                          output.file=file.path(output.file.dir,"hm_unadjusted_2.csv"))
 
-output.file.name.1 <- 'In_ad_not_un_cp.xls'
-output.file.name.2 <- 'In_un_not_ad_cp.xls'
 compareResults(30,res1,res2,gene.based.table,output.file.dir,
-                  type.boxplot='Only3',
-                  output.file.name.1,output.file.name.2)
+                  type.boxplot='Only3')
 
 #If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
 
@@ -83,12 +80,8 @@ res4 <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Hypergeometric',
                          output.file=file.path(output.file.dir,"hm_unadjusted_4.csv"))
 
-output.file.name.3 <- 'In_ad_not_un_hp.xls'
-output.file.name.4 <- 'In_un_not_ad_hp.xls'
-
 compareResults(10,res3,res4,output.file.dir,
-                  type.boxplot='Only3',
-                  output.file.name.3,output.file.name.4)
+                  type.boxplot='Only3')
                   
 ```
 
@@ -101,8 +94,6 @@ res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                         method='Wallenius',
                         output.file=file.path(output.file.dir,"bp_adjusted.csv"))
            
-PathwaySplice:::writeTibble(res1,output.file.dir)
-            
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',test.cats=c('GO:BP'),
                         go.size.limit=c(5,30),
@@ -114,13 +105,8 @@ enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
                       label.vertex.by.index = TRUE)
                       
 
-                      
-output.file.name.1 <- 'In_ad_not_un_bp.xls'
-output.file.name.2 <- 'In_un_not_ad_bp.xls'
-
 compareResults(20,res1,res2,output.file.dir,
-              type.boxplot='Only3',
-              output.file.name.1,output.file.name.2)
+              type.boxplot='Only3')
 
 #Label network by index of gene set, and output the network file in GML format that
 #can be used as an input in Cytoscape  
