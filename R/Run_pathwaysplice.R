@@ -219,6 +219,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param vertex.label.font Font size of node label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
+#' @param scaling.factor Scaling factor that users can adjust the thickness of the edges on network      
 #' @param output.file.dir Output files directory, see \code{Details} section below. 
 #' 
 #' @param label.vertex.by.index Options for labeling nodes on network. 
@@ -256,9 +257,11 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                          id='ensGene',test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),method='Wallenius')
 #'                          
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+#' label.vertex.by.index = TRUE)
 #' 
-#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE)
+#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+#' label.vertex.by.index = FALSE)
   
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
@@ -531,15 +534,11 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                      
 #'        3 categories: 'All categories','adjusted.top','unadjusted.top'
 #'        
-#' @param adjusted.only.file File name for outputing adjused but not
-#'        in unadjusted when using the selected gene sets     
-#' @param unadjusted.only.file File name for outputing unadjused but not
-#'        in adjusted when using the selected gene sets  
 #'
 #' @return The output include 3 files in \code{output.dir}: 
 #' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
 #' (2) a box plot to show the distribution of number of features within all genes, the ones of with and without adjusting for bias factors
-#' (3) a file to listing the gene names belonging to different sections of the venn diagram    
+#' (3) a file to listing the gene set names belonging to different sections of the venn diagram    
 #' 
 #' @examples
 #' 
@@ -556,7 +555,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                          method='Wallenius', output.file=tempfile())
 #' 
 #' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
+#'                          id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
 #' compareResults(20,res1,res2,gene.based.table,type.boxplot='Only3')
@@ -564,7 +563,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' @export
 #' 
 compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=tempdir(), 
-                           type.boxplot = c("All", "Only3"), In.ad.not.un.file=tempfile(), In.un.not.ad.file=tempfile())
+                           type.boxplot = c("All", "Only3"))
 {
   
   if (!dir.exists(output.dir))
@@ -697,15 +696,15 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           
           #writeTibble(venn.res,file.path(output.dir,"results4venn.csv"))
           
-          Output_file <- file.path(output.dir, In.ad.not.un.file)
-          writegototable(example.go.adjusted.by.exon[index1, ], Output_file)
+          #Output_file <- file.path(output.dir, adjusted.only.file)
+          writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,"adjustedOnly.txt"))
         
-        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,In.ad.not.un.file))
+        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,adjusted.only.file))
         
-         Output_file <- file.path(output.dir, In.un.not.ad.file)
-         writegototable(example.go.unadjusted[index2, ], Output_file)
+         #Output_file <- file.path(output.dir, unadjusted.only.file)
+         writegototable(example.go.unadjusted[index2, ], file.path(output.dir,"unadjustedOnly.txt"))
         
-        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,In.un.not.ad.file))
+        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,unadjusted.only.file))
         
       } else
       {
