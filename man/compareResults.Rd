@@ -5,8 +5,7 @@
 \title{compareResults}
 \usage{
 compareResults(n.go, adjusted, unadjusted, gene.based.table,
-  output.dir = tempdir(), type.boxplot = c("All", "Only3"),
-  In.ad.not.un.file = tempfile(), In.un.not.ad.file = tempfile())
+  output.dir = tempdir(), type.boxplot = c("All", "Only3"))
 }
 \arguments{
 \item{n.go}{Number of gene sets}
@@ -29,18 +28,12 @@ a genewised table}
                      'adjusted.only','unadjusted.only'
                      
        3 categories: 'All categories','adjusted.top','unadjusted.top'}
-
-\item{adjusted.only.file}{File name for outputing adjused but not
-in unadjusted when using the selected gene sets}
-
-\item{unadjusted.only.file}{File name for outputing unadjused but not
-in adjusted when using the selected gene sets}
 }
 \value{
 The output include 3 files in \code{output.dir}: 
 (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
 (2) a box plot to show the distribution of number of features within all genes, the ones of with and without adjusting for bias factors
-(3) a file to listing the gene names belonging to different sections of the venn diagram
+(3) a file to listing the gene set names belonging to different sections of the venn diagram
 }
 \description{
 compareResults compares distribution of number of features within genes with and without adjusting for bias factors in splicing pathway analysis.
@@ -60,7 +53,7 @@ res1 <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Wallenius', output.file=tempfile())
 
 res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=harllmark,go.size.limit = c(2, 200),
+                         id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
                          method='Hypergeometric',output.file=tempfile())
 
 compareResults(20,res1,res2,gene.based.table,type.boxplot='Only3')

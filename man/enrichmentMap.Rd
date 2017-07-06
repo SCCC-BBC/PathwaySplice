@@ -23,6 +23,8 @@ if users run this function on OS X. tcltk R package is also required, but in mos
 \item{similarity.threshold}{Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 will be connected on the enrichment map}
 
+\item{scaling.factor}{Scaling factor that users can adjust the thickness of the edges on network}
+
 \item{output.file.dir}{Output files directory, see \code{Details} section below.}
 
 \item{label.vertex.by.index}{Options for labeling nodes on network. 
@@ -61,9 +63,11 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
                          go.size.limit=c(5,30),method='Wallenius')
                          
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE)
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.vertex.by.index = TRUE)
 
-enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE)
+enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+label.vertex.by.index = FALSE)
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
