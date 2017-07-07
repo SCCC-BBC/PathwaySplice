@@ -1863,19 +1863,27 @@ tibble.input %>%
 
 }
 
-#processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$")
+#processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction")
 
-processBamFile <- function(input.bam.dir,input.bam.pattern){
-
+processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
+  
+  if (!dir.exists(output.file.dir))
+  {
+    dir.create(output.file.dir, recursive = TRUE)
+  }
+  
+  cmd="QoRTs QC"
+  
   bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
   
   lapply(bam.list,function(u){
     
     sample.name <- basename(dirname(u))
     
-    print(sample.name)
+    cmd1=paste(cmd,u,gtffile.gtf,file.path(output.file.dir,sample.name),sep=" ")
+    print(cmd1)
+    #system(cmd1)
     
   })
   
 }
-
