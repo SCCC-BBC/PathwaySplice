@@ -1889,8 +1889,10 @@ getCount4EachBamUsingJobArray <- function(input.bam.dir,input.bam.pattern,gtffil
   })
   
   cmd2 <- x[[u]]
-  cmd2
+
+  cat(cmd2, "\n\n")
   
+  system(cmd2)
 }
 
 createBsubJobArrayRfun <- function(Rfun,job.name,wait.job.name){
@@ -1935,8 +1937,7 @@ useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
   return(cmd)
 }
 
-
-#R -e 'processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction")'
+#R -e 'library(PathwaySplice);PathwaySplice:::processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction")'
 
 processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
@@ -1962,4 +1963,3 @@ processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.fi
   
   system(counting)  
 }
-
