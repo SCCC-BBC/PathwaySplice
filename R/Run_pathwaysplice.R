@@ -1869,4 +1869,13 @@ processBamFile <- function(input.bam.dir,input.bam.pattern){
 
   bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
   
+  lapply(bam.list,function(u){
+    
+    sample.name <- basename(dirname(u))
+    
+    print(sample.name)
+    
+  })
+  
 }
+
