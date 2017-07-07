@@ -1876,7 +1876,13 @@ getCount4EachBamUsingJobArray <- function(input.bam.dir,input.bam.pattern,gtffil
     dir.create(output.file.dir, recursive = TRUE)
   }
   
-  cmd="java -Xmx4000M -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar QC --noGzipOutput --keepMultiMapped"
+  cmd.java.1="module load java/1.8.0_60"
+  
+  cmd.java.2='export _JAVA_OPTIONS="-Xmx5G"'
+  
+  cmd.java.3="java -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar QC --noGzipOutput --keepMultiMapped"
+  
+  cmd=paste(cmd.java.1,cmd.java.2,cmd.java.3,sep=";")
   
   bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
   
