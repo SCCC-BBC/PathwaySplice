@@ -1867,6 +1867,10 @@ tibble.input %>%
 
 processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
+  index <- system('echo $LSB_JOBINDEX',intern = TRUE)
+  
+  u <- as.integer(index)
+  
   if (!dir.exists(output.file.dir))
   {
     dir.create(output.file.dir, recursive = TRUE)
@@ -1884,8 +1888,62 @@ processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.fi
     cmd1
   })
   
-  print(x)
+  n <- length(x)
   
-  #lapply(x,function(u){system(u)})
+  job.name <- paste0("Count[1-",n,"]")
+  
+  Rfun <- "test"
+  counting <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
+  
+  print(counting)  
+}
+
+createBsubJobArrayRfun <- function(Rfun,job.name,wait.job.name){
+  x <- useJobArrayOnPegasus("parallel","72:00",16,25000,8,job.name,wait.job.name)
+  xx <- paste(x,paste0("\"R -e ",paste0("\'",Rfun,"\'"),"\""),sep=" ")
+  xx
+}
+
+useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
+                                 , Wall.time, cores, Memory, span.ptile,job.name,wait.job.name=NULL) {
+  
+  job.option <- match.arg(job.option)
+  
+  #index.job <- regexpr("\\[",job.name)[1]
+  
+  #job.name.array <- substr(job.name,1,(index.job-1))
+  
+  job.name.array <- job.name
+  
+  switch (job.option,
+          parallel = {
+            cmd0 = paste(Wall.time,"-n",cores,"-q parallel -R 'rusage[mem=",Memory,"] span[ptile=",span.ptile,"]' -u aimin.yan@med.miami.edu",sep = " ")
+          },
+          bigmem = {
+            cmd0 = paste(Wall.time,"-n",cores,"-q bigmem -R 'rusage[mem=",Memory,"] span[ptile=", span.ptile, "]' -u aimin.yan@med.miami.edu",sep = " ")
+          },
+          general = {
+            cmd0 = paste(Wall.time,"-n",cores,"-q general -R 'rusage[mem=",Memory,"] span[ptile=",span.ptile, "]' -u aimin.yan@med.miami.edu",sep = " ")
+          }
+  )
+  
+  if(!is.null(wait.job.name)){
+    cmd1 = paste0("bsub -w \"done(\"", wait.job.name, "\")\"", " -P bbc -J \"",
+                  job.name, paste0("\" -o %J.", job.name.array, ".log "), paste0("-e %J.",
+                                                                                 job.name.array, ".err -W"))
+  }else{
+    cmd1 = paste0("bsub -P bbc -J \"",job.name, paste0("\" -o %J.", job.name.array, ".log "), paste0("-e %J.",job.name.array, ".err -W"))
+  }
+  
+  cmd = paste(cmd1,cmd0,sep=" ")
+  
+  return(cmd)
+}
+
+getCount4EachBam <- function(input.command){
+  
+  index <- system('echo $LSB_JOBINDEX',intern = TRUE)
+  u <- as.integer(index)
+  system(input.command[[u]])
   
 }
