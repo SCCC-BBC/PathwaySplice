@@ -1862,3 +1862,11 @@ tibble.input %>%
   write.csv(output.file.name)
 
 }
+
+#processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$")
+
+processBamFile <- function(input.bam.dir,input.bam.pattern){
+
+  bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
+  
+}
