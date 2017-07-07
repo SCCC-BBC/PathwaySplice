@@ -1863,9 +1863,9 @@ tibble.input %>%
 
 }
 
-#processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction")
 
-processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
+
+getCount4EachBamUsingJobArray <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
   index <- system('echo $LSB_JOBINDEX',intern = TRUE)
   
@@ -1888,14 +1888,9 @@ processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.fi
     cmd1
   })
   
-  n <- length(x)
+  cmd2 <- cmd1[[u]]
+  cmd2
   
-  job.name <- paste0("Count[1-",n,"]")
-  
-  Rfun <- "test"
-  counting <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
-  
-  print(counting)  
 }
 
 createBsubJobArrayRfun <- function(Rfun,job.name,wait.job.name){
@@ -1940,10 +1935,31 @@ useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
   return(cmd)
 }
 
-getCount4EachBam <- function(input.command){
+
+#R -e 'processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction")'
+
+processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
-  index <- system('echo $LSB_JOBINDEX',intern = TRUE)
-  u <- as.integer(index)
-  system(input.command[[u]])
+  cmd="QoRTs QC"
   
+  bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
+  
+  n <- length(bam.list)
+  
+  job.name <- paste0("Count[1-",n,"]")
+  
+  Rfun1 <- 'library(PathwaySplice);re <- PathwaySplice:::getCount4EachBamUsingJobArray('
+  input <- input.bam.dir
+  input.bam.pattern <- input.bam.pattern
+  processed.gene.gtf <- gtffile.gtf
+  output <- output.file.dir
+  Rfun2 <- ')'
+  
+  Rinput <- paste0('\\"',input,'\\",','\\"',input.bam.pattern,'\\",','\\"',processed.gene.gtf,'\\",','\\"',output,'\\"')
+  Rfun <-paste0(Rfun1,Rinput,Rfun2)
+  
+  counting <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
+  
+  system(counting)  
 }
+
