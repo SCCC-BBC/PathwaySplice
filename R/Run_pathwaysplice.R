@@ -1888,7 +1888,7 @@ getCount4EachBamUsingJobArray <- function(input.bam.dir,input.bam.pattern,gtffil
     cmd1
   })
   
-  cmd2 <- cmd1[[u]]
+  cmd2 <- x[[u]]
   cmd2
   
 }
