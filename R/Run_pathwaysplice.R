@@ -1876,14 +1876,16 @@ processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.fi
   
   bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
   
-  lapply(bam.list,function(u){
+  x <- lapply(bam.list,function(u){
     
     sample.name <- basename(dirname(u))
     
     cmd1=paste(cmd,u,gtffile.gtf,file.path(output.file.dir,sample.name),sep=" ")
-    print(cmd1)
-    #system(cmd1)
-    
+    cmd1
   })
+  
+  print(x)
+  
+  #lapply(x,function(u){system(u)})
   
 }
