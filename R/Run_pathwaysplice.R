@@ -1945,6 +1945,8 @@ useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
 
 #R -e 'library(PathwaySplice);PathwaySplice:::processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction")'
 
+#R -e 'library(PathwaySplice);PathwaySplice:::processBamFile("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","STAR_out.sorted.bam$","~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based")'
+
 processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
   cmd="QoRTs QC"
