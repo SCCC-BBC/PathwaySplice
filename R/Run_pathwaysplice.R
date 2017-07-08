@@ -1880,7 +1880,7 @@ getCount4EachBamUsingJobArray <- function(input.bam.dir,input.bam.pattern,gtffil
   
   cmd.java.2='export _JAVA_OPTIONS="-Xmx5G"'
   
-  cmd.java.3="java -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar QC --noGzipOutput --keepMultiMapped"
+  cmd.java.3="java -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar QC --noGzipOutput --keepMultiMapped --stranded"
   
   cmd=paste(cmd.java.1,cmd.java.2,cmd.java.3,sep=";")
   
