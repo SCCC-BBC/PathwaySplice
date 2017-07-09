@@ -2003,7 +2003,7 @@ getResultsFromJunctionSeq2 <- function(dir.name, sample.file, count.file,
   #return(jscs)
 }
 
-#R -e 'library(PathwaySplice);PathwaySplice:::submitJob4Jscs("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","Sample_info.txt","QC.spliceJunctionAndExonCounts.forJunctionSeq.txt","Mus_musculus.GRCm38.83.JunctionSeq.flat.gff","shrink","junctionsAndExons","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/Output_jscs)'
+#R -e 'library(PathwaySplice);PathwaySplice:::submitJob4Jscs("/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based","Sample_info.txt","QC.spliceJunctionAndExonCounts.forJunctionSeq.txt","Mus_musculus.GRCm38.83.JunctionSeq.flat.gff","shrink","junctionsAndExons","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/Output_jscs")'
 
 submitJob4Jscs <- function(dir.name, sample.file, count.file, 
                       gff.file, method.dispFinal,analysis.type,output.file.dir){
@@ -2020,10 +2020,6 @@ submitJob4Jscs <- function(dir.name, sample.file, count.file,
   analysis.type <- analysis.type
   output <- output.file.dir
   
-  input <- input.bam.dir
-  input.bam.pattern <- input.bam.pattern
-  processed.gene.gtf <- gtffile.gtf
-  output <- output.file.dir
   Rfun2 <- ')'
   
   Rinput <- paste0('\\"',input,'\\",',
