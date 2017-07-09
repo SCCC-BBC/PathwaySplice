@@ -1970,6 +1970,12 @@ getResultsFromJunctionSeq2 <- function(dir.name, sample.file, count.file,
                                       gff.file, method.dispFinal = c("shrink", "max", "fitted", "noShare"),analysis.type,output.file.dir)
 {
   
+  
+  if (!dir.exists(output.file.dir))
+  {
+    dir.create(output.file.dir, recursive = TRUE)
+  }
+  
   # set up method for calculating dispFinal
   method.dispFinal <- match.arg(method.dispFinal)
   
