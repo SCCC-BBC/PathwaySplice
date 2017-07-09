@@ -1863,8 +1863,6 @@ tibble.input %>%
 
 }
 
-
-
 getCount4EachBamUsingJobArray <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
   index <- system('echo $LSB_JOBINDEX',intern = TRUE)
@@ -1912,10 +1910,6 @@ useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
   
   job.option <- match.arg(job.option)
   
-  #index.job <- regexpr("\\[",job.name)[1]
-  
-  #job.name.array <- substr(job.name,1,(index.job-1))
-  
   job.name.array <- job.name
   
   switch (job.option,
@@ -1949,8 +1943,6 @@ useJobArrayOnPegasus <- function(job.option=c("general","parallel","bigmem")
 
 processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.file.dir){
   
-  cmd="QoRTs QC"
-  
   bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, all.files = TRUE,recursive=TRUE,full.names=TRUE)
   
   n <- length(bam.list)
@@ -1970,4 +1962,75 @@ processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.fi
   counting <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
   
   system(counting)  
+}
+
+
+
+getResultsFromJunctionSeq2 <- function(dir.name, sample.file, count.file, 
+                                      gff.file, method.dispFinal = c("shrink", "max", "fitted", "noShare"),analysis.type,output.file.dir)
+{
+  
+  # set up method for calculating dispFinal
+  method.dispFinal <- match.arg(method.dispFinal)
+  
+  # Get sample file
+  dir.name <- reformatpath(dir.name)
+  
+  path.sample.file <- file.path(dir.name, sample.file)
+  decoder.bySample <- read.table(path.sample.file, header = TRUE, stringsAsFactors = FALSE)
+  
+  x <- colnames(decoder.bySample)
+  
+  sample.ID.index <- which(colnames(decoder.bySample)==x[1])
+  group.ID.index <- which(colnames(decoder.bySample)==x[2])
+  
+  # Get count file
+  path.count.file <- file.path(dir.name, decoder.bySample[,sample.ID.index],count.file)
+  
+  # Get annotation file
+  path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
+  
+  jscs<-runJunctionSeqAnalyses(sample.files= path.count.file,sample.names= decoder.bySample[,sample.ID.index],condition=decoder.bySample[,group.ID.index],flat.gff.file= path.gff.file,analysis.type = analysis.type,nCores=1,verbose=TRUE,debug.mode=TRUE,use.multigene.aggregates = TRUE,method.dispFinal = method.dispFinal)
+  
+  save(jscs,file=file.path(output.file.dir,"jscs.RData"))
+  
+  #return(jscs)
+}
+
+#R -e 'library(PathwaySplice);PathwaySplice:::submitJob4Jscs("/projects/scratch/bbc/Project/Pengzhang_data2015/Alignment_len60","Sample_info.txt","QC.spliceJunctionAndExonCounts.forJunctionSeq.txt","Mus_musculus.GRCm38.83.JunctionSeq.flat.gff","shrink","junctionsAndExons","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/Output_jscs)'
+
+submitJob4Jscs <- function(dir.name, sample.file, count.file, 
+                      gff.file, method.dispFinal,analysis.type,output.file.dir){
+  
+  job.name <- "RunJscs"
+  
+  Rfun1 <- 'library(PathwaySplice);re <- PathwaySplice:::getResultsFromJunctionSeq2('
+  
+  input <- dir.name
+  sample.file <- sample.file
+  count.file <- count.file 
+  gff.file <- gff.file
+  method.dispFinal <- method.dispFinal
+  analysis.type <- analysis.type
+  output <- output.file.dir
+  
+  input <- input.bam.dir
+  input.bam.pattern <- input.bam.pattern
+  processed.gene.gtf <- gtffile.gtf
+  output <- output.file.dir
+  Rfun2 <- ')'
+  
+  Rinput <- paste0('\\"',input,'\\",',
+                   '\\"',sample.file,'\\",',
+                   '\\"',count.file,'\\",',
+                   '\\"',gff.file,'\\",',
+                   '\\"',method.dispFinal,'\\",',
+                   '\\"',analysis.type,'\\",',
+                   '\\"',output,'\\"')
+ 
+  Rfun <-paste0(Rfun1,Rinput,Rfun2)
+  
+  jscs <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
+  
+  system(jscs)  
 }
