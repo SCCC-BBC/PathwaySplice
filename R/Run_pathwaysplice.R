@@ -1030,14 +1030,17 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     }
     
     # Add option to choose gene set by its size
-    gene2cat <- getGeneSetBySize(gene2cat, go.size.limit)
+    #gene2cat <- getGeneSetBySize(gene2cat, go.size.limit)
+    
+    cat2gene <- getGeneSetBySize(cat2gene, go.size.limit)
     
     if(length(gene2cat)==0){
       stop("No gene set is satisfied by the selected size. Change gene set or choose new size.")
     }
     
-    cat2gene <- reversemapping(gene2cat)
     gene2cat <- reversemapping(cat2gene)
+    cat2gene <- reversemapping(gene2cat)
+    
     
     nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
     if (nafrac > 50)
@@ -1570,7 +1573,13 @@ match2Genome <- function(genome_id)
         suppressMessages(xxx <- select(edb, keys = entrezid, columns = c("ENSEMBL", 
             "SYMBOL")))
         yyy <- xxx[, c(3, 2, 1)]
-    }, {
+    }, mm10 = {
+      edb <- org.Mm.eg.db
+      entrezid <- keys(edb, keytype = "ENTREZID")
+      suppressMessages(xxx <- select(edb, keys = entrezid, columns = c("ENSEMBL",                                                        "SYMBOL")))
+      yyy <- xxx[, c(3, 2, 1)]
+    },
+    {
         hs <- query(ah, c("Ensembl", "GRCm38", "Mus Musculus"))
         res <- hs[["AH53222"]]
         res <- genes(res, columns = c("gene_name"))
@@ -1620,11 +1629,14 @@ getGeneSetBySize <- function(user2cat, go.size.limit)
     
     if (is.finite(lower.size) & is.finite(upper.size))
     {
+        cat("selected\\n")
         gene2go.select.2 <- gene2go.select.1[lapply(gene2go.select.1, length) > 
             lower.size & lapply(gene2go.select.1, length) <= upper.size]
+        
+        print(lapply(gene2go.select, length))
     } else
     {
-        
+        cat("unselected\\n")
         gene2go.select.2 <- gene2go.select.1
     }
     
@@ -1964,7 +1976,7 @@ processBamFile <- function(input.bam.dir,input.bam.pattern,gtffile.gtf,output.fi
   system(counting)  
 }
 
-
+#PathwaySplice:::getResultsFromJunctionSeq2("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based","Sample_info.txt","QC.spliceJunctionAndExonCounts.forJunctionSeq.txt","mouse_str.gff","shrink","junctionsAndExons","~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs")
 
 getResultsFromJunctionSeq2 <- function(dir.name, sample.file, count.file, 
                                       gff.file, method.dispFinal = c("shrink", "max", "fitted", "noShare"),analysis.type,output.file.dir)
