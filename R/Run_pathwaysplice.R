@@ -1979,7 +1979,6 @@ getResultsFromJunctionSeq2 <- function(dir.name, sample.file, count.file,
                                       gff.file, method.dispFinal = c("shrink", "max", "fitted", "noShare"),analysis.type,output.file.dir)
 {
   
-  
   if (!dir.exists(output.file.dir))
   {
     dir.create(output.file.dir, recursive = TRUE)
@@ -2044,4 +2043,53 @@ submitJob4Jscs <- function(dir.name, sample.file, count.file,
   jscs <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
   
   system(jscs)  
+}
+
+makeGffFile <- function(input.gtf.file,stranded=c("yes","no"),out.gff.dir){
+
+  cmd.java.1="module load java/1.8.0_60"
+  cmd.java.2='export _JAVA_OPTIONS="-Xmx5G"'
+  
+  input.gtf.file <- "~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf"
+  
+  input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
+  stranded <- match.arg(stranded)
+  
+  switch(stranded, yes = {
+    cmd.java.3="java -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar makeFlatGff --stranded"
+    cmd=paste(cmd.java.1,cmd.java.2,cmd.java.3,sep=";")
+    cmd1 <- paste(cmd,input.gtf.file,file.path(out.gff.dir,paste0(input.gtf.file.name,"_stranded.gff"),sep=" "))
+  },no = {
+    cmd.java.3="java -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar makeFlatGff"
+    cmd=paste(cmd.java.1,cmd.java.2,cmd.java.3,sep=";")
+    cmd1 <- paste(cmd,input.gtf.file,file.path(out.gff.dir,paste0(input.gtf.file.name,".gff"),sep=" "))
+  })
+  
+  system(cmd1)
+
+}
+
+#R -e 'library(PathwaySplice);PathwaySplice:::submitJob4makeGffFile("~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf","yes","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/GTF_Files")'
+
+submitJob4makeGffFile <- function(input.gtf.file,stranded,out.gff.dir){
+  
+  if (!dir.exists(out.gff.dir))
+  {
+    dir.create(out.gff.dir, recursive = TRUE)
+  }
+  
+  job.name <- "makeGff"
+  
+  Rfun1 <- 'library(PathwaySplice);re <- PathwaySplice:::makeGffFile('
+
+  Rinput <- paste0('\\"',input.gtf.file,'\\",',
+                   '\\"',stranded,'\\",',
+                   '\\"',out.gff.dir,'\\"')
+  Rfun2 <- ')'
+  
+  Rfun <-paste0(Rfun1,Rinput,Rfun2)
+  
+  cmd.gff <- createBsubJobArrayRfun(Rfun,job.name,wait.job.name=NULL)
+  
+  system(cmd.gff)
 }
