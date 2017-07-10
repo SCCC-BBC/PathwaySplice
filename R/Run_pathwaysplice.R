@@ -2011,7 +2011,7 @@ getResultsFromJunctionSeq2 <- function(dir.name, sample.file, count.file,
   #return(jscs)
 }
 
-#R -e 'library(PathwaySplice);PathwaySplice:::submitJob4Jscs("/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based","Sample_info.txt","QC.spliceJunctionAndExonCounts.forJunctionSeq.txt","Mus_musculus.GRCm38.83.JunctionSeq.flat.gff","shrink","junctionsAndExons","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/Output_jscs")'
+#R -e 'library(PathwaySplice);PathwaySplice:::submitJob4Jscs("/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based","Sample_info.txt","QC.spliceJunctionAndExonCounts.forJunctionSeq.txt","Mus_musculus.GRCm38.83.processed.sorted_stranded.gff","shrink","junctionsAndExons","/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/Output_jscs")'
 
 submitJob4Jscs <- function(dir.name, sample.file, count.file, 
                       gff.file, method.dispFinal,analysis.type,output.file.dir){
