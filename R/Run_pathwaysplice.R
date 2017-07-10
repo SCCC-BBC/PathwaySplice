@@ -1629,14 +1629,11 @@ getGeneSetBySize <- function(user2cat, go.size.limit)
     
     if (is.finite(lower.size) & is.finite(upper.size))
     {
-        cat("selected\\n")
         gene2go.select.2 <- gene2go.select.1[lapply(gene2go.select.1, length) > 
             lower.size & lapply(gene2go.select.1, length) <= upper.size]
         
-        print(lapply(gene2go.select, length))
     } else
     {
-        cat("unselected\\n")
         gene2go.select.2 <- gene2go.select.1
     }
     
