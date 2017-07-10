@@ -2050,7 +2050,7 @@ makeGffFile <- function(input.gtf.file,stranded=c("yes","no"),out.gff.dir){
   cmd.java.1="module load java/1.8.0_60"
   cmd.java.2='export _JAVA_OPTIONS="-Xmx5G"'
   
-  input.gtf.file <- "~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf"
+  #input.gtf.file <- "~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf"
   
   input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
   stranded <- match.arg(stranded)
