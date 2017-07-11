@@ -118,3 +118,69 @@ enmap <- enrichmentMap(res1,n=10,fixed = FALSE,similarity.threshold=0.3,
                        label.vertex.by.index = FALSE,
                        output.file.dir=file.path(output.file.dir,"OutEnmap"))
 ```
+
++ Some examples when using PathwaySplice on windows
+
+```{r eval=TRUE}
+# not run, demonstrates how output file can be specified
+gene.based.table <- makeGeneTable(featureBasedData)
+
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                          test.cats=c('GO:BP'),
+                          go.size.limit=c(5,30),
+                          method='Wallenius',binsize=20, 
+                          output.file="C:/Users/lxw391/TEMP/test.csv")
+                          
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                          test.cats=c('GO:BP'),
+                          go.size.limit=c(5,30),
+                          method='Wallenius',binsize=20, 
+                          output.file="C:/temp/test.csv")
+```
+
+```{r eval=TRUE}
+gene.based.table <- makeGeneTable(featureBasedData)
+ 
+res <- runPathwaySplice(gene.based.table,genome='hg19',
+                          id='ensGene',test.cats=c('GO:BP'),
+                          go.size.limit=c(5,30),method='Wallenius')
+                          
+# labeling each node by gene set name
+enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+label.vertex.by.index = FALSE)
+ 
+# labeling each node by gene set index
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.vertex.by.index = TRUE)
+ 
+# not run, illustrates specification of output file directory 
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.vertex.by.index = TRUE, output.file.dir="C:/temp")
+ 
+# not run, illustrates specification of output file directory
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.vertex.by.index = FALSE, output.file.dir="C:/temp")
+```
+
+```{r eval=TRUE}
+dir.name <- system.file('extdata', package='PathwaySplice')
+hallmark.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+ 
+hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
+                    
+gene.based.table <- makeGeneTable(featureBasedData)
+ 
+res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
+                          id='ensGene',gene2cat=hallmark,  
+                          go.size.limit = c(5, 200),
+                          method='Wallenius', output.file=tempfile())
+ 
+res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
+                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
+                          method='Hypergeometric',output.file=tempfile())
+ 
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
+ 
+# not run, illustrate specification of output directory
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',                output.dir="C:/Temp")
+```
