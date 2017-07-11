@@ -184,15 +184,13 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                          test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),
-#'                          method='Wallenius',binsize=20, 
-#'                          output.file="C:/Users/lxw391/TEMP/test.csv")
+#'                          method='Wallenius',binsize=20)
 #'                          
 #' # not run, demonstrates how output file can be specified                         
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                          test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),
-#'                          method='Wallenius',binsize=20, 
-#'                          output.file="C:/temp/test.csv")
+#'                          method='Wallenius',binsize=20)
 #'                      
 #'                          
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
@@ -278,14 +276,6 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #' label.vertex.by.index = TRUE)
 #' 
-#' # not run, illustrates specification of output file directory 
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#' label.vertex.by.index = TRUE, output.file.dir="C:/temp")
-#' 
-#' # not run, illustrates specification of output file directory
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#' label.vertex.by.index = FALSE, output.file.dir="C:/temp")
-  
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
     {
@@ -587,9 +577,6 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 #' 
-#' # not run, illustrate specification of output directory
-#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3', 
-#'               output.dir="C:/Temp")
 #'
 #' @export
 #' 
@@ -1673,7 +1660,6 @@ getGeneSetBySize <- function(user2cat, go.size.limit)
 }
 
 # res <- PathwaySplice:::makeFeatureTable(res)
-# 
 makeFeatureTable <- function(jscs,use.multigene.aggregates = FALSE)
 {
     temp <- fData(jscs)
