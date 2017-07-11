@@ -15,15 +15,15 @@ enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
 
 \item{fixed}{If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
 to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
-Note: users will need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
-if users run this function on OS X. tcltk R package is also required, but in most distributions of R tcltk is already included}
+Note: on OS X system, users need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
+to run this function . tcltk R package is also required, but in most distributions of R tcltk is already included}
 
 \item{vertex.label.font}{Font size of node label}
 
 \item{similarity.threshold}{Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 will be connected on the enrichment map}
 
-\item{scaling.factor}{Scaling factor that users can adjust the thickness of the edges on network}
+\item{scaling.factor}{Scaling factor that users can use to adjust the edge thickness of the network}
 
 \item{output.file.dir}{Output files directory, see \code{Details} section below.}
 
@@ -51,9 +51,11 @@ The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates
 there are no overlapping genes between two gene sets, 
 JC=1 indicates two gene sets are identical. 
 
-The output directory will include two files: 
-(1) a gene set information file that includes full names of the gene sets and the gene set indices shown on the network 
-(2) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
+The output directory will include the following files: 
+
+(1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
+(2) when label.vertex.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
+and the gene set indices shown on the network. Numbers after ":" indicates the nubmer of significant genes in the gene set
 }
 \examples{
 
@@ -63,11 +65,21 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
                          go.size.limit=c(5,30),method='Wallenius')
                          
+# labeling each node by gene set name
+enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+label.vertex.by.index = FALSE)
+
+# labeling each node by gene set index
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 label.vertex.by.index = TRUE)
 
-enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-label.vertex.by.index = FALSE)
+# not run, illustrates specification of output file directory 
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.vertex.by.index = TRUE, output.file.dir="C:/temp")
+
+# not run, illustrates specification of output file directory
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.vertex.by.index = FALSE, output.file.dir="C:/temp")
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package

@@ -33,7 +33,7 @@ Default is set to FALSE, where genes not mapped to any tested categories are ign
 
 \item{binsize}{The number of genes in each gene bin in the bias plot}
 
-\item{output.file}{File name for the analysis result in .csv format. See package vignette for details.}
+\item{output.file}{File name for the analysis result in .csv format.}
 }
 \value{
 runPathwaySplice returns a \href{https://cran.r-project.org/package=dplyr}{tibble} with the following information:
@@ -64,10 +64,19 @@ This function implements the methodology described in Young et al. (2011) to adj
 }
 \examples{
 gene.based.table <- makeGeneTable(featureBasedData)
+
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          test.cats=c('GO:BP'),
                          go.size.limit=c(5,30),
-                         method='Wallenius',binsize=20)
+                         method='Wallenius',binsize=20, 
+                         output.file="C:/Users/lxw391/TEMP/test.csv")
+                         
+# not run, demonstrates how output file can be specified                         
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                         test.cats=c('GO:BP'),
+                         go.size.limit=c(5,30),
+                         method='Wallenius',binsize=20, 
+                         output.file="C:/temp/test.csv")
                      
                          
 }

@@ -17,26 +17,30 @@ gene set anlaysis results adjusting for biases in splicing analysis}
 gene set analysis results NOT adjusting for biases}
 
 \item{gene.based.table}{An object returned by \code{makeGeneTable}, should correspond to 
-a genewised table}
+a table with one p-value for each gene}
 
 \item{output.dir}{Directory for output files}
 
-\item{type.boxplot}{Get boxplot for 5 categories or 3 categories
+\item{type.boxplot}{Options are "All" and "Only3", corresponding to drawing 5 boxplots or 3 boxplots. 
 
-       5 categories: 'All categories',
-                     'adjusted.top','unadjusted.top',
-                     'adjusted.only','unadjusted.only'
+       5 boxplots:  \code{all genesets}, \code{sig.adjusted} (sig gene sets in adjusted analysis),
+        \code{sig.unadjusted} (sig gene sets in unadjusted analysis),
+        \code{sig.adjusted.only} (sig gene sets in adjusted analysis only), 
+        \code{sig.unadjusted.only} (sig gene sets in unadjusted analysis only)
                      
-       3 categories: 'All categories','adjusted.top','unadjusted.top'}
+       3 boxplots: \code{all genesets}, \code{adjusted.sig}, \code{unadjusted.sig}}
 }
 \value{
 The output include 3 files in \code{output.dir}: 
 (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
-(2) a box plot to show the distribution of number of features within all genes, the ones of with and without adjusting for bias factors
-(3) a file to listing the gene set names belonging to different sections of the venn diagram
+(2) a .csv file with gene set names belonging to different sections of the venn diagram    
+(3) a box plot showing the distributions of number of features within all genes 
+in significant gene sets, with and without adjusting for bias factors
 }
 \description{
-compareResults compares distribution of number of features within genes with and without adjusting for bias factors in splicing pathway analysis.
+This function compares the distributions of bias factors (e.g. number of exon bins) 
+in genes within significant gene sets, with and without adjusting for bias factors 
+in splicing pathway analysis.
 }
 \examples{
 
@@ -47,15 +51,19 @@ hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
                    
 gene.based.table <- makeGeneTable(featureBasedData)
 
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=hallmark,  
-                         go.size.limit = c(2, 200),
+                         go.size.limit = c(5, 200),
                          method='Wallenius', output.file=tempfile())
 
-res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
+res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
+                         id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
                          method='Hypergeometric',output.file=tempfile())
 
-compareResults(20,res1,res2,gene.based.table,type.boxplot='Only3')
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
+
+# not run, illustrate specification of output directory
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3', 
+              output.dir="C:/Temp")
 
 }

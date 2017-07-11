@@ -146,7 +146,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' @param use.genes.without.cat Whether genes not mapped to any gene_set tested are included in analysis.
 #'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.
 #' @param binsize The number of genes in each gene bin in the bias plot
-#' @param output.file File name for the analysis result in .csv format. See package vignette for details.  
+#' @param output.file File name for the analysis result in .csv format.  
 #'  
 #' @details This function implements the methodology described in Young et al. (2011) to adjust for 
 #'          different number of gene features (column \code{numFeature} in \code{gene.based.table}). 
@@ -180,10 +180,19 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'
 #' @examples
 #' gene.based.table <- makeGeneTable(featureBasedData)
+#' 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                          test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),
-#'                          method='Wallenius',binsize=20)
+#'                          method='Wallenius',binsize=20, 
+#'                          output.file="C:/Users/lxw391/TEMP/test.csv")
+#'                          
+#' # not run, demonstrates how output file can be specified                         
+#' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+#'                          test.cats=c('GO:BP'),
+#'                          go.size.limit=c(5,30),
+#'                          method='Wallenius',binsize=20, 
+#'                          output.file="C:/temp/test.csv")
 #'                      
 #'                          
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
@@ -214,12 +223,12 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param n The top \emph{n} most significant gene sets are shown on enrichment map
 #' @param fixed If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
 #' to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
-#' Note: users will need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
-#' if users run this function on OS X. tcltk R package is also required, but in most distributions of R tcltk is already included
+#' Note: on OS X system, users need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
+#' to run this function . tcltk R package is also required, but in most distributions of R tcltk is already included
 #' @param vertex.label.font Font size of node label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
-#' @param scaling.factor Scaling factor that users can adjust the thickness of the edges on network      
+#' @param scaling.factor Scaling factor that users can use to adjust the edge thickness of the network      
 #' @param output.file.dir Output files directory, see \code{Details} section below. 
 #' 
 #' @param label.vertex.by.index Options for labeling nodes on network. 
@@ -240,9 +249,13 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' there are no overlapping genes between two gene sets, 
 #' JC=1 indicates two gene sets are identical. 
 #' 
-#' The output directory will include two files: 
-#' (1) a gene set information file that includes full names of the gene sets and the gene set indices shown on the network 
-#' (2) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
+#' The output directory will include the following files: 
+#' 
+#' (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
+#' (2) when label.vertex.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
+#' and the gene set indices shown on the network. Numbers after ":" indicates the nubmer of significant genes in the gene set 
+#' 
+#' 
 #' 
 #' @export
 #' @return A list with edge and node information used to plot enrichment map
@@ -257,11 +270,21 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                          id='ensGene',test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),method='Wallenius')
 #'                          
+#' # labeling each node by gene set name
+#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+#' label.vertex.by.index = FALSE)
+#' 
+#' # labeling each node by gene set index
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #' label.vertex.by.index = TRUE)
 #' 
-#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-#' label.vertex.by.index = FALSE)
+#' # not run, illustrates specification of output file directory 
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+#' label.vertex.by.index = TRUE, output.file.dir="C:/temp")
+#' 
+#' # not run, illustrates specification of output file directory
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+#' label.vertex.by.index = FALSE, output.file.dir="C:/temp")
   
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
     similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
@@ -382,7 +405,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     netplot(g, vertex.label.font = vertex.label.font, vertex.label.color = "black", 
         fixed = fixed, ...)
     
-    write.graph(g, file.path(output.file.dir,"g.gml"), format = "gml")
+    write.graph(g, file.path(output.file.dir,"network.layout.for.cytoscape.gml"), format = "gml")
     invisible(g)
     
     re2 <- map_data
@@ -516,7 +539,9 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 
 #' compareResults
 #' 
-#' compareResults compares distribution of number of features within genes with and without adjusting for bias factors in splicing pathway analysis. 
+#' This function compares the distributions of bias factors (e.g. number of exon bins) 
+#' in genes within significant gene sets, with and without adjusting for bias factors 
+#' in splicing pathway analysis. 
 #'
 #' @param n.go Number of gene sets
 #' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
@@ -524,21 +549,23 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' @param unadjusted An object returned by \code{runPathwaySplice}, should correspond to 
 #' gene set analysis results NOT adjusting for biases
 #' @param gene.based.table An object returned by \code{makeGeneTable}, should correspond to 
-#' a genewised table
+#' a table with one p-value for each gene
 #' @param output.dir Directory for output files 
-#' @param type.boxplot Get boxplot for 5 categories or 3 categories
+#' @param type.boxplot Options are "All" and "Only3", corresponding to drawing 5 boxplots or 3 boxplots. 
 #' 
-#'        5 categories: 'All categories',
-#'                      'adjusted.top','unadjusted.top',
-#'                      'adjusted.only','unadjusted.only'
+#'        5 boxplots:  \code{all genesets}, \code{sig.adjusted} (sig gene sets in adjusted analysis),
+#'         \code{sig.unadjusted} (sig gene sets in unadjusted analysis),
+#'         \code{sig.adjusted.only} (sig gene sets in adjusted analysis only), 
+#'         \code{sig.unadjusted.only} (sig gene sets in unadjusted analysis only)
 #'                      
-#'        3 categories: 'All categories','adjusted.top','unadjusted.top'
+#'        3 boxplots: \code{all genesets}, \code{adjusted.sig}, \code{unadjusted.sig}
 #'        
 #'
 #' @return The output include 3 files in \code{output.dir}: 
 #' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
-#' (2) a box plot to show the distribution of number of features within all genes, the ones of with and without adjusting for bias factors
-#' (3) a file to listing the gene set names belonging to different sections of the venn diagram    
+#' (2) a .csv file with gene set names belonging to different sections of the venn diagram    
+#' (3) a box plot showing the distributions of number of features within all genes 
+#' in significant gene sets, with and without adjusting for bias factors
 #' 
 #' @examples
 #' 
@@ -549,16 +576,20 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                    
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
-#' res1 <- runPathwaySplice(gene.based.table,genome='hg19',
+#' res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=hallmark,  
-#'                          go.size.limit = c(2, 200),
+#'                          go.size.limit = c(5, 200),
 #'                          method='Wallenius', output.file=tempfile())
 #' 
-#' res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-#'                          id='ensGene',gene2cat=hallmark,go.size.limit = c(2, 200),
+#' res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
+#'                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
-#' compareResults(20,res1,res2,gene.based.table,type.boxplot='Only3')
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
+#' 
+#' # not run, illustrate specification of output directory
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3', 
+#'               output.dir="C:/Temp")
 #'
 #' @export
 #' 
