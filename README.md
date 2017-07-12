@@ -80,8 +80,11 @@ res4 <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Hypergeometric',
                          output.file=file.path(output.file.dir,"hm_unadjusted_4.csv"))
 
-compareResults(10,res3,res4,output.file.dir,
+yy <- compareResults(10,res3,res4,gene.based.table,output.file.dir,
                   type.boxplot='Only3')
+
+yy <- compareResults(10,res3,res4,gene.based.table,output.file.dir,
+                  type.boxplot='All')
                   
 ```
 

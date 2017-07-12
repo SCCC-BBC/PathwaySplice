@@ -41,13 +41,13 @@ runPathwaySplice returns a \href{https://cran.r-project.org/package=dplyr}{tibbl
 and pathway interchangeably} 
 \item{over_represented_pvalue}{P-vaue for the associated gene_set being over-represented among significant genes} 
 \item{under_represented_pvalue}{P-vaue for the associated gene_set being under-represented among significant genes} 
-\item{numDEInCat}{The number of significant genes in the gene_set} 
+\item{numSIGInCat}{The number of significant genes in the gene_set} 
 \item{numInCat}{The total number of genes in the gene_set}                                          
 \item{description}{Description of the gene gene_set} 
 \item{ontology}{The domain of the gene ontology terms if GO categories were tested. 
       Go categories can be classified into three domains: cellular component, biological process, molecular function.} 
-\item{DEgene_ensembl}{Ensembl gene ID of significant genes in the gene_set}
-\item{DEgene_symbol}{Gene symbols of signficant genes in the gene_set}
+\item{SIGgene_ensembl}{Ensembl gene ID of significant genes in the gene_set}
+\item{SIGgene_symbol}{Gene symbols of signficant genes in the gene_set}
 \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the gene_set, 
      note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
 }

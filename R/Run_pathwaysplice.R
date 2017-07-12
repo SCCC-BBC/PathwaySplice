@@ -159,13 +159,13 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' and pathway interchangeably} 
 #' \item{over_represented_pvalue}{P-vaue for the associated gene_set being over-represented among significant genes} 
 #' \item{under_represented_pvalue}{P-vaue for the associated gene_set being under-represented among significant genes} 
-#' \item{numDEInCat}{The number of significant genes in the gene_set} 
+#' \item{numSIGInCat}{The number of significant genes in the gene_set} 
 #' \item{numInCat}{The total number of genes in the gene_set}                                          
 #' \item{description}{Description of the gene gene_set} 
 #' \item{ontology}{The domain of the gene ontology terms if GO categories were tested. 
 #'       Go categories can be classified into three domains: cellular component, biological process, molecular function.} 
-#' \item{DEgene_ensembl}{Ensembl gene ID of significant genes in the gene_set}
-#' \item{DEgene_symbol}{Gene symbols of signficant genes in the gene_set}
+#' \item{SIGgene_ensembl}{Ensembl gene ID of significant genes in the gene_set}
+#' \item{SIGgene_symbol}{Gene symbols of signficant genes in the gene_set}
 #' \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the gene_set, 
 #'      note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
 #'
@@ -288,7 +288,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     goseqres <- as.data.frame(goseqres)
   
     GO.name <- goseqres$gene_set
-    temp <- goseqres$DEgene_ensembl
+    temp <- goseqres$SIGgene_ensembl
     names(temp) <- GO.name
     x <- goseqres
     geneSets <- temp
@@ -297,7 +297,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     
     if (any(grep("^GO:", y$gene_set)))
     {
-        vertexname <- paste0(y$description, ":", y$numDEInCat)
+        vertexname <- paste0(y$description, ":", y$numSIGInCat)
         
         if (label.vertex.by.index == TRUE)
         {
@@ -312,7 +312,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         }
     } else
     {
-        vertexname <- paste0(y$gene_set, ":", y$numDEInCat)
+        vertexname <- paste0(y$gene_set, ":", y$numSIGInCat)
         
         if (label.vertex.by.index == TRUE)
         {
@@ -383,7 +383,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         Vdata <- data.frame(pathway = igraph::V(g)$name, color = igraph::V(g)$color)
         map_data <- list(edge_data = Edata, vertex_data = Vdata)
         
-        cnt <- as.integer(y$numDEInCat)
+        cnt <- as.integer(y$numSIGInCat)
         
         names(cnt) <- vertexname[1:n]
         
@@ -674,9 +674,17 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           yy <- as.data.frame(yy)
           yy$grp <- factor(yy$grp)
           yy$grp <- factor(yy$grp, levels = levels(yy$grp)[c(2, 1, 3)])
-          png(file.path(output.dir, "boxplot.png"))
-          boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
-          dev.off()
+          yy$y <- as.numeric(as.character(yy$y))
+          
+          colnames(yy) <- c("numFeature", "category")
+          
+          #png(file.path(output.dir, "boxplot.png"))
+          #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          
+          p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box")
+        #  export(p, file = file.path(output.dir, "boxplot.png"))
+          htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
+          #dev.off()
         }, {
           yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", length(In.ad.not.un))), cbind(In.un.not.ad , rep("unadjusted.only", length(In.un.not.ad))), 
                       cbind(cp.topN.adjusted, rep(paste0("cp.top.adjusted.",n.go), length(cp.topN.adjusted))), 
@@ -686,9 +694,23 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
                                                                                                                                                 rep("cp.all.unadjusted", length(cp.all.unadjusted))))
           colnames(yy) <- c("y", "grp")
           yy <- as.data.frame(yy)
-          png(file.path(output.dir, "boxplot.png"))
-          boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
-          dev.off()
+          
+          yy$y <- as.numeric(as.character(yy$y))
+          
+          colnames(yy) <- c("numFeature", "category")
+          
+          #png(file.path(output.dir, "boxplot.png"))
+          #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          
+          p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box")
+          
+          #png(file.path(output.dir, "boxplot.png"))
+          #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          #plot_ly(yy, x = ~ as.numeric(as.character(y)), color = ~grp, type = "box")
+          #p <- plot_ly(yy, x = ~ as.numeric(as.character(y)), color = ~grp, type = "box")
+          #export(p, file = file.path(output.dir, "boxplot.png"))
+          htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
+          #dev.off()
         })
 
          na.pad <- function(x,len){
@@ -749,6 +771,8 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
       
     }
   }
+  
+  return(yy)
 }
 
 # Utility functions for PathwaySplice
@@ -1089,7 +1113,7 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     num_de <- length(DE)
     num_genes <- nrow(pwf)
     pvals <- data.frame(gene_set = cats, over_represented_pvalue = NA, under_represented_pvalue = NA, 
-        stringsAsFactors = FALSE, numDEInCat = NA, numInCat = NA)
+        stringsAsFactors = FALSE, numSIGInCat = NA, numInCat = NA)
     if (method == "Sampling")
     {
         # We need to know the number of DE genes in each gene_set, make this as a
@@ -1252,8 +1276,8 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     
     DE_from_GO <- temp.gene.name.2
     
-    colnames(pvals.6.df) <- c("gene_set", "DEgene_ensembl")
-    colnames(pvals.6.gene.symbol.df) <- c("gene_set", "DEgene_symbol")
+    colnames(pvals.6.df) <- c("gene_set", "SIGgene_ensembl")
+    colnames(pvals.6.gene.symbol.df) <- c("gene_set", "SIGgene_symbol")
     
     colnames(pvals.7.df) <- c("gene_set", "All_gene_ensembl")
     colnames(pvals.7.gene.symbol.df) <- c("gene_set", "All_gene_symbol")
@@ -1483,7 +1507,7 @@ getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
     
     GO.data <- GO.wall.DE_interest[[1]]
   
-    y <- as.list(GO.data$DEgene_ensembl)
+    y <- as.list(GO.data$SIGgene_ensembl)
     
     re <- lapply(1:length(y), function(u, y, mds.11.sample)
     {

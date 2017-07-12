@@ -5,6 +5,7 @@ import(reshape2)
 import(org.Hs.eg.db,org.Mm.eg.db)
 import(VennDiagram)
 import(ensembldb)
+import(webshot)
 
 importFrom(AnnotationHub,AnnotationHub,query)
 importFrom(BiocGenerics,sizeFactors)
@@ -25,7 +26,8 @@ importFrom(RColorBrewer,brewer.pal)
 importFrom(S4Vectors,mcols)
 importFrom(dplyr,data_frame,as_data_frame,mutate_each,"%>%",funs)
 importFrom(igraph,graph.empty,add_vertices,graph.data.frame,delete.edges,E,V,get.edgelist,write.graph)
-        
+importFrom(plotly,plot_ly)
+
 export(.onAttach)
 export(gmtGene2Cat)
 export(lrTestBias)
