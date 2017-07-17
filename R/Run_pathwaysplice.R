@@ -609,7 +609,7 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
       unadjusted <- example.go.unadjusted[1:n, 1]
       
       re <- list(adjusted = adjusted, unadjusted = unadjusted)
-      
+      #plot.new()
       venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
                                                                       paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), 
                                 height = 3000, width = 3500, resolution = 1000, col = "black", 
@@ -624,9 +624,9 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
       In.unadjusted.not.in.adjusted <- setdiff(unadjusted, common)
       In.adjusted.not.in.unadjusted <- setdiff(adjusted, common)
       
-      cat(length(common),"\n")
-      cat(length(In.unadjusted.not.in.adjusted),"\n")
-      cat(length(In.adjusted.not.in.unadjusted),"\n")
+      #cat(length(common),"\n")
+      #cat(length(In.unadjusted.not.in.adjusted),"\n")
+      #cat(length(In.adjusted.not.in.unadjusted),"\n")
       
       if (length(In.unadjusted.not.in.adjusted) != 0 && length(In.adjusted.not.in.unadjusted) != 
           0)
@@ -680,8 +680,12 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           
           #png(file.path(output.dir, "boxplot.png"))
           #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          m = list(l = 200,r = 5,b = 5,t = 5,pad = 4)
+          p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box") %>% 
+            layout(margin = m)
           
-          p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box")
+          #chart_link = plotly_POST(p, filename="sizing/1")
+          #chart_link
         #  export(p, file = file.path(output.dir, "boxplot.png"))
           htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
           #dev.off()
@@ -701,9 +705,13 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           
           #png(file.path(output.dir, "boxplot.png"))
           #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
+          m = list(l = 200,r = 5,b = 5,t = 5,pad = 4)
           
-          p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box")
+          p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box") %>%
+            layout(margin = m)
           
+          #chart_link = plotly_POST(p, filename="sizing/1")
+          #chart_link
           #png(file.path(output.dir, "boxplot.png"))
           #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
           #plot_ly(yy, x = ~ as.numeric(as.character(y)), color = ~grp, type = "box")
@@ -737,12 +745,22 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           #writeTibble(venn.res,file.path(output.dir,"results4venn.csv"))
           
           #Output_file <- file.path(output.dir, adjusted.only.file)
-          writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,"adjustedOnly.txt"))
+          
+          temp1 <- dplyr::as_data_frame(example.go.adjusted.by.exon[index1, ])
+          
+          writeTibble(temp1,file.path(output.dir,"adjustedOnly.csv"))
+          
+          #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,"adjustedOnly.txt"))
         
-        #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,adjusted.only.file))
+         #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,adjusted.only.file))
         
          #Output_file <- file.path(output.dir, unadjusted.only.file)
-         writegototable(example.go.unadjusted[index2, ], file.path(output.dir,"unadjustedOnly.txt"))
+         
+          temp2 <- dplyr::as_data_frame(example.go.unadjusted[index2, ])
+          
+          writeTibble(temp2,file.path(output.dir,"unadjustedOnly.csv"))
+          
+          #writegototable(temp2, file.path(output.dir,"unadjustedOnly.txt"))
         
         #writegototable(example.go.adjusted.by.exon[index1, ], file.path(output.dir,unadjusted.only.file))
         
@@ -1908,7 +1926,7 @@ flatten_list = function(x){
 }
 
 tibble.input %>%
-  mutate_each(funs(flatten_list)) %>%
+  mutate_all(funs(flatten_list)) %>%
   write.csv(output.file.name)
 
 }
