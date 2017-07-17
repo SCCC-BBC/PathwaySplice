@@ -185,5 +185,44 @@ res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
  
 # not run, illustrate specification of output directory
-compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',                output.dir="C:/Temp")
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
+```
+
++ More examples
+
+```{r eval=TRUE}
+
+#Exons and junctions
+load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs/jscs.RData")
+
+res.peng <- PathwaySplice:::makeFeatureTable(jscs)
+
+gene.based.table.peng <- makeGeneTable(res.peng)
+
+res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","bp_adjusted.csv"))
+
+enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","OutEnmap"))
+
+#Only exons
+load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly/jscs.RData")
+
+res.peng <- PathwaySplice:::makeFeatureTable(jscs)
+
+gene.based.table.peng <- makeGeneTable(res.peng)
+
+res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscsOutput_jscs_exonsOnly","bp_adjusted.csv"))
+
+enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly","OutEnmap"))
+
+#Only junctions
+load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly/jscs.RData")
+
+res.peng <- PathwaySplice:::makeFeatureTable(jscs)
+
+gene.based.table.peng <- makeGeneTable(res.peng)
+
+res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","bp_adjusted.csv"))
+
+enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","OutEnmap"))
+
 ```
