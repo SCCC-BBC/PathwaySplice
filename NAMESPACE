@@ -24,7 +24,7 @@ importFrom(grDevices,dev.off,png)
 importFrom(utils,write.table)
 importFrom(RColorBrewer,brewer.pal)
 importFrom(S4Vectors,mcols)
-importFrom(dplyr,data_frame,as_data_frame,mutate_each,"%>%",funs)
+importFrom(dplyr,data_frame,as_data_frame,mutate_all,"%>%",funs)
 importFrom(igraph,graph.empty,add_vertices,graph.data.frame,delete.edges,E,V,get.edgelist,write.graph)
 importFrom(plotly,plot_ly)
 
