@@ -105,7 +105,7 @@ res2 <- runPathwaySplice(gene.based.table,genome='hg19',
                         
 enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
                        output.file.dir = output.file.dir,
-                      label.vertex.by.index = TRUE)
+                      label.node.by.index = TRUE)
                       
 
 compareResults(20,res1,res2,output.file.dir,
@@ -113,12 +113,12 @@ compareResults(20,res1,res2,output.file.dir,
 
 #Label network by index of gene set, and output the network file in GML format that
 #can be used as an input in Cytoscape  
-enmap <- enrichmentMap(res1,n=10,similarity.threshold=0.3,label.vertex.by.index = TRUE,output.file.dir=file.path(output.file.dir,"OutEnmap"))
+enmap <- enrichmentMap(res1,n=10,similarity.threshold=0.3,label.node.by.index = TRUE,output.file.dir=file.path(output.file.dir,"OutEnmap"))
 
 #Label network by description of gene set, and output the network file in GML format
 #that can be used as an input in Cytoscape                       
 enmap <- enrichmentMap(res1,n=10,fixed = FALSE,similarity.threshold=0.3,
-                       label.vertex.by.index = FALSE,
+                       label.node.by.index = FALSE,
                        output.file.dir=file.path(output.file.dir,"OutEnmap"))
 ```
 
@@ -150,19 +150,19 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                           
 # labeling each node by gene set name
 enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-label.vertex.by.index = FALSE)
+label.node.by.index = FALSE)
  
 # labeling each node by gene set index
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.vertex.by.index = TRUE)
+label.node.by.index = TRUE)
  
 # not run, illustrates specification of output file directory 
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.vertex.by.index = TRUE, output.file.dir="C:/temp")
+label.node.by.index = TRUE, output.file.dir="C:/temp")
  
 # not run, illustrates specification of output file directory
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.vertex.by.index = FALSE, output.file.dir="C:/temp")
+label.node.by.index = FALSE, output.file.dir="C:/temp")
 ```
 
 ```{r eval=TRUE}
@@ -201,7 +201,7 @@ gene.based.table.peng <- makeGeneTable(res.peng)
 
 res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","bp_adjusted.csv"))
 
-enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","OutEnmap"))
+enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","OutEnmap"))
 
 #Only exons
 load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly/jscs.RData")
@@ -212,7 +212,7 @@ gene.based.table.peng <- makeGeneTable(res.peng)
 
 res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscsOutput_jscs_exonsOnly","bp_adjusted.csv"))
 
-enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly","OutEnmap"))
+enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly","OutEnmap"))
 
 #Only junctions
 load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly/jscs.RData")
@@ -223,6 +223,6 @@ gene.based.table.peng <- makeGeneTable(res.peng)
 
 res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","bp_adjusted.csv"))
 
-enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.vertex.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","OutEnmap"))
+enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","OutEnmap"))
 
 ```
