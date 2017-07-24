@@ -223,13 +223,13 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
 #' Note: on OS X system, users need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
 #' to run this function . tcltk R package is also required, but in most distributions of R tcltk is already included
-#' @param vertex.label.font Font size of node label
+#' @param node.label.font Font size of node label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
 #' @param scaling.factor Scaling factor that users can use to adjust the edge thickness of the network      
 #' @param output.file.dir Output files directory, see \code{Details} section below. 
 #' 
-#' @param label.vertex.by.index Options for labeling nodes on network. 
+#' @param label.node.by.index Options for labeling nodes on network. 
 #'        
 #'        FALSE indicates to label nodes by gene set names
 #'        
@@ -250,7 +250,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' The output directory will include the following files: 
 #' 
 #' (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
-#' (2) when label.vertex.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
+#' (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
 #' and the gene set indices shown on the network. Numbers after ":" indicates the nubmer of significant genes in the gene set 
 #' 
 #' 
@@ -270,14 +270,14 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                          
 #' # labeling each node by gene set name
 #' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-#' label.vertex.by.index = FALSE)
+#' label.node.by.index = FALSE)
 #' 
 #' # labeling each node by gene set index
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#' label.vertex.by.index = TRUE)
+#' label.node.by.index = TRUE)
 #' 
-enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1, 
-    similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.vertex.by.index = FALSE, ...)
+enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1, 
+    similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.node.by.index = FALSE, ...)
     {
     
     if (!dir.exists(output.file.dir))
@@ -297,30 +297,30 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
     
     if (any(grep("^GO:", y$gene_set)))
     {
-        vertexname <- paste0(y$description, ":", y$numSIGInCat)
+        nodename <- paste0(y$description, ":", y$numSIGInCat)
         
-        if (label.vertex.by.index == TRUE)
+        if (label.node.by.index == TRUE)
         {
-            vertexname.index <- seq(1, length(vertexname))
+            nodename.index <- seq(1, length(nodename))
             
-            output.text <- as.data.frame(cbind(vertexname.index, vertexname))[1:n, 
+            output.text <- as.data.frame(cbind(nodename.index, nodename))[1:n, 
                 ]
-            vertexname <- vertexname.index
+            nodename <- nodename.index
             colnames(output.text) <- c("index", "name")
             write.table(output.text, file = file.path(output.file.dir, "enrichmap_GO.xls"), 
                 quote = FALSE, col.names = TRUE, row.names = FALSE, sep = "\t")
         }
     } else
     {
-        vertexname <- paste0(y$gene_set, ":", y$numSIGInCat)
+        nodename <- paste0(y$gene_set, ":", y$numSIGInCat)
         
-        if (label.vertex.by.index == TRUE)
+        if (label.node.by.index == TRUE)
         {
-            vertexname.index <- seq(1, length(vertexname))
+            nodename.index <- seq(1, length(nodename))
             
-            output.text <- as.data.frame(cbind(vertexname.index, vertexname))[1:n, 
+            output.text <- as.data.frame(cbind(nodename.index, nodename))[1:n, 
                 ]
-            vertexname <- vertexname.index
+            nodename <- nodename.index
             colnames(output.text) <- c("index", "name")
             
             write.table(output.text, file = file.path(output.file.dir, "enrichmap_pathway.xls"), 
@@ -342,7 +342,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         g <- graph.empty(0, directed = FALSE)
         g <- add_vertices(g, nv = 1)
         
-        igraph::V(g)$name <- vertexname
+        igraph::V(g)$name <- nodename
         igraph::V(g)$color <- "red"
         
     } else
@@ -354,7 +354,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         
         n <- nrow(y)  #
         w <- matrix(NA, nrow = n, ncol = n)
-        colnames(w) <- rownames(w) <- vertexname[1:n]
+        colnames(w) <- rownames(w) <- nodename[1:n]
         
         for (i in 1:n)
         {
@@ -372,7 +372,7 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         
         g <- delete.edges(g, igraph::E(g)[wd[, 3] < similarity.threshold])
         
-        idx <- unlist(sapply(igraph::V(g)$name, function(x) which(x == vertexname[1:n])))
+        idx <- unlist(sapply(igraph::V(g)$name, function(x) which(x == nodename[1:n])))
         
         cols <- color_scale("red", "#E5C494")
         
@@ -381,18 +381,18 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
         Edata <- as.data.frame(get.edgelist(g))
         Edata$edgewidth <- igraph::E(g)$width
         Vdata <- data.frame(pathway = igraph::V(g)$name, color = igraph::V(g)$color)
-        map_data <- list(edge_data = Edata, vertex_data = Vdata)
+        map_data <- list(edge_data = Edata, node_data = Vdata)
         
         cnt <- as.integer(y$numSIGInCat)
         
-        names(cnt) <- vertexname[1:n]
+        names(cnt) <- nodename[1:n]
         
         cnt2 <- cnt[igraph::V(g)$name]
         
         igraph::V(g)$size <- cnt2/sum(cnt2) * 100
     }
     
-    netplot(g, vertex.label.font = vertex.label.font, vertex.label.color = "black", 
+    netplot(g, node.label.font = node.label.font, node.label.color = "black", 
         fixed = fixed, ...)
     
     write.graph(g, file.path(output.file.dir,"network.layout.for.cytoscape.gml"), format = "gml")
