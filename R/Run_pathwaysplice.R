@@ -769,14 +769,14 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
         
         if (length(In.unadjusted.not.in.adjusted) == 0)
         {
-          cat("there is no gene sets in unadjusted resutls but not in adjusted resutls\n")
+          cat("there is no significant gene sets in unadjusted results only\n")
         }
         
         cat("\n")
         
         if (length(In.adjusted.not.in.unadjusted) == 0)
         {
-          cat("there is no gene sets in adjusted resutls but not in unadjusted resutls\n")
+          cat("there is no significant gene sets in adjusted results only\n")
         }
         
         cat("\n")
