@@ -576,7 +576,10 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
-#' 
+#' \dontrun{
+#' # not run, illustrate specification of output directory
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
+#'}
 #'
 #' @export
 #' 
