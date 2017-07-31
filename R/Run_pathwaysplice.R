@@ -576,6 +576,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
+#' compareResults(20, res.adj, res.unadj, gene.based.table)
 #' \dontrun{
 #' # not run, illustrate specification of output directory
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
@@ -709,7 +710,6 @@ compareResults <- function(n.go,adjusted,unadjusted,gene.based.table,output.dir=
           #png(file.path(output.dir, "boxplot.png"))
           #boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
           m = list(l = 200,r = 5,b = 5,t = 5,pad = 4)
-          
           p <- plot_ly(yy, x = ~ numFeature, color = ~category, type = "box") %>%
             layout(margin = m)
           

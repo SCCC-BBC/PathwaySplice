@@ -8,7 +8,7 @@ Depends: R (>= 3.4.0)
 Imports: goseq, Biobase, DOSE, reshape2, igraph, org.Hs.eg.db, org.Mm.eg.db, BiocGenerics, 
          AnnotationDbi, JunctionSeq, BiasedUrn, GO.db,gdata, geneLenDataBase, 
          grDevices, graphics, stats, utils, VennDiagram, RColorBrewer, 
-         ensembldb, AnnotationHub, S4Vectors, dplyr, plotly, webshot
+         ensembldb, AnnotationHub, S4Vectors, dplyr, plotly, webshot, htmlwidgets
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 biocViews: AlternativeSplicing, DifferentialSplicing, GeneSetEnrichment, GO, RNASeq, Sequencing, Software,

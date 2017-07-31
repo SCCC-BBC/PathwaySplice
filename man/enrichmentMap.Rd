@@ -4,9 +4,9 @@
 \alias{enrichmentMap}
 \title{enrichmentMap}
 \usage{
-enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
+enrichmentMap(goseqres, n = 50, fixed = TRUE, node.label.font = 1,
   similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(),
-  label.vertex.by.index = FALSE, ...)
+  label.node.by.index = FALSE, ...)
 }
 \arguments{
 \item{goseqres}{Pathway analysis results, an object returned by \code{runPathwaySplice}}
@@ -18,7 +18,7 @@ to draw an interactive enrichment map. Users can then manually adjust the layout
 Note: on OS X system, users need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
 to run this function . tcltk R package is also required, but in most distributions of R tcltk is already included}
 
-\item{vertex.label.font}{Font size of node label}
+\item{node.label.font}{Font size of node label}
 
 \item{similarity.threshold}{Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 will be connected on the enrichment map}
@@ -27,7 +27,7 @@ will be connected on the enrichment map}
 
 \item{output.file.dir}{Output files directory, see \code{Details} section below.}
 
-\item{label.vertex.by.index}{Options for labeling nodes on network. 
+\item{label.node.by.index}{Options for labeling nodes on network. 
 
 FALSE indicates to label nodes by gene set names
 
@@ -54,7 +54,7 @@ JC=1 indicates two gene sets are identical.
 The output directory will include the following files: 
 
 (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
-(2) when label.vertex.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
+(2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
 and the gene set indices shown on the network. Numbers after ":" indicates the nubmer of significant genes in the gene set
 }
 \examples{
@@ -67,11 +67,11 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          
 # labeling each node by gene set name
 enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-label.vertex.by.index = FALSE)
+label.node.by.index = FALSE)
 
 # labeling each node by gene set index
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.vertex.by.index = TRUE)
+label.node.by.index = TRUE)
 
 }
 \author{
