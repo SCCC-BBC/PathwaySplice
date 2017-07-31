@@ -61,6 +61,10 @@ res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Hypergeometric',output.file=tempfile())
 
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
-
+compareResults(20, res.adj, res.unadj, gene.based.table)
+\dontrun{
+# illustrate specification of output directory
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
+}
 
 }

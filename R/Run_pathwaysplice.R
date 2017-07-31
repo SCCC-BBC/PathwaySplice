@@ -185,13 +185,13 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                          test.cats=c('GO:BP'),
 #'                          go.size.limit=c(5,30),
 #'                          method='Wallenius',binsize=20)
-#'                          
-#' # not run, demonstrates how output file can be specified                         
+#' \dontrun{
+#' # demonstrates how output file can be specified                 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
-#'                          test.cats=c('GO:BP'),
-#'                          go.size.limit=c(5,30),
-#'                          method='Wallenius',binsize=20)
-#'                      
+#'                        test.cats=c('GO:BP'),
+#'                        go.size.limit=c(5,30),
+#'                        method='Wallenius',binsize=20, 
+#' }                       output.file="C:/temp/test.csv")              
 #'                          
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
     "GO:BP", "GO:MF"), go.size.limit = c(10, 200), method = "Wallenius", repcnt = 2000, 
@@ -275,6 +275,15 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' # labeling each node by gene set index
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #' label.node.by.index = TRUE)
+#' 
+#' \dontrun{
+#' # illustrates specification of output file directory 
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+#'                       label.node.by.index = TRUE, output.file.dir="C:/temp")
+#'                       
+#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+#'                       label.node.by.index = FALSE, output.file.dir="C:/temp")
+#'}
 #' 
 enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold,scaling.factor=1,output.file.dir=tempdir(), label.node.by.index = FALSE, ...)
@@ -578,7 +587,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 #' compareResults(20, res.adj, res.unadj, gene.based.table)
 #' \dontrun{
-#' # not run, illustrate specification of output directory
+#' # illustrate specification of output directory
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
 #'}
 #'
