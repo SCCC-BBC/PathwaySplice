@@ -12,7 +12,7 @@ Imports: goseq, Biobase, DOSE, reshape2, igraph, org.Hs.eg.db, org.Mm.eg.db, Bio
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 biocViews: AlternativeSplicing, DifferentialSplicing, GeneSetEnrichment, GO, RNASeq, Sequencing, Software,
-            Visualization, NetworkEnrichment, Network
+            Visualization, NetworkEnrichment, Network, Pathways, GraphAndNetwork, Regression
 Description: Pathway analysis of alternative splicing would be biased without accounting for the different 
             number of exons associated with each gene, because genes with higher number of exons are more 
             likely to be included in the 'significant' gene list in alternative splicing. 
