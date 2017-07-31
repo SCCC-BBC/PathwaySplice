@@ -1,4 +1,4 @@
-#' makeGeneTable 
+#' makeGeneTable
 #' 
 #' This function obtains genewise p-values,
 #' by representing each gene with the smallest p-value among its features, 
