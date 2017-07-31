@@ -55,7 +55,7 @@ The output directory will include the following files:
 
 (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
 (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
-and the gene set indices shown on the network. Numbers after ":" indicates the nubmer of significant genes in the gene set
+and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set
 }
 \examples{
 
@@ -76,10 +76,10 @@ label.node.by.index = TRUE)
 \dontrun{
 # illustrates specification of output file directory 
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-                      label.node.by.index = TRUE, output.file.dir="C:/temp")
+                      label.node.by.index = TRUE, output.file.dir='C:/temp')
                       
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-                      label.node.by.index = FALSE, output.file.dir="C:/temp")
+                      label.node.by.index = FALSE, output.file.dir='C:/temp')
 }
 
 }

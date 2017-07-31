@@ -21,7 +21,7 @@ a table with one p-value for each gene}
 
 \item{output.dir}{Directory for output files}
 
-\item{type.boxplot}{Options are "All" and "Only3", corresponding to drawing 5 boxplots or 3 boxplots. 
+\item{type.boxplot}{Options are 'All' and 'Only3', corresponding to drawing 5 boxplots or 3 boxplots. 
 
        5 boxplots:  \code{all genesets}, \code{sig.adjusted} (sig gene sets in adjusted analysis),
         \code{sig.unadjusted} (sig gene sets in unadjusted analysis),
@@ -45,7 +45,7 @@ in splicing pathway analysis.
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
-hallmark.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
+hallmark.pathway.file <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
 
 hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
                    
@@ -61,10 +61,12 @@ res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
                          method='Hypergeometric',output.file=tempfile())
 
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
-compareResults(20, res.adj, res.unadj, gene.based.table)
+
 \dontrun{
 # illustrate specification of output directory
-compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
+output.file.dir <- '~/OutputTestPathwaySplice'
+compareResults(20,res1,res2,gene.based.table,output.file.dir,type.boxplot='Only3')
 }
 
 }
