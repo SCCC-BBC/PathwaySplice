@@ -585,10 +585,12 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #'                          method='Hypergeometric',output.file=tempfile())
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
-#' compareResults(20, res.adj, res.unadj, gene.based.table)
+#' 
 #' \dontrun{
 #' # illustrate specification of output directory
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
+#' output.file.dir <- "~/OutputTestPathwaySplice"
+#' compareResults(20,res1,res2,gene.based.table,output.file.dir,type.boxplot='Only3')
 #'}
 #'
 #' @export
