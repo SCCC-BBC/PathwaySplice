@@ -189,8 +189,9 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
-#'                        method='Wallenius',binsize=20, 
-#' }                       output.file='C:/temp/test.csv')              
+#'                        method='Wallenius',binsize=20,output.file='C:/temp/test.csv')
+#'}
+#'                                      
 #'                          
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 
@@ -2171,4 +2172,62 @@ submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir) {
     cmd.gff <- createBsubJobArrayRfun(Rfun, job.name, wait.job.name = NULL)
     
     system(cmd.gff)
+}
+
+adjustBystatistics1 <- function(gene.based.table){
+  
+   z.value <- qchisq(gene.based.table$geneWisePvalue,1,lower.tail = FALSE)
+  
+   m<-lm(z.value~gene.based.table$numFeature)
+   
+   z.value.adjusted=mean(z.value)+residuals(m)
+   
+   p.new<-pchisq(z.value.adjusted, df = 1, lower.tail = FALSE)
+   
+   gene.based.table$geneWisePvalue <- p.new
+   gene.based.table
+}
+
+adjustBystatistics2 <- function(gene.based.table){
+  
+  z.value <- qchisq(gene.based.table$geneWisePvalue,1,lower.tail = FALSE)
+  
+  m<-loess(z.value~gene.based.table$numFeature,span = 0.3)
+  
+  z.value.adjusted=mean(z.value)+residuals(m)
+  
+  p.new<-pchisq(z.value.adjusted, df = 1, lower.tail = FALSE)
+  
+  gene.based.table$geneWisePvalue <- p.new
+  gene.based.table
+}
+
+adjustBystatistics3 <- function(gene.based.table,degree.poly){
+  
+  z.value <- qchisq(gene.based.table$geneWisePvalue,1,lower.tail = FALSE)
+  
+  m<-lm(z.value~poly(gene.based.table$numFeature,degree.poly))
+  
+  z.value.adjusted=mean(z.value)+residuals(m)
+  
+  p.new<-pchisq(z.value.adjusted, df = 1, lower.tail = FALSE)
+  
+  gene.based.table$geneWisePvalue <- p.new
+  gene.based.table
+}
+
+adjustBystatistics4 <- function(gene.based.table,nKnots = 6){
+  
+  nKnots <- round(nKnots)
+  
+  z.value <- qchisq(gene.based.table$geneWisePvalue,1,lower.tail = FALSE)
+
+  m <- gam(z.value ~ s(gene.based.table$numFeature, k = nKnots, bs = "cr"))
+  
+  z.value.adjusted=mean(z.value)+residuals(m)
+  
+  p.new<-pchisq(z.value.adjusted, df = 1, lower.tail = FALSE)
+  
+  gene.based.table$geneWisePvalue <- p.new
+  gene.based.table
 }

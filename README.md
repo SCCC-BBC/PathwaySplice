@@ -108,7 +108,7 @@ enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
                       label.node.by.index = TRUE)
                       
 
-compareResults(20,res1,res2,output.file.dir,
+compareResults(20,res1,res2,gene.based.table,output.file.dir,
               type.boxplot='Only3')
 
 #Label network by index of gene set, and output the network file in GML format that
@@ -118,6 +118,10 @@ enmap <- enrichmentMap(res1,n=10,similarity.threshold=0.3,label.node.by.index = 
 #Label network by description of gene set, and output the network file in GML format
 #that can be used as an input in Cytoscape                       
 enmap <- enrichmentMap(res1,n=10,fixed = FALSE,similarity.threshold=0.3,
+                       label.node.by.index = FALSE,
+                       output.file.dir=file.path(output.file.dir,"OutEnmap"))
+                       
+enmap <- enrichmentMap(res2,n=10,fixed = FALSE,similarity.threshold=0.3,
                        label.node.by.index = FALSE,
                        output.file.dir=file.path(output.file.dir,"OutEnmap"))
 ```
@@ -183,6 +187,12 @@ res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
                           method='Hypergeometric',output.file=tempfile())
  
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
+ 
+res.unadj.adjusted<- runPathwaySplice(gene.based.table.adjusted,genome='hg19',
+                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
+                          method='Hypergeometric',output.file=tempfile())
+ 
+ 
  
 # not run, illustrate specification of output directory
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
