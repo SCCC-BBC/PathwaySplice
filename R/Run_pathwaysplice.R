@@ -618,13 +618,13 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             re <- list(adjusted = adjusted, unadjusted = unadjusted)
             # plot.new()
             venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
-                paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), 
-                height = 3000, width = 3500, resolution = 1000, 
+                paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), main.pos
+                = c(0.5, 0.5),main.just=c(0.5,0.5),height = 3000, width = 3500, resolution = 1000, 
                 col = "black", lty = "dotted", lwd = 1, fill = c("red", 
                   "blue"), alpha = 0.5, label.col = c(rep("black", 
                   3)), cex = 0.5, fontfamily = "serif", fontface = "bold", 
                 cat.col = c("red", "blue"), cat.cex = 0.5, cat.pos = 0.5, 
-                cat.dist = 0.05, cat.fontfamily = "serif")
+                cat.dist = 0.05, cat.fontfamily = "serif", margin = 0.2)
             
             # boxplot
             common <- intersect(unadjusted, adjusted)
@@ -714,12 +714,12 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", 
                     length(In.ad.not.un))), cbind(In.un.not.ad, 
                     rep("unadjusted.only", length(In.un.not.ad))), 
-                    cbind(cp.topN.adjusted, rep(paste0("cp.top.adjusted.", 
+                    cbind(cp.topN.adjusted, rep(paste0("top.adjusted.", 
                       n.go), length(cp.topN.adjusted))), cbind(cp.topN.unadjusted, 
-                      rep(paste0("cp.top.unadjusted.", n.go), 
+                      rep(paste0("top.unadjusted.", n.go), 
                         length(cp.topN.unadjusted))), cbind(cp.all.adjusted, 
-                      rep("cp.all.adjusted", length(cp.all.adjusted))), 
-                    cbind(cp.all.unadjusted, rep("cp.all.unadjusted", 
+                      rep("all.adjusted", length(cp.all.adjusted))), 
+                    cbind(cp.all.unadjusted, rep("all.unadjusted", 
                       length(cp.all.unadjusted))))
                   colnames(yy) <- c("y", "grp")
                   yy <- as.data.frame(yy)
@@ -822,7 +822,7 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
         }
     }
     
-    return(yy)
+    #return(yy)
 }
 
 # Utility functions for PathwaySplice
