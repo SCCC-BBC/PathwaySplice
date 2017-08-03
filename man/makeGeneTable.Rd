@@ -4,7 +4,7 @@
 \alias{makeGeneTable}
 \title{makeGeneTable}
 \usage{
-makeGeneTable(feature.table, sig.threshold = 0.05)
+makeGeneTable(feature.table, sig.threshold = 0.05, stat = "pvalue")
 }
 \arguments{
 \item{feature.table}{An \code{featureBasedData} object.}

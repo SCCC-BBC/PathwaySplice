@@ -4,12 +4,12 @@
 \alias{enrichmentMap}
 \title{enrichmentMap}
 \usage{
-enrichmentMap(goseqres, n = 50, fixed = TRUE, node.label.font = 1,
+enrichmentMap(pathway.res, n = 50, fixed = TRUE, node.label.font = 1,
   similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(),
   label.node.by.index = FALSE, ...)
 }
 \arguments{
-\item{goseqres}{Pathway analysis results, an object returned by \code{runPathwaySplice}}
+\item{pathway.res}{Pathway analysis results, an object returned by \code{runPathwaySplice}}
 
 \item{n}{The top \emph{n} most significant gene sets are shown on enrichment map}
 

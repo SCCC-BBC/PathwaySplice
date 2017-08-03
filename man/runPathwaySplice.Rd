@@ -50,6 +50,8 @@ and pathway interchangeably}
 \item{SIGgene_symbol}{Gene symbols of signficant genes in the gene_set}
 \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the gene_set, 
      note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
+
+These information are also saved in the file \code{output.file}
 }
 \description{
 This function identifies pathways that are enriched with signficant genes, while accounting for 
@@ -70,14 +72,28 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          go.size.limit=c(5,30),
                          method='Wallenius',binsize=20)
 \dontrun{
-# demonstrates how output file can be specified                 
+# demonstrate how output file can be specified                 
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        test.cats=c('GO:BP'),
                        go.size.limit=c(5,30),
-                       method='Wallenius',binsize=20,output.file='C:/temp/test.csv')
-}
-                                     
-                         
+                       method='Wallenius',binsize=20, 
+                       output.file='C:/temp/test.csv')    
+
+# demonstrate using customized gene sets
+dir.name <- system.file('extdata', package='PathwaySplice')
+hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
+hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
+
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                       gene2cat=hlp,
+                       go.size.limit=c(5,200),
+                       method='Wallenius',binsize=20, 
+                       output.file='C:/temp/test.csv')                        
+                                 
+                                                     
+}    
+                    
+                                                               
 }
 \references{
 Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 

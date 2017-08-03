@@ -38,11 +38,12 @@ dir.name <- system.file('extdata', package='PathwaySplice')
 hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
 hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
 
+\dontrun{
 #using url for pathways database linked to a website
 hallmark.url.pathways <- paste0('https://raw.githubusercontent.com/SCCC-BBC',
                    '/PathwaySplice/development/inst/extdata',
                      '/h.all.v6.0.symbols.gmt.txt')
 
 hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')
-
+}
 }
