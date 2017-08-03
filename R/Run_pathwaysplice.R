@@ -244,7 +244,6 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
-<<<<<<< HEAD
 #'                        method='Wallenius',binsize=20, 
 #'                        output.file='C:/temp/test.csv')    
 #'
@@ -263,12 +262,6 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' }    
 #'                     
 #'                                                                
-=======
-#'                        method='Wallenius',binsize=20,output.file='C:/temp/test.csv')
-#'}
-#'                                      
-#'                          
->>>>>>> 2e5bcdc94119290f24bed63b4bd189dfe8623109
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 
         200), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE, 
