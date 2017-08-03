@@ -107,7 +107,6 @@ enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
                        output.file.dir = output.file.dir,
                       label.node.by.index = TRUE)
                       
-
 compareResults(20,res1,res2,gene.based.table,output.file.dir,
               type.boxplot='Only3')
 
