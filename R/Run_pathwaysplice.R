@@ -22,38 +22,56 @@
 #' data(featureBasedData)
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #'   
-makeGeneTable <- function(feature.table, sig.threshold = 0.05) {
-    gene.id <- unique(feature.table$geneID)
-    
-    y <- lapply(gene.id, function(u, feature.table) {
-        
-        x <- as.data.frame(feature.table[which(feature.table$geneID %in% 
-            u), ], stringsAsFactors = FALSE)
-        
-        num.feature <- dim(x)[1]
-        
-        xx <- x[which.min(x$pvalue), ]
-        
-        xxx <- cbind.data.frame(xx, num.feature, stringsAsFactors = FALSE)
-        
-        xxx
-        
-    }, feature.table)
-    
-    yy <- do.call(rbind.data.frame, c(y, stringsAsFactors = FALSE))
-    
-    sig.gene <- ifelse(yy$pvalue < sig.threshold, 1, 0)
-    
-    z <- cbind.data.frame(yy$geneID, yy$pvalue, sig.gene, yy$countbinID, 
-        yy$num.feature, stringsAsFactors = FALSE)
-    
-    colnames(z) <- c("geneID", "geneWisePvalue", "sig.gene", 
-        "mostSigDeFeature", "numFeature")
-    
-    z <- reformatdata(z)
-    
-    return(z)
+# makeGeneTable <- function(feature.table, sig.threshold = 0.05) {
+#     gene.id <- unique(feature.table$geneID)
+#     
+#     y <- lapply(gene.id, function(u, feature.table) {
+#         
+#         x <- as.data.frame(feature.table[which(feature.table$geneID %in% 
+#             u), ], stringsAsFactors = FALSE)
+#         
+#         num.feature <- dim(x)[1]
+#         
+#         xx <- x[which.min(x$pvalue), ]
+#         
+#         xxx <- cbind.data.frame(xx, num.feature, stringsAsFactors = FALSE)
+#         
+#         xxx
+#         
+#     }, feature.table)
+#     
+#     yy <- do.call(rbind.data.frame, c(y, stringsAsFactors = FALSE))
+#     
+#     sig.gene <- ifelse(yy$pvalue < sig.threshold, 1, 0)
+#     
+#     z <- cbind.data.frame(yy$geneID, yy$pvalue, sig.gene, yy$countbinID, 
+#         yy$num.feature, stringsAsFactors = FALSE)
+#     
+#     colnames(z) <- c("geneID", "geneWisePvalue", "sig.gene", 
+#         "mostSigDeFeature", "numFeature")
+#     
+#     z <- reformatdata(z)
+#     z <- z[order(z[,1]) ,]
+#     return(z)
+# }
+
+makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
+  
+  min.pval <- aggregate(pvalue ~ geneID, data=feature.table, FUN=min)
+  n.feature <- as.data.frame(table (featureBasedData$geneID))
+  both <- merge (x=min.pval, y=n.feature, by.x="geneID", by.y="Var1")
+  both$fdr <- p.adjust(both$pvalue, method="fdr")
+  
+  if (stat == "pvalue") {both$sig.gene <- ifelse(both$pvalue < sig.threshold, 1, 0)}    
+  
+  if (stat=="fdr") {both$sig.gene <- ifelse(both$fdr < sig.threshold, 1, 0)}  
+
+  names (both) <- sub ("pvalue", "geneWisePvalue", names(both))
+  names (both) <- sub ("Freq",  "numFeature", names(both))
+  return (both)
 }
+
+
 
 #' lrTestBias
 #' 
@@ -82,50 +100,86 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05) {
 #' lrTestBias(gene.based.table)
 #' 
 #' 
+# lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
+#     
+#      
+#     mydata <- genewise.table
+#     
+#     n.gene <- dim(mydata)[1]
+#     
+#     DE.out <- ifelse(mydata$sig.gene == 1, "Significant genes", 
+#         "Non-significant genes")
+#     
+#     mydata.2 <- cbind(mydata, DE.out)
+#     
+#     par(mfrow = c(1, 1))
+#     
+#     if (var(as.numeric(unlist(mydata.2$numFeature))) != 0) {
+#         
+#         mylogit.2 <- glm(DE.out ~ as.numeric(numFeature), data = mydata.2, 
+#             family = "binomial")
+#         re <- summary(mylogit.2)
+#         pvalue <- re$coefficients[2, 4]
+#         
+#         p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
+#         
+#         index.1 <- which(colnames(mydata.2) %in% c("numFeature"))
+#         index.2 <- which(colnames(mydata.2) %in% c("DE.out"))
+#         
+#         temp <- data.frame(mydata.2[, c(index.1, index.2)])
+#         
+#         temp$DE.out <- factor(temp$DE.out)
+#         
+#         temp$DE.out <- factor(temp$DE.out, levels = levels(temp$DE.out)[c(2, 
+#             1)])
+#         
+#         boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), 
+#             boxwex = boxplot.width, ylab = "Number of features", 
+#             col = "lightgray", ylim = c(min(temp$numFeature), 
+#                 max(temp$numFeature)))
+#         
+#         text(x = 2, y = max(temp$numFeature) - 1, labels = c("", 
+#             paste0("P-value from logistic regression ", p.value)))
+#     } else {
+#         cat("There are no variations on the number of features\n")
+#     }
+#     
+# }
+
 lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
+ 
+  mydata <- genewise.table
+  
+  DE <- ifelse(mydata$sig.gene == 1, 1, 0)
+  
+  mydata.2 <- cbind(mydata, DE)
+  
+  if (var(mydata.2$numFeature) != 0) {
     
-    mydata <- genewise.table
+    mylogit.2 <- glm(DE ~ as.numeric(numFeature), data = mydata.2, family = "binomial")
+
+    re <- summary(mylogit.2)
+    pvalue <- re$coefficients[2, 4]
     
-    n.gene <- dim(mydata)[1]
+    p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
     
-    DE.out <- ifelse(mydata$sig.gene == 1, "Significant genes", 
-        "Non-significant genes")
+    boxplot(mydata.2$numFeature ~ mydata.2$DE, 
+            boxwex = boxplot.width,
+            ylab = "Number of features", 
+            col = "lightgray", 
+            ylim = c(min(mydata.2$numFeature), 
+            max(mydata.2$numFeature)),
+            names=c("non-significant genes", "significant genes"))
     
-    mydata.2 <- cbind(mydata, DE.out)
-    
-    par(mfrow = c(1, 1))
-    
-    if (var(as.numeric(unlist(mydata.2$numFeature))) != 0) {
-        
-        mylogit.2 <- glm(DE.out ~ as.numeric(numFeature), data = mydata.2, 
-            family = "binomial")
-        re <- summary(mylogit.2)
-        pvalue <- re$coefficients[2, 4]
-        
-        p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
-        
-        index.1 <- which(colnames(mydata.2) %in% c("numFeature"))
-        index.2 <- which(colnames(mydata.2) %in% c("DE.out"))
-        
-        temp <- data.frame(mydata.2[, c(index.1, index.2)])
-        
-        temp$DE.out <- factor(temp$DE.out)
-        
-        temp$DE.out <- factor(temp$DE.out, levels = levels(temp$DE.out)[c(2, 
-            1)])
-        
-        boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), 
-            boxwex = boxplot.width, ylab = "Number of features", 
-            col = "lightgray", ylim = c(min(temp$numFeature), 
-                max(temp$numFeature)))
-        
-        text(x = 2, y = max(temp$numFeature) - 1, labels = c("", 
-            paste0("P-value from logistic regression ", p.value)))
-    } else {
-        cat("There are no variations on the number of features\n")
-    }
-    
-}
+    text(x = 2, y = max(temp$numFeature) - 1, 
+         labels = c("", paste0("P-value from logistic regression ", p.value)))
+  } else {
+    cat("There are no variations on the number of features\n")
+  }
+}  
+
+
+
 
 #' runPathwaySplice
 #'
@@ -168,6 +222,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' \item{Ave_value_all_gene}{The average value for \code{numFeature} for all the genes in the gene_set, 
 #'      note that \code{numFeature} is the bias factor adjusted by PathwaySplice}
 #'
+#'These information are also saved in the file \code{output.file}  
 #' 
 #' @references Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 
 #' accounting for selection bias}. Genome Biology 11:R14
@@ -185,29 +240,51 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #'                          go.size.limit=c(5,30),
 #'                          method='Wallenius',binsize=20)
 #' \dontrun{
-#' # demonstrates how output file can be specified                 
+#' # demonstrate how output file can be specified                 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
-#'                        method='Wallenius',binsize=20,output.file='C:/temp/test.csv')
-#'}
-#'                                      
-#'                          
+#'                        method='Wallenius',binsize=20, 
+#'                        output.file='C:/temp/test.csv')    
+#'
+#'# demonstrate using customized gene sets
+#' dir.name <- system.file('extdata', package='PathwaySplice')
+#' hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
+#' hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
+#'
+#' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+#'                        gene2cat=hlp,
+#'                        go.size.limit=c(5,200),
+#'                        method='Wallenius',binsize=20, 
+#'                        output.file='C:/temp/test.csv')                        
+#'                                  
+#'                                                      
+#' }    
+#'                     
+#'                                                                
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 
         200), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE, 
     binsize = "auto", output.file = tempfile()) {
+  
     x <- genewise.table$sig.gene
     names(x) <- genewise.table$geneID
+    
     pwf <- nullpSplice(x, genome, id, bias.data = genewise.table$numFeature, 
         plot.fit = TRUE, binsize)
+    
     CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
         test.cats = test.cats, go.size.limit = go.size.limit, 
         method = method, repcnt = repcnt, use.genes.without.cat = use.genes.without.cat)
+    
     res1 <- getStaisitcs4Go(CatDE, genewise.table)
+    
     res2 <- reformatPathwayOut(res1)
+    
     res3 <- within(res2, rm("Ave_value_DE"))
+    
     writeTibble(res3, output.file)
+    
     res3
     # CatDE
 }
@@ -217,7 +294,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' This function draws an enrichment map based on the overlap of gene sets 
 #' as measured by the Jaccard Coefficient(JC) 
 #'                                  
-#' @param goseqres Pathway analysis results, an object returned by \code{runPathwaySplice}
+#' @param pathway.res Pathway analysis results, an object returned by \code{runPathwaySplice}
 #' @param n The top \emph{n} most significant gene sets are shown on enrichment map
 #' @param fixed If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
 #' to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
@@ -285,7 +362,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #'                       label.node.by.index = FALSE, output.file.dir='C:/temp')
 #'}
 #' 
-enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1, 
+enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), 
     label.node.by.index = FALSE, ...) {
     
@@ -293,12 +370,12 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1,
         dir.create(output.file.dir, recursive = TRUE)
     }
     
-    goseqres <- as.data.frame(goseqres)
+    pathway.res <- as.data.frame(pathway.res)
     
-    GO.name <- goseqres$gene_set
-    temp <- goseqres$SIGgene_ensembl
+    GO.name <- pathway.res$gene_set
+    temp <- pathway.res$SIGgene_ensembl
     names(temp) <- GO.name
-    x <- goseqres
+    x <- pathway.res
     geneSets <- temp
     
     y <- as.data.frame(x)
@@ -436,13 +513,14 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1,
 #' hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
 #' hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
 #' 
+#' \dontrun{
 #' #using url for pathways database linked to a website
 #' hallmark.url.pathways <- paste0('https://raw.githubusercontent.com/SCCC-BBC',
 #'                    '/PathwaySplice/development/inst/extdata',
 #'                      '/h.all.v6.0.symbols.gmt.txt')
 #' 
 #' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')
-#' 
+#' }
 
 
 gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL, 
@@ -619,12 +697,16 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             # plot.new()
             venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
                 paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), main.pos
-                = c(0.5, 0.5),main.just=c(0.5,0.5),height = 3000, width = 3500, resolution = 1000, 
+                = c(0.5, 0.5),main.just=c(2,2),height = 3000, width = 3500, resolution = 1000, 
                 col = "black", lty = "dotted", lwd = 1, fill = c("red", 
                   "blue"), alpha = 0.5, label.col = c(rep("black", 
                   3)), cex = 0.5, fontfamily = "serif", fontface = "bold", 
                 cat.col = c("red", "blue"), cat.cex = 0.5, cat.pos = 0.5, 
                 cat.dist = 0.05, cat.fontfamily = "serif", margin = 0.2)
+            
+            # require(gridExtra)
+            # grid.arrange(gTree(children=venn.plot), top="Title", bottom="subtitle")
+            # #mtext ("adjusted", side=1)
             
             # boxplot
             common <- intersect(unadjusted, adjusted)
