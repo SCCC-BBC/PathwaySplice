@@ -40,6 +40,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c(
 + Build up network based on the overlap between gene sets and visualize this network
 
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
+#test
 output.file.dir <- file.path(tempdir(),"OutputEnmap")
 enmap <- enrichmentMap(res,n=3,output.file.dir
                        =output.file.dir,similarity.threshold=0)
