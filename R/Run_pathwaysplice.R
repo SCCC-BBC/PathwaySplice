@@ -294,7 +294,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' This function draws an enrichment map based on the overlap of gene sets 
 #' as measured by the Jaccard Coefficient(JC) 
 #'                                  
-#' @param goseqres Pathway analysis results, an object returned by \code{runPathwaySplice}
+#' @param pathway.res Pathway analysis results, an object returned by \code{runPathwaySplice}
 #' @param n The top \emph{n} most significant gene sets are shown on enrichment map
 #' @param fixed If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
 #' to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
@@ -362,7 +362,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #'                       label.node.by.index = FALSE, output.file.dir='C:/temp')
 #'}
 #' 
-enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1, 
+enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), 
     label.node.by.index = FALSE, ...) {
     
@@ -370,12 +370,12 @@ enrichmentMap <- function(goseqres, n = 50, fixed = TRUE, node.label.font = 1,
         dir.create(output.file.dir, recursive = TRUE)
     }
     
-    goseqres <- as.data.frame(goseqres)
+    pathway.res <- as.data.frame(pathway.res)
     
-    GO.name <- goseqres$gene_set
-    temp <- goseqres$SIGgene_ensembl
+    GO.name <- pathway.res$gene_set
+    temp <- pathway.res$SIGgene_ensembl
     names(temp) <- GO.name
-    x <- goseqres
+    x <- pathway.res
     geneSets <- temp
     
     y <- as.data.frame(x)
@@ -697,12 +697,16 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             # plot.new()
             venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
                 paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), main.pos
-                = c(0.5, 0.5),main.just=c(0.5,0.5),height = 3000, width = 3500, resolution = 1000, 
+                = c(0.5, 0.5),main.just=c(2,2),height = 3000, width = 3500, resolution = 1000, 
                 col = "black", lty = "dotted", lwd = 1, fill = c("red", 
                   "blue"), alpha = 0.5, label.col = c(rep("black", 
                   3)), cex = 0.5, fontfamily = "serif", fontface = "bold", 
                 cat.col = c("red", "blue"), cat.cex = 0.5, cat.pos = 0.5, 
                 cat.dist = 0.05, cat.fontfamily = "serif", margin = 0.2)
+            
+            # require(gridExtra)
+            # grid.arrange(gTree(children=venn.plot), top="Title", bottom="subtitle")
+            # #mtext ("adjusted", side=1)
             
             # boxplot
             common <- intersect(unadjusted, adjusted)
