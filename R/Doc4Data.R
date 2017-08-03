@@ -1,12 +1,12 @@
 #' featureBasedData
 #' 
-#' This dataset gives results of RNA-seq data in Dolatshad et al. (2015), 
+#' This dataset includes analysis results of RNA-seq data in Dolatshad et al. (2015), 
 #' which compared transcriptome of CD34+ cells from myelodysplastic syndrome (MDS) patients 
-#' with SF3B1 mutations vs. healthy controls using RNA sequencing. The \code{JunctionSeq} package was used to determine 
-#' which counting bins were differentially used. Counting bins are non-overlapping segments of the exons 
-#' or splicing junctions (see Fig 1 in Anders et al. (2012)). Because of the size limit, only counting bins associated with 
-#' a subset of genes were included here for demonstration. The details of the analysis can be found in the \code{PathwaySplice} vignette.  
-#' 
+#' with SF3B1 mutations vs. healthy controls using RNA sequencing. 
+#' The \code{JunctionSeq} package was used to assess differential usage of counting bins, which are
+#' non-overlapping segments of the exons or splicing junctions (see Fig 1 in Anders et al. (2012)). 
+#' Because of the size limit, only counting bins associated with 
+#' a subset of genes were included here for demonstration. 
 #' 
 #' @docType data
 #' @keywords datasets
