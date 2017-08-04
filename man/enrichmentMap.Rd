@@ -79,9 +79,7 @@ enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
                       label.node.by.index = TRUE, output.file.dir='C:/temp')
                       
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-                      label.node.by.index = FALSE, output.file.dir='C:/temp')
-}
-
+                      label.node.by.index = FALSE, output.file.dir='C:/temp')}
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package

@@ -29,6 +29,4 @@ how genewise pvalues were obtained in the \code{genewise.table}
 \examples{
 gene.based.table <- makeGeneTable(featureBasedData)
 lrTestBias(gene.based.table)
-
-
 }

@@ -88,12 +88,9 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        gene2cat=hlp,
                        go.size.limit=c(5,200),
                        method='Wallenius',binsize=20, 
-                       output.file='C:/temp/test.csv')                        
-                                 
-                                                     
-}    
-                    
-                                                               
+                       output.file='C:/temp/test.csv')
+}
+
 }
 \references{
 Young MD, Wakefield MJ, Smyth GK, Oshlack A (2011) \emph{Gene ontology analysis for RNA-seq: 
