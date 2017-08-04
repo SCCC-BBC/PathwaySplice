@@ -235,3 +235,30 @@ res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGen
 enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","OutEnmap"))
 
 ```
+
+```
++ Example for paper
+
+```{r eval=TRUE}
+dir.name <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper"
+
+sample.file <- "decoder.bySample.Mut_WT_2.txt"
+count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt" 
+gff.file <-"Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+
+#exonsOnly
+res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
+sample.file, count.file,gff.file, method.dispFinal =
+'shrink',analysis.type = "exonsOnly")
+
+#junctionsOnly
+res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
+sample.file, count.file,gff.file, method.dispFinal =
+'shrink',analysis.type = "junctionsOnly")
+
+#junctionsAndExons
+res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
+sample.file, count.file,gff.file, method.dispFinal =
+'shrink',analysis.type = "junctionsAndExons")
+
+```
