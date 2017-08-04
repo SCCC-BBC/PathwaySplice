@@ -18,6 +18,7 @@ lrTestBias(gene.based.table,boxplot.width=0.3)
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(5,30),method='Wallenius')
 
 ## ----eval=TRUE,warning=FALSE,message=FALSE,results='hide'----------------
+#test
 output.file.dir <- file.path(tempdir(),"OutputEnmap")
 enmap <- enrichmentMap(res,n=3,output.file.dir
                        =output.file.dir,similarity.threshold=0)
