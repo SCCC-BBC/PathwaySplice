@@ -6,7 +6,8 @@
 #'  
 #' @param feature.table An \code{featureBasedData} object.
 #' @param sig.threshold Significance threshold used to determine whether the gene is significant 
-#' or not  
+#' or not
+#' @param stat Which parameter(p value or FDR) to use for determining the significance of genes  
 #'
 #' @return Returns a genewised table with several variables (columns) 
 #' \item{geneID}{Gene identifiers in ensembl gene IDs}
@@ -15,50 +16,15 @@
 #' \item{mostSigDeFeature}{the most significant gene feature}
 #' \item{numFeature}{number of gene features within the gene}
 #' 
-#' 
-#' @export
-#'
 #' @examples
 #' data(featureBasedData)
 #' gene.based.table <- makeGeneTable(featureBasedData)
+#' @export
 #'   
-# makeGeneTable <- function(feature.table, sig.threshold = 0.05) {
-#     gene.id <- unique(feature.table$geneID)
-#     
-#     y <- lapply(gene.id, function(u, feature.table) {
-#         
-#         x <- as.data.frame(feature.table[which(feature.table$geneID %in% 
-#             u), ], stringsAsFactors = FALSE)
-#         
-#         num.feature <- dim(x)[1]
-#         
-#         xx <- x[which.min(x$pvalue), ]
-#         
-#         xxx <- cbind.data.frame(xx, num.feature, stringsAsFactors = FALSE)
-#         
-#         xxx
-#         
-#     }, feature.table)
-#     
-#     yy <- do.call(rbind.data.frame, c(y, stringsAsFactors = FALSE))
-#     
-#     sig.gene <- ifelse(yy$pvalue < sig.threshold, 1, 0)
-#     
-#     z <- cbind.data.frame(yy$geneID, yy$pvalue, sig.gene, yy$countbinID, 
-#         yy$num.feature, stringsAsFactors = FALSE)
-#     
-#     colnames(z) <- c("geneID", "geneWisePvalue", "sig.gene", 
-#         "mostSigDeFeature", "numFeature")
-#     
-#     z <- reformatdata(z)
-#     z <- z[order(z[,1]) ,]
-#     return(z)
-# }
-
 makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
   
   min.pval <- aggregate(pvalue ~ geneID, data=feature.table, FUN=min)
-  n.feature <- as.data.frame(table (featureBasedData$geneID))
+  n.feature <- as.data.frame(table (feature.table$geneID))
   both <- merge (x=min.pval, y=n.feature, by.x="geneID", by.y="Var1")
   both$fdr <- p.adjust(both$pvalue, method="fdr")
   
@@ -70,8 +36,6 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
   names (both) <- sub ("Freq",  "numFeature", names(both))
   return (both)
 }
-
-
 
 #' lrTestBias
 #' 
@@ -91,61 +55,11 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
 #'   
 #' @return Nothing to be returned
 #' 
-#' @export
-#' 
-#'  
-#'
 #' @examples
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' lrTestBias(gene.based.table)
+#' @export
 #' 
-#' 
-# lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
-#     
-#      
-#     mydata <- genewise.table
-#     
-#     n.gene <- dim(mydata)[1]
-#     
-#     DE.out <- ifelse(mydata$sig.gene == 1, "Significant genes", 
-#         "Non-significant genes")
-#     
-#     mydata.2 <- cbind(mydata, DE.out)
-#     
-#     par(mfrow = c(1, 1))
-#     
-#     if (var(as.numeric(unlist(mydata.2$numFeature))) != 0) {
-#         
-#         mylogit.2 <- glm(DE.out ~ as.numeric(numFeature), data = mydata.2, 
-#             family = "binomial")
-#         re <- summary(mylogit.2)
-#         pvalue <- re$coefficients[2, 4]
-#         
-#         p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
-#         
-#         index.1 <- which(colnames(mydata.2) %in% c("numFeature"))
-#         index.2 <- which(colnames(mydata.2) %in% c("DE.out"))
-#         
-#         temp <- data.frame(mydata.2[, c(index.1, index.2)])
-#         
-#         temp$DE.out <- factor(temp$DE.out)
-#         
-#         temp$DE.out <- factor(temp$DE.out, levels = levels(temp$DE.out)[c(2, 
-#             1)])
-#         
-#         boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), 
-#             boxwex = boxplot.width, ylab = "Number of features", 
-#             col = "lightgray", ylim = c(min(temp$numFeature), 
-#                 max(temp$numFeature)))
-#         
-#         text(x = 2, y = max(temp$numFeature) - 1, labels = c("", 
-#             paste0("P-value from logistic regression ", p.value)))
-#     } else {
-#         cat("There are no variations on the number of features\n")
-#     }
-#     
-# }
-
 lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
  
   mydata <- genewise.table
@@ -171,15 +85,12 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
             max(mydata.2$numFeature)),
             names=c("non-significant genes", "significant genes"))
     
-    text(x = 2, y = max(temp$numFeature) - 1, 
+    text(x = 2, y = max(mydata.2$numFeature) - 1, 
          labels = c("", paste0("P-value from logistic regression ", p.value)))
   } else {
     cat("There are no variations on the number of features\n")
   }
 }  
-
-
-
 
 #' runPathwaySplice
 #'
@@ -230,8 +141,6 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' Anders S, Reyes A, Huber W (2012) \emph{Dececting differential usage of exons from RNA-seq data.} 
 #' Genome Research 22(10): 2008-2017
 #' 
-#' @export
-#'
 #' @examples
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
@@ -256,12 +165,11 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #'                        gene2cat=hlp,
 #'                        go.size.limit=c(5,200),
 #'                        method='Wallenius',binsize=20, 
-#'                        output.file='C:/temp/test.csv')                        
-#'                                  
-#'                                                      
-#' }    
-#'                     
-#'                                                                
+#'                        output.file='C:/temp/test.csv')
+#' }
+#' 
+#' @export
+
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 
         200), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE, 
@@ -286,7 +194,6 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
     writeTibble(res3, output.file)
     
     res3
-    # CatDE
 }
 
 #' enrichmentMap
@@ -330,9 +237,6 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
 #' and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set 
 #' 
-#' 
-#' 
-#' @export
 #' @return A list with edge and node information used to plot enrichment map
 #' 
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
@@ -359,9 +263,9 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #'                       label.node.by.index = TRUE, output.file.dir='C:/temp')
 #'                       
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#'                       label.node.by.index = FALSE, output.file.dir='C:/temp')
-#'}
-#' 
+#'                       label.node.by.index = FALSE, output.file.dir='C:/temp')}
+#' @export                      
+
 enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), 
     label.node.by.index = FALSE, ...) {
@@ -504,10 +408,7 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
 #' @return A list where each entry is named by a gene and contains a vector of all
 #'         the pathways associated with the gene
 #'
-#' @export
-#'
 #' @examples
-#' 
 #' #using local file for pathways database
 #' dir.name <- system.file('extdata', package='PathwaySplice')
 #' hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
@@ -518,10 +419,9 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
 #' hallmark.url.pathways <- paste0('https://raw.githubusercontent.com/SCCC-BBC',
 #'                    '/PathwaySplice/development/inst/extdata',
 #'                      '/h.all.v6.0.symbols.gmt.txt')
+#' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')}
 #' 
-#' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')
-#' }
-
+#' @export
 
 gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL, 
     genomeID = c("mm10", "hg19", "hg38")) {
@@ -557,15 +457,17 @@ gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL,
     
 }
 
-#' Title
+#' .onAttach
 #'
 #' @param libname
 #' @param pkgname
 #'
 #' @return Nothing to be returned
-#' @export
+
 #'
 #' @examples
+#' 
+#' @export
 
 .onAttach <- function(libname, pkgname) {
     if (.Platform$OS.type == "windows" && .Platform$GUI == "Rgui") {
@@ -665,7 +567,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 #' # illustrate specification of output directory
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
 #' output.file.dir <- '~/OutputTestPathwaySplice'
-#' compareResults(20,res1,res2,gene.based.table,output.file.dir,type.boxplot='Only3')
+#' compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')
 #'}
 #'
 #' @export
@@ -694,31 +596,17 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             unadjusted <- example.go.unadjusted[1:n, 1]
             
             re <- list(adjusted = adjusted, unadjusted = unadjusted)
-            # plot.new()
-            venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
-                paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), main.pos
-                = c(0.5, 0.5),main.just=c(2,2),height = 3000, width = 3500, resolution = 1000, 
-                col = "black", lty = "dotted", lwd = 1, fill = c("red", 
-                  "blue"), alpha = 0.5, label.col = c(rep("black", 
-                  3)), cex = 0.5, fontfamily = "serif", fontface = "bold", 
-                cat.col = c("red", "blue"), cat.cex = 0.5, cat.pos = 0.5, 
-                cat.dist = 0.05, cat.fontfamily = "serif", margin = 0.2)
             
-            # require(gridExtra)
-            # grid.arrange(gTree(children=venn.plot), top="Title", bottom="subtitle")
-            # #mtext ("adjusted", side=1)
-            
-            # boxplot
+            vp <- venn.diagram(re,fill = c("red","blue"),cat.col = c("red", "blue"),
+                               alpha = 0.3, 
+                               filename = file.path(output.dir,paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")))
+
             common <- intersect(unadjusted, adjusted)
             
             In.unadjusted.not.in.adjusted <- setdiff(unadjusted, 
                 common)
             In.adjusted.not.in.unadjusted <- setdiff(adjusted, 
                 common)
-            
-            # cat(length(common),'\n')
-            # cat(length(In.unadjusted.not.in.adjusted),'\n')
-            # cat(length(In.adjusted.not.in.unadjusted),'\n')
             
             if (length(In.unadjusted.not.in.adjusted) != 0 && 
                 length(In.adjusted.not.in.unadjusted) != 0) {
@@ -742,10 +630,6 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                 
                 yyy <- cbind(example.go.unadjusted[index2, ]$rank.value.by.over_represented_pvalue, 
                   example.go.adjusted.by.exon[index2, ]$rank.value.by.over_represented_pvalue)
-                
-                # xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
-                # #colnames(xx) <- c('In.ad.not.un', 'In.un.not.ad')
-                # colnames(xx) <- c('adjusted.only', 'unadjusted.only')
                 
                 cp.topN.adjusted.name <- unique(unlist(example.go.adjusted.by.exon[1:n, 
                   ]$All_gene_ensembl))
@@ -781,18 +665,13 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   
                   colnames(yy) <- c("numFeature", "category")
                   
-                  # png(file.path(output.dir, 'boxplot.png'))
-                  # boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
                   p <- plot_ly(yy, x = ~numFeature, color = ~category, 
                     type = "box") %>% layout(margin = m)
                   
-                  # chart_link = plotly_POST(p, filename='sizing/1') chart_link
-                  # export(p, file = file.path(output.dir, 'boxplot.png'))
                   htmlwidgets::saveWidget(p, file.path(output.dir, 
                     "boxplot.html"))
-                  # dev.off()
-                }, {
+                                }, {
                   yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", 
                     length(In.ad.not.un))), cbind(In.un.not.ad, 
                     rep("unadjusted.only", length(In.un.not.ad))), 
@@ -810,22 +689,12 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   
                   colnames(yy) <- c("numFeature", "category")
                   
-                  # png(file.path(output.dir, 'boxplot.png'))
-                  # boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
                   p <- plot_ly(yy, x = ~numFeature, color = ~category, 
                     type = "box") %>% layout(margin = m)
                   
-                  # chart_link = plotly_POST(p, filename='sizing/1') chart_link
-                  # png(file.path(output.dir, 'boxplot.png'))
-                  # boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
-                  # plot_ly(yy, x = ~ as.numeric(as.character(y)), color =
-                  # ~grp, type = 'box') p <- plot_ly(yy, x = ~
-                  # as.numeric(as.character(y)), color = ~grp, type = 'box')
-                  # export(p, file = file.path(output.dir, 'boxplot.png'))
                   htmlwidgets::saveWidget(p, file.path(output.dir, 
                     "boxplot.html"))
-                  # dev.off()
                 })
                 
                 na.pad <- function(x, len) {
@@ -852,33 +721,17 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   eol = "\n", na = " ", dec = ".", row.names = FALSE, 
                   col.names = TRUE)
                 
-                # writeTibble(venn.res,file.path(output.dir,'results4venn.csv'))
-                
-                # Output_file <- file.path(output.dir, adjusted.only.file)
                 
                 temp1 <- dplyr::as_data_frame(example.go.adjusted.by.exon[index1, 
                   ])
                 
                 writeTibble(temp1, file.path(output.dir, "adjustedOnly.csv"))
                 
-                # writegototable(example.go.adjusted.by.exon[index1, ],
-                # file.path(output.dir,'adjustedOnly.txt'))
-                
-                # writegototable(example.go.adjusted.by.exon[index1, ],
-                # file.path(output.dir,adjusted.only.file))
-                
-                # Output_file <- file.path(output.dir, unadjusted.only.file)
                 
                 temp2 <- dplyr::as_data_frame(example.go.unadjusted[index2, 
                   ])
                 
                 writeTibble(temp2, file.path(output.dir, "unadjustedOnly.csv"))
-                
-                # writegototable(temp2,
-                # file.path(output.dir,'unadjustedOnly.txt'))
-                
-                # writegototable(example.go.adjusted.by.exon[index1, ],
-                # file.path(output.dir,unadjusted.only.file))
                 
             } else {
                 
@@ -903,8 +756,6 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             
         }
     }
-    
-    #return(yy)
 }
 
 # Utility functions for PathwaySplice
@@ -1619,6 +1470,7 @@ outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ) {
 }
 
 # res11 <- getStaisitcs4Go(res1,gene.based.table)
+
 getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample) {
     
     GO.data <- GO.wall.DE_interest[[1]]
@@ -1909,17 +1761,25 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2,
 }
 
 # getResultsFromJunctionSeq This function is used to get
-# analysis results from using JunctionSeq @param dir.name
-# Path name for sample information file @param sample.file
-# Sample information file @param count.file Count file @param
-# gff.file Annotation file @param method.dispFinal Determine
-# the method used to get a 'final' dispersion estimate.
+# analysis results from using JunctionSeq 
+# @param dir.name Path name for sample information file 
+# @param sample.file Sample information file 
+# @param count.file Count file 
+# @param gff.file Annotation file 
+# @param method.dispFinal Determine the method used to get a 'final' dispersion estimate.
 # @return The analysis result from JunctionSeq R package
-# @export @examples dir.name <- system.file('extdata',
-# package='PathwaySplice') sample.file <- 'Sample_info.txt'
-# count.file <- 'Counts.10.genes.txt' gff.file <-
-# 'flat.chr22.10.genes.gff' res <-
-# PathwaySplice:::getResultsFromJunctionSeq(dir.name,
+# @export 
+# @examples 
+# 
+# dir.name <- system.file('extdata',
+# package='PathwaySplice') 
+# 
+# sample.file <- 'Sample_info.txt'
+# count.file <- 'Counts.10.genes.txt' 
+# gff.file <-
+# 'flat.chr22.10.genes.gff'
+#  
+# res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
 # sample.file, count.file,gff.file, method.dispFinal =
 # 'shrink',analysis.type = 'exonsOnly')
 
@@ -1983,6 +1843,7 @@ makeExample <- function(feature.table, num.gene) {
 }
 
 # res.reforamt <- PathwaySplice:::reformatPathwayOut(res)
+
 reformatPathwayOut <- function(pathway.in) {
     
     res <- dplyr::as_data_frame(pathway.in$GO)
@@ -1992,6 +1853,7 @@ reformatPathwayOut <- function(pathway.in) {
 }
 
 # PathwaySplice:::writeTibble(res.reforamt)
+
 writeTibble <- function(tibble.input, output.file.name = tempfile()) {
     
     if (!dir.exists(dirname(output.file.name))) {
@@ -2232,8 +2094,7 @@ makeGffFile <- function(input.gtf.file, stranded = c("yes", "no"),
     
 }
 
-# R -e
-# 'library(PathwaySplice);PathwaySplice:::submitJob4makeGffFile('~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf','yes','/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/GTF_Files')'
+# R -e 'library(PathwaySplice);PathwaySplice:::submitJob4makeGffFile('~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf','yes','/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/GTF_Files')'
 
 submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir) {
     
