@@ -248,6 +248,9 @@ gff.file <-"Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
 
 #exonsOnly
 res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
+sample.file, count.file,gff.file,analysis.type = "exonsOnly",use.multigene.aggregates =TRUE,method.dispFinal = 'shrink')
+
+res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
 sample.file, count.file,gff.file, method.dispFinal =
 'shrink',analysis.type = "exonsOnly")
 

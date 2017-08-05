@@ -1784,11 +1784,10 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2,
 # 'shrink',analysis.type = 'exonsOnly')
 
 getResultsFromJunctionSeq <- function(dir.name, sample.file, 
-    count.file, gff.file, method.dispFinal = c("shrink", "max", 
-        "fitted", "noShare"), analysis.type) {
+    count.file, gff.file,analysis.type,use.multigene.aggregates,method.dispFinal=c("shrink","max","fitted","noShare"),...) {
     
     # set up method for calculating dispFinal
-    method.dispFinal <- match.arg(method.dispFinal)
+     method.dispFinal <- match.arg(method.dispFinal)
     
     # Get sample file
     dir.name <- reformatpath(dir.name)
@@ -1813,8 +1812,7 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file,
     # Analysis using exonsOnly,and adjust Gender
     jscs <- runJunctionSeqAnalyses(sample.files = path.count.file, 
         sample.names = decoder.bySample[, sample.ID.index], condition = decoder.bySample[, 
-            group.ID.index], flat.gff.file = path.gff.file, analysis.type = analysis.type, 
-        nCores = 1, use.covars = decoder.bySample[, x[3], drop = FALSE], 
+            group.ID.index], flat.gff.file = path.gff.file,analysis.type=analysis.type,use.multigene.aggregates=use.multigene.aggregates,use.covars = decoder.bySample[, x[3], drop = FALSE], 
         test.formula0 = formula(paste("~ ", paste("sample", "countbin", 
             paste0(x[3], ":countbin"), sep = "+"))), test.formula1 = formula(paste("~ ", 
             paste("sample", "countbin", paste0(x[3], ":countbin"), 
@@ -1822,8 +1820,7 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file,
             paste("condition", x[3], "countbin", paste0(x[3], 
                 ":countbin"), "condition:countbin", sep = "+")), 
             geneLevel.formula = formula(paste("~ ", paste(x[3], 
-                "condition", sep = "+")), verbose = TRUE, debug.mode = TRUE, 
-                use.multigene.aggregates = TRUE, method.dispFinal = method.dispFinal)))
+                "condition", sep = "+")),method.dispFinal,...)))
     
     return(jscs)
 }
