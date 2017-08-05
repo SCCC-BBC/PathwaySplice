@@ -1765,8 +1765,8 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2,
 # @param dir.name Path name for sample information file 
 # @param sample.file Sample information file 
 # @param count.file Count file 
-# @param gff.file Annotation file 
-# @param method.dispFinal Determine the method used to get a 'final' dispersion estimate.
+# @param gff.file Annotation file
+# @param ... Additional parameters(Define them based on runJunctionSeqAnalyses function in JuntionSeq)  
 # @return The analysis result from JunctionSeq R package
 # @export 
 # @examples 
@@ -1784,11 +1784,8 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2,
 # 'shrink',analysis.type = 'exonsOnly')
 
 getResultsFromJunctionSeq <- function(dir.name, sample.file, 
-    count.file, gff.file,analysis.type,use.multigene.aggregates,method.dispFinal=c("shrink","max","fitted","noShare"),...) {
-    
-    # set up method for calculating dispFinal
-     method.dispFinal <- match.arg(method.dispFinal)
-    
+    count.file, gff.file,...) {
+
     # Get sample file
     dir.name <- reformatpath(dir.name)
     
@@ -1809,18 +1806,23 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file,
     # Get annotation file
     path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
     
-    # Analysis using exonsOnly,and adjust Gender
-    jscs <- runJunctionSeqAnalyses(sample.files = path.count.file, 
-        sample.names = decoder.bySample[, sample.ID.index], condition = decoder.bySample[, 
-            group.ID.index], flat.gff.file = path.gff.file,analysis.type=analysis.type,use.multigene.aggregates=use.multigene.aggregates,use.covars = decoder.bySample[, x[3], drop = FALSE], 
+    # Analysis using runJunctionSeqAnalyse, and adjust Gender
+    jscs <- runJunctionSeqAnalyses(
+        sample.files = path.count.file, 
+        sample.names = decoder.bySample[, sample.ID.index], 
+        condition = decoder.bySample[,group.ID.index], 
+        flat.gff.file = path.gff.file,
+        use.covars = decoder.bySample[, x[3], drop = FALSE], 
         test.formula0 = formula(paste("~ ", paste("sample", "countbin", 
-            paste0(x[3], ":countbin"), sep = "+"))), test.formula1 = formula(paste("~ ", 
+            paste0(x[3], ":countbin"), sep = "+"))), 
+        test.formula1 = formula(paste("~ ", 
             paste("sample", "countbin", paste0(x[3], ":countbin"), 
-                "condition:countbin", sep = "+"))), effect.formula = formula(paste("~ ", 
+                "condition:countbin", sep = "+"))), 
+        effect.formula = formula(paste("~ ", 
             paste("condition", x[3], "countbin", paste0(x[3], 
-                ":countbin"), "condition:countbin", sep = "+")), 
-            geneLevel.formula = formula(paste("~ ", paste(x[3], 
-                "condition", sep = "+")),method.dispFinal,...)))
+                ":countbin"), "condition:countbin", sep = "+"))),
+        geneLevel.formula = formula(paste("~ ", paste(x[3], 
+                "condition", sep = "+"))),...)
     
     return(jscs)
 }
