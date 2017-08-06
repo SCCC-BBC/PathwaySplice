@@ -1,8 +1,14 @@
 ---
-title: "PathwaySplice"
+title: "PathwaySplice testing for RNA-seq datasets"
 author: "Aimin Yan"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output:
+  knitr:::html_vignette:
+    toc: true
+    fig_caption: yes
+  pdf_document:
+    highlight: null
+    number_sections: y
 vignette: >
   %\VignetteIndexEntry{PathwaySplice}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,34 +19,42 @@ vignette: >
 knitr::opts_chunk$set(fig.width=12,fig.height=8,collapse = FALSE, comment = "#>")
 ```
 
-# Use PathwaySplice
+# Introduction
 
-+ Convert feature based data to gene based data
+This document gives an introduction to the use of the PathwaySplice R Bioconductor package. This package provides methods for (1) performing pathway analysis that ex-plicitly adjusts for the number of exons or junctions associated with each gene; (2) visualizing selection bias due to different number of exons or junctions for each gene and formally tests for presence of bias using logistic regression; (3) supporting gene sets based on the Gene Ontology terms, as well as more broadly defined gene sets (e.g. MSigDB) or user defined gene sets; (4) identifing the significant genes driving pathway significance and (5) organizing significant pathways with an enrichment map, where pathways with large number of overlapping genes are grouped together in a network graph.
+
+        Once installed, the PathwaySplice package can be easily loaded into R using:
+```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+        library(PathwaySplcie)
+```
+
+# Use PathwaySplice
+PathwaySplice uses the output from DEXSeq or JunctionSeq as input basis. Assume users have gotten the differnetial exon usage or differential splicing junctions usage results from DEXSeq or JunctionSeq. User needs to convert these resutls into gene based table, then use this gene based table to perform analysis using the following commands:
+```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+featureBasedData <- PathwaySplice:::makeFeatureTable(res)
+gene.based.table <- makeGeneTable(featureBasedDat)
+```
+For a showcase, PathwaySplice supply a feature based data with this packages, users can load this data using commands:
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-library(PathwaySplice)
 data("featureBasedData")
 gene.based.table <- makeGeneTable(featureBasedData)
 ```
 
-+ Apply logistic regression model to identify bias factor
+After this step, use can identify bias factor by the function lrTestBias
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 lrTestBias(gene.based.table,boxplot.width=0.3)
 ```
 
-+ Perform analysis using pathwaysplice
+To perform analysis by adjusting number of feature, users can perform the following step:
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-
-# This function performes gene set analysis that adjusts for different number of gene features 
-# (i.e. exons and/or spicing junctions) associated with each gene. 
-# The significant genes are those with smallest p-value of gene feature  < *threshold*.
-
-res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(5,30),method='Wallenius')
+res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Wallenius')
 ```
 
-+ Build up network based on the overlap between gene sets and visualize this network
+User can use the resuls from runPathwaySplice to build up enrichment network using the following commands:
 
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-#test
 output.file.dir <- file.path(tempdir(),"OutputEnmap")
 enmap <- enrichmentMap(res,n=3,output.file.dir
                        =output.file.dir,similarity.threshold=0)

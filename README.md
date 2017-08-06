@@ -236,7 +236,6 @@ enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.no
 
 ```
 
-```
 + Example for paper
 
 ```{r eval=TRUE}
@@ -265,3 +264,5 @@ sample.file, count.file,gff.file, method.dispFinal =
 'shrink',analysis.type = "junctionsAndExons")
 
 ```
+#To generate vignettes
+#rmarkdown::render("vignettes/tutorial.Rmd", output_format="all")
