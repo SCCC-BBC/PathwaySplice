@@ -65,6 +65,8 @@ This function implements the methodology described in Young et al. (2011) to adj
          the proportions of signficant genes are then plotted against the gene bins.
 }
 \examples{
+data(featureBasedData)
+
 gene.based.table <- makeGeneTable(featureBasedData)
 
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',

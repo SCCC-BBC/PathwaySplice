@@ -6,7 +6,8 @@
 #'  
 #' @param feature.table An \code{featureBasedData} object.
 #' @param sig.threshold Significance threshold used to determine whether the gene is significant 
-#' or not  
+#' or not
+#' @param stat The statistic used to select significant genes. Options are "pvalue" or "fdr" 
 #'
 #' @return Returns a genewised table with several variables (columns) 
 #' \item{geneID}{Gene identifiers in ensembl gene IDs}
@@ -21,44 +22,12 @@
 #' @examples
 #' data(featureBasedData)
 #' gene.based.table <- makeGeneTable(featureBasedData)
-#'   
-# makeGeneTable <- function(feature.table, sig.threshold = 0.05) {
-#     gene.id <- unique(feature.table$geneID)
-#     
-#     y <- lapply(gene.id, function(u, feature.table) {
-#         
-#         x <- as.data.frame(feature.table[which(feature.table$geneID %in% 
-#             u), ], stringsAsFactors = FALSE)
-#         
-#         num.feature <- dim(x)[1]
-#         
-#         xx <- x[which.min(x$pvalue), ]
-#         
-#         xxx <- cbind.data.frame(xx, num.feature, stringsAsFactors = FALSE)
-#         
-#         xxx
-#         
-#     }, feature.table)
-#     
-#     yy <- do.call(rbind.data.frame, c(y, stringsAsFactors = FALSE))
-#     
-#     sig.gene <- ifelse(yy$pvalue < sig.threshold, 1, 0)
-#     
-#     z <- cbind.data.frame(yy$geneID, yy$pvalue, sig.gene, yy$countbinID, 
-#         yy$num.feature, stringsAsFactors = FALSE)
-#     
-#     colnames(z) <- c("geneID", "geneWisePvalue", "sig.gene", 
-#         "mostSigDeFeature", "numFeature")
-#     
-#     z <- reformatdata(z)
-#     z <- z[order(z[,1]) ,]
-#     return(z)
-# }
+
 
 makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
   
   min.pval <- aggregate(pvalue ~ geneID, data=feature.table, FUN=min)
-  n.feature <- as.data.frame(table (featureBasedData$geneID))
+  n.feature <- as.data.frame(table (feature.table$geneID))
   both <- merge (x=min.pval, y=n.feature, by.x="geneID", by.y="Var1")
   both$fdr <- p.adjust(both$pvalue, method="fdr")
   
@@ -96,59 +65,20 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
 #'  
 #'
 #' @examples
+#' data(featureBasedData)
+#' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
+#' 
 #' lrTestBias(gene.based.table)
-#' 
-#' 
-# lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
-#     
-#      
-#     mydata <- genewise.table
-#     
-#     n.gene <- dim(mydata)[1]
-#     
-#     DE.out <- ifelse(mydata$sig.gene == 1, "Significant genes", 
-#         "Non-significant genes")
-#     
-#     mydata.2 <- cbind(mydata, DE.out)
-#     
-#     par(mfrow = c(1, 1))
-#     
-#     if (var(as.numeric(unlist(mydata.2$numFeature))) != 0) {
-#         
-#         mylogit.2 <- glm(DE.out ~ as.numeric(numFeature), data = mydata.2, 
-#             family = "binomial")
-#         re <- summary(mylogit.2)
-#         pvalue <- re$coefficients[2, 4]
-#         
-#         p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
-#         
-#         index.1 <- which(colnames(mydata.2) %in% c("numFeature"))
-#         index.2 <- which(colnames(mydata.2) %in% c("DE.out"))
-#         
-#         temp <- data.frame(mydata.2[, c(index.1, index.2)])
-#         
-#         temp$DE.out <- factor(temp$DE.out)
-#         
-#         temp$DE.out <- factor(temp$DE.out, levels = levels(temp$DE.out)[c(2, 
-#             1)])
-#         
-#         boxplot(unlist(temp$numFeature) ~ unlist(temp$DE.out), 
-#             boxwex = boxplot.width, ylab = "Number of features", 
-#             col = "lightgray", ylim = c(min(temp$numFeature), 
-#                 max(temp$numFeature)))
-#         
-#         text(x = 2, y = max(temp$numFeature) - 1, labels = c("", 
-#             paste0("P-value from logistic regression ", p.value)))
-#     } else {
-#         cat("There are no variations on the number of features\n")
-#     }
-#     
-# }
 
-lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
+
+
+
+lrTestBias <- function(genewise.table, boxplot.width = 0.5) {
  
   mydata <- genewise.table
+  
+  mydata <- gene.based.table
   
   DE <- ifelse(mydata$sig.gene == 1, 1, 0)
   
@@ -165,14 +95,17 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
     
     boxplot(mydata.2$numFeature ~ mydata.2$DE, 
             boxwex = boxplot.width,
-            ylab = "Number of features", 
             col = "lightgray", 
-            ylim = c(min(mydata.2$numFeature), 
-            max(mydata.2$numFeature)),
-            names=c("non-significant genes", "significant genes"))
-    
-    text(x = 2, y = max(temp$numFeature) - 1, 
-         labels = c("", paste0("P-value from logistic regression ", p.value)))
+            ylab = "Number of gene features", 
+            #ylim = c(min(mydata.2$numFeature), 
+            #max(mydata.2$numFeature)),
+            names=c("non-significant genes", "significant genes"), 
+            outline =FALSE, 
+            frame.plot=TRUE, 
+            at = c(1, 2.5), 
+            xlim = c(0,6)
+            )
+   mtext(paste0("P-value from logistic regression ", p.value),side=1, line=3, at=1)
   } else {
     cat("There are no variations on the number of features\n")
   }
@@ -233,6 +166,8 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' @export
 #'
 #' @examples
+#' data(featureBasedData)
+#' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
@@ -244,7 +179,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
-#'                        method='Wallenius',binsize=20, 
+#'                        method='Wallenius',binsize=800, 
 #'                        output.file='C:/temp/test.csv')    
 #'
 #'# demonstrate using customized gene sets
@@ -316,9 +251,14 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' 
 #' @details
 #'   
-#' In the enrichment map, the \emph{node colors} are controlled by gene set p-values, where smaller p-values correspond to dark red color; 
-#' \emph{node sizes} are controlled by the number of significant genes in gene set;
-#' and \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+#' In the enrichment map,
+#' \itemize{
+#'   \item the \emph{node colors} are controlled by gene set p-values, 
+#'     where smaller p-values correspond to dark red color;
+#'   \item \emph{node sizes} are controlled by the number of significant genes in gene set;
+#'   \item \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+#'   \item the numbers after ':' indicates the nubmer of significant genes in the gene set 
+#' }
 #' 
 #' The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 #' there are no overlapping genes between two gene sets, 
@@ -328,8 +268,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' 
 #' (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
 #' (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
-#' and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set 
-#' 
+#' and the gene set indices shown on the network. 
 #' 
 #' 
 #' @export
@@ -338,6 +277,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
 #' 
 #' @examples
+#' data(featureBasedData)
 #' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
@@ -349,12 +289,13 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
 #' label.node.by.index = FALSE)
 #' 
+#' \dontrun{
+#' 
 #' # labeling each node by gene set index
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #' label.node.by.index = TRUE)
 #' 
-#' \dontrun{
-#' # illustrates specification of output file directory 
+#' #' # illustrates specification of output file directory 
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #'                       label.node.by.index = TRUE, output.file.dir='C:/temp')
 #'                       
@@ -613,11 +554,13 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 
 #' compareResults
 #' 
-#' This function compares the distributions of bias factors (e.g. number of exon bins) 
-#' in genes within significant gene sets, with and without adjusting for bias factors 
+#' This function helps with visualizing the effects of bias adjustment in pathway analysis, 
+#' by comparing the distributions of bias factors (e.g. number of exon bins) 
+#' in genes associated with the most significant gene sets, before and after adjusting for bias factors 
 #' in splicing pathway analysis. 
 #'
-#' @param n.go Number of gene sets
+#' @param n.go Distributions of bias factor in genes associated with the most significant 
+#'             \code{n.go} gene sets will be compared
 #' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
 #' gene set anlaysis results adjusting for biases in splicing analysis
 #' @param unadjusted An object returned by \code{runPathwaySplice}, should correspond to 
@@ -663,10 +606,10 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 #' 
 #' \dontrun{
 #' # illustrate specification of output directory
+#' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
-#' output.file.dir <- '~/OutputTestPathwaySplice'
-#' compareResults(20,res1,res2,gene.based.table,output.file.dir,type.boxplot='Only3')
-#'}
+#' 
+#' }
 #'
 #' @export
 #' 

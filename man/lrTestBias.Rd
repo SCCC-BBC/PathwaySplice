@@ -27,7 +27,10 @@ Here features refer to exon bins or splicing junction bins, depending on
 how genewise pvalues were obtained in the \code{genewise.table}
 }
 \examples{
+data(featureBasedData)
+
 gene.based.table <- makeGeneTable(featureBasedData)
+
 lrTestBias(gene.based.table)
 
 

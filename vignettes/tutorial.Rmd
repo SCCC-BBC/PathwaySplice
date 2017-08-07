@@ -23,7 +23,7 @@ gene.based.table <- makeGeneTable(featureBasedData)
 ```
 
 + Apply logistic regression model to identify bias factor
-```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
+```{r eval=FALSE,warning=FALSE,message=FALSE,results='hide'}
 lrTestBias(gene.based.table,boxplot.width=0.3)
 ```
 
