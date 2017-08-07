@@ -37,7 +37,7 @@ PathwaySplice uses the output from DEXSeq[@Anders2012] or JunctionSeq[@Hartley20
 ```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 featureBasedData <- PathwaySplice:::makeFeatureTable(res)
 ```
-After users get genefeature based table(featureBasedData), users can use makeGeneTable functio to convert it to a gene based table:
+After users get genefeature based table(featureBasedData), users can use makeGeneTable function to convert it to a gene based table:
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 gene.based.table <- makeGeneTable(featureBasedData)
