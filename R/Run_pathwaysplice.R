@@ -7,7 +7,7 @@
 #' @param feature.table An \code{featureBasedData} object.
 #' @param sig.threshold Significance threshold used to determine whether the gene is significant 
 #' or not
-#' @param stat Which parameter(p value or FDR) to use for determining the significance of genes  
+#' @param stat The statistic used to select significant genes. Options are "pvalue" or "fdr" 
 #'
 #' @return Returns a genewised table with several variables (columns) 
 #' \item{geneID}{Gene identifiers in ensembl gene IDs}
