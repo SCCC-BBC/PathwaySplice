@@ -57,20 +57,52 @@ lrTestBias(gene.based.table,boxplot.width=0.3)
 To perform analysis by adjusting number of feature, users can perform the following step:
 
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-res <- runPathwaySplice(gene.based.table,genome='hg19',
+res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',
                         test.cats=c('GO:BP'),
                         go.size.limit=c(5,30),method='Wallenius')
 ```
 
+User can compare the output after adjutstment and the one before adjustment:
+
+```{r eval=FALSE,warning=FALSE,message=FALSE,results='hide'}
+
+res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
+                          id='ensGene',test.cats =c('GO:BP'),
+                          go.size.limit = c(5, 30),
+                          method='Hypergeometric')
+
+compareResults(20, res.adj, res.unadj, 
+               gene.based.table, 
+               type.boxplot='Only3',
+               output.dir="~/PathwaySplice_output")
+
+```
+
 Users can build up the enrichment network from the output of runPathwaySplice function by the following commands:
 
-```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-output.file.dir <- file.path(tempdir(),"OutputEnmap")
-enmap <- enrichmentMap(res,n=3,
+```{r eval=FALSE,warning=FALSE,message=FALSE,results='hide'}
+output.file.dir <- file.path("~/PathwaySplice_output","OutputEnmap")
+enmap <- enrichmentMap(res.adj,n=3,
                        output.file.dir=output.file.dir,
                        similarity.threshold=0)
 ```
+
+In the enrichment map, the size of the nodes indicates the number of significant genes within the pathway, which is also indicated by the number after “:”. The color of the nodes indicates pathway significance, where smaller p-values correspond to dark red color. The thickness of the edges corresponds to JC similarity coefficient between the two pathways.
+
+User can find several output files and a directory named as "OutputEnmap" under "~/PathwaySplice_output" directory. These files include:
+
+"boxplot.html": To show the distributions of gene features associated with genes in significant gene sets before and after bias "adjustment".
+
+"adjusted_unadjusted_overlap_venn.tiff": To visualize the overalp of genes in significant pathways before and after adjustment.
+
+"adjustedOnly.csv": To list gene sets only in adjusted results. 
+
+"unadjustedOnly.csv": To list gene sets only in unadjusted results. 
+
+"results4venn.csv": To list 3 columns that corresponds to gene set names in adjustedOnly, unadjustedOnly and common area in venn plot.    
+
+In "OutputEnmap" directory, users can find "network.layout.for.cytoscape.gml", this file can be used as an input in cytoscape software[@Shannon2003] to let users manipulate the networks. 
 
 # Conclusion
 
