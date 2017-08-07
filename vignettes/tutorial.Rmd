@@ -1,3 +1,4 @@
+<!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
 ---
 title: "PathwaySplice testing for RNA-seq datasets"
 author: "Aimin Yan"
@@ -9,6 +10,9 @@ output:
   pdf_document:
     highlight: null
     number_sections: y
+bibliography: Splicing-network.bib
+pandoc_args: --natbib
+biblio-style: plain    
 vignette: >
   %\VignetteIndexEntry{PathwaySplice}
   %\VignetteEngine{knitr::rmarkdown}
@@ -29,7 +33,8 @@ This document gives an introduction to the use of the PathwaySplice R Bioconduct
 ```
 
 # Use PathwaySplice
-PathwaySplice uses the output from DEXSeq or JunctionSeq as input basis. Assume users have gotten the differnetial exon usage or differential splicing junctions usage results from DEXSeq or JunctionSeq. User needs to convert these resutls into gene based table, then use this gene based table to perform analysis using the following commands:
+PathwaySplice uses the output from DEXSeq[@Anders2012] or JunctionSeq[@Hartley2016] as input basis. Assume users have gotten the differnetial exon usage or differential splicing junctions usage results from DEXSeq or JunctionSeq. User needs to convert these resutls into gene based table, then use this gene based table to perform analysis using the following commands:
+
 ```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 featureBasedData <- PathwaySplice:::makeFeatureTable(res)
 gene.based.table <- makeGeneTable(featureBasedDat)
@@ -57,5 +62,12 @@ User can use the resuls from runPathwaySplice to build up enrichment network usi
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
 output.file.dir <- file.path(tempdir(),"OutputEnmap")
 enmap <- enrichmentMap(res,n=3,output.file.dir
-                       =output.file.dir,similarity.threshold=0)
+                       =output.file.dir,
+                       similarity.threshold=0)
 ```
+
+## Conclusion
+
+In summary, our work identified the potential bias in RNA-Seq data analysis when using differential exons or/and splicing junction usage to represent differential expressed gene, and using these differential expressed genes to perform subsequent gene set and pathway analysis. We futher sugguest a bias correction approach that could provide a more accutate gene set and pathway analsis. We implemented this method into an R package, and we believe that this R packcage could help other researchers when they perform similar type of RNA-Seq data analysis.
+
+## Reference
