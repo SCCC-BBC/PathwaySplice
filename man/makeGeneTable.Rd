@@ -12,7 +12,7 @@ makeGeneTable(feature.table, sig.threshold = 0.05, stat = "pvalue")
 \item{sig.threshold}{Significance threshold used to determine whether the gene is significant 
 or not}
 
-\item{stat}{The statistic used to select significant genes. Options are "pvalue" or "fdr"}
+\item{stat}{Which parameter(p value or FDR) to use for determining the significance of genes}
 }
 \value{
 Returns a genewised table with several variables (columns) 

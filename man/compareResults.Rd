@@ -8,8 +8,7 @@ compareResults(n.go, adjusted, unadjusted, gene.based.table,
   output.dir = tempdir(), type.boxplot = c("All", "Only3"))
 }
 \arguments{
-\item{n.go}{Distributions of bias factor in genes associated with the most significant 
-\code{n.go} gene sets will be compared}
+\item{n.go}{Number of gene sets}
 
 \item{adjusted}{An object returned by \code{runPathwaySplice}, should correspond to
 gene set anlaysis results adjusting for biases in splicing analysis}
@@ -39,9 +38,8 @@ The output include 3 files in \code{output.dir}:
 in significant gene sets, with and without adjusting for bias factors
 }
 \description{
-This function helps with visualizing the effects of bias adjustment in pathway analysis, 
-by comparing the distributions of bias factors (e.g. number of exon bins) 
-in genes associated with the most significant gene sets, before and after adjusting for bias factors 
+This function compares the distributions of bias factors (e.g. number of exon bins) 
+in genes within significant gene sets, with and without adjusting for bias factors 
 in splicing pathway analysis.
 }
 \examples{
@@ -66,7 +64,6 @@ compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 
 \dontrun{
 # illustrate specification of output directory
-
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
 output.file.dir <- '~/OutputTestPathwaySplice'
 compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')

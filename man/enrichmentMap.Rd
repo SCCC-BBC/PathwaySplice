@@ -43,14 +43,9 @@ This function draws an enrichment map based on the overlap of gene sets
 as measured by the Jaccard Coefficient(JC)
 }
 \details{
-In the enrichment map,
-\itemize{
-  \item the \emph{node colors} are controlled by gene set p-values, 
-    where smaller p-values correspond to dark red color;
-  \item \emph{node sizes} are controlled by the number of significant genes in gene set;
-  \item \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
-  \item the numbers after ':' indicates the nubmer of significant genes in the gene set 
-}
+In the enrichment map, the \emph{node colors} are controlled by gene set p-values, where smaller p-values correspond to dark red color; 
+\emph{node sizes} are controlled by the number of significant genes in gene set;
+and \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
 
 The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 there are no overlapping genes between two gene sets, 
@@ -63,7 +58,6 @@ The output directory will include the following files:
 and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set
 }
 \examples{
-data(featureBasedData)
 
 gene.based.table <- makeGeneTable(featureBasedData)
 
@@ -75,13 +69,12 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
 enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
 label.node.by.index = FALSE)
 
-\dontrun{
-
 # labeling each node by gene set index
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.node.by.index = TRUE)
+label.node.by.index = FALSE)
 
-#' # illustrates specification of output file directory 
+\dontrun{
+# illustrates specification of output file directory 
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
                       label.node.by.index = TRUE, output.file.dir='C:/temp')
                       

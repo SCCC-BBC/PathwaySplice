@@ -4,7 +4,7 @@
 \alias{lrTestBias}
 \title{lrTestBias}
 \usage{
-lrTestBias(genewise.table, boxplot.width = 0.5)
+lrTestBias(genewise.table, boxplot.width = 0.1)
 }
 \arguments{
 \item{genewise.table}{A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}}
@@ -27,9 +27,6 @@ Here features refer to exon bins or splicing junction bins, depending on
 how genewise pvalues were obtained in the \code{genewise.table}
 }
 \examples{
-data(featureBasedData)
-
 gene.based.table <- makeGeneTable(featureBasedData)
-
 lrTestBias(gene.based.table)
 }
