@@ -4,7 +4,7 @@
 \alias{lrTestBias}
 \title{lrTestBias}
 \usage{
-lrTestBias(genewise.table, boxplot.width = 0.1)
+lrTestBias(genewise.table, boxplot.width = 0.5)
 }
 \arguments{
 \item{genewise.table}{A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}}
@@ -32,6 +32,4 @@ data(featureBasedData)
 gene.based.table <- makeGeneTable(featureBasedData)
 
 lrTestBias(gene.based.table)
-
-
 }

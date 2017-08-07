@@ -32,7 +32,6 @@ the list being the pathways associated with the gene. When gene ids in RNA-Seq d
              \href{https://raw.githubusercontent.com/aiminy/GOSJ/master/data/gene_annotation.txt}{this link.}
 }
 \examples{
-
 #using local file for pathways database
 dir.name <- system.file('extdata', package='PathwaySplice')
 hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
@@ -43,7 +42,6 @@ hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
 hallmark.url.pathways <- paste0('https://raw.githubusercontent.com/SCCC-BBC',
                    '/PathwaySplice/development/inst/extdata',
                      '/h.all.v6.0.symbols.gmt.txt')
+hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')}
 
-hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')
-}
 }

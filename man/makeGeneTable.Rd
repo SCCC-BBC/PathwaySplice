@@ -30,5 +30,4 @@ and then determines genes status as significant or not.
 \examples{
 data(featureBasedData)
 gene.based.table <- makeGeneTable(featureBasedData)
-  
 }

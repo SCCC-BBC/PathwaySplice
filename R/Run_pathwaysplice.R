@@ -16,14 +16,11 @@
 #' \item{mostSigDeFeature}{the most significant gene feature}
 #' \item{numFeature}{number of gene features within the gene}
 #' 
-#' 
-#' @export
-#'
 #' @examples
 #' data(featureBasedData)
 #' gene.based.table <- makeGeneTable(featureBasedData)
-
-
+#' @export
+#'   
 makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
   
   min.pval <- aggregate(pvalue ~ geneID, data=feature.table, FUN=min)
@@ -39,8 +36,6 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
   names (both) <- sub ("Freq",  "numFeature", names(both))
   return (both)
 }
-
-
 
 #' lrTestBias
 #' 
@@ -60,25 +55,17 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat="pvalue") {
 #'   
 #' @return Nothing to be returned
 #' 
-#' @export
-#' 
-#'  
-#'
 #' @examples
 #' data(featureBasedData)
 #' 
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' 
 #' lrTestBias(gene.based.table)
-
-
-
-
+#' @export
+#' 
 lrTestBias <- function(genewise.table, boxplot.width = 0.5) {
- 
+
   mydata <- genewise.table
-  
-  mydata <- gene.based.table
   
   DE <- ifelse(mydata$sig.gene == 1, 1, 0)
   
@@ -96,6 +83,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.5) {
     boxplot(mydata.2$numFeature ~ mydata.2$DE, 
             boxwex = boxplot.width,
             col = "lightgray", 
+
             ylab = "Number of gene features", 
             #ylim = c(min(mydata.2$numFeature), 
             #max(mydata.2$numFeature)),
@@ -106,13 +94,11 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.5) {
             xlim = c(0,6)
             )
    mtext(paste0("P-value from logistic regression ", p.value),side=1, line=3, at=1)
+
   } else {
     cat("There are no variations on the number of features\n")
   }
 }  
-
-
-
 
 #' runPathwaySplice
 #'
@@ -163,8 +149,6 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.5) {
 #' Anders S, Reyes A, Huber W (2012) \emph{Dececting differential usage of exons from RNA-seq data.} 
 #' Genome Research 22(10): 2008-2017
 #' 
-#' @export
-#'
 #' @examples
 #' data(featureBasedData)
 #' 
@@ -191,12 +175,11 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.5) {
 #'                        gene2cat=hlp,
 #'                        go.size.limit=c(5,200),
 #'                        method='Wallenius',binsize=20, 
-#'                        output.file='C:/temp/test.csv')                        
-#'                                  
-#'                                                      
-#' }    
-#'                     
-#'                                                                
+#'                        output.file='C:/temp/test.csv')
+#' }
+#' 
+#' @export
+
 runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
     test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 
         200), method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE, 
@@ -221,7 +204,6 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
     writeTibble(res3, output.file)
     
     res3
-    # CatDE
 }
 
 #' enrichmentMap
@@ -268,10 +250,8 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' 
 #' (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
 #' (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
-#' and the gene set indices shown on the network. 
+#' and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set 
 #' 
-#' 
-#' @export
 #' @return A list with edge and node information used to plot enrichment map
 #' 
 #' @author Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
@@ -300,9 +280,9 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #'                       label.node.by.index = TRUE, output.file.dir='C:/temp')
 #'                       
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#'                       label.node.by.index = FALSE, output.file.dir='C:/temp')
-#'}
-#' 
+#'                       label.node.by.index = FALSE, output.file.dir='C:/temp')}
+#' @export                      
+
 enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), 
     label.node.by.index = FALSE, ...) {
@@ -445,10 +425,7 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
 #' @return A list where each entry is named by a gene and contains a vector of all
 #'         the pathways associated with the gene
 #'
-#' @export
-#'
 #' @examples
-#' 
 #' #using local file for pathways database
 #' dir.name <- system.file('extdata', package='PathwaySplice')
 #' hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
@@ -459,10 +436,9 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
 #' hallmark.url.pathways <- paste0('https://raw.githubusercontent.com/SCCC-BBC',
 #'                    '/PathwaySplice/development/inst/extdata',
 #'                      '/h.all.v6.0.symbols.gmt.txt')
+#' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')}
 #' 
-#' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')
-#' }
-
+#' @export
 
 gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL, 
     genomeID = c("mm10", "hg19", "hg38")) {
@@ -498,15 +474,17 @@ gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL,
     
 }
 
-#' Title
+#' .onAttach
 #'
 #' @param libname
 #' @param pkgname
 #'
 #' @return Nothing to be returned
-#' @export
+
 #'
 #' @examples
+#' 
+#' @export
 
 .onAttach <- function(libname, pkgname) {
     if (.Platform$OS.type == "windows" && .Platform$GUI == "Rgui") {
@@ -608,8 +586,9 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 #' # illustrate specification of output directory
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
-#' 
-#' }
+#' output.file.dir <- '~/OutputTestPathwaySplice'
+#' compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')
+#'}
 #'
 #' @export
 #' 
@@ -637,31 +616,17 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             unadjusted <- example.go.unadjusted[1:n, 1]
             
             re <- list(adjusted = adjusted, unadjusted = unadjusted)
-            # plot.new()
-            venn.plot <- venn.diagram(x = re[c(1, 2)], filename = file.path(output.dir, 
-                paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")), main.pos
-                = c(0.5, 0.5),main.just=c(2,2),height = 3000, width = 3500, resolution = 1000, 
-                col = "black", lty = "dotted", lwd = 1, fill = c("red", 
-                  "blue"), alpha = 0.5, label.col = c(rep("black", 
-                  3)), cex = 0.5, fontfamily = "serif", fontface = "bold", 
-                cat.col = c("red", "blue"), cat.cex = 0.5, cat.pos = 0.5, 
-                cat.dist = 0.05, cat.fontfamily = "serif", margin = 0.2)
             
-            # require(gridExtra)
-            # grid.arrange(gTree(children=venn.plot), top="Title", bottom="subtitle")
-            # #mtext ("adjusted", side=1)
-            
-            # boxplot
+            vp <- venn.diagram(re,fill = c("red","blue"),cat.col = c("red", "blue"),
+                               alpha = 0.3, 
+                               filename = file.path(output.dir,paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")))
+
             common <- intersect(unadjusted, adjusted)
             
             In.unadjusted.not.in.adjusted <- setdiff(unadjusted, 
                 common)
             In.adjusted.not.in.unadjusted <- setdiff(adjusted, 
                 common)
-            
-            # cat(length(common),'\n')
-            # cat(length(In.unadjusted.not.in.adjusted),'\n')
-            # cat(length(In.adjusted.not.in.unadjusted),'\n')
             
             if (length(In.unadjusted.not.in.adjusted) != 0 && 
                 length(In.adjusted.not.in.unadjusted) != 0) {
@@ -685,10 +650,6 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                 
                 yyy <- cbind(example.go.unadjusted[index2, ]$rank.value.by.over_represented_pvalue, 
                   example.go.adjusted.by.exon[index2, ]$rank.value.by.over_represented_pvalue)
-                
-                # xx <- cbind(unlist(In.ad.not.un), unlist(In.un.not.ad))
-                # #colnames(xx) <- c('In.ad.not.un', 'In.un.not.ad')
-                # colnames(xx) <- c('adjusted.only', 'unadjusted.only')
                 
                 cp.topN.adjusted.name <- unique(unlist(example.go.adjusted.by.exon[1:n, 
                   ]$All_gene_ensembl))
@@ -724,18 +685,13 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   
                   colnames(yy) <- c("numFeature", "category")
                   
-                  # png(file.path(output.dir, 'boxplot.png'))
-                  # boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
                   p <- plot_ly(yy, x = ~numFeature, color = ~category, 
                     type = "box") %>% layout(margin = m)
                   
-                  # chart_link = plotly_POST(p, filename='sizing/1') chart_link
-                  # export(p, file = file.path(output.dir, 'boxplot.png'))
                   htmlwidgets::saveWidget(p, file.path(output.dir, 
                     "boxplot.html"))
-                  # dev.off()
-                }, {
+                                }, {
                   yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", 
                     length(In.ad.not.un))), cbind(In.un.not.ad, 
                     rep("unadjusted.only", length(In.un.not.ad))), 
@@ -753,22 +709,12 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   
                   colnames(yy) <- c("numFeature", "category")
                   
-                  # png(file.path(output.dir, 'boxplot.png'))
-                  # boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
                   p <- plot_ly(yy, x = ~numFeature, color = ~category, 
                     type = "box") %>% layout(margin = m)
                   
-                  # chart_link = plotly_POST(p, filename='sizing/1') chart_link
-                  # png(file.path(output.dir, 'boxplot.png'))
-                  # boxplot(as.numeric(as.character(y)) ~ grp, data = yy)
-                  # plot_ly(yy, x = ~ as.numeric(as.character(y)), color =
-                  # ~grp, type = 'box') p <- plot_ly(yy, x = ~
-                  # as.numeric(as.character(y)), color = ~grp, type = 'box')
-                  # export(p, file = file.path(output.dir, 'boxplot.png'))
                   htmlwidgets::saveWidget(p, file.path(output.dir, 
                     "boxplot.html"))
-                  # dev.off()
                 })
                 
                 na.pad <- function(x, len) {
@@ -795,33 +741,17 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   eol = "\n", na = " ", dec = ".", row.names = FALSE, 
                   col.names = TRUE)
                 
-                # writeTibble(venn.res,file.path(output.dir,'results4venn.csv'))
-                
-                # Output_file <- file.path(output.dir, adjusted.only.file)
                 
                 temp1 <- dplyr::as_data_frame(example.go.adjusted.by.exon[index1, 
                   ])
                 
                 writeTibble(temp1, file.path(output.dir, "adjustedOnly.csv"))
                 
-                # writegototable(example.go.adjusted.by.exon[index1, ],
-                # file.path(output.dir,'adjustedOnly.txt'))
-                
-                # writegototable(example.go.adjusted.by.exon[index1, ],
-                # file.path(output.dir,adjusted.only.file))
-                
-                # Output_file <- file.path(output.dir, unadjusted.only.file)
                 
                 temp2 <- dplyr::as_data_frame(example.go.unadjusted[index2, 
                   ])
                 
                 writeTibble(temp2, file.path(output.dir, "unadjustedOnly.csv"))
-                
-                # writegototable(temp2,
-                # file.path(output.dir,'unadjustedOnly.txt'))
-                
-                # writegototable(example.go.adjusted.by.exon[index1, ],
-                # file.path(output.dir,unadjusted.only.file))
                 
             } else {
                 
@@ -846,8 +776,6 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             
         }
     }
-    
-    #return(yy)
 }
 
 # Utility functions for PathwaySplice
@@ -1562,6 +1490,7 @@ outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ) {
 }
 
 # res11 <- getStaisitcs4Go(res1,gene.based.table)
+
 getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample) {
     
     GO.data <- GO.wall.DE_interest[[1]]
@@ -1852,27 +1781,31 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2,
 }
 
 # getResultsFromJunctionSeq This function is used to get
-# analysis results from using JunctionSeq @param dir.name
-# Path name for sample information file @param sample.file
-# Sample information file @param count.file Count file @param
-# gff.file Annotation file @param method.dispFinal Determine
-# the method used to get a 'final' dispersion estimate.
+# analysis results from using JunctionSeq 
+# @param dir.name Path name for sample information file 
+# @param sample.file Sample information file 
+# @param count.file Count file 
+# @param gff.file Annotation file
+# @param ... Additional parameters(Define them based on runJunctionSeqAnalyses function in JuntionSeq)  
 # @return The analysis result from JunctionSeq R package
-# @export @examples dir.name <- system.file('extdata',
-# package='PathwaySplice') sample.file <- 'Sample_info.txt'
-# count.file <- 'Counts.10.genes.txt' gff.file <-
-# 'flat.chr22.10.genes.gff' res <-
-# PathwaySplice:::getResultsFromJunctionSeq(dir.name,
+# @export 
+# @examples 
+# 
+# dir.name <- system.file('extdata',
+# package='PathwaySplice') 
+# 
+# sample.file <- 'Sample_info.txt'
+# count.file <- 'Counts.10.genes.txt' 
+# gff.file <-
+# 'flat.chr22.10.genes.gff'
+#  
+# res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
 # sample.file, count.file,gff.file, method.dispFinal =
 # 'shrink',analysis.type = 'exonsOnly')
 
 getResultsFromJunctionSeq <- function(dir.name, sample.file, 
-    count.file, gff.file, method.dispFinal = c("shrink", "max", 
-        "fitted", "noShare"), analysis.type) {
-    
-    # set up method for calculating dispFinal
-    method.dispFinal <- match.arg(method.dispFinal)
-    
+    count.file, gff.file,...) {
+
     # Get sample file
     dir.name <- reformatpath(dir.name)
     
@@ -1893,20 +1826,23 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file,
     # Get annotation file
     path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
     
-    # Analysis using exonsOnly,and adjust Gender
-    jscs <- runJunctionSeqAnalyses(sample.files = path.count.file, 
-        sample.names = decoder.bySample[, sample.ID.index], condition = decoder.bySample[, 
-            group.ID.index], flat.gff.file = path.gff.file, analysis.type = analysis.type, 
-        nCores = 1, use.covars = decoder.bySample[, x[3], drop = FALSE], 
+    # Analysis using runJunctionSeqAnalyse, and adjust Gender
+    jscs <- runJunctionSeqAnalyses(
+        sample.files = path.count.file, 
+        sample.names = decoder.bySample[, sample.ID.index], 
+        condition = decoder.bySample[,group.ID.index], 
+        flat.gff.file = path.gff.file,
+        use.covars = decoder.bySample[, x[3], drop = FALSE], 
         test.formula0 = formula(paste("~ ", paste("sample", "countbin", 
-            paste0(x[3], ":countbin"), sep = "+"))), test.formula1 = formula(paste("~ ", 
+            paste0(x[3], ":countbin"), sep = "+"))), 
+        test.formula1 = formula(paste("~ ", 
             paste("sample", "countbin", paste0(x[3], ":countbin"), 
-                "condition:countbin", sep = "+"))), effect.formula = formula(paste("~ ", 
+                "condition:countbin", sep = "+"))), 
+        effect.formula = formula(paste("~ ", 
             paste("condition", x[3], "countbin", paste0(x[3], 
-                ":countbin"), "condition:countbin", sep = "+")), 
-            geneLevel.formula = formula(paste("~ ", paste(x[3], 
-                "condition", sep = "+")), verbose = TRUE, debug.mode = TRUE, 
-                use.multigene.aggregates = TRUE, method.dispFinal = method.dispFinal)))
+                ":countbin"), "condition:countbin", sep = "+"))),
+        geneLevel.formula = formula(paste("~ ", paste(x[3], 
+                "condition", sep = "+"))),...)
     
     return(jscs)
 }
@@ -1926,6 +1862,7 @@ makeExample <- function(feature.table, num.gene) {
 }
 
 # res.reforamt <- PathwaySplice:::reformatPathwayOut(res)
+
 reformatPathwayOut <- function(pathway.in) {
     
     res <- dplyr::as_data_frame(pathway.in$GO)
@@ -1935,6 +1872,7 @@ reformatPathwayOut <- function(pathway.in) {
 }
 
 # PathwaySplice:::writeTibble(res.reforamt)
+
 writeTibble <- function(tibble.input, output.file.name = tempfile()) {
     
     if (!dir.exists(dirname(output.file.name))) {
@@ -2175,8 +2113,7 @@ makeGffFile <- function(input.gtf.file, stranded = c("yes", "no"),
     
 }
 
-# R -e
-# 'library(PathwaySplice);PathwaySplice:::submitJob4makeGffFile('~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf','yes','/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/GTF_Files')'
+# R -e 'library(PathwaySplice);PathwaySplice:::submitJob4makeGffFile('~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf','yes','/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/GTF_Files')'
 
 submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir) {
     
