@@ -161,7 +161,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
-#'                        method='Wallenius',binsize=20, 
+#'                        method='Wallenius',binsize=800, 
 #'                        output.file='C:/temp/test.csv')    
 #'
 #'# demonstrate using customized gene sets
@@ -232,9 +232,14 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' 
 #' @details
 #'   
-#' In the enrichment map, the \emph{node colors} are controlled by gene set p-values, where smaller p-values correspond to dark red color; 
-#' \emph{node sizes} are controlled by the number of significant genes in gene set;
-#' and \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+#' In the enrichment map,
+#' \itemize{
+#'   \item the \emph{node colors} are controlled by gene set p-values, 
+#'     where smaller p-values correspond to dark red color.
+#'   \item \emph{node sizes} are controlled by the number of significant genes in gene set.
+#'   \item \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+#'   \item the numbers after ':' indicates the nubmer of significant genes in the gene set. 
+#' }
 #' 
 #' The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 #' there are no overlapping genes between two gene sets, 
@@ -244,7 +249,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' 
 #' (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
 #' (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
-#' and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set 
+#' and the gene set indices shown on the network. 
 #' 
 #' @return A list with edge and node information used to plot enrichment map
 #' 
@@ -536,11 +541,14 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 
 #' compareResults
 #' 
-#' This function compares the distributions of bias factors (e.g. number of exon bins) 
-#' in genes within significant gene sets, with and without adjusting for bias factors 
-#' in splicing pathway analysis. 
+#' This function helps with visualizing the effects of bias adjustment in pathway analysis, 
+#' by comparing the distributions of bias factors (e.g. number of exon bins) 
+#' in genes associated with the most significant gene sets, before and after adjusting for bias factors 
+#' in splicing pathway analysis.
+#'  
 #'
-#' @param n.go Number of gene sets
+#' @param n.go Distributions of bias factor in genes associated with the most significant 
+#'             \code{n.go} gene sets will be compared
 #' @param adjusted An object returned by \code{runPathwaySplice}, should correspond to  
 #' gene set anlaysis results adjusting for biases in splicing analysis
 #' @param unadjusted An object returned by \code{runPathwaySplice}, should correspond to 

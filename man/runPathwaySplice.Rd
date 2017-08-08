@@ -76,7 +76,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        test.cats=c('GO:BP'),
                        go.size.limit=c(5,30),
-                       method='Wallenius',binsize=20, 
+                       method='Wallenius',binsize=800, 
                        output.file='C:/temp/test.csv')    
 
 # demonstrate using customized gene sets

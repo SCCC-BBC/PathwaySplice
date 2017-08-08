@@ -43,9 +43,14 @@ This function draws an enrichment map based on the overlap of gene sets
 as measured by the Jaccard Coefficient(JC)
 }
 \details{
-In the enrichment map, the \emph{node colors} are controlled by gene set p-values, where smaller p-values correspond to dark red color; 
-\emph{node sizes} are controlled by the number of significant genes in gene set;
-and \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+In the enrichment map,
+\itemize{
+  \item the \emph{node colors} are controlled by gene set p-values, 
+    where smaller p-values correspond to dark red color.
+  \item \emph{node sizes} are controlled by the number of significant genes in gene set.
+  \item \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+  \item the numbers after ':' indicates the nubmer of significant genes in the gene set. 
+}
 
 The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
 there are no overlapping genes between two gene sets, 
@@ -55,7 +60,7 @@ The output directory will include the following files:
 
 (1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
 (2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
-and the gene set indices shown on the network. Numbers after ':' indicates the nubmer of significant genes in the gene set
+and the gene set indices shown on the network.
 }
 \examples{
 
