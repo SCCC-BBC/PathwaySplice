@@ -82,7 +82,7 @@ compareResults(20, res.adj, res.unadj,
 Users can build up the enrichment network from the output of runPathwaySplice function by the following commands:
 
 ```{r eval=FALSE,warning=FALSE,message=FALSE,results='hide'}
-output.file.dir <- file.path("~/PathwaySplice_output","OutputEnmap")
+output.file.dir <- file.path("~/PathwaySplice_output")
 enmap <- enrichmentMap(res.adj,n=3,
                        output.file.dir=output.file.dir,
                        similarity.threshold=0)
@@ -90,7 +90,7 @@ enmap <- enrichmentMap(res.adj,n=3,
 
 In the enrichment map, the size of the nodes indicates the number of significant genes within the pathway, which is also indicated by the number after “:”. The color of the nodes indicates pathway significance, where smaller p-values correspond to dark red color. The thickness of the edges corresponds to JC similarity coefficient between the two pathways.
 
-User can find several output files and a directory named as "OutputEnmap" under "~/PathwaySplice_output" directory. These files include:
+User can find several output files under "~/PathwaySplice_output" directory. These files include:
 
 "boxplot.html": To show the distributions of gene features associated with genes in significant gene sets before and after bias "adjustment".
 
@@ -102,7 +102,7 @@ User can find several output files and a directory named as "OutputEnmap" under 
 
 "results4venn.csv": To list 3 columns that corresponds to gene set names in adjustedOnly, unadjustedOnly and common area in venn plot.    
 
-In "OutputEnmap" directory, users can find "network.layout.for.cytoscape.gml", this file can be used as an input in cytoscape software[@Shannon2003] to let users manipulate the networks. 
+"network.layout.for.cytoscape.gml": The file can be used as an input in cytoscape software[@Shannon2003] to let users manipulate the networks. 
 
 # Conclusion
 
