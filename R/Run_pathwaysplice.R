@@ -7,7 +7,7 @@
 #' @param feature.table An \code{featureBasedData} object.
 #' @param sig.threshold Significance threshold used to determine whether the gene is significant 
 #' or not
-#' @param stat The statistic used to select significant genes. Options are "pvalue" or "fdr" 
+#' @param stat The statistic used to select significant genes. Options are 'pvalue' or 'fdr' 
 #'
 #' @return Returns a genewised table with several variables (columns) 
 #' \item{geneID}{Gene identifiers in ensembl gene IDs}
@@ -20,25 +20,21 @@
 #' data(featureBasedData)
 #' gene.based.table <- makeGeneTable(featureBasedData)
 #' @export
-#'   
+#' 
 makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat = "pvalue")
 {
-    
     min.pval <- aggregate(pvalue ~ geneID, data = feature.table, FUN = min)
     n.feature <- as.data.frame(table(feature.table$geneID))
     both <- merge(x = min.pval, y = n.feature, by.x = "geneID", by.y = "Var1")
     both$fdr <- p.adjust(both$pvalue, method = "fdr")
-    
     if (stat == "pvalue")
     {
         both$sig.gene <- ifelse(both$pvalue < sig.threshold, 1, 0)
     }
-    
     if (stat == "fdr")
     {
         both$sig.gene <- ifelse(both$fdr < sig.threshold, 1, 0)
     }
-    
     names(both) <- sub("pvalue", "geneWisePvalue", names(both))
     names(both) <- sub("Freq", "numFeature", names(both))
     return(both)
@@ -69,29 +65,18 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat = "pvalue")
 #' 
 lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 {
-    
     mydata <- genewise.table
-    
     DE <- ifelse(mydata$sig.gene == 1, 1, 0)
-    
     mydata.2 <- cbind(mydata, DE)
-    
     if (var(mydata.2$numFeature) != 0)
     {
-        
-        mylogit.2 <- glm(DE ~ as.numeric(numFeature), data = mydata.2, 
-            family = "binomial")
-        
+        mylogit.2 <- glm(DE ~ as.numeric(numFeature), data = mydata.2, family = "binomial")
         re <- summary(mylogit.2)
         pvalue <- re$coefficients[2, 4]
-        
         p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
-        
-        boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, 
-            ylab = "Number of features", col = "lightgray", ylim = c(min(mydata.2$numFeature), 
-                max(mydata.2$numFeature)), names = c("non-significant genes", 
-                "significant genes"))
-        
+        boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, ylab = "Number of features", 
+            col = "lightgray", ylim = c(min(mydata.2$numFeature), max(mydata.2$numFeature)), 
+            names = c("non-significant genes", "significant genes"))
         text(x = 2, y = max(mydata.2$numFeature) - 1, labels = c("", paste0("P-value from logistic regression ", 
             p.value)))
     } else
@@ -177,31 +162,20 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #' }
 #' 
 #' @export
-
-runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, 
-    test.cats = c("GO:CC", "GO:BP", "GO:MF"), go.size.limit = c(10, 200), 
-    method = "Wallenius", repcnt = 2000, use.genes.without.cat = FALSE, 
-    binsize = "auto", output.file = tempfile())
+runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.cats = c("GO:CC", 
+    "GO:BP", "GO:MF"), go.size.limit = c(10, 200), method = "Wallenius", repcnt = 2000, 
+    use.genes.without.cat = FALSE, binsize = "auto", output.file = tempfile())
     {
-    
     x <- genewise.table$sig.gene
     names(x) <- genewise.table$geneID
-    
-    pwf <- nullpSplice(x, genome, id, bias.data = genewise.table$numFeature, 
-        plot.fit = TRUE, binsize)
-    
-    CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, 
-        test.cats = test.cats, go.size.limit = go.size.limit, method = method, 
-        repcnt = repcnt, use.genes.without.cat = use.genes.without.cat)
-    
+    pwf <- nullpSplice(x, genome, id, bias.data = genewise.table$numFeature, plot.fit = TRUE, 
+        binsize)
+    CatDE <- pathwaysplice(pwf, genome = genome, id = id, gene2cat = gene2cat, test.cats = test.cats, 
+        go.size.limit = go.size.limit, method = method, repcnt = repcnt, use.genes.without.cat = use.genes.without.cat)
     res1 <- getStaisitcs4Go(CatDE, genewise.table)
-    
     res2 <- reformatPathwayOut(res1)
-    
     res3 <- within(res2, rm("Ave_value_DE"))
-    
     writeTibble(res3, output.file)
-    
     res3
 }
 
@@ -279,68 +253,51 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL,
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 #'                       label.node.by.index = FALSE, output.file.dir='C:/temp')}
 #' @export                      
-
 enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
-    similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), 
-    label.node.by.index = FALSE, ...)
+    similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), label.node.by.index = FALSE, 
+    ...)
     {
-    
     if (!dir.exists(output.file.dir))
     {
         dir.create(output.file.dir, recursive = TRUE)
     }
-    
     pathway.res <- as.data.frame(pathway.res)
-    
     GO.name <- pathway.res$gene_set
     temp <- pathway.res$SIGgene_ensembl
     names(temp) <- GO.name
     x <- pathway.res
     geneSets <- temp
-    
     y <- as.data.frame(x)
-    
     if (any(grep("^GO:", y$gene_set)))
     {
         nodename <- paste0(y$description, ":", y$numSIGInCat)
-        
         if (label.node.by.index == TRUE)
         {
             nodename.index <- seq(1, length(nodename))
-            
-            output.text <- as.data.frame(cbind(nodename.index, nodename))[1:n, 
-                ]
+            output.text <- as.data.frame(cbind(nodename.index, nodename))[1:n, ]
             nodename <- nodename.index
             colnames(output.text) <- c("index", "name")
-            write.table(output.text, file = file.path(output.file.dir, 
-                "enrichmap_GO.xls"), quote = FALSE, col.names = TRUE, row.names = FALSE, 
-                sep = "\t")
+            write.table(output.text, file = file.path(output.file.dir, "enrichmap_GO.xls"), 
+                quote = FALSE, col.names = TRUE, row.names = FALSE, sep = "\t")
         }
     } else
     {
         nodename <- paste0(y$gene_set, ":", y$numSIGInCat)
-        
         if (label.node.by.index == TRUE)
         {
             nodename.index <- seq(1, length(nodename))
-            
-            output.text <- as.data.frame(cbind(nodename.index, nodename))[1:n, 
-                ]
+            output.text <- as.data.frame(cbind(nodename.index, nodename))[1:n, ]
             nodename <- nodename.index
             colnames(output.text) <- c("index", "name")
-            
-            write.table(output.text, file = file.path(output.file.dir, 
-                "enrichmap_pathway.xls"), quote = FALSE, col.names = TRUE, 
-                row.names = FALSE, sep = "\t")
+            write.table(output.text, file = file.path(output.file.dir, "enrichmap_pathway.xls"), 
+                quote = FALSE, col.names = TRUE, row.names = FALSE, sep = "\t")
         }
     }
-    
     if (nrow(y) < n)
     {
         n <- nrow(y)
     }
     y <- y[1:n, ]
-    
     if (n == 0)
     {
         stop("no enriched term found...")
@@ -348,21 +305,16 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
     {
         g <- graph.empty(0, directed = FALSE)
         g <- add_vertices(g, nv = 1)
-        
         igraph::V(g)$name <- nodename
         igraph::V(g)$color <- "red"
-        
     } else
     {
         pvalue <- as.numeric(y$over_represented_pvalue)
-        
         id <- y[, 1]
         geneSets <- geneSets[id]
-        
-        n <- nrow(y)  #
+        n <- nrow(y)
         w <- matrix(NA, nrow = n, ncol = n)
         colnames(w) <- rownames(w) <- nodename[1:n]
-        
         for (i in 1:n)
         {
             for (j in i:n)
@@ -370,44 +322,29 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
                 w[i, j] <- overlap_ratio(geneSets[id[i]], geneSets[id[j]])
             }
         }
-        
         wd <- melt(w)
         wd <- wd[wd[, 1] != wd[, 2], ]
         wd <- wd[!is.na(wd[, 3]), ]
         g <- graph.data.frame(wd[, -3], directed = FALSE)
         igraph::E(g)$width <- sqrt(wd[, 3] * 5) * scaling.factor
-        
         g <- delete.edges(g, igraph::E(g)[wd[, 3] < similarity.threshold])
-        
-        idx <- unlist(sapply(igraph::V(g)$name, function(x) which(x == 
-            nodename[1:n])))
-        
+        idx <- unlist(sapply(igraph::V(g)$name, function(x) which(x == nodename[1:n])))
         cols <- color_scale("red", "#E5C494")
-        
-        igraph::V(g)$color <- cols[sapply(pvalue, getIdx, min(pvalue), 
-            max(pvalue))]
-        
+        igraph::V(g)$color <- cols[sapply(pvalue, getIdx, min(pvalue), max(pvalue))]
         Edata <- as.data.frame(get.edgelist(g))
         Edata$edgewidth <- igraph::E(g)$width
         Vdata <- data.frame(pathway = igraph::V(g)$name, color = igraph::V(g)$color)
         map_data <- list(edge_data = Edata, node_data = Vdata)
-        
         cnt <- as.integer(y$numSIGInCat)
-        
         names(cnt) <- nodename[1:n]
-        
         cnt2 <- cnt[igraph::V(g)$name]
-        
         igraph::V(g)$size <- cnt2/sum(cnt2) * 100
     }
-    
-    netplot(g, node.label.font = node.label.font, node.label.color = "black", 
-        fixed = fixed, ...)
-    
+    netplot(g, node.label.font = node.label.font, node.label.color = "black", fixed = fixed, 
+        ...)
     write.graph(g, file.path(output.file.dir, "network.layout.for.cytoscape.gml"), 
         format = "gml")
     invisible(g)
-    
     re2 <- map_data
     return(re2)
 }
@@ -448,41 +385,27 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
 #' hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')}
 #' 
 #' @export
-
 gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL, genomeID = c("mm10", 
     "hg19", "hg38"))
     {
-    
     gmt_input_file <- pathway.file
-    
     gene.2.cat.gmt <- gene2cat2(gmt_input_file)
-    
     names.gene.gmt <- as.data.frame(names(gene.2.cat.gmt))
     colnames(names.gene.gmt) <- "gene_id"
-    
     if (!is.null(gene.anno.file))
     {
-        # gene.anno.dir <- dirname(gene_anno_file) gene.annno.dir <-
-        # reformatpath(gene.anno.dir) file.name <- basename(gene_anno_file)
-        
         gene_anno_file <- gene.anno.file
-        
         gene.id.conversion <- read.csv(gene_anno_file)
     } else
     {
         gene.id.conversion <- match.arg(genomeID)
     }
-    
     xxx <- match2Genome(gene.id.conversion)
-    
     names.gene.gmt.2 <- match(names.gene.gmt$gene_id, xxx[, 1])
-    
     gene.id.conversion.2 <- xxx[names.gene.gmt.2, ]
-    
     gene.2.cat.gmt.2 <- gene.2.cat.gmt
     names(gene.2.cat.gmt.2) <- gene.id.conversion.2[, 2]
     gene.2.cat.gmt.2
-    
 }
 
 #' .onAttach
@@ -496,7 +419,6 @@ gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL, genomeID = c("mm10"
 #' @examples
 #' 
 #' @export
-
 .onAttach <- function(libname, pkgname)
 {
     if (.Platform$OS.type == "windows" && .Platform$GUI == "Rgui")
@@ -505,39 +427,24 @@ gmtGene2Cat <- function(pathway.file, gene.anno.file = NULL, genomeID = c("mm10"
     }
 }
 
-# These two variables are required for automatic fetching of categories
-# to function.  Their purpose is to take the UCSC genome and gene ID
-# values given when looking up length data and convert them to the
-# names used for the same organism and gene identifier in the organism
-# packages.
+.ORG_PACKAGES = paste("org.", c("Ag.eg", "At.tair", "Bt.eg", "Ce.eg", "Cf.eg", "Dm.eg", 
+    "Dr.eg", "EcK12.eg", "EcSakai.eg", "Gg.eg", "Hs.eg", "Mm.eg", "Mmu.eg", "Pf.plasmo", 
+    "Pt.eg", "Rn.eg", "Sc.sgd", "Ss.eg", "Xl.eg"), sep = "")
 
-# Mappings that are primarily required by getgo, the purpose of this is
-# to convert the UCSC genome IDs, to the bioconductor organism names,
-# e.g.  'mm'->'org.Mm.'
-.ORG_PACKAGES = paste("org.", c("Ag.eg", "At.tair", "Bt.eg", "Ce.eg", "Cf.eg", 
-    "Dm.eg", "Dr.eg", "EcK12.eg", "EcSakai.eg", "Gg.eg", "Hs.eg", "Mm.eg", 
-    "Mmu.eg", "Pf.plasmo", "Pt.eg", "Rn.eg", "Sc.sgd", "Ss.eg", "Xl.eg"), 
-    sep = "")
-names(.ORG_PACKAGES) = c("anoGam", "Arabidopsis", "bosTau", "ce", "canFam", 
-    "dm", "danRer", "E. coli K12", "E. coli Sakai", "galGal", "hg", "mm", 
-    "rheMac", "Malaria", "panTro", "rn", "sacCer", "susScr", "xenTro")
+names(.ORG_PACKAGES) = c("anoGam", "Arabidopsis", "bosTau", "ce", "canFam", "dm", 
+    "danRer", "E. coli K12", "E. coli Sakai", "galGal", "hg", "mm", "rheMac", "Malaria", 
+    "panTro", "rn", "sacCer", "susScr", "xenTro")
 
-# These are the only formats supported by getgo at the moment, the
-# purpose is to convert the USCC gene ID formats, to the shorthand used
-# by the bioconductor organism packages, .e.g.  'refGene'->'ENSEMBL'
 .ID_MAP = c("eg", "eg", "ENSEMBL", "SYMBOL", "sgd", "plasmo", "tair")
-names(.ID_MAP) = c("knownGene", "refGene", "ensGene", "geneSymbol", "sgd", 
-    "plasmo", "tair")
 
-# Below are the exceptions to the function name for gene to go term
-# mappings
+names(.ID_MAP) = c("knownGene", "refGene", "ensGene", "geneSymbol", "sgd", "plasmo", 
+    "tair")
+
 .ORG_GOMAP_FUNCTION = c("GO2ALLEGS", "GO2ALLTAIRS", "GO2ALLORFS", "GO2ALLORFS")
-names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", 
-    "org.Sc.sgd")
 
-# TxDb Length databases
-.TXDB_ORGS = c("ce6", "dm3", "hg18", "hg19", "hg38", "mm10", "mm9", "rn4", 
-    "rn5", "sacCer2", "sacCer3")
+names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.Sc.sgd")
+.TXDB_ORGS = c("ce6", "dm3", "hg18", "hg19", "hg38", "mm10", "mm9", "rn4", "rn5", 
+    "sacCer2", "sacCer3")
 
 #' compareResults
 #' 
@@ -601,8 +508,8 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo",
 #'
 #' @export
 #' 
-compareResults <- function(n.go, adjusted, unadjusted, gene.based.table, 
-    output.dir = tempdir(), type.boxplot = c("All", "Only3"))
+compareResults <- function(n.go, adjusted, unadjusted, gene.based.table, output.dir = tempdir(), 
+    type.boxplot = c("All", "Only3"))
     {
     
     if (!dir.exists(output.dir))
@@ -631,9 +538,9 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
             
             re <- list(adjusted = adjusted, unadjusted = unadjusted)
             
-            vp <- venn.diagram(re, fill = c("red", "blue"), cat.col = c("red", 
-                "blue"), alpha = 0.3, filename = file.path(output.dir, 
-                paste0(names(re)[1], "_", names(re)[2], "_overlap_venn.tiff")))
+            vp <- venn.diagram(re, fill = c("red", "blue"), cat.col = c("red", "blue"), 
+                alpha = 0.3, filename = file.path(output.dir, paste0(names(re)[1], 
+                  "_", names(re)[2], "_overlap_venn.tiff")))
             
             common <- intersect(unadjusted, adjusted)
             
@@ -654,8 +561,7 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                 
                 
                 index2 <- match(In.unadjusted.not.in.adjusted, example.go.unadjusted$gene_set)
-                index2.name <- unique(unlist(example.go.unadjusted[index2, 
-                  ]$All_gene_ensembl))
+                index2.name <- unique(unlist(example.go.unadjusted[index2, ]$All_gene_ensembl))
                 In.un.not.ad <- gene.based.table[match(index2.name, gene.based.table$geneID), 
                   ]$numFeature
                 
@@ -673,42 +579,41 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   gene.based.table$geneID), ]$numFeature
                 
                 adjusted.name <- unique(unlist(example.go.adjusted.by.exon$All_gene_ensembl))
-                cp.all.adjusted <- gene.based.table[match(adjusted.name, 
-                  gene.based.table$geneID), ]$numFeature
+                cp.all.adjusted <- gene.based.table[match(adjusted.name, gene.based.table$geneID), 
+                  ]$numFeature
                 
                 unadjusted.name <- unique(unlist(example.go.unadjusted$All_gene_ensembl))
-                cp.all.unadjusted <- gene.based.table[match(unadjusted.name, 
-                  gene.based.table$geneID), ]$numFeature
+                cp.all.unadjusted <- gene.based.table[match(unadjusted.name, gene.based.table$geneID), 
+                  ]$numFeature
                 
                 type.boxplot <- match.arg(type.boxplot)
                 
                 switch(type.boxplot, Only3 = {
-                  yy <- rbind(cbind(cp.topN.adjusted, rep(paste0("Adjusted_", 
-                    n.go), length(cp.topN.adjusted))), cbind(cp.topN.unadjusted, 
-                    rep(paste0("Unadjusted_", n.go), length(cp.topN.unadjusted))), 
-                    cbind(cp.all.unadjusted, rep("All", length(cp.all.unadjusted))))
+                  yy <- rbind(cbind(cp.topN.adjusted, rep(paste0("Adjusted_", n.go), 
+                    length(cp.topN.adjusted))), cbind(cp.topN.unadjusted, rep(paste0("Unadjusted_", 
+                    n.go), length(cp.topN.unadjusted))), cbind(cp.all.unadjusted, 
+                    rep("All", length(cp.all.unadjusted))))
                   colnames(yy) <- c("y", "grp")
                   yy <- as.data.frame(yy)
                   yy$grp <- factor(yy$grp)
-                  yy$grp <- factor(yy$grp, levels = levels(yy$grp)[c(2, 
-                    1, 3)])
+                  yy$grp <- factor(yy$grp, levels = levels(yy$grp)[c(2, 1, 3)])
                   yy$y <- as.numeric(as.character(yy$y))
                   
                   colnames(yy) <- c("numFeature", "category")
                   
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
-                  p <- plot_ly(yy, x = ~numFeature, color = ~category, 
-                    type = "box") %>% layout(margin = m)
+                  p <- plot_ly(yy, x = ~numFeature, color = ~category, type = "box") %>% 
+                    layout(margin = m)
                   
                   htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
                 }, {
-                  yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", 
-                    length(In.ad.not.un))), cbind(In.un.not.ad, rep("unadjusted.only", 
-                    length(In.un.not.ad))), cbind(cp.topN.adjusted, rep(paste0("top.adjusted.", 
-                    n.go), length(cp.topN.adjusted))), cbind(cp.topN.unadjusted, 
-                    rep(paste0("top.unadjusted.", n.go), length(cp.topN.unadjusted))), 
-                    cbind(cp.all.adjusted, rep("all.adjusted", length(cp.all.adjusted))), 
-                    cbind(cp.all.unadjusted, rep("all.unadjusted", length(cp.all.unadjusted))))
+                  yy <- rbind(cbind(In.ad.not.un, rep("adjusted.only", length(In.ad.not.un))), 
+                    cbind(In.un.not.ad, rep("unadjusted.only", length(In.un.not.ad))), 
+                    cbind(cp.topN.adjusted, rep(paste0("top.adjusted.", n.go), length(cp.topN.adjusted))), 
+                    cbind(cp.topN.unadjusted, rep(paste0("top.unadjusted.", n.go), 
+                      length(cp.topN.unadjusted))), cbind(cp.all.adjusted, rep("all.adjusted", 
+                      length(cp.all.adjusted))), cbind(cp.all.unadjusted, rep("all.unadjusted", 
+                      length(cp.all.unadjusted))))
                   colnames(yy) <- c("y", "grp")
                   yy <- as.data.frame(yy)
                   
@@ -717,8 +622,8 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                   colnames(yy) <- c("numFeature", "category")
                   
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
-                  p <- plot_ly(yy, x = ~numFeature, color = ~category, 
-                    type = "box") %>% layout(margin = m)
+                  p <- plot_ly(yy, x = ~numFeature, color = ~category, type = "box") %>% 
+                    layout(margin = m)
                   
                   htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
                 })
@@ -739,12 +644,11 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                 z <- common
                 
                 venn.res <- makePaddedDataFrame(list(x = x, y = y, z = z))
-                colnames(venn.res) <- c("adjusted.only", "unadjusted.only", 
-                  "common")
+                colnames(venn.res) <- c("adjusted.only", "unadjusted.only", "common")
                 
                 write.table(venn.res, file = file.path(output.dir, "results4venn.csv"), 
-                  quote = FALSE, sep = ",", eol = "\n", na = " ", dec = ".", 
-                  row.names = FALSE, col.names = TRUE)
+                  quote = FALSE, sep = ",", eol = "\n", na = " ", dec = ".", row.names = FALSE, 
+                  col.names = TRUE)
                 
                 
                 temp1 <- dplyr::as_data_frame(example.go.adjusted.by.exon[index1, 
@@ -753,8 +657,7 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table,
                 writeTibble(temp1, file.path(output.dir, "adjustedOnly.csv"))
                 
                 
-                temp2 <- dplyr::as_data_frame(example.go.unadjusted[index2, 
-                  ])
+                temp2 <- dplyr::as_data_frame(example.go.unadjusted[index2, ])
                 
                 writeTibble(temp2, file.path(output.dir, "unadjustedOnly.csv"))
                 
@@ -797,8 +700,8 @@ gene2cat <- function(gene.name, re)
 
 gsa.read.gmt <- function(filename)
 {
-    a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, 
-        fill = TRUE, flush = TRUE, multi.line = FALSE)
+    a <- scan(filename, what = list("", ""), sep = "\t", quote = NULL, fill = TRUE, 
+        flush = TRUE, multi.line = FALSE)
     geneset.names <- a[1][[1]]
     geneset.descriptions <- a[2][[1]]
     dd <- scan(filename, what = "", sep = "\t", quote = NULL)
@@ -874,8 +777,7 @@ reformatdata <- function(re.gene.based)
         re2 <- re
     }
     
-    All.gene.id.based.on.sub_feature <- unique(unlist(strsplit(re2$geneID, 
-        "\\+")))
+    All.gene.id.based.on.sub_feature <- unique(unlist(strsplit(re2$geneID, "\\+")))
     
     All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub_feature))
     names(All.gene.id.index) <- All.gene.id.based.on.sub_feature
@@ -896,67 +798,18 @@ reformatdata <- function(re.gene.based)
     
 }
 
-heatmap_wPCA = function(Data, g_level = NULL)
-{
-    
-    Data.pca = prcomp(t(Data))
-    hmcol <- rev(colorRampPalette(brewer.pal(10, "RdBu"))(256))
-    
-    if (is.null(g_level))
-    {
-        type_level = 1:ncol(Data)
-        col_level = "black"
-        
-        with(data.frame(Data.pca$x), scatter3D(PC1, PC2, PC3, colvar = NULL, 
-            type = "h", ticktype = "detailed", bty = "b2", cex = 1, xlab = "PC 1", 
-            ylab = "PC 2", zlab = "PC 3", theta = 40, phi = 40, pch = type_level, 
-            col = col_level, main = "Principal component analysis"))
-        
-        
-        
-        with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, 
-            colnames(Data), col = "black", add = TRUE, colkey = FALSE, 
-            cex = 0.5))
-    } else
-    {
-        type_level = 1:ncol(Data)
-        TEMP = factor(g_level)
-        uniq_label = levels(TEMP)
-        levels(TEMP) = hmcol[ceiling(seq(length.out = length(levels(TEMP)), 
-            from = 1, to = 256))]
-        col_level = as.character(TEMP)
-        uniq_col = levels(TEMP)
-        
-        Data.pca = prcomp(t(Data))
-        with(data.frame(Data.pca$x), scatter3D(PC1, PC2, PC3, colvar = NULL, 
-            type = "h", ticktype = "detailed", bty = "b2", cex = 1, xlab = "PC 1", 
-            ylab = "PC 2", zlab = "PC 3", theta = 40, phi = 40, pch = type_level, 
-            col = col_level, main = "Principal component analysis"))
-        
-        legend("topright", legend = uniq_label, pch = type_level, col = uniq_col, 
-            cex = 1, inset = c(0.02))
-        
-        with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, 
-            colnames(Data), col = "black", add = TRUE, colkey = FALSE, 
-            cex = 0.5))
-    }
-}
-
 writegototable <- function(GO_re, Output_file)
 {
     dataset2 <- GO_re
-    dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, 
-        is.list)], function(x) sapply(x, function(y) paste(unlist(y), collapse = ", ")))
+    dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, is.list)], 
+        function(x) sapply(x, function(y) paste(unlist(y), collapse = ", ")))
     
-    write.table(dataset2, file = Output_file, row.names = FALSE, quote = FALSE, 
-        sep = "\t")
+    write.table(dataset2, file = Output_file, row.names = FALSE, quote = FALSE, sep = "\t")
 }
 
-pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit, 
-    method, repcnt, use.genes.without.cat)
+pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit, method, 
+    repcnt, use.genes.without.cat)
     {
-    ################# Input pre-processing and validation ################### Do some
-    ################# validation of input variables
     if (any(!test.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
     {
         stop("Invalid gene_set specified.  Valid categories are GO:CC, GO:BP, GO:MF or KEGG")
@@ -967,8 +820,6 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         {
             stop("You must specify the genome and gene ID format when automatically fetching gene to GO gene_set mappings.")
         }
-        # If we're using user specified mappings, this obviously isn't a
-        # problem
         genome <- "dummy"
         id <- "dummy"
     }
@@ -980,37 +831,19 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
     {
         stop("Was expecting a dataframe or a list mapping categories to genes.  Check gene2cat input and try again.")
     }
-    
-    # Factors are evil
     pwf <- unfactor(pwf)
     gene2cat <- unfactor(gene2cat)
-    
-    ###################### Data fetching and processing ########################
     if (is.null(gene2cat))
     {
-        # When we fetch the data using getgo it will be in the list format
         message("Fetching GO annotations...")
         gene2cat <- getGeneSet(rownames(pwf), genome, id, fetch.cats = test.cats)
-        # names(gene2cat) <- rownames(pwf)
-        
-        # cat('OK') Do the two rebuilds to remove any nulls
         cat2gene <- reversemapping(gene2cat)
         gene2cat <- reversemapping(cat2gene)
-        
-        # print(cat2gene) print(gene2cat)
-        
     } else
     {
-        # The gene2cat input accepts a number of formats, we need to check each
-        # of them in term
         message("Using manually entered categories.")
-        # The options are a flat mapping (that is a data frame or matrix) or a
-        # list, where the list can be either gene->categories or
-        # gene_set->genes
         if (class(gene2cat) != "list")
         {
-            # it's not a list so it must be a data.frame, work out which column
-            # contains the genes
             genecol_sum <- as.numeric(apply(gene2cat, 2, function(u)
             {
                 sum(u %in% rownames(pwf))
@@ -1033,40 +866,21 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
             {
                 othercol <- 2
             }
-            # Now put it into our delicious listy format
             gene2cat <- split(gene2cat[, othercol], gene2cat[, genecol])
-            # Do the appropriate builds
             cat2gene <- reversemapping(gene2cat)
             gene2cat <- reversemapping(cat2gene)
-            
         }
-        
         gene2cat <- gene2cat[-which(is.na(names(gene2cat)))]
-        
-        # !!!! The following conditional has been flagged as a potential issue
-        # when using certain types of input where the gene_set names are the
-        # same as gene names (which seems like something you should avoid
-        # anyway...).  Leave it for now !!!!  We're now garunteed to have a
-        # list (unless the user screwed up the input) but it could be
-        # gene_set->genes rather than the gene->categories that we want.
         if (sum(unique(unlist(gene2cat, use.names = FALSE)) %in% rownames(pwf)) > 
             sum(unique(names(gene2cat)) %in% rownames(pwf)))
             {
             gene2cat <- reversemapping(gene2cat)
         }
-        # Alright, we're garunteed a list going in the direction we want now.
-        # Throw out genes which we will not use
         gene2cat <- gene2cat[names(gene2cat) %in% rownames(pwf)]
-        
         if (length(gene2cat) > 0)
         {
-            
-            # Rebuild because it's a fun thing to do
             cat2gene <- reversemapping(gene2cat)
             gene2cat <- reversemapping(cat2gene)
-            
-            ## make sure we remove duplicate entries .. e.g. see
-            ## http://permalink.gmane.org/gmane.science.biology.informatics.conductor/46876
             cat2gene <- lapply(cat2gene, function(x)
             {
                 unique(x)
@@ -1077,43 +891,25 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
             })
         } else
         {
-            
             cat("There is no match between gene names of gene2pathway input and gene names of the data set under analysis,please change gene2pathway input\n\n")
-            
             return(NA)
-            
         }
-        
     }
-    
-    # Add option to choose gene set by its size gene2cat <-
-    # getGeneSetBySize(gene2cat, go.size.limit)
-    
     cat2gene <- getGeneSetBySize(cat2gene, go.size.limit)
-    
     if (length(gene2cat) == 0)
     {
         stop("No gene set is satisfied by the selected size. Change gene set or choose new size.")
     }
-    
     gene2cat <- reversemapping(cat2gene)
     cat2gene <- reversemapping(gene2cat)
-    
-    
     nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
     if (nafrac > 50)
     {
         warning(paste("Missing length data for ", round(nafrac), "% of genes.  Accuarcy of GO test will be reduced.", 
             sep = ""))
     }
-    # Give the genes with unknown length the weight used by the median gene
-    # (not the median weighting!)
     pwf$pwf[is.na(pwf$pwf)] <- pwf$pwf[match(sort(pwf$bias.data[!is.na(pwf$bias.data)])[ceiling(sum(!is.na(pwf$bias.data))/2)], 
         pwf$bias.data)]
-    
-    
-    
-    # Remove all the genes with unknown GOterms
     unknown_go_terms = nrow(pwf) - length(gene2cat)
     if ((!use.genes.without.cat) && unknown_go_terms > 0)
     {
@@ -1122,276 +918,157 @@ pathwaysplice <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit,
         message("This was the default behavior for version 1.15.1 and earlier.")
         pwf = pwf[rownames(pwf) %in% names(gene2cat), ]
     }
-    
-    # A few variables are always useful so calculate them
     cats <- names(cat2gene)
     DE <- rownames(pwf)[pwf$DEgenes == 1]
     num_de <- length(DE)
     num_genes <- nrow(pwf)
-    pvals <- data.frame(gene_set = cats, over_represented_pvalue = NA, 
-        under_represented_pvalue = NA, stringsAsFactors = FALSE, numSIGInCat = NA, 
-        numInCat = NA)
+    pvals <- data.frame(gene_set = cats, over_represented_pvalue = NA, under_represented_pvalue = NA, 
+        stringsAsFactors = FALSE, numSIGInCat = NA, numInCat = NA)
     if (method == "Sampling")
     {
-        # We need to know the number of DE genes in each gene_set, make this as
-        # a mask that we can use later...
         num_DE_mask <- rep(0, length(cats))
         a <- table(unlist(gene2cat[DE], FALSE, FALSE))
-        
         num_DE_mask[match(names(a), cats)] <- as.numeric(a)
         num_DE_mask <- as.integer(num_DE_mask)
-        # We have to ensure that genes not associated with a gene_set are
-        # included in the simulation, to do this they need an empty entry in
-        # the gene2cat list
         gene2cat <- gene2cat[rownames(pwf)]
         names(gene2cat) <- rownames(pwf)
         message("Running the simulation...")
-        # Now do the actual simulating
         lookup <- matrix(0, nrow = repcnt, ncol = length(cats))
         for (i in 1:repcnt)
         {
-            # A more efficient way of doing weighted random sampling without
-            # replacment than the built in function The order(runif...)[1:n] bit
-            # picks n genes at random, weighting them by the PWF The
-            # table(as.character(unlist(...))) bit then counts the number of times
-            # this random set occured in each gene_set
             a <- table(as.character(unlist(gene2cat[order(runif(num_genes)^(1/pwf$pwf), 
                 decreasing = TRUE)[1:num_de]], FALSE, FALSE)))
             lookup[i, match(names(a), cats)] <- a
             pp(repcnt)
         }
         message("Calculating the p-values...")
-        # The only advantage of the loop is it uses less memory...  for(i in
-        # 1:length(cats)){
-        # pvals[i,2:3]=c((sum(lookup[,i]>=num_DE_mask[i])+1)/(repcnt+1),(sum(lookup[,i]<=num_DE_mask[i])+1)/(repcnt+1))
-        # pp(length(cats)) }
-        pvals[, 2] <- (colSums(lookup >= outer(rep(1, repcnt), num_DE_mask)) + 
-            1)/(repcnt + 1)
-        pvals[, 3] <- (colSums(lookup <= outer(rep(1, repcnt), num_DE_mask)) + 
-            1)/(repcnt + 1)
+        pvals[, 2] <- (colSums(lookup >= outer(rep(1, repcnt), num_DE_mask)) + 1)/(repcnt + 
+            1)
+        pvals[, 3] <- (colSums(lookup <= outer(rep(1, repcnt), num_DE_mask)) + 1)/(repcnt + 
+            1)
     }
     if (method == "Wallenius")
     {
         message("Calculating the p-values...")
-        # All these things are just to make stuff run faster, mostly because
-        # comparison of integers is faster than string comparison
         degenesnum <- which(pwf$DEgenes == 1)
-        # Turn all genes into a reference to the pwf object
-        
         cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
-        # This value is used in every calculation, by storing it we need only
-        # calculate it once
         alpha <- sum(pwf$pwf)
-        
-        # Each gene_set will have a different weighting so needs its own test
         pvals[, 2:3] <- t(sapply(cat2genenum, function(u)
         {
-            # The number of DE genes in this gene_set
             num_de_incat <- sum(degenesnum %in% u)
-            
-            # The total number of genes in this gene_set
             num_incat <- length(u)
-            
-            # This is just a quick way of calculating weight=avg(PWF within
-            # gene_set)/avg(PWF outside of gene_set)
             avg_weight <- mean(pwf$pwf[u])
             weight <- (avg_weight * (num_genes - num_incat))/(alpha - num_incat * 
                 avg_weight)
-            if (num_incat == num_genes) 
-                {
-                  weight <- 1
-                }  #case for the root GO terms
-            
-            # Now calculate the sum of the tails of the Wallenius distribution (the
-            # p-values)
-            
-            c(dWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, 
-                num_de, weight) + pWNCHypergeo(num_de_incat, num_incat, 
-                num_genes - num_incat, num_de, weight, lower.tail = FALSE), 
-                pWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, 
-                  num_de, weight))
+            if (num_incat == num_genes)
+            {
+                weight <- 1
+            }
+            c(dWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, num_de, 
+                weight) + pWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, 
+                num_de, weight, lower.tail = FALSE), pWNCHypergeo(num_de_incat, num_incat, 
+                num_genes - num_incat, num_de, weight))
         }))
     }
     if (method == "Hypergeometric")
     {
         message("Calculating the p-values...")
-        # All these things are just to make stuff run faster, mostly because
-        # comparison of integers is faster than string comparison
         degenesnum <- which(pwf$DEgenes == 1)
-        # Turn all genes into a reference to the pwf object
         cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
-        # Simple hypergeometric test, one gene_set at a time
         pvals[, 2:3] <- t(sapply(cat2genenum, function(u)
         {
-            # The number of DE genes in this gene_set
             num_de_incat <- sum(degenesnum %in% u)
-            # The total number of genes in this gene_set
             num_incat <- length(u)
-            # Calculate the sum of the tails of the hypergeometric distribution
-            # (the p-values)
-            c(dhyper(num_de_incat, num_incat, num_genes - num_incat, num_de) + 
-                phyper(num_de_incat, num_incat, num_genes - num_incat, 
-                  num_de, lower.tail = FALSE), phyper(num_de_incat, num_incat, 
-                num_genes - num_incat, num_de))
+            c(dhyper(num_de_incat, num_incat, num_genes - num_incat, num_de) + phyper(num_de_incat, 
+                num_incat, num_genes - num_incat, num_de, lower.tail = FALSE), phyper(num_de_incat, 
+                num_incat, num_genes - num_incat, num_de))
         }))
     }
-    
-    # Populate the count columns...
     degenesnum <- which(pwf$DEgenes == 1)
     cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
     pvals[, 4:5] <- t(sapply(cat2genenum, function(u)
     {
         c(sum(degenesnum %in% u), length(u))
     }))
-    
     DE_pwf <- rownames(pwf[degenesnum, ])
-    
     pvals.6 <- sapply(cat2gene, function(u, DE_pwf)
     {
-        # c(sum(degenesnum%in%u),length(u))
-        # c(rownames(pwf)[u[-which(is.na(u))]])
         x <- u[which(u %in% DE_pwf)]
         x
     }, DE_pwf)
-    
     xxx <- match2Genome(genome)
-    
     pvals.6.gene.symbol <- sapply(pvals.6, function(u, xxx)
     {
         y <- xxx[match(u, as.character(xxx[, 2])), 1]
         y
     }, xxx)
-    
     gene_pwf <- rownames(pwf)
-    
     pvals.7 <- sapply(cat2gene, function(u, gene_pwf)
     {
-        # c(sum(degenesnum%in%u),length(u))
-        # c(rownames(pwf)[u[-which(is.na(u))]])
         x <- u[which(u %in% gene_pwf)]
         x
     }, gene_pwf)
-    
-    # xxx <- match2Genome(genome)
-    
     pvals.7.gene.symbol <- sapply(pvals.7, function(u, xxx)
     {
         y <- xxx[match(u, as.character(xxx[, 2])), 1]
         y
     }, xxx)
-    
-    
-    # Convert list to data frame
     pvals.6.df <- list_to_df(pvals.6)
     pvals.6.gene.symbol.df <- list_to_df(pvals.6.gene.symbol)
-    
     pvals.7.df <- list_to_df(pvals.7)
     pvals.7.gene.symbol.df <- list_to_df(pvals.7.gene.symbol)
-    
     dataset2 <- pvals.6.gene.symbol.df
-    dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, 
-        is.list)], function(x) sapply(x, function(y) paste(unlist(y), collapse = ", ")))
-    
+    dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, is.list)], 
+        function(x) sapply(x, function(y) paste(unlist(y), collapse = ", ")))
     temp.gene.name <- unique(apply(dataset2[, 2], 1, c))
-    temp.gene.name.2 <- unique(gdata::trim(unlist(strsplit(temp.gene.name, 
-        split = ","))))
-    
+    temp.gene.name.2 <- unique(gdata::trim(unlist(strsplit(temp.gene.name, split = ","))))
     DE_from_GO <- temp.gene.name.2
-    
     colnames(pvals.6.df) <- c("gene_set", "SIGgene_ensembl")
     colnames(pvals.6.gene.symbol.df) <- c("gene_set", "SIGgene_symbol")
-    
     colnames(pvals.7.df) <- c("gene_set", "All_gene_ensembl")
     colnames(pvals.7.gene.symbol.df) <- c("gene_set", "All_gene_symbol")
-    
-    # Finally, sort by p-value
     pvals <- pvals[order(pvals$over_represented_pvalue), ]
-    
-    # Supplement the table with the GO term name and ontology group but
-    # only if the enrichment categories are actually GO terms
     if (any(grep("^GO:", pvals$gene_set)))
     {
-        GOnames <- select(GO.db, keys = pvals$gene_set, columns = c("TERM", 
-            "ONTOLOGY"))[, 2:3]
-        
-        # GOnames <- select(GO.db, keys = pvals$gene_set, columns =
-        # c('Description', 'ONTOLOGY'))[, 2:3]
-        
+        GOnames <- select(GO.db, keys = pvals$gene_set, columns = c("TERM", "ONTOLOGY"))[, 
+            2:3]
         colnames(GOnames) <- tolower(colnames(GOnames))
-        
         colnames(GOnames)[colnames(GOnames) == "term"] <- "description"
-        
         pvals <- cbind(pvals, GOnames)
-        
-        
     }
-    
-    # And return
     re.2 <- merge(pvals, pvals.6.df, by = "gene_set", sort = FALSE)
-    
     re.3 <- merge(re.2, pvals.6.gene.symbol.df, by = "gene_set", sort = FALSE)
-    
     re.4 <- merge(re.3, pvals.7.df, by = "gene_set", sort = FALSE)
-    
     re.5 <- merge(re.4, pvals.7.gene.symbol.df, by = "gene_set", sort = FALSE)
-    
-    
-    # pvals.4 <- list(GO = pvals.3, DE_GO = DE_from_GO, cat2gene =
-    # cat2gene)
-    
     re.6 <- list(GO = re.5, DE_GO = DE_from_GO, cat2gene = cat2gene)
-    
     return(re.6)
-    
 }
 
-getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", 
-    "GO:MF"))
-    {
-    # Check for valid input
+getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP", "GO:MF"))
+{
     if (any(!fetch.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
     {
         stop("Invaled gene_set specified.  Categories can only be GO:CC, GO:BP, GO:MF or KEGG")
     }
-    # Convert from genome ID to org.__.__.db format
-    orgstring <- as.character(.ORG_PACKAGES[match(gsub("[0-9]+", "", genome), 
-        names(.ORG_PACKAGES))])
-    # Multimatch or no match
+    orgstring <- as.character(.ORG_PACKAGES[match(gsub("[0-9]+", "", genome), names(.ORG_PACKAGES))])
     if (length(orgstring) != 1)
     {
         stop("Couldn't grab GO categories automatically.  Please manually specify.")
     }
-    # Load the library
     library(paste(orgstring, "db", sep = "."), character.only = TRUE)
-    # What is the default ID that the organism package uses?
     coreid <- strsplit(orgstring, "\\.")[[1]][3]
-    
-    # Now we need to convert it into the naming convention used by the
-    # organism packages
     userid <- as.character(.ID_MAP[match(id, names(.ID_MAP))])
-    # Multimatch or no match
     if (is.na(userid) | (length(userid) != 1))
     {
         stop("Couldn't grab GO categories automatically.  Please manually specify.")
     }
-    # The (now loaded) organism package contains a mapping between the
-    # internal ID and whatever the default is (usually eg), the rest of
-    # this function is about changing that mapping to point from categories
-    # to the ID specified Fetch the mapping in its current format Because
-    # GO is a directed graph, we need to get not just the genes associated
-    # with each ID, but also those associated with its children.  GO2ALLEGS
-    # does this.
     core2cat <- NULL
     if (length(grep("^GO", fetch.cats)) != 0)
     {
-        # Get the name of the function which maps gene ids to go terms usually
-        # this will be 'GO2ALLEG'
         gomapFunction <- .ORG_GOMAP_FUNCTION[orgstring]
         if (is.na(gomapFunction)) 
             gomapFunction <- .ORG_GOMAP_FUNCTION["default"]
         x <- toTable(get(paste(orgstring, gomapFunction, sep = "")))
-        # Keep only those ones that we specified and keep only the names
-        # core2cat=x[x$Ontology%in%gsub('^GO:','',fetch.cats),1:2]
         x[!x$Ontology %in% gsub("^GO:", "", fetch.cats), 2] <- "Other"
         core2cat <- x[, 1:2]
         colnames(core2cat) <- c("gene_id", "gene_set")
@@ -1399,7 +1076,6 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP",
     if (length(grep("^KEGG", fetch.cats)) != 0)
     {
         x <- toTable(get(paste(orgstring, "PATH", sep = "")))
-        # Either add it to existing table or create a new one
         colnames(x) <- c("gene_id", "gene_set")
         if (!is.null(core2cat))
         {
@@ -1409,57 +1085,31 @@ getGeneSet <- function(genes, genome, id, fetch.cats = c("GO:CC", "GO:BP",
             core2cat <- x
         }
     }
-    
-    # Now we MAY have to convert the 'gene_id' column to the format we are
-    # using
     if (coreid != userid)
     {
-        # The mapping between user id and core id, don't use the
-        # <USER_ID>2<CORE_ID> object as the naming is not always consistent
         user2core <- toTable(get(paste(orgstring, userid, sep = "")))
-        # Throw away any user ID that doesn't appear in core2cat
         user2core <- user2core[user2core[, 1] %in% core2cat[, 1], ]
-        # Make a list version of core2cat, we'll need it
         list_core2cat <- split(core2cat[, 2], core2cat[, 1])
-        # Now we need to replicate the core IDs that need replicating
         list_core2cat <- list_core2cat[match(user2core[, 1], names(list_core2cat))]
-        # Now we can replace the labels on this list with the user ones from
-        # user2core, but there will be duplicates, so we have to unlist, label,
-        # then relist
-        user2cat <- split(unlist(list_core2cat, FALSE, FALSE), rep(user2core[, 
-            2], sapply(list_core2cat, length)))
-        # Now we only want each gene_set listed once for each entry...
+        user2cat <- split(unlist(list_core2cat, FALSE, FALSE), rep(user2core[, 2], 
+            sapply(list_core2cat, length)))
         user2cat <- sapply(user2cat, unique)
-        ### In case you don't believe that this works as it should, here is the
-        ### slow as all hell way for comparison... Make first list
-        ### list_user2core=split(user2core[,1],user2core[,2]) Make the second
-        ### list_core2cat=split(core2cat[,2],core2cat[,1]) Go through each entry
-        ### in first list and expand using second...
-        ### user2cat=sapply(list_user2core,function(u){unique(unlist(list_core2cat[u],FALSE,FALSE))})
-        
     } else
     {
-        # We don't need to convert anything (WOO!), so just make it into a list
         user2cat <- split(core2cat[, 2], core2cat[, 1])
         user2cat <- sapply(user2cat, unique)
     }
-    # remove any empty strings
     user2cat <- lapply(user2cat, function(x)
     {
         if (length(x) > 1) 
             x = x[x != "Other"]
         x
     })
-    
-    ## we don't like case sensitivity
     names(user2cat) <- toupper(names(user2cat))
     gene2go <- user2cat[toupper(genes)]
-    
     return(gene2go)
 }
 
-# Description: Prints progress through a loop copy from Matthew Young's
-# goseq
 pp <- function(total, count, i = i)
 {
     if (missing(count))
@@ -1475,135 +1125,81 @@ pp <- function(total, count, i = i)
 
 outputGoBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 {
-    
-    # select GO term(10<=numInCat<=300 and BP only)
-    
-    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & 
-        Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 300 & Re.Go.adjusted.by.exon.SJ[[1]]$ontology == 
-        "BP")
-    
+    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 
+        300 & Re.Go.adjusted.by.exon.SJ[[1]]$ontology == "BP")
     Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ[[1]][index.select, 
         ]
-    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, 
-        -3]
-    temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, 
-        scientific = TRUE, digits = 2)
+    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, -3]
+    temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, scientific = TRUE, 
+        digits = 2)
     Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue <- temp
-    
     rank.value.by.over_represented_pvalue <- rank(as.numeric(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue), 
         ties.method = "min")
-    
-    Re.Go.adjusted.by.exon.SJ.select <- cbind(Re.Go.adjusted.by.exon.SJ.select, 
-        rank.value.by.over_represented_pvalue)
-    
-    # Re.Go.adjusted.by.exon.SJ.select<-format(Re.Go.adjusted.by.exon.SJ.select,scientific
-    # = TRUE,digits=2)
-    
+    Re.Go.adjusted.by.exon.SJ.select <- cbind(Re.Go.adjusted.by.exon.SJ.select, rank.value.by.over_represented_pvalue)
     return(Re.Go.adjusted.by.exon.SJ.select)
-    
 }
 
 outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 {
-    
-    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & 
-        Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 300)
-    
+    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 
+        300)
     Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ[[1]][index.select, 
         ]
-    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, 
-        -3]
-    temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, 
-        scientific = TRUE, digits = 2)
+    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, -3]
+    temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, scientific = TRUE, 
+        digits = 2)
     Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue <- temp
-    
     rank.value.by.over_represented_pvalue <- rank(as.numeric(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue), 
         ties.method = "min")
-    
-    Re.Go.adjusted.by.exon.SJ.select <- cbind(Re.Go.adjusted.by.exon.SJ.select, 
-        rank.value.by.over_represented_pvalue)
-    
-    # Re.Go.adjusted.by.exon.SJ.select<-format(Re.Go.adjusted.by.exon.SJ.select,scientific
-    # = TRUE,digits=2)
-    
+    Re.Go.adjusted.by.exon.SJ.select <- cbind(Re.Go.adjusted.by.exon.SJ.select, rank.value.by.over_represented_pvalue)
     return(Re.Go.adjusted.by.exon.SJ.select)
-    
 }
-
-# res11 <- getStaisitcs4Go(res1,gene.based.table)
 
 getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
 {
-    
     GO.data <- GO.wall.DE_interest[[1]]
-    
     y <- as.list(GO.data$SIGgene_ensembl)
-    
     re <- lapply(1:length(y), function(u, y, mds.11.sample)
     {
-        
         yy <- y[[u]]
-        
         y.id <- trim(c(unlist(strsplit(y[[u]], split = ","))))
-        
         if (length(y.id) != 0)
         {
-            
             yyy <- mean(as.numeric(unlist(mds.11.sample[match(y.id, mds.11.sample$geneID), 
                 ]$numFeature)))
-            
         } else
         {
             yyy <- 0
         }
-        
         yyy
-        
     }, y, mds.11.sample)
-    
     re2 <- list_to_df(re)
-    
     GO.data.1 <- cbind(GO.data, re2)
     GO.data.2 <- GO.data.1[, -(dim(GO.data.1)[2] - 1)]
     colnames(GO.data.2)[dim(GO.data.2)[2]] <- "Ave_value_DE"
-    
     cat2gene <- GO.wall.DE_interest[[3]]
-    
     rre <- lapply(1:length(cat2gene), function(u, cat2gene, mds.11.sample)
     {
-        
         yy <- cat2gene[[u]]
-        
         y.id <- yy
-        
         if (length(y.id) != 0)
         {
-            
             yyy <- mean(as.numeric(unlist(mds.11.sample[match(y.id, mds.11.sample$geneID), 
                 ]$numFeature)), na.rm = TRUE)
-            
         } else
         {
             yyy <- 0
         }
-        
         yyy
-        
     }, cat2gene, mds.11.sample)
     names(rre) <- names(cat2gene)
     rre2 <- list_to_df(rre)
-    
     colnames(rre2) <- c("gene_set", "Ave_value_all_gene")
-    
     GO.data.3 <- merge(GO.data.2, rre2, by = "gene_set", sort = FALSE)
-    
     GO.data.3$Ave_value_DE <- unlist(GO.data.3$Ave_value_DE)
     GO.data.3$Ave_value_all_gene <- unlist(GO.data.3$Ave_value_all_gene)
-    
     re3 <- list(GO.wall.DE_interest = GO.data.3, pwf.DE_interest = GO.wall.DE_interest[[2]])
-    
     return(re3)
-    
 }
 
 overlap_ratio <- function(x, y)
@@ -1664,11 +1260,9 @@ match2Genome <- function(genome_id)
 reformatpath <- function(dir.name)
 {
     CheckOPS <- Sys.info()[["sysname"]]
-    
     if (CheckOPS == "Darwin")
     {
         temp <- unlist(strsplit(dir.name, split = "\\/"))
-        
         if (!is.na(temp[3] == "H_driver"))
         {
             if (temp[3] == "H_driver")
@@ -1678,99 +1272,66 @@ reformatpath <- function(dir.name)
                 dir.name <- do.call("file.path", as.list(temp))
             }
         }
-        
     }
-    
     return(dir.name)
 }
 
 getGeneSetBySize <- function(user2cat, go.size.limit)
 {
-    
     gene2go <- user2cat
     gene2go.select <- lapply(gene2go, function(x)
     {
         x = x[x != "Other"]
         x
     })
-    
-    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 
-        0]
-    
+    gene2go.select.1 <- gene2go.select[lapply(gene2go.select, length) > 0]
     lower.size <- go.size.limit[1]
     upper.size <- go.size.limit[2]
-    
     if (is.finite(lower.size) & is.finite(upper.size))
     {
-        gene2go.select.2 <- gene2go.select.1[lapply(gene2go.select.1, length) > 
-            lower.size & lapply(gene2go.select.1, length) <= upper.size]
-        
+        gene2go.select.2 <- gene2go.select.1[lapply(gene2go.select.1, length) > lower.size & 
+            lapply(gene2go.select.1, length) <= upper.size]
     } else
     {
         gene2go.select.2 <- gene2go.select.1
     }
-    
     return(gene2go.select.2)
-    
 }
 
-# res <- PathwaySplice:::makeFeatureTable(res)
 makeFeatureTable <- function(jscs, use.multigene.aggregates = FALSE)
 {
     temp <- fData(jscs)
-    
     temp2 <- temp[which(temp$testable == TRUE), ]
-    
     index.1 <- which(colnames(temp2) %in% c("geneID"))
     index.2 <- which(colnames(temp2) %in% c("countbinID"))
-    
     index.3 <- which(colnames(temp2) %in% c("pvalue"))
-    
     temp3 <- temp2[, c(index.1, index.2, index.3)]
-    
     temp3 <- rapply(temp3, as.character, classes = "factor", how = "replace")
-    
     if (use.multigene.aggregates == FALSE)
     {
         temp3 <- temp3[-grep("\\+", temp3$geneID), ]
     }
-    
     row.names(temp3) = seq(1, dim(temp3)[1], 1)
-    
     return(temp3)
 }
 
-nullpSplice = function(DEgenes, genome, id, bias.data = NULL, plot.fit = TRUE, 
-    binsize = "auto")
-    {
-    # Input Checking
+nullpSplice = function(DEgenes, genome, id, bias.data = NULL, plot.fit = TRUE, binsize = "auto")
+{
     if (!is.null(bias.data) & length(bias.data) != length(DEgenes))
     {
         stop("bias.data vector must have the same length as DEgenes vector!")
     }
-    # Factors cause strange things to happen, remove them if they exist
     bias.data = unfactor(bias.data)
     DEgenes = unfactor(DEgenes)
-    
-    # Fetch length data from geneLenDataBase
     if (is.null(bias.data))
     {
         bias.data = getlength(names(DEgenes), genome, id)
     }
-    
-    # Fit a spline to the binary vector of DE calls vs gene length May not
-    # have bias data for some of the entries, return NA at those positions
     pwf = rep(NA, length(DEgenes))
     w = !is.na(bias.data)
     pwf[w] = makespline(bias.data[w], DEgenes[w])
-    
-    # Make a data frame which contains all the data used to make the fit
-    # and the fit itself
-    out = data.frame(DEgenes = DEgenes, bias.data = bias.data, pwf = pwf, 
-        stringsAsFactors = FALSE)
+    out = data.frame(DEgenes = DEgenes, bias.data = bias.data, pwf = pwf, stringsAsFactors = FALSE)
     rownames(out) = names(DEgenes)
-    
-    # Plot the PWF if the arument has been specified
     if (plot.fit)
     {
         plotPwfSplice(out, binsize)
@@ -1781,53 +1342,32 @@ nullpSplice = function(DEgenes, genome, id, bias.data = NULL, plot.fit = TRUE,
 plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2, xlab = "Biased Data in <binsize> gene bins.", 
     ylab = "Proportion of significant genes", ...)
     {
-    # We shouldn't try and plot NAs obviously...
     w = !is.na(pwf$bias.data)
     o = order(pwf$bias.data[w])
-    # What is the total range in the fit?
     rang = max(pwf$pwf, na.rm = TRUE) - min(pwf$pwf, na.rm = TRUE)
     if (rang == 0 & binsize == "auto") 
         binsize = 1000
     if (binsize == "auto")
     {
-        # A low number of starting genes to bin, usually 100
         binsize = max(1, min(100, floor(sum(w) * 0.08)))
         resid = rang
-        # Turn off warnings till we've worked out what we're doing
         oldwarn = options()$warn
         options(warn = -1)
-        # Keep increasing the number of genes in each bin until the scatter
-        # around the lines reaches the cutoff. Stop if we reach only 10 bins
-        # for the entire plot
         while (binsize <= floor(sum(w) * 0.1) & resid/rang > 0.001)
         {
             binsize = binsize + 100
-            # Assign each gene a 'bin number'
             splitter = ceiling(1:length(pwf$DEgenes[w][o])/binsize)
-            # Determine the percentage DE in each bin
             de = sapply(split(pwf$DEgenes[w][o], splitter), mean)
-            # Determine the average length in each bin
-            binlen = sapply(split(as.numeric(pwf$bias.data[w][o]), splitter), 
-                mean)
-            # Calculate the residuals, how much the binned data deviates from the
-            # PWF
-            resid = sum((de - approx(pwf$bias.data[w][o], pwf$pwf[w][o], 
-                binlen)$y)^2)/length(binlen)
+            binlen = sapply(split(as.numeric(pwf$bias.data[w][o]), splitter), mean)
+            resid = sum((de - approx(pwf$bias.data[w][o], pwf$pwf[w][o], binlen)$y)^2)/length(binlen)
         }
         options(warn = oldwarn)
     } else
     {
-        # Assign each gene a 'bin number'
         splitter = ceiling(1:length(pwf$DEgenes[w][o])/binsize)
-        # Determine the percentage DE in each bin
         de = sapply(split(pwf$DEgenes[w][o], splitter), mean)
-        # Determine the average length in each bin
-        binlen = sapply(split(as.numeric(pwf$bias.data[w][o]), splitter), 
-            mean)
+        binlen = sapply(split(as.numeric(pwf$bias.data[w][o]), splitter), mean)
     }
-    # Now we've settled on a binsize, plot it Did the user specify the
-    # labels?  If so we can't put in the defaults or they'll be used twice
-    # and errors result.
     xlab = gsub("<binsize>", as.character(binsize), xlab)
     if ("xlab" %in% names(list(...)))
     {
@@ -1845,31 +1385,21 @@ plotPwfSplice = function(pwf, binsize, pwf_col = 3, pwf_lwd = 2, xlab = "Biased 
     {
         plot(binlen, de, xlab = xlab, ylab = ylab, ...)
     }
-    # Add the PWF
     lines(pwf$bias.data[w][o], pwf$pwf[w][o], col = pwf_col, lwd = pwf_lwd)
 }
 
-# res.reforamt <- PathwaySplice:::reformatPathwayOut(res)
-
 reformatPathwayOut <- function(pathway.in)
 {
-    
     res <- dplyr::as_data_frame(pathway.in$GO)
-    
     res
-    
 }
-
-# PathwaySplice:::writeTibble(res.reforamt)
 
 writeTibble <- function(tibble.input, output.file.name = tempfile())
 {
-    
     if (!dir.exists(dirname(output.file.name)))
     {
         dir.create(dirname(output.file.name), recursive = TRUE)
     }
-    
     flatten_list = function(x)
     {
         if (typeof(x) != "list")
@@ -1878,7 +1408,5 @@ writeTibble <- function(tibble.input, output.file.name = tempfile())
         }
         sapply(x, function(y) paste(y, collapse = " | "))
     }
-    
     tibble.input %>% mutate_all(funs(flatten_list)) %>% write.csv(output.file.name)
-    
 }
