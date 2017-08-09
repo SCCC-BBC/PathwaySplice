@@ -65,6 +65,50 @@ makeExample <- function(feature.table, num.gene)
   }
 }
 
+heatmap_wPCA = function(Data, g_level = NULL)
+{
+  
+  Data.pca = prcomp(t(Data))
+  hmcol <- rev(colorRampPalette(brewer.pal(10, "RdBu"))(256))
+  
+  if (is.null(g_level))
+  {
+    type_level = 1:ncol(Data)
+    col_level = "black"
+    
+    with(data.frame(Data.pca$x), scatter3D(PC1, PC2, PC3, colvar = NULL, type = "h", 
+                                           ticktype = "detailed", bty = "b2", cex = 1, xlab = "PC 1", ylab = "PC 2", 
+                                           zlab = "PC 3", theta = 40, phi = 40, pch = type_level, col = col_level, 
+                                           main = "Principal component analysis"))
+    
+    
+    
+    with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, colnames(Data), 
+                                        col = "black", add = TRUE, colkey = FALSE, cex = 0.5))
+  } else
+  {
+    type_level = 1:ncol(Data)
+    TEMP = factor(g_level)
+    uniq_label = levels(TEMP)
+    levels(TEMP) = hmcol[ceiling(seq(length.out = length(levels(TEMP)), from = 1, 
+                                     to = 256))]
+    col_level = as.character(TEMP)
+    uniq_col = levels(TEMP)
+    
+    Data.pca = prcomp(t(Data))
+    with(data.frame(Data.pca$x), scatter3D(PC1, PC2, PC3, colvar = NULL, type = "h", 
+                                           ticktype = "detailed", bty = "b2", cex = 1, xlab = "PC 1", ylab = "PC 2", 
+                                           zlab = "PC 3", theta = 40, phi = 40, pch = type_level, col = col_level, 
+                                           main = "Principal component analysis"))
+    
+    legend("topright", legend = uniq_label, pch = type_level, col = uniq_col, 
+           cex = 1, inset = c(0.02))
+    
+    with(data.frame(Data.pca$x), text3D(x = PC1, y = PC2, z = PC3, colnames(Data), 
+                                        col = "black", add = TRUE, colkey = FALSE, cex = 0.5))
+  }
+}
+
 getCount4EachBamUsingJobArray <- function(input.bam.dir, input.bam.pattern, 
                                           gtffile.gtf, output.file.dir)
 {
