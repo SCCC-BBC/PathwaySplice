@@ -30,6 +30,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1) {
         boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, ylab = "Number of features", col = "lightgray", ylim = c(min(mydata.2$numFeature), 
             max(mydata.2$numFeature)), names = c("non-significant genes", "significant genes"))
         text(x = 2, y = max(mydata.2$numFeature) - 1, labels = c("", paste0("P-value from logistic regression ", p.value)))
+        
     }
     else {
         cat("There are no variations on the number of features\n")
