@@ -262,7 +262,34 @@ sample.file, count.file,gff.file, method.dispFinal =
 res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
 sample.file, count.file,gff.file, method.dispFinal =
 'shrink',analysis.type = "junctionsAndExons")
+```
+
++ More example for paper
+
+```{r eval=TRUE}
+load("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/example_Mut_WT_re_run_with_multiple_gene.RData")
+res1 <- makeFeatureTable(res)
+source('~/PathwaySplice/inst/bin/Simple.r')
+gene.based.table <- PathwaySplice::makeGeneTable(featureBasedData)
+lrTestBias(gene.based.table)
+output.dir="~/PathwaySplice_output_1"
+
+res.adj <- PathwaySplice::runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),
+                        method='Wallenius',
+                        output.file=file.path(output.dir,"bp_adjusted.csv"))
+                        
+enmap <- PathwaySplice::enrichmentMap(res.adj,n=10,fixed = FALSE,similarity.threshold=0.3,
+label.node.by.index = FALSE,output.file.dir = output.dir)                       
+    
+output.dir="~/PathwaySplice_output_2"
+
+enmap <- PathwaySplice::enrichmentMap(res.adj,n=10,fixed = FALSE,similarity.threshold=0.3,
+label.node.by.index = FALSE,add.numSIGInCat=TRUE,output.file.dir = output.dir) 
 
 ```
+
+
 #To generate vignettes
 #rmarkdown::render("vignettes/tutorial.Rmd", output_format="all")
