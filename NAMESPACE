@@ -33,6 +33,7 @@ importFrom(stats, aggregate, lm,loess,p.adjust, pchisq,qchisq,residuals)
 importFrom(gridExtra,grid.arrange)
 importFrom(grid,gTree,grid.draw)
 importFrom(gplots,venn)
+importFrom(logistf,logistf)
 
 export(.onAttach)
 export(gmtGene2Cat)
