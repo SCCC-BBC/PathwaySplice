@@ -70,9 +70,8 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
     mydata.2 <- cbind(mydata, DE)
     if (var(mydata.2$numFeature) != 0)
     {
-        mylogit.2 <- glm(DE ~ as.numeric(numFeature), data = mydata.2, family = "binomial")
-        re <- summary(mylogit.2)
-        pvalue <- re$coefficients[2, 4]
+        mylogit.2 <- logistf(DE ~ as.numeric(numFeature), data = mydata.2)
+        pvalue <- mylogit.2$prob[2]
         p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
         boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, ylab = "Number of features", 
             col = "lightgray", ylim = c(min(mydata.2$numFeature), max(mydata.2$numFeature)), 
@@ -254,7 +253,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #'                       label.node.by.index = FALSE, output.file.dir='C:/temp')}
 #' @export                      
 enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
-    similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), label.node.by.index = FALSE, 
+    similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), label.node.by.index = FALSE,add.numSIGInCat=FALSE, 
     ...)
     {
     if (!dir.exists(output.file.dir))
@@ -270,7 +269,12 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
     y <- as.data.frame(x)
     if (any(grep("^GO:", y$gene_set)))
     {
+        if(add.numSIGInCat==TRUE){
         nodename <- paste0(y$description, ":", y$numSIGInCat)
+        }else
+        {
+          nodename <- y$description 
+        }
         if (label.node.by.index == TRUE)
         {
             nodename.index <- seq(1, length(nodename))
@@ -282,7 +286,13 @@ enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1
         }
     } else
     {
-        nodename <- paste0(y$gene_set, ":", y$numSIGInCat)
+        if(add.numSIGInCat==TRUE){
+          nodename <- paste0(y$description, ":", y$numSIGInCat)
+        }else
+        {
+          nodename <- y$description 
+        }
+        
         if (label.node.by.index == TRUE)
         {
             nodename.index <- seq(1, length(nodename))
