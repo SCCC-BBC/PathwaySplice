@@ -6,7 +6,7 @@
 \usage{
 enrichmentMap(pathway.res, n = 50, fixed = TRUE, node.label.font = 1,
   similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(),
-  label.node.by.index = FALSE, ...)
+  label.node.by.index = FALSE, add.numSIGInCat = FALSE, ...)
 }
 \arguments{
 \item{pathway.res}{Pathway analysis results, an object returned by \code{runPathwaySplice}}
