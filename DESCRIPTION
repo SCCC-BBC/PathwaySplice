@@ -9,7 +9,7 @@ Imports: goseq, Biobase, DOSE, reshape2, igraph, org.Hs.eg.db, org.Mm.eg.db, Bio
          AnnotationDbi, JunctionSeq, BiasedUrn, GO.db,gdata, geneLenDataBase, 
          grDevices, graphics, stats, utils, VennDiagram, RColorBrewer, 
          ensembldb, AnnotationHub, S4Vectors, dplyr, plotly, webshot, htmlwidgets , mgcv ,gridExtra, 
-         grid ,gplots
+         grid ,gplots,logistf
 Suggests: testthat, knitr, rmarkdown
 VignetteBuilder: knitr
 biocViews: AlternativeSplicing, DifferentialSplicing, GeneSetEnrichment, GO, RNASeq, Sequencing, Software,
