@@ -350,9 +350,28 @@ submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir)
     dir.create(out.gff.dir, recursive = TRUE)
   }
   
+  job.name <- "processGtf"
+  
+  Rfun1 <- 'r.lib<- Sys.getenv("R_LIBS_USER");source(file.path(r.lib,"PathwaySplice/bin/AnalysisScript.r"));proceessGtf4makeGffFile('
+
+  Rinput <- paste0("\\\"", input.gtf.file, "\\\",", 
+                   "\\\"", out.gff.dir, "\\\"")
+  Rfun2 <- ")"
+  
+  Rfun <- paste0(Rfun1, Rinput, Rfun2)
+  
+  cmd.gff <- createBsubJobArrayRfun(Rfun, job.name, wait.job.name = NULL)
+  
+  system(cmd.gff)
+  
+#  proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
+
   job.name <- "makeGff"
   
-  Rfun1 <- "library(PathwaySplice);re <- PathwaySplice:::makeGffFile("
+  Rfun1 <- 'r.lib<- Sys.getenv("R_LIBS_USER");source(file.path(r.lib,"PathwaySplice/bin/AnalysisScript.r"));re <- makeGffFile('
+  
+  input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
+  input.gtf.file <- file.path(out.gff.dir, paste0(input.gtf.file.name, "_processed.gtf"))
   
   Rinput <- paste0("\\\"", input.gtf.file, "\\\",", "\\\"", stranded, 
                    "\\\",", "\\\"", out.gff.dir, "\\\"")
@@ -360,7 +379,7 @@ submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir)
   
   Rfun <- paste0(Rfun1, Rinput, Rfun2)
   
-  cmd.gff <- createBsubJobArrayRfun(Rfun, job.name, wait.job.name = NULL)
+  cmd.gff <- createBsubJobArrayRfun(Rfun, job.name, wait.job.name = "processGtf")
   
   system(cmd.gff)
 }
@@ -438,10 +457,6 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
   
   r.lib<- Sys.getenv("R_LIBS_USER")
   
-  cmd.sh.1 = "tail -n +6" 
-  cmd.sh.2 = '| awk -F "\t" "{OFS=\"\t\"; $1 = "chr"$1; print}" | awk -F"\t" "{OFS="\t"; if($1=="chrMT") $1="chrM"; print}" | sort -k1,1 -k4,4n' 
-  cmd.sh.3 = ">" 
-    
   #Homo_sapiens.GRCh38.84.processed.sorted.22.gtf
   
   input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
