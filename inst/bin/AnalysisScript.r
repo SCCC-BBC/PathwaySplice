@@ -446,6 +446,8 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
  
   cmd1 <- paste(cmd.sh.1, input.gtf.file,cmd.sh.2, cmd.sh.3,file.path(out.gff.dir, paste0(input.gtf.file.name, 
                                                                      "_processed.gtf"), sep = " "))
+  print(cmd1)
+  
   system(cmd1)
   
 }
