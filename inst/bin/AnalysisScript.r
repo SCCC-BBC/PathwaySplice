@@ -436,6 +436,8 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
 {
   #/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.gtf 
   
+  r.lib<- Sys.getenv("R_LIBS_USER")
+  
   cmd.sh.1 = "tail -n +6" 
   cmd.sh.2 = '| awk -F "\t" "{OFS=\"\t\"; $1 = "chr"$1; print}" | awk -F"\t" "{OFS="\t"; if($1=="chrMT") $1="chrM"; print}" | sort -k1,1 -k4,4n' 
   cmd.sh.3 = ">" 
@@ -444,7 +446,7 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
   
   input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
  
-  cmd1 <- paste(cmd.sh.1, input.gtf.file,cmd.sh.2, cmd.sh.3,file.path(out.gff.dir, paste0(input.gtf.file.name, 
+  cmd1 <- paste("sh",r.lib,"PathwaySplice/bin/processGtf.sh",input.gtf.file,file.path(out.gff.dir, paste0(input.gtf.file.name, 
                                                                      "_processed.gtf"), sep = " "))
   print(cmd1)
   
