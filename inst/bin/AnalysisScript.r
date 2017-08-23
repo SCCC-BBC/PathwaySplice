@@ -426,3 +426,26 @@ adjustBystatistics4 <- function(gene.based.table, nKnots = 6)
   gene.based.table$geneWisePvalue <- p.new
   gene.based.table
 }
+
+# input.gtf.file <- /media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.gtf
+# out.gff.dir <- 
+# 
+# proceessGtf4makeGffFile(input.gtf.file,out.gff.dir) 
+#
+proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
+{
+  #/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.gtf 
+  
+  cmd.sh.1 = "tail -n +6" 
+  cmd.sh.2 = "| awk -F '\t' '{OFS='\t'; $1 = 'chr'$1; print}' | awk -F'\t' '{OFS='\t'; if($1=='chrMT') $1='chrM'; print}' | sort -k1,1 -k4,4n" 
+  cmd.sh.3 = ">" 
+    
+  #Homo_sapiens.GRCh38.84.processed.sorted.22.gtf
+  
+  input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
+ 
+  cmd1 <- paste(cmd.sh.1, input.gtf.file,cmd.sh.2, cmd.sh.3,file.path(out.gff.dir, paste0(input.gtf.file.name, 
+                                                                     "_processed.gtf"), sep = " "))
+  system(cmd1)
+  
+}
