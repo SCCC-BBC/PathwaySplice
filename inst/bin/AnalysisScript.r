@@ -437,7 +437,7 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
   #/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.gtf 
   
   cmd.sh.1 = "tail -n +6" 
-  cmd.sh.2 = "| awk -F '\t' '{OFS='\t'; $1 = 'chr'$1; print}' | awk -F'\t' '{OFS='\t'; if($1=='chrMT') $1='chrM'; print}' | sort -k1,1 -k4,4n" 
+  cmd.sh.2 = '| awk -F "\t" "{OFS="\t"; $1 = "chr"$1; print}" | awk -F"\t" "{OFS="\t"; if($1=="chrMT") $1="chrM"; print}" | sort -k1,1 -k4,4n' 
   cmd.sh.3 = ">" 
     
   #Homo_sapiens.GRCh38.84.processed.sorted.22.gtf
