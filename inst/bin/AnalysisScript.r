@@ -447,7 +447,7 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
   input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
  
   cmd1 <- paste("sh",file.path(r.lib,"PathwaySplice/bin/processGtf.sh"),input.gtf.file,file.path(out.gff.dir, paste0(input.gtf.file.name, 
-                                                                     "_processed.gtf"), sep = " "))
+                                                                     "_processed.gtf")), sep = " ")
   print(cmd1)
   
   system(cmd1)
