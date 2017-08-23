@@ -352,7 +352,7 @@ submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir)
   
   job.name <- "processGtf"
   
-  Rfun1 <- 'proceessGtf4makeGffFile('
+  Rfun1 <- 'r.lib<- Sys.getenv(\\\"R_LIBS_USER\\\");source(file.path(r.lib,\\\"PathwaySplice/bin/AnalysisScript.r\\\"));proceessGtf4makeGffFile('
 
   Rinput <- paste0("\\\"", input.gtf.file, "\\\",", 
                    "\\\"", out.gff.dir, "\\\"")
@@ -368,7 +368,7 @@ submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir)
 
   job.name <- "makeGff"
   
-  Rfun1 <- 're <- makeGffFile('
+  Rfun1 <- 'r.lib<- Sys.getenv(\\\"R_LIBS_USER\\\");source(file.path(r.lib,\\\"PathwaySplice/bin/AnalysisScript.r\\\"));re <- makeGffFile('
   
   input.gtf.file.name <- tools::file_path_sans_ext(basename(input.gtf.file))
   input.gtf.file <- file.path(out.gff.dir, paste0(input.gtf.file.name, "_processed.gtf"))
