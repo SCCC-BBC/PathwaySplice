@@ -342,6 +342,8 @@ makeGffFile <- function(input.gtf.file, stranded = c("yes", "no"), out.gff.dir)
 # R -e
 # 'library(PathwaySplice);PathwaySplice:::submitJob4makeGffFile('~/mus_musculus/Mus_musculus.GRCm38.83.processed.sorted.gtf','yes','/scratch/projects/bbc/aiminy_project/peng_junction/count_strand_based/GTF_Files')'
 
+# R -e 'r.lib<- Sys.getenv("R_LIBS_USER");source(file.path(r.lib,"PathwaySplice/bin/AnalysisScript.r"));submitJob4makeGffFile("~/Homo_sapiens.GRCh38.84.gtf","no","~/TestGFF")'
+
 submitJob4makeGffFile <- function(input.gtf.file, stranded, out.gff.dir)
 {
   
