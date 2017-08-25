@@ -470,3 +470,76 @@ proceessGtf4makeGffFile <- function(input.gtf.file,out.gff.dir,use.cluster=NULL)
   system(cmd1)
   
 }
+
+extractInfoFromGtf <- function() {
+  en<-ensemblGenome("/Volumes/Bioinformatics$/Aimin_project/GTF_Files")
+  read.gtf(en,"Homo_sapiens.GRCh38.84.gtf")
+  
+  en2<-ensemblGenome("/Volumes/Bioinformatics$/Aimin_project/GTF_Files")
+  read.gtf(en2,"Homo_sapiens.GRCh38.84_processed.gff")
+  
+  track.0 <- import("/Volumes/Bioinformatics$/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.gtf")
+  track.00 <- track.0[-which(is.na(track.0$protein_id))]
+  
+  track <- import("/Volumes/Bioinformatics$/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84_processed.gff")
+  track.gene <- track[which(track$type %in% c("aggregate_gene","exonic_part")),]
+  track.gene.rm.plus <- track.gene[-grep("\\+",track.gene$gene_id),]
+  
+  export(track.gene.rm.plus,"~/Dropbox (BBSR)/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84_processed_exon.gff",format = "gff3")
+  
+  track.1 <- track[-grep("\\+",track$tx_set),]
+  
+  track.2 <- track[-grep("\\+",track$gene_id),]
+  
+  track.3 <- track.2[which(track.2$type=="aggregate_gene"),]
+  
+  track.4 <- track.2[which(track.2$type=="exonic_part"),]
+  
+  length(unique(track.4$gene_id))
+}
+
+
+# R -e 'r.lib<- Sys.getenv("R_LIBS_USER");source(file.path(r.lib,"PathwaySplice/bin/AnalysisScript.r"));getCount4EachBam("/media/H_driver/Aimin_project/GOSJ_STAR_Bam","STAR_out.sorted.bam$","/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.2.gtf","java -jar /home/aiminyan/QoRTs/QoRTs.jar QC","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCount")'
+
+getCount4EachBam <- function(input.bam.dir, input.bam.pattern, 
+                                          gtffile.gtf, cmd, output.file.dir)
+{
+  
+  #index <- system("echo $LSB_JOBINDEX", intern = TRUE)
+  
+  #u <- as.integer(index)
+  
+  if (!dir.exists(output.file.dir))
+  {
+    dir.create(output.file.dir, recursive = TRUE)
+  }
+  
+  # cmd.java.1 = "module load java/1.8.0_60"
+  # 
+  # cmd.java.2 = "export _JAVA_OPTIONS=\"-Xmx5G\""
+  # 
+  # cmd.java.3 = "java -jar $HOME/NGS_tools/QoRTs/QoRTs_1.1.8/QoRTs.jar QC --noGzipOutput --keepMultiMapped --stranded"
+  # 
+  # cmd = paste(cmd.java.1, cmd.java.2, cmd.java.3, sep = ";")
+  
+  
+  bam.list <- list.files(input.bam.dir, pattern = input.bam.pattern, 
+                         all.files = TRUE, recursive = TRUE, full.names = TRUE)
+  
+  x <- lapply(bam.list, function(u,cmd,gtffile.gtf,output.file.dir)
+  {
+    
+    sample.name <- basename(dirname(u))
+    
+    cmd1 = paste(cmd, u, gtffile.gtf, file.path(paste0('"',output.file.dir,'"'),sample.name), 
+                 sep = " ")
+    cmd1
+  },cmd,gtffile.gtf,output.file.dir)
+  
+  lapply(1:lenght(x),function(u,x){
+    cmd2 <- x[[u]]
+    cat(cmd2, "\n\n")
+    system(cmd2)
+  },x)
+  
+}
