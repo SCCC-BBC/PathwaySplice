@@ -499,7 +499,7 @@ extractInfoFromGtf <- function() {
 }
 
 
-# R -e 'r.lib<- Sys.getenv("R_LIBS_USER");source(file.path(r.lib,"PathwaySplice/bin/AnalysisScript.r"));getCount4EachBam("/media/H_driver/Aimin_project/GOSJ_STAR_Bam","STAR_out.sorted.bam$","/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.2.gtf","java -jar /home/aiminyan/QoRTs/QoRTs.jar QC","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCount")'
+# R -e 'r.lib<- Sys.getenv("R_LIBS_USER");source(file.path(r.lib,"PathwaySplice/bin/AnalysisScript.r"));getCount4EachBam("/media/H_driver/Aimin_project/GOSJ_STAR_Bam","STAR_out.sorted.bam$","/media/H_driver/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.2.gtf","java -jar /home/aiminyan/QoRTs/QoRTs.jar QC --keepMultiMapped","/media/aiminyan/DATA/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped")'
 
 getCount4EachBam <- function(input.bam.dir, input.bam.pattern, 
                                           gtffile.gtf, cmd, output.file.dir)
@@ -529,7 +529,7 @@ getCount4EachBam <- function(input.bam.dir, input.bam.pattern,
   x <- lapply(bam.list, function(u,cmd,gtffile.gtf,output.file.dir)
   {
     
-    sample.name <- basename(dirname(u))
+    sample.name <- basename(u)
     
     cmd1 = paste(cmd, u, gtffile.gtf, file.path(paste0('"',output.file.dir,'"'),sample.name), 
                  sep = " ")
