@@ -536,7 +536,7 @@ getCount4EachBam <- function(input.bam.dir, input.bam.pattern,
     cmd1
   },cmd,gtffile.gtf,output.file.dir)
   
-  lapply(1:lenght(x),function(u,x){
+  lapply(1:length(x),function(u,x){
     cmd2 <- x[[u]]
     cat(cmd2, "\n\n")
     system(cmd2)
