@@ -1420,3 +1420,29 @@ writeTibble <- function(tibble.input, output.file.name = tempfile())
     }
     tibble.input %>% mutate_all(funs(flatten_list)) %>% write.csv(output.file.name)
 }
+
+splitGeneCluster <- function(re.gene.based)
+{
+
+  re2 <- re.gene.based
+  
+  All.gene.id.based.on.sub_feature <- unique(unlist(strsplit(re2$geneID, "\\+")))
+  
+  All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub_feature))
+  names(All.gene.id.index) <- All.gene.id.based.on.sub_feature
+  
+  re3 <- lapply(All.gene.id.based.on.sub_feature, function(u, re2)
+  {
+    x <- as.data.frame(re2[grep(u, re2$geneID), ], stringsAsFactors = FALSE)
+  }, re2)
+  
+  re4 <- do.call(rbind.data.frame, c(re3, stringsAsFactors = FALSE))
+  
+  index.geneID <- which(colnames(re4) %in% c("geneID"))
+  re5 <- cbind.data.frame(All.gene.id.based.on.sub_feature, re4[, -c(index.geneID)], 
+                          stringsAsFactors = FALSE)
+  colnames(re5)[1] <- "geneID"
+  
+  return(re5)
+  
+}

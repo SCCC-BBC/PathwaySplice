@@ -16,9 +16,12 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
 {
   
   # Get sample file
-  dir.name <- reformatpath(dir.name)
+  dir.name <- PathwaySplice:::reformatpath(dir.name)
   
-  path.sample.file <- file.path(dir.name, sample.file)
+  #path.sample.file <- file.path(dir.name, sample.file)
+  
+  path.sample.file <- sample.file
+  
   decoder.bySample <- read.table(path.sample.file, header = TRUE, stringsAsFactors = FALSE)
   
   x <- colnames(decoder.bySample)
@@ -32,7 +35,9 @@ getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file,
                                count.file)
   
   # Get annotation file
-  path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
+  #path.gff.file <- file.path(dir.name, "GTF_Files", gff.file)
+  
+  path.gff.file <- gff.file
   
   # Analysis using runJunctionSeqAnalyse, and adjust Gender
   jscs <- runJunctionSeqAnalyses(sample.files = path.count.file, sample.names = decoder.bySample[, 
@@ -481,10 +486,71 @@ extractInfoFromGtf <- function() {
   track.0 <- import("/Volumes/Bioinformatics$/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.gtf")
   track.00 <- track.0[-which(is.na(track.0$protein_id))]
   
-  track <- import("/Volumes/Bioinformatics$/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84_processed.gff")
-  track.gene <- track[which(track$type %in% c("aggregate_gene","exonic_part")),]
-  track.gene.rm.plus <- track.gene[-grep("\\+",track.gene$gene_id),]
+  track.process.gtf <- import("~/Dropbox (BBSR)/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.2.gtf")
   
+  track <- import("/Volumes/Bioinformatics$/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84_processed.gff")
+  track.exon.only <- track[which(track$type %in% c("exonic_part")),]
+  
+  mcols(track.exon.only)
+  
+  
+  track.exon.only.df <- as.data.frame(track.exon.only)
+  track.exon.only.df.rm.plus <- track.exon.only.df[-grep("\\+",track.exon.only.df$gene_id),]
+  track.exon.only.df.plus <- track.exon.only.df[grep("\\+",track.exon.only.df$gene_id),]
+  
+  head(track.exon.only.df.rm.plus)
+  
+  write.table(track.exon.only.df.rm.plus, file = "~/Dropbox (BBSR)/Aimin_project/GTF_Files/exon.only.df.rm.plus.csv", append = FALSE, quote = FALSE, sep = ",",na = "", dec = ".", row.names = FALSE,col.names = TRUE)
+  
+  write.table(track.exon.only.df.plus, file = "~/Dropbox (BBSR)/Aimin_project/GTF_Files/exon.only.df.include.plus.csv", append = FALSE, quote = FALSE, sep = ",",na = "", dec = ".", row.names = FALSE,col.names = TRUE)
+  
+  
+  track.process.gtf.df <- as.data.frame(track.process.gtf)
+  
+  track.process.gtf.protein.coding.df <- track.process.gtf.df[which(track.process.gtf.df$gene_biotype %in% c("protein_coding")),]
+  track.process.gtf.non.protein.coding.df <- track.process.gtf.df[-which(track.process.gtf.df$gene_biotype %in% c("protein_coding")),]
+  
+  num.protein.coding.gene <- length(unique(track.process.gtf.protein.coding.df$gene_id))
+  
+  num.non.protein.coding.gene <- length(unique(track.process.gtf.non.protein.coding.df$gene_id))
+  
+  re<-list(gene.without.multimapped=gene.based.without.multimapped$geneID,gene.with.multimapped=jscs.with.multimapped.4$geneID,protein.coding.gene=track.process.gtf.protein.coding.df$gene_id,non.protein.coding.gene=track.process.gtf.non.protein.coding.df$gene_id)
+  
+  v <- venn.diagram(
+    x = re,
+    filename = NULL,
+    col = "black",
+    lwd = 1,
+    fill = c("red","blue","green","turquoise4"),
+    alpha = c(0.5, 0.5,0.5,0.5),
+    label.col = c(rep("black",15)),
+    cex = 1,
+    fontfamily = "serif",
+    fontface = "bold",
+    cat.col = c("red","blue","green","turquoise4"),
+    cat.cex = 1,
+    cat.fontfamily = "serif")
+    
+   png(file.path("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped",paste0(paste(names(re),collapse = "_"),"_overlap_venn.png")),width = 1000, height = 600, units = "px") 
+   grid.newpage()
+   pushViewport(viewport(width=unit(1, "npc"), height = unit(1, "npc"))); 
+   grid.draw(v)
+   dev.off()
+  
+  track.process.gtf.df.2 <- cbind.data.frame(track.process.gtf.df$gene_id,track.process.gtf.df$protein_id)
+  track.process.gtf.df.3 <- track.process.gtf.df.2[!duplicated(track.process.gtf.df.2$`track.process.gtf.df$gene_id`), ]
+  
+  gene.encoding <- track.process.gtf.df.3[-which(is.na(track.process.gtf.df.3$`track.process.gtf.df$protein_id`)),]
+  gene.non.encoding <- track.process.gtf.df.3[which(is.na(track.process.gtf.df.3$`track.process.gtf.df$protein_id`)),]
+  
+  track.gene.rm.plus <- track.gene[-grep("\\+",track.gene$gene_id),]
+  export(track.exon.only,"~/Dropbox (BBSR)/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84.exon.only.gff",format = "gff3")
+  
+  
+  track.gene <- track[which(track$type %in% c("aggregate_gene","exonic_part")),]
+  export(track.gene.rm.plus,"~/Dropbox (BBSR)/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84_processed_exon.gff",format = "gff3")
+  
+  track.gene.rm.plus <- track.gene[-grep("\\+",track.gene$gene_id),]
   export(track.gene.rm.plus,"~/Dropbox (BBSR)/Aimin_project/GTF_Files/Homo_sapiens.GRCh38.84_processed_exon.gff",format = "gff3")
   
   track.1 <- track[-grep("\\+",track$tx_set),]
@@ -541,5 +607,32 @@ getCount4EachBam <- function(input.bam.dir, input.bam.pattern,
     cat(cmd2, "\n\n")
     system(cmd2)
   },x)
+  
+}
+
+# input.without.multiplemapped.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/SRR1660308_STAR_out.sorted.bam"
+#
+# input.with.multiplemapped.dir <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/SRR1660308_STAR_out.sorted.bam"
+#
+# input.file.pattern <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt"
+#
+compareTwoCountFiles <- function(input.with.multiplemapped.dir, input.without.multiplemapped.dir, input.file.pattern, 
+                             output.file.dir)
+{
+  
+  file.1 <- list.files(input.with.multiplemapped.dir, pattern = input.file.pattern, 
+                         all.files = TRUE, recursive = TRUE, full.names = TRUE)
+  
+  file.2 <- list.files(input.without.multiplemapped.dir, pattern = input.file.pattern, 
+                       all.files = TRUE, recursive = TRUE, full.names = TRUE)
+  
+  count.1 <- read.table(file.1,header = FALSE)
+  count.2 <- read.table(file.2,header = FALSE)
+  
+  count.1.2 <- merge.data.frame(count.1,count.2,by="V1",sort = FALSE)
+  
+  count.1.2.dd <- cbind.data.frame(count.1.2,count.1.2$V2.x-count.1.2$V2.y)
+  
+  head(count.1.2.dd)
   
 }

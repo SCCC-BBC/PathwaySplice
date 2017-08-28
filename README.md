@@ -268,7 +268,9 @@ sample.file, count.file,gff.file, method.dispFinal =
 
 ```{r eval=TRUE}
 load("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/example_Mut_WT_re_run_with_multiple_gene.RData")
-res1 <- makeFeatureTable(res)
+res.without.multimapped <- PathwaySplice:::makeFeatureTable(res)
+gene.based.without.multimapped <- makeGeneTable(res.without.multimapped)
+
 source('~/PathwaySplice/inst/bin/Simple.r')
 gene.based.table <- PathwaySplice::makeGeneTable(featureBasedData)
 lrTestBias(gene.based.table)
@@ -290,6 +292,54 @@ label.node.by.index = FALSE,add.numSIGInCat=TRUE,output.file.dir = output.dir)
 
 ```
 
+```{r eval=TRUE}
+
+dir.name <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped"
+
+sample.file <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/decoder.bySample.Mut_WT_2.txt"
+
+count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt" 
+
+gff.file <-"~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
+
+#exonsOnly
+res <- getResultsFromJunctionSeq(dir.name,
+sample.file, count.file,gff.file,analysis.type = "exonsOnly",use.multigene.aggregates =TRUE,method.dispFinal = 'shrink')
+save(res,file="~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/jscsKeepMutiMapped.RData")
+res.2 <- PathwaySplice:::makeFeatureTable(res)
+res.3 <- makeGeneTable(res.2)
+lrTestBias(res.3)
+jscs.with.multimapped <- res
+
+jscs.with.multimapped.2 <- PathwaySplice:::makeFeatureTable(jscs.with.multimapped, use.multigene.aggregates = TRUE)
+jscs.with.multimapped.3 <- makeGeneTable(jscs.with.multimapped.2)
+
+jscs.with.multimapped.4 <- PathwaySplice:::splitGeneCluster(jscs.with.multimapped.3)
+
+re<-list(gene.with.multimapped=res.3$geneID,gene.without.multimapped = gene.based.without.multimapped$geneID)
+
+venn.plot <- venn.diagram(
+  x = re[c(1,2)],
+  filename = file.path("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped",paste0(names(re)[1],"_",names(re)[2],"_overlap_venn.tiff")),
+  height = 3000,
+  width = 3500,
+  resolution = 1000,
+  col = "black",
+  lty = "dotted",
+  lwd = 1,
+  fill = c("red","blue"),
+  alpha = 0.50,
+  label.col = c(rep("black",3)),
+  cex = 0.5,
+  fontfamily = "serif",
+  fontface = "bold",
+  cat.col = c("red","blue"),
+  cat.cex = 0.5,
+  cat.pos = 0.5,
+  cat.dist = 0.05,
+  cat.fontfamily = "serif"
+)
+```
 
 #To generate vignettes
 #rmarkdown::render("vignettes/tutorial.Rmd", output_format="all")
