@@ -4,7 +4,7 @@ Title: An R Package for Unbiased Splicing Pathway Analysis
 Version: 0.99.17
 Author: Aimin Yan, Xi Chen, Lily Wang
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
-Depends: R (>= 3.4.0)
+Depends: R (>= 3.4.0), knitr
 Imports: goseq, Biobase, DOSE, reshape2, igraph, org.Hs.eg.db, org.Mm.eg.db, BiocGenerics, 
          AnnotationDbi, JunctionSeq, BiasedUrn, GO.db,gdata, geneLenDataBase, 
          grDevices, graphics, stats, utils, VennDiagram, RColorBrewer, 
