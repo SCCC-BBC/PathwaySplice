@@ -1,21 +1,21 @@
 ---
 title: "PathwaySplice testing for RNA-seq datasets"
 author: "Aimin Yan"
-date: "`r Sys.Date()`"
+date: '`r Sys.Date()`'
 output:
   knitr:::html_vignette:
-    toc: true
     fig_caption: yes
+    toc: yes
   pdf_document:
     highlight: null
-    number_sections: y
+    number_sections: yes
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
-biblio-style: plain    
-vignette: >
-  %\VignetteIndexEntry{PathwaySplice}
+biblio-style: plain
+vignette: > 
+  %\VignetteIndexEntry{PathwaySplice} 
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+   \usepackage[utf8]{inputenc}
 ---
 
 ```{r, echo = FALSE}

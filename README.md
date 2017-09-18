@@ -343,3 +343,4 @@ venn.plot <- venn.diagram(
 
 #To generate vignettes
 #rmarkdown::render("vignettes/tutorial.Rmd", output_format="all")
+#rmarkdown::render("vignettes/tutorial.Rmd", output_format="all",encoding="utf8")(on windows)
