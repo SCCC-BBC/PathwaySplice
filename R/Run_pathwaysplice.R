@@ -37,6 +37,9 @@ makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat = "pvalue")
     }
     names(both) <- sub("pvalue", "geneWisePvalue", names(both))
     names(both) <- sub("Freq", "numFeature", names(both))
+    
+    both <- splitGeneCluster(both)
+    
     return(both)
 }
 
@@ -192,7 +195,8 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param node.label.font Font size of node label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
-#' @param scaling.factor Scaling factor that users can use to adjust the edge thickness of the network      
+#' @param scaling.factor Scaling factor that users can use to adjust the edge thickness of the network 
+#'       
 #' @param output.file.dir Output files directory, see \code{Details} section below. 
 #' 
 #' @param label.node.by.index Options for labeling nodes on network. 
