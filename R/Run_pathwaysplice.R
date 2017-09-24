@@ -1165,43 +1165,43 @@ outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
     return(Re.Go.adjusted.by.exon.SJ.select)
 }
 
-getStaisitcs4Go <- function(GO.wall.DE_interest, mds.11.sample)
+getStaisitcs4Go <- function(GO.wall.DE_interest, genewise.table)
 {
     GO.data <- GO.wall.DE_interest[[1]]
     y <- as.list(GO.data$SIGgene_ensembl)
-    re <- lapply(1:length(y), function(u, y, mds.11.sample)
+    re <- lapply(1:length(y), function(u, y, genewise.table)
     {
         yy <- y[[u]]
         y.id <- trim(c(unlist(strsplit(y[[u]], split = ","))))
         if (length(y.id) != 0)
         {
-            yyy <- mean(as.numeric(unlist(mds.11.sample[match(y.id, mds.11.sample$geneID), 
+            yyy <- mean(as.numeric(unlist(genewise.table[match(y.id, genewise.table$geneID), 
                 ]$numFeature)))
         } else
         {
             yyy <- 0
         }
         yyy
-    }, y, mds.11.sample)
+    }, y, genewise.table)
     re2 <- list_to_df(re)
     GO.data.1 <- cbind(GO.data, re2)
     GO.data.2 <- GO.data.1[, -(dim(GO.data.1)[2] - 1)]
     colnames(GO.data.2)[dim(GO.data.2)[2]] <- "Ave_value_DE"
     cat2gene <- GO.wall.DE_interest[[3]]
-    rre <- lapply(1:length(cat2gene), function(u, cat2gene, mds.11.sample)
+    rre <- lapply(1:length(cat2gene), function(u, cat2gene, genewise.table)
     {
         yy <- cat2gene[[u]]
         y.id <- yy
         if (length(y.id) != 0)
         {
-            yyy <- mean(as.numeric(unlist(mds.11.sample[match(y.id, mds.11.sample$geneID), 
+            yyy <- mean(as.numeric(unlist(genewise.table[match(y.id, genewise.table$geneID), 
                 ]$numFeature)), na.rm = TRUE)
         } else
         {
             yyy <- 0
         }
         yyy
-    }, cat2gene, mds.11.sample)
+    }, cat2gene, genewise.table)
     names(rre) <- names(cat2gene)
     rre2 <- list_to_df(rre)
     colnames(rre2) <- c("gene_set", "Ave_value_all_gene")
@@ -1446,3 +1446,327 @@ splitGeneCluster <- function(re.gene.based)
   return(re5)
   
 }
+
+getFirstOfGeneCluster <- function(re.gene.based)
+{
+  
+  re2 <- re.gene.based
+  
+  single.gene.id <- unique(unlist(strsplit(re2$geneID, "\\+")))
+  
+  res.single.gene <- re2[which(re2$geneID %in% single.gene.id),]
+  
+  res.gene.cluster <- re2[-which(re2$geneID %in% single.gene.id),]
+  
+  ress <- list(res.single.gene=res.single.gene,res.gene.cluster=res.gene.cluster)
+  
+  ress
+  
+  # All.gene.id.index <- rep(0, length(All.gene.id.based.on.sub_feature))
+  # names(All.gene.id.index) <- All.gene.id.based.on.sub_feature
+  # 
+  # re3 <- lapply(All.gene.id.based.on.sub_feature, function(u, re2)
+  # {
+  #   x <- as.data.frame(re2[grep(u, re2$geneID), ], stringsAsFactors = FALSE)
+  # }, re2)
+  # 
+  # re4 <- do.call(rbind.data.frame, c(re3, stringsAsFactors = FALSE))
+  # 
+  # index.geneID <- which(colnames(re4) %in% c("geneID"))
+  # re5 <- cbind.data.frame(All.gene.id.based.on.sub_feature, re4[, -c(index.geneID)], 
+  #                         stringsAsFactors = FALSE)
+  # colnames(re5)[1] <- "geneID"
+  # 
+  # return(re5)
+  # 
+  # 
+}
+
+identifyGeneAndItsCluster <- function(re.gene.based)
+{
+  
+  re2 <- re.gene.based$geneID
+  single.gene.id <- unique(unlist(strsplit(re2, "\\+")))
+  
+  re3 <- lapply(single.gene.id, function(u, re2)
+  {
+    x <- re2[grep(u, re2)]
+    xx <- unique(unlist(strsplit(x, "\\+")))
+    xxx <- tibble(gene=u,geneCluster=list(xx))
+    xxx
+  }, re2)
+
+  re4 <- do.call(rbind.data.frame, c(re3, stringsAsFactors = FALSE))
+
+  #index.geneID <- which(colnames(re4) %in% c("geneID"))
+  #re5 <- cbind.data.frame(All.gene.id.based.on.sub_feature, re4[, -c(index.geneID)],
+  #                        stringsAsFactors = FALSE)
+  #colnames(re5)[1] <- "geneID"
+
+  return(re4)
+
+}
+
+# pwf <- getPwf(res3)
+# 
+getPwf <- function(genewise.table, genome, id, binsize = "auto")
+{
+  x <- genewise.table$sig.gene
+  names(x) <- genewise.table$geneID
+  pwf <- nullpSplice(x, genome, id, bias.data = genewise.table$numFeature, plot.fit = TRUE, 
+                     binsize)
+
+  pwf
+}
+
+# pathwaysplice2 takes gene cluster into consideration 
+# 
+# gene.cluster.test <- PathwaySplice:::pathwaysplice2(pwf, genome = 'hg19', id = 'ensGene', gene2cat = NULL, test.cats = c("GO:BP"),go.size.limit = c(10,200),method = "Wallenius", repcnt = 2000, use.genes.without.cat = TRUE)
+# 
+# gene.cluster.test <- PathwaySplice:::pathwaysplice2(pwf, genome = 'hg19', id = 'ensGene', gene2cat = NULL, test.cats = c("GO:BP"),go.size.limit = c(10,200),method = "Wallenius", repcnt = 2000, use.genes.without.cat = TRUE,gene.2.geneCluster=gene.2.geneCluster)
+# 
+# gene.2.geneCluster <- pwf.2[,4]
+# names(gene.2.geneCluster) <- rownames(pwf.2)
+# 
+pathwaysplice2 <- function(pwf, genome, id, gene2cat, test.cats, go.size.limit, method, 
+                          repcnt, use.genes.without.cat,gene.2.geneCluster=gene.2.geneCluster)
+{
+  if (any(!test.cats %in% c("GO:CC", "GO:BP", "GO:MF", "KEGG")))
+  {
+    stop("Invalid gene_set specified.  Valid categories are GO:CC, GO:BP, GO:MF or KEGG")
+  }
+  if ((missing(genome) | missing(id)))
+  {
+    if (is.null(gene2cat))
+    {
+      stop("You must specify the genome and gene ID format when automatically fetching gene to GO gene_set mappings.")
+    }
+    genome <- "dummy"
+    id <- "dummy"
+  }
+  if (!any(method %in% c("Wallenius", "Sampling", "Hypergeometric")))
+  {
+    stop("Invalid calculation method selected.  Valid options are Wallenius, Sampling & Hypergeometric.")
+  }
+  if (!is.null(gene2cat) && (!is.data.frame(gene2cat) & !is.list(gene2cat)))
+  {
+    stop("Was expecting a dataframe or a list mapping categories to genes.  Check gene2cat input and try again.")
+  }
+  pwf <- unfactor(pwf)
+  gene2cat <- unfactor(gene2cat)
+  if (is.null(gene2cat))
+  {
+    message("Fetching GO annotations...")
+    gene2cat <- getGeneSet(rownames(pwf), genome, id, fetch.cats = test.cats)
+    cat2gene <- reversemapping(gene2cat)
+    gene2cat <- reversemapping(cat2gene)
+  } else
+  {
+    message("Using manually entered categories.")
+    if (class(gene2cat) != "list")
+    {
+      genecol_sum <- as.numeric(apply(gene2cat, 2, function(u)
+      {
+        sum(u %in% rownames(pwf))
+      }))
+      genecol <- which(genecol_sum != 0)
+      if (length(genecol) > 1)
+      {
+        genecol <- genecol[order(-genecol_sum)[1]]
+        warning(paste("More than one possible gene column found in gene2cat, using the one headed", 
+                      colnames(gene2cat)[genecol]))
+      }
+      if (length(genecol) == 0)
+      {
+        genecol <- 1
+        warning(paste("Gene column could not be identified in gene2cat conclusively, using the one headed", 
+                      colnames(gene2cat)[genecol]))
+      }
+      othercol <- 1
+      if (genecol == 1)
+      {
+        othercol <- 2
+      }
+      gene2cat <- split(gene2cat[, othercol], gene2cat[, genecol])
+      cat2gene <- reversemapping(gene2cat)
+      gene2cat <- reversemapping(cat2gene)
+    }
+    gene2cat <- gene2cat[-which(is.na(names(gene2cat)))]
+    if (sum(unique(unlist(gene2cat, use.names = FALSE)) %in% rownames(pwf)) > 
+        sum(unique(names(gene2cat)) %in% rownames(pwf)))
+    {
+      gene2cat <- reversemapping(gene2cat)
+    }
+    gene2cat <- gene2cat[names(gene2cat) %in% rownames(pwf)]
+    if (length(gene2cat) > 0)
+    {
+      cat2gene <- reversemapping(gene2cat)
+      gene2cat <- reversemapping(cat2gene)
+      cat2gene <- lapply(cat2gene, function(x)
+      {
+        unique(x)
+      })
+      gene2cat <- lapply(gene2cat, function(x)
+      {
+        unique(x)
+      })
+    } else
+    {
+      cat("There is no match between gene names of gene2pathway input and gene names of the data set under analysis,please change gene2pathway input\n\n")
+      return(NA)
+    }
+  }
+  
+  print(cat2gene)
+  
+  cat2gene <- getGeneSetBySize(cat2gene, go.size.limit)
+  
+  if (length(gene2cat) == 0)
+  {
+    stop("No gene set is satisfied by the selected size. Change gene set or choose new size.")
+  }
+  gene2cat <- reversemapping(cat2gene)
+  cat2gene <- reversemapping(gene2cat)
+  nafrac <- (sum(is.na(pwf$pwf))/nrow(pwf)) * 100
+  if (nafrac > 50)
+  {
+    warning(paste("Missing length data for ", round(nafrac), "% of genes.  Accuarcy of GO test will be reduced.", 
+                  sep = ""))
+  }
+  pwf$pwf[is.na(pwf$pwf)] <- pwf$pwf[match(sort(pwf$bias.data[!is.na(pwf$bias.data)])[ceiling(sum(!is.na(pwf$bias.data))/2)], 
+                                           pwf$bias.data)]
+  unknown_go_terms = nrow(pwf) - length(gene2cat)
+  if ((!use.genes.without.cat) && unknown_go_terms > 0)
+  {
+    message(paste("For", unknown_go_terms, "genes, we could not find any categories. These genes will be excluded."))
+    message("To force their use, please run with use_genes_without_cat=TRUE (see documentation).")
+    message("This was the default behavior for version 1.15.1 and earlier.")
+    pwf = pwf[rownames(pwf) %in% names(gene2cat), ]
+  }
+  cats <- names(cat2gene)
+  DE <- rownames(pwf)[pwf$DEgenes == 1]
+  num_de <- length(DE)
+  num_genes <- nrow(pwf)
+  pvals <- data.frame(gene_set = cats, over_represented_pvalue = NA, under_represented_pvalue = NA, 
+                      stringsAsFactors = FALSE, numSIGInCat = NA, numInCat = NA)
+  if (method == "Sampling")
+  {
+    num_DE_mask <- rep(0, length(cats))
+    a <- table(unlist(gene2cat[DE], FALSE, FALSE))
+    num_DE_mask[match(names(a), cats)] <- as.numeric(a)
+    num_DE_mask <- as.integer(num_DE_mask)
+    gene2cat <- gene2cat[rownames(pwf)]
+    names(gene2cat) <- rownames(pwf)
+    message("Running the simulation...")
+    lookup <- matrix(0, nrow = repcnt, ncol = length(cats))
+    for (i in 1:repcnt)
+    {
+      a <- table(as.character(unlist(gene2cat[order(runif(num_genes)^(1/pwf$pwf), 
+                                                    decreasing = TRUE)[1:num_de]], FALSE, FALSE)))
+      lookup[i, match(names(a), cats)] <- a
+      pp(repcnt)
+    }
+    message("Calculating the p-values...")
+    pvals[, 2] <- (colSums(lookup >= outer(rep(1, repcnt), num_DE_mask)) + 1)/(repcnt + 
+                                                                                 1)
+    pvals[, 3] <- (colSums(lookup <= outer(rep(1, repcnt), num_DE_mask)) + 1)/(repcnt + 
+                                                                                 1)
+  }
+  if (method == "Wallenius")
+  {
+    message("Calculating the p-values...")
+    degenesnum <- which(pwf$DEgenes == 1)
+    cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
+    alpha <- sum(pwf$pwf)
+    pvals[, 2:3] <- t(sapply(cat2genenum, function(u)
+    {
+      num_de_incat <- sum(degenesnum %in% u)
+      num_incat <- length(u)
+      avg_weight <- mean(pwf$pwf[u])
+      weight <- (avg_weight * (num_genes - num_incat))/(alpha - num_incat * 
+                                                          avg_weight)
+      if (num_incat == num_genes)
+      {
+        weight <- 1
+      }
+      c(dWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, num_de, 
+                     weight) + pWNCHypergeo(num_de_incat, num_incat, num_genes - num_incat, 
+                                            num_de, weight, lower.tail = FALSE), pWNCHypergeo(num_de_incat, num_incat, 
+                                                                                              num_genes - num_incat, num_de, weight))
+    }))
+  }
+  if (method == "Hypergeometric")
+  {
+    message("Calculating the p-values...")
+    degenesnum <- which(pwf$DEgenes == 1)
+    cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
+    pvals[, 2:3] <- t(sapply(cat2genenum, function(u)
+    {
+      num_de_incat <- sum(degenesnum %in% u)
+      num_incat <- length(u)
+      c(dhyper(num_de_incat, num_incat, num_genes - num_incat, num_de) + phyper(num_de_incat, 
+                                                                                num_incat, num_genes - num_incat, num_de, lower.tail = FALSE), phyper(num_de_incat, 
+                                                                                                                                                      num_incat, num_genes - num_incat, num_de))
+    }))
+  }
+  degenesnum <- which(pwf$DEgenes == 1)
+  cat2genenum <- relist(match(unlist(cat2gene), rownames(pwf)), cat2gene)
+  pvals[, 4:5] <- t(sapply(cat2genenum, function(u)
+  {
+    c(sum(degenesnum %in% u), length(u))
+  }))
+  DE_pwf <- rownames(pwf[degenesnum, ])
+  pvals.6 <- sapply(cat2gene, function(u, DE_pwf)
+  {
+    x <- u[which(u %in% DE_pwf)]
+    x
+  }, DE_pwf)
+  xxx <- match2Genome(genome)
+  pvals.6.gene.symbol <- sapply(pvals.6, function(u, xxx)
+  {
+    y <- xxx[match(u, as.character(xxx[, 2])), 1]
+    y
+  }, xxx)
+  gene_pwf <- rownames(pwf)
+  pvals.7 <- sapply(cat2gene, function(u, gene_pwf)
+  {
+    x <- u[which(u %in% gene_pwf)]
+    x
+  }, gene_pwf)
+  pvals.7.gene.symbol <- sapply(pvals.7, function(u, xxx)
+  {
+    y <- xxx[match(u, as.character(xxx[, 2])), 1]
+    y
+  }, xxx)
+  pvals.6.df <- list_to_df(pvals.6)
+  pvals.6.gene.symbol.df <- list_to_df(pvals.6.gene.symbol)
+  pvals.7.df <- list_to_df(pvals.7)
+  pvals.7.gene.symbol.df <- list_to_df(pvals.7.gene.symbol)
+  dataset2 <- pvals.6.gene.symbol.df
+  dataset2[sapply(dataset2, is.list)] <- sapply(dataset2[sapply(dataset2, is.list)], 
+                                                function(x) sapply(x, function(y) paste(unlist(y), collapse = ", ")))
+  temp.gene.name <- unique(apply(dataset2[, 2], 1, c))
+  temp.gene.name.2 <- unique(gdata::trim(unlist(strsplit(temp.gene.name, split = ","))))
+  DE_from_GO <- temp.gene.name.2
+  colnames(pvals.6.df) <- c("gene_set", "SIGgene_ensembl")
+  colnames(pvals.6.gene.symbol.df) <- c("gene_set", "SIGgene_symbol")
+  colnames(pvals.7.df) <- c("gene_set", "All_gene_ensembl")
+  colnames(pvals.7.gene.symbol.df) <- c("gene_set", "All_gene_symbol")
+  pvals <- pvals[order(pvals$over_represented_pvalue), ]
+  if (any(grep("^GO:", pvals$gene_set)))
+  {
+    GOnames <- select(GO.db, keys = pvals$gene_set, columns = c("TERM", "ONTOLOGY"))[, 
+                                                                                     2:3]
+    colnames(GOnames) <- tolower(colnames(GOnames))
+    colnames(GOnames)[colnames(GOnames) == "term"] <- "description"
+    pvals <- cbind(pvals, GOnames)
+  }
+  re.2 <- merge(pvals, pvals.6.df, by = "gene_set", sort = FALSE)
+  re.3 <- merge(re.2, pvals.6.gene.symbol.df, by = "gene_set", sort = FALSE)
+  re.4 <- merge(re.3, pvals.7.df, by = "gene_set", sort = FALSE)
+  re.5 <- merge(re.4, pvals.7.gene.symbol.df, by = "gene_set", sort = FALSE)
+  re.6 <- list(GO = re.5, DE_GO = DE_from_GO, cat2gene = cat2gene)
+  return(re.6)
+}
+
+
