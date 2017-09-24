@@ -306,6 +306,7 @@ gff.file <-"~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4pa
 res <- getResultsFromJunctionSeq(dir.name,
 sample.file, count.file,gff.file,analysis.type = "exonsOnly",use.multigene.aggregates =TRUE,method.dispFinal = 'shrink')
 save(res,file="~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/jscsKeepMutiMapped.RData")
+load("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/jscsKeepMutiMapped.RData")
 res.2 <- PathwaySplice:::makeFeatureTable(res)
 res.3 <- makeGeneTable(res.2)
 lrTestBias(res.3)
