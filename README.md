@@ -7,9 +7,9 @@ Pathway analysis for alternative splicing in RNA-seq datasets that accounts for 
 
 # Introduction
 
-In alternative splicing ananlysis of RNASeq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. 
+In alternative splicing ananlysis of RNASeq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [Anders2012] or JunctionSeq [Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. 
 
-For DEXSeq results, we use _gene features_ to refers to non-overlapping exon counting bins [@Anders2012, Figure 1], while for JunctionSeq results, _gene features_ refers to non-overlapping exon or splicing junction counting bins. 
+For DEXSeq results, we use _gene features_ to refers to non-overlapping exon counting bins [Anders2012, Figure 1], while for JunctionSeq results, _gene features_ refers to non-overlapping exon or splicing junction counting bins. 
 
 A major challenge is that without explicit adjustment, pathways analysis would be biased toward pathways that include genes with a large number of gene features, because these genes are more likely to be selected as "significant genes" in pathway analysis.  
 
@@ -35,7 +35,7 @@ library(devtools)
 install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 ```
 
-The input file of PathwaySplice are p-values for multiple gene features associated with each gene. This information can be obtained from DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016] output files. As an example, PathwaySplice includes a feature based dataset within the package, based on a RNASeq study of CD34+ cells from myelodysplastic syndrome (MDS) patients with SF3B1 mutations (Dolatshad, et al., 2015). This dataset was downloaded from GEO database (GSE63569), we selected a random subset of 5000 genes here for demonstration. 
+The input file of PathwaySplice are p-values for multiple gene features associated with each gene. This information can be obtained from DEXSeq [Anders2012] or JunctionSeq [Hartley2016] output files. As an example, PathwaySplice includes a feature based dataset within the package, based on a RNASeq study of CD34+ cells from myelodysplastic syndrome (MDS) patients with SF3B1 mutations (Dolatshad, et al., 2015). This dataset was downloaded from GEO database (GSE63569), we selected a random subset of 5000 genes here for demonstration. 
 
 The example dataset can be loaded directly:
 ```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup'}
@@ -56,7 +56,7 @@ To assess selection bias, i.e. whether gene with more features are more likely t
 lrTestBias(gene.based.table,boxplot.width=0.3)
 ```
 
-To perform pathway analysis that adjusts for the number of gene features, we use the **runPathwangSplice** function, which implements the methodology described in [@Young2010]. **runPathwangSplice** returns a   [tibble](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) dataset  with statistical significance of the pathway (`over_represented_pvalue`), as well as the significant genes that drives pathway significance (`SIGgene_ensembl` and `SIGgene_symbol`). An additional bias plot that visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins is also generated. 
+To perform pathway analysis that adjusts for the number of gene features, we use the **runPathwangSplice** function, which implements the methodology described in [Young2010]. **runPathwangSplice** returns a   [tibble](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) dataset  with statistical significance of the pathway (`over_represented_pvalue`), as well as the significant genes that drives pathway significance (`SIGgene_ensembl` and `SIGgene_symbol`). An additional bias plot that visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins is also generated. 
 
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='markup'}
 result.adjusted <- runPathwaySplice(gene.based.table,genome='hg19',
@@ -91,7 +91,7 @@ enmap <- enrichmentMap(result.adjusted,n=5,
                        similarity.threshold=0.3, scaling.factor = 2)
 ```
 
-In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[@Shannon2003], which allows users to further maually adjust appearance of the generated network. 
+In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[Shannon2003], which allows users to further maually adjust appearance of the generated network. 
 
 # Reference
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
