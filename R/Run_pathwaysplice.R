@@ -73,15 +73,18 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
     mydata.2 <- cbind(mydata, DE)
     if (var(mydata.2$numFeature) != 0)
     {
-        mylogit.2 <- logistf(DE ~ as.numeric(numFeature), data = mydata.2)
-        pvalue <- mylogit.2$prob[2]
-        p.value <- format.pval(pvalue, eps = 1e-04, digits = 2)
+        mylogit.2 <- glm(formula = DE ~ as.numeric(numFeature), data = mydata.2, family = binomial(link = "logit"))
+        
+        pvalue <- coef(summary(mylogit.2))[2,4]
+        p.value <- formatC(pvalue, format = "e", digits = 2)
+        print (paste0("P-value from logistic regression is ", p.value))
+        
         boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, ylab = "Number of features", 
             col = "lightgray", ylim = c(min(mydata.2$numFeature), max(mydata.2$numFeature)), 
             names = c("non-significant genes", "significant genes"))
-        text(x = 2, y = max(mydata.2$numFeature) - 1, labels = c("", paste0("P-value from logistic regression ", 
-            p.value)))
+        
     } else
+    
     {
         cat("There are no variations on the number of features\n")
     }
@@ -195,13 +198,9 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' @param node.label.font Font size of node label
 #' @param similarity.threshold Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 #'                             will be connected on the enrichment map
-<<<<<<< HEAD
+
 #' @param scaling.factor Scaling factor that users can use to adjust the edge thickness of the network, 
-#' which is based on value of sqrt(JC coefficient * 5) * scaling.factor 
-=======
-#' @param scaling.factor Scaling factor that users can use to adjust the edge thickness of the network 
-#'       
->>>>>>> e8523300138e29e92a513be64b5ee52ebab69976
+#'         which is based on value of sqrt(JC coefficient * 5) * scaling.factor 
 #' @param output.file.dir Output files directory, see \code{Details} section below. 
 #' 
 #' @param label.node.by.index Options for labeling nodes on network. 
