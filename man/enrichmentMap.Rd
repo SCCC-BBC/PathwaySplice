@@ -34,6 +34,8 @@ FALSE indicates to label nodes by gene set names
 
 TRUE indicates to label nodes by the index of gene sets}
 
+\item{add.numSIGInCat}{Option for users to decide whether to add number of signficant genes of each gene set to the nodes in enrichment map or not}
+
 \item{...}{Additional parameter}
 }
 \value{
