@@ -15,7 +15,7 @@ output:
   pdf_document:
     highlight: null
     number_sections: yes
-bibliography: Splicing-network.bib
+bibliography: vignettes/Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
 vignette: > 
