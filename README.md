@@ -2,346 +2,122 @@
 [![codecov](https://codecov.io/github/SCCC-BBC/PathwaySplice/coverage.svg?branch=master)](https://codecov.io/github/SCCC-BBC/PathwaySplice)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)]
 
-# PathwaySplice
-An R package for adjusting bias in pathway analysis using differential exon and splicing junction usage based results
+---
+title: "PathwaySplice: pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features"
+author: "Aimin Yan, Xi Chen, Lily Wang"
+date: '`r Sys.Date()`'
 
-# To Install
+output:
+  html_document:
+   theme: default
+   fig_caption: yes
+   toc: no
+   highlight: null
+  pdf_document:
+    highlight: null
+    number_sections: yes
+bibliography: Splicing-network.bib
+pandoc_args: --natbib
+biblio-style: plain
+vignette: > 
+  %\VignetteIndexEntry{PathwaySplice} 
+  %\VignetteEngine{knitr::rmarkdown}
+   \usepackage[utf8]{inputenc}
+   
+---
 
-```{r eval=TRUE}
-#In R console
-library(devtools)
-
-# This version of PathwaySplice can be installed if your R version is >= 3.4.0
-install_github("SCCC-BBC/PathwaySplice",ref = 'development')
-
-#In pegasus terminal 
-R -e 'library(devtools);install_github("SCCC-BBC/PathwaySplice",ref="development")'
-
+```{r,echo=FALSE}
+knitr::opts_chunk$set(collapse = FALSE,comment = "#>")
 ```
 
-# Use PathwaySplice
+# Introduction
 
-+ Run DEXSeq or JunctionSeq to get differential exon and/or splicing junction analysis resutls 
+In alternative splicing ananlysis of RNASeq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. 
 
-```{r eval=TRUE}
-# Load feature table to get differential usage results
+For DEXSeq results, we use _gene features_ to refers to non-overlapping exon counting bins [@Anders2012, Figure 1], while for JunctionSeq results, _gene features_ refers to non-overlapping exon or splicing junction counting bins. 
 
+A major challenge is that without explicit adjustment, pathways analysis would be biased toward pathways that include genes with a large number of gene features, because these genes are more likely to be selected as "significant genes" in pathway analysis.  
+
+PathwaySplice is an R package that falicitate the folowing analysis: 
+
+1. Performing pathway analysis that explicitly adjusts for the number of exons or junctions associated with each gene; 
+2. Visualizing selection bias due to different number of exons or junctions for each gene and formally tests for presence of bias using logistic regression; 
+3. Supporting gene sets based on the Gene Ontology terms, as well as more broadly defined gene sets (e.g. MSigDB) or user defined gene sets; 
+4. Identifing the significant genes driving pathway significance and 
+5. Organizing significant pathways with an enrichment map, where pathways with large number of overlapping genes are grouped together in a network graph.
+
+
+# Quick start on using PathwaySplice
+
+After installation, the PathwaySplice package can be loaded into R using:
+```{r eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
 library(PathwaySplice)
-data(featureBasedData)
-
-output.file.dir <- "~/OutputTestPathwaySplice"
-
-# Convert the results of differential usage analysis into gene based resutls
-gene.based.table <- makeGeneTable(featureBasedData)
 ```
 
-+ Apply logistic regression model to identify bias factor
-```{r eval=TRUE}
+The latest version can also be installed by 
+```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+library(devtools)
+install_github("SCCC-BBC/PathwaySplice",ref = 'development')
+```
+
+The input file of PathwaySplice are p-values for multiple gene features associated with each gene. This information can be obtained from DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016] output files. As an example, PathwaySplice includes a feature based dataset within the package, based on a RNASeq study of CD34+ cells from myelodysplastic syndrome (MDS) patients with SF3B1 mutations (Dolatshad, et al., 2015). This dataset was downloaded from GEO database (GSE63569), we selected a random subset of 5000 genes here for demonstration. 
+
+The example dataset can be loaded directly:
+```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup'}
+data(featureBasedData)
+head (featureBasedData)
+```
+
+Next the **makeGeneTable** function can be used to convert it to a gene based table. 
+```{r eval=TRUE, message=FALSE, warning=FALSE, results='markup'}
+gene.based.table <- makeGeneTable(featureBasedData)
+head(gene.based.table)
+```
+Here `geneWisePvalue` is simply the lowest feature based p-value for the gene, `numFeature` is number of features for the gene, `fdr` is false discovery rate for `genewisePvalue`, `sig.gene` indicates if a gene is significant.  
+
+To assess selection bias, i.e. whether gene with more features are more likely to be selected as significant genes, **lrTestBias** function fits a logistic regression with `logit (sig.gene) ~ numFeature`
+
+```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup', fig.height=5, fig.width=5}
 lrTestBias(gene.based.table,boxplot.width=0.3)
 ```
-#output.file.dir <-"C:/Temp"
 
-+ Perform pathwaysplice using Canonical Pathways
-```{r eval=TRUE}
+To perform pathway analysis that adjusts for the number of gene features, we use the **runPathwangSplice** function, which implements the methodology described in [@Young2010]. **runPathwangSplice** returns a   [tibble](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) dataset  with statistical significance of the pathway (`over_represented_pvalue`), as well as the significant genes that drives pathway significance (`SIGgene_ensembl` and `SIGgene_symbol`). An additional bias plot that visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins is also generated. 
+
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='markup'}
+result.adjusted <- runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Wallenius')
+head(result.adjusted)
+```
+
+To performe pathway analysis for other user defined databases, one needs to specify the pathway database in [.gmt format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats) first and then use the `gmtGene2Cat` function before calling `pathwaySplice` function. 
+
+
+```{r eval=TRUE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
 dir.name <- system.file('extdata', package='PathwaySplice')
-#canonical.pathway.file <- '10.cp.gmt.txt'
-canonical.pathway.file <- "h.all.v6.0.symbols.gmt.txt"
-
-cpp <- gmtGene2Cat(file.path(dir.name,canonical.pathway.file),genomeID='hg19')
-
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,
-                         method='Wallenius',go.size.limit=c(0,20),
-                         output.file=file.path(output.file.dir,"hm_adjusted_1.csv"))
-                         
-res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,
-                         method='Hypergeometric',go.size.limit=c(0,20),
-                         output.file=file.path(output.file.dir,"hm_unadjusted_2.csv"))
-
-compareResults(30,res1,res2,gene.based.table,output.file.dir,
-                  type.boxplot='Only3')
-
-#If you are interested in other gene sets such as Transcription Factor Targets(TFT) and hallmark gene sets from http://software.broadinstitute.org/gsea/msigdb/collections.jsp, download these gmt files, then perform analysis as the above.
-
-dir.name.1 <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
-#dir.name.1 <- "C:/Users/lxw391/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data"
-pathway.file <- "h.all.v6.0.symbols.gmt.txt"
-
-cpp <- gmtGene2Cat(file.path(dir.name.1,pathway.file),genomeID='hg19')
-
-res3 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,
-                         method='Wallenius',
-                         output.file=file.path(output.file.dir,"hm_unadjusted_3.csv"))
-                         
-res4 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=cpp,
-                         method='Hypergeometric',
-                         output.file=file.path(output.file.dir,"hm_unadjusted_4.csv"))
-
-yy <- compareResults(10,res3,res4,gene.based.table,output.file.dir,
-                  type.boxplot='Only3')
-
-yy <- compareResults(10,res3,res4,gene.based.table,output.file.dir,
-                  type.boxplot='All')
-                  
+hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
+hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
+result.hallmark <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                gene2cat=hlp, go.size.limit=c(5,200), method='Wallenius', binsize=20)
+```                
+For example, the results for the MSigDB Hallmark gene sets are
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+head(result.hallmark)
 ```
 
-+ Build up network based on the overlap between gene sets and visualize this network
 
-```{r eval=TRUE}
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-                        id='ensGene',test.cats=c('GO:BP'),
-                        go.size.limit=c(5,30),
-                        method='Wallenius',
-                        output.file=file.path(output.file.dir,"bp_adjusted.csv"))
-           
-res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                        id='ensGene',test.cats=c('GO:BP'),
-                        go.size.limit=c(5,30),
-                        method='Hypergeometric',
-                        output.file=file.path(output.file.dir,"bp_unadjusted.csv"))
-                        
-enmap1 <- enrichmentMap(res1,n=6,similarity.threshold=0,
-                       output.file.dir = output.file.dir,
-                      label.node.by.index = TRUE)
-                      
-compareResults(20,res1,res2,gene.based.table,output.file.dir,
-              type.boxplot='Only3')
+Lastly, to visualize pathway analysis results in an enrichment network, we use the **enrichmentMap** function:
 
-#Label network by index of gene set, and output the network file in GML format that
-#can be used as an input in Cytoscape  
-enmap <- enrichmentMap(res1,n=10,similarity.threshold=0.3,label.node.by.index = TRUE,output.file.dir=file.path(output.file.dir,"OutEnmap"))
-
-#Label network by description of gene set, and output the network file in GML format
-#that can be used as an input in Cytoscape                       
-enmap <- enrichmentMap(res1,n=10,fixed = FALSE,similarity.threshold=0.3,
-                       label.node.by.index = FALSE,
-                       output.file.dir=file.path(output.file.dir,"OutEnmap"))
-                       
-enmap <- enrichmentMap(res2,n=10,fixed = FALSE,similarity.threshold=0.3,
-                       label.node.by.index = FALSE,
-                       output.file.dir=file.path(output.file.dir,"OutEnmap"))
+```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='center', fig.height=6, fig.width=6}
+output.file.dir <- file.path("~/PathwaySplice_output")
+enmap <- enrichmentMap(result.adjusted,n=5,
+                       output.file.dir=output.file.dir,
+                       similarity.threshold=0.3, scaling.factor = 2)
 ```
 
-+ Some examples when using PathwaySplice on windows
+In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[@Shannon2003], which allows users to further maually adjust appearance of the generated network. 
 
-```{r eval=TRUE}
-# not run, demonstrates how output file can be specified
-gene.based.table <- makeGeneTable(featureBasedData)
-
-res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
-                          test.cats=c('GO:BP'),
-                          go.size.limit=c(5,30),
-                          method='Wallenius',binsize=20, 
-                          output.file="C:/Users/lxw391/TEMP/test.csv")
-                          
-res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
-                          test.cats=c('GO:BP'),
-                          go.size.limit=c(5,30),
-                          method='Wallenius',binsize=20, 
-                          output.file="C:/temp/test.csv")
-```
-
-```{r eval=TRUE}
-gene.based.table <- makeGeneTable(featureBasedData)
- 
-res <- runPathwaySplice(gene.based.table,genome='hg19',
-                          id='ensGene',test.cats=c('GO:BP'),
-                          go.size.limit=c(5,30),method='Wallenius')
-                          
-# labeling each node by gene set name
-enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
-label.node.by.index = FALSE)
- 
-# labeling each node by gene set index
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.node.by.index = TRUE)
- 
-# not run, illustrates specification of output file directory 
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.node.by.index = TRUE, output.file.dir="C:/temp")
- 
-# not run, illustrates specification of output file directory
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.node.by.index = FALSE, output.file.dir="C:/temp")
-```
-
-```{r eval=TRUE}
-dir.name <- system.file('extdata', package='PathwaySplice')
-hallmark.pathway.file <- file.path(dir.name,"h.all.v6.0.symbols.gmt.txt")
- 
-hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
-                    
-gene.based.table <- makeGeneTable(featureBasedData)
- 
-res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
-                          id='ensGene',gene2cat=hallmark,  
-                          go.size.limit = c(5, 200),
-                          method='Wallenius', output.file=tempfile())
- 
-res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
-                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
-                          method='Hypergeometric',output.file=tempfile())
- 
-compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
- 
-res.unadj.adjusted<- runPathwaySplice(gene.based.table.adjusted,genome='hg19',
-                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
-                          method='Hypergeometric',output.file=tempfile())
- 
- 
- 
-# not run, illustrate specification of output directory
-compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir="C:/Temp")
-```
-
-+ More examples
-
-```{r eval=TRUE}
-
-#Exons and junctions
-load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs/jscs.RData")
-
-res.peng <- PathwaySplice:::makeFeatureTable(jscs)
-
-gene.based.table.peng <- makeGeneTable(res.peng)
-
-res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","bp_adjusted.csv"))
-
-enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs","OutEnmap"))
-
-#Only exons
-load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly/jscs.RData")
-
-res.peng <- PathwaySplice:::makeFeatureTable(jscs)
-
-gene.based.table.peng <- makeGeneTable(res.peng)
-
-res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscsOutput_jscs_exonsOnly","bp_adjusted.csv"))
-
-enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_exonsOnly","OutEnmap"))
-
-#Only junctions
-load("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly/jscs.RData")
-
-res.peng <- PathwaySplice:::makeFeatureTable(jscs)
-
-gene.based.table.peng <- makeGeneTable(res.peng)
-
-res.path.peng <- runPathwaySplice(gene.based.table.peng,genome='mm10',id='ensGene',test.cats=c('GO:BP'),go.size.limit=c(10,300),method='Wallenius',binsize=20,output.file=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","bp_adjusted.csv"))
-
-enrichmentMap(res.path.peng,n=10,fixed = FALSE,similarity.threshold=0.3,label.node.by.index = FALSE,output.file.dir=file.path("~/Dropbox (BBSR)/BBSR Team Folder/Aimin_Yan/peng/count_strand_based/Output_jscs_junctionsOnly","OutEnmap"))
-
-```
-
-+ Example for paper
-
-```{r eval=TRUE}
-dir.name <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper"
-
-sample.file <- "decoder.bySample.Mut_WT_2.txt"
-count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt" 
-gff.file <-"Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
-
-#exonsOnly
-res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
-sample.file, count.file,gff.file,analysis.type = "exonsOnly",use.multigene.aggregates =TRUE,method.dispFinal = 'shrink')
-
-res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
-sample.file, count.file,gff.file, method.dispFinal =
-'shrink',analysis.type = "exonsOnly")
-
-#junctionsOnly
-res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
-sample.file, count.file,gff.file, method.dispFinal =
-'shrink',analysis.type = "junctionsOnly")
-
-#junctionsAndExons
-res <-PathwaySplice:::getResultsFromJunctionSeq(dir.name,
-sample.file, count.file,gff.file, method.dispFinal =
-'shrink',analysis.type = "junctionsAndExons")
-```
-
-+ More example for paper
-
-```{r eval=TRUE}
-load("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/example_Mut_WT_re_run_with_multiple_gene.RData")
-res.without.multimapped <- PathwaySplice:::makeFeatureTable(res)
-gene.based.without.multimapped <- makeGeneTable(res.without.multimapped)
-
-source('~/PathwaySplice/inst/bin/Simple.r')
-gene.based.table <- PathwaySplice::makeGeneTable(featureBasedData)
-lrTestBias(gene.based.table)
-output.dir="~/PathwaySplice_output_1"
-
-res.adj <- PathwaySplice::runPathwaySplice(gene.based.table,genome='hg19',
-                        id='ensGene',test.cats=c('GO:BP'),
-                        go.size.limit=c(5,30),
-                        method='Wallenius',
-                        output.file=file.path(output.dir,"bp_adjusted.csv"))
-                        
-enmap <- PathwaySplice::enrichmentMap(res.adj,n=10,fixed = FALSE,similarity.threshold=0.3,
-label.node.by.index = FALSE,output.file.dir = output.dir)                       
-    
-output.dir="~/PathwaySplice_output_2"
-
-enmap <- PathwaySplice::enrichmentMap(res.adj,n=10,fixed = FALSE,similarity.threshold=0.3,
-label.node.by.index = FALSE,add.numSIGInCat=TRUE,output.file.dir = output.dir) 
-
-```
-
-```{r eval=TRUE}
-
-dir.name <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped"
-
-sample.file <- "~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/decoder.bySample.Mut_WT_2.txt"
-
-count.file <- "QC.spliceJunctionAndExonCounts.forJunctionSeq.txt" 
-
-gff.file <-"~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/ExampleData4paper/GTF_Files/Homo_sapiens.GRCh38.84.processed.sorted.4.JunctionSeq.flat.gff"
-
-#exonsOnly
-res <- getResultsFromJunctionSeq(dir.name,
-sample.file, count.file,gff.file,analysis.type = "exonsOnly",use.multigene.aggregates =TRUE,method.dispFinal = 'shrink')
-save(res,file="~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/jscsKeepMutiMapped.RData")
-load("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/jscsKeepMutiMapped.RData")
-res.2 <- PathwaySplice:::makeFeatureTable(res)
-res.3 <- makeGeneTable(res.2)
-lrTestBias(res.3)
-jscs.with.multimapped <- res
-
-jscs.with.multimapped.2 <- PathwaySplice:::makeFeatureTable(jscs.with.multimapped, use.multigene.aggregates = TRUE)
-jscs.with.multimapped.3 <- makeGeneTable(jscs.with.multimapped.2)
-
-jscs.with.multimapped.4 <- PathwaySplice:::splitGeneCluster(jscs.with.multimapped.3)
-
-re<-list(gene.with.multimapped=res.3$geneID,gene.without.multimapped = gene.based.without.multimapped$geneID)
-
-venn.plot <- venn.diagram(
-  x = re[c(1,2)],
-  filename = file.path("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped",paste0(names(re)[1],"_",names(re)[2],"_overlap_venn.tiff")),
-  height = 3000,
-  width = 3500,
-  resolution = 1000,
-  col = "black",
-  lty = "dotted",
-  lwd = 1,
-  fill = c("red","blue"),
-  alpha = 0.50,
-  label.col = c(rep("black",3)),
-  cex = 0.5,
-  fontfamily = "serif",
-  fontface = "bold",
-  cat.col = c("red","blue"),
-  cat.cex = 0.5,
-  cat.pos = 0.5,
-  cat.dist = 0.05,
-  cat.fontfamily = "serif"
-)
-```
-
-#To generate vignettes
-#rmarkdown::render("vignettes/tutorial.Rmd", output_format="all")
-#rmarkdown::render("vignettes/tutorial.Rmd", output_format="all",encoding="utf8")(on windows)
+# Reference
+<!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
+<!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all",encoding="utf8")(on windows) -->
