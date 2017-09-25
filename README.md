@@ -94,5 +94,6 @@ enmap <- enrichmentMap(result.adjusted,n=5,
 In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[Shannon2003], which allows users to further maually adjust appearance of the generated network. 
 
 # Reference
+The details are available on vignettes/tutorial.pdf
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all",encoding="utf8")(on windows) -->
