@@ -18,9 +18,9 @@ or not}
 Returns a genewised table with several variables (columns) 
 \item{geneID}{Gene identifiers in ensembl gene IDs}
 \item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
-\item{sig.gene}{a gene is significant (1) or not (0)} 
-\item{mostSigDeFeature}{the most significant gene feature}
 \item{numFeature}{number of gene features within the gene}
+\item{fdr}{false discovery rate for genewisePvalue}
+\item{sig.gene}{a gene is significant (1) or not (0)}
 }
 \description{
 This function obtains genewise p-values,

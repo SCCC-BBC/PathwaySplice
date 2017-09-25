@@ -23,7 +23,8 @@ to run this function . tcltk R package is also required, but in most distributio
 \item{similarity.threshold}{Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
 will be connected on the enrichment map}
 
-\item{scaling.factor}{Scaling factor that users can use to adjust the edge thickness of the network}
+\item{scaling.factor}{Scaling factor that users can use to adjust the edge thickness of the network, 
+which is based on value of sqrt(JC coefficient * 5) * scaling.factor}
 
 \item{output.file.dir}{Output files directory, see \code{Details} section below.}
 

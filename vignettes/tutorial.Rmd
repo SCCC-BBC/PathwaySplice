@@ -1,12 +1,17 @@
+
 ---
-title: "PathwaySplice testing for RNA-seq datasets"
-author: "Aimin Yan"
+title: "PathwaySplice: pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features"
+author: "Aimin Yan, Xi Chen, Lily Wang"
 date: '`r Sys.Date()`'
+
 output:
-  knitr:::html_vignette:
-    fig_caption: yes
-    toc: yes
-  pdf_document:
+  html_document:
+   theme: default
+   fig_caption: yes
+   toc: no
+   highlight: null
+   
+pdf_document:
     highlight: null
     number_sections: yes
 bibliography: Splicing-network.bib
@@ -19,94 +24,95 @@ vignette: >
 ---
 
 ```{r, echo = FALSE}
-knitr::opts_chunk$set(fig.width=12,fig.height=8,collapse = FALSE, comment = "#>")
+knitr::opts_chunk$set(fig.width=8,fig.height=7,collapse = FALSE, comment = "#>")
 ```
 
 # Introduction
 
-This document gives an introduction to the use of the PathwaySplice R Bioconductor package. This package provides methods for (1) performing pathway analysis that ex-plicitly adjusts for the number of exons or junctions associated with each gene; (2) visualizing selection bias due to different number of exons or junctions for each gene and formally tests for presence of bias using logistic regression; (3) supporting gene sets based on the Gene Ontology terms, as well as more broadly defined gene sets (e.g. MSigDB) or user defined gene sets; (4) identifing the significant genes driving pathway significance and (5) organizing significant pathways with an enrichment map, where pathways with large number of overlapping genes are grouped together in a network graph.
+In alternative splicing ananlysis of RNASeq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. 
 
-        Once installed, the PathwaySplice package can be easily loaded into R using:
+For DEXSeq results, we use _gene features_ to refers to non-overlapping exon counting bins [@Anders2012, Figure 1], while for JunctionSeq results, _gene features_ refers to non-overlapping exon or splicing junction counting bins. 
+
+A major challenge is that without explicit adjustment, pathways analysis would be biased toward pathways that include genes with a large number of gene features, because these genes are more likely to be selected as "significant genes" in pathway analysis.  
+
+PathwaySplice is an R package that falicitate the folowing analysis: 
+
+1. Performing pathway analysis that explicitly adjusts for the number of exons or junctions associated with each gene; 
+2. Visualizing selection bias due to different number of exons or junctions for each gene and formally tests for presence of bias using logistic regression; 
+3. Supporting gene sets based on the Gene Ontology terms, as well as more broadly defined gene sets (e.g. MSigDB) or user defined gene sets; 
+4. Identifing the significant genes driving pathway significance and 
+5. Organizing significant pathways with an enrichment map, where pathways with large number of overlapping genes are grouped together in a network graph.
+
+
+# Quick start on using PathwaySplice
+
+After installation, the PathwaySplice package can be loaded into R using:
 ```{r eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
-        library(PathwaySplice)
+library(PathwaySplice)
 ```
 
-# Use PathwaySplice
-PathwaySplice uses the output from DEXSeq[@Anders2012] or JunctionSeq[@Hartley2016] as input basis. Assume that users have got the differnetial exon usage or differential splicing junctions usage results(res) from DEXSeq or JunctionSeq. Users need to use the internal function makeFeatureTable in PathwaySplice to convert res into a gene feature based table firstly:
-
+The latest version can also be installed by 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
-featureBasedData <- PathwaySplice:::makeFeatureTable(res)
+library(devtools)
+install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 ```
-After users get genefeature based table(featureBasedData), users can use makeGeneTable function to convert it to a gene based table:
 
-```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
+The input file of PathwaySplice are p-values for multiple gene features associated with each gene. This information can be obtained from DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016] output files. As an example, PathwaySplice includes a feature based dataset within the package, based on a RNASeq study of CD34+ cells from myelodysplastic syndrome (MDS) patients with SF3B1 mutations (Dolatshad, et al., 2015). This dataset was downloaded from GEO database (GSE63569), we selected a random subset of 5000 genes here for demonstration. 
+
+The example dataset can be loaded directly:
+```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup'}
+data(featureBasedData)
+head (featureBasedData)
+```
+
+Next the **makeGeneTable** function can be used to convert it to a gene based table. 
+```{r eval=TRUE, message=FALSE, warning=FALSE, results='markup'}
 gene.based.table <- makeGeneTable(featureBasedData)
+head(gene.based.table)
 ```
+Here `geneWisePvalue` is simply the lowest feature based p-value for the gene, `numFeature` is number of features for the gene, `fdr` is false discovery rate for `genewisePvalue`, `sig.gene` indicates if a gene is significant.  
 
-For a showcase, PathwaySplice supply a feature based data with this package, users can load this data directly:
-```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-data("featureBasedData")
-gene.based.table <- makeGeneTable(featureBasedData)
-```
+To assess selection bias, i.e. whether gene with more features are more likely to be selected as significant genes, **lrTestBias** function fits a logistic regression with `logit (sig.gene) ~ numFeature`
 
-After this step, users can identify bias factor by the function lrTestBias
-```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
+```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup'}
 lrTestBias(gene.based.table,boxplot.width=0.3)
 ```
 
-To perform analysis by adjusting number of feature, users can perform the following step:
+To perform pathway analysis that adjusts for the number of gene features, we use the **runPathwangSplice** function, which implements the methodology described in (ref-goseq paper). **runPathwangSplice** returns a   [tibble](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) dataset  with statistical significance of the pathway (`over_represented_pvalue`), as well as the significant genes that drives pathway significance (`SIGgene_ensembl` and `SIGgene_symbol`). An additional bias plot that visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins is also generated. 
 
-```{r eval=TRUE,warning=FALSE,message=FALSE,results='hide'}
-res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
+```{r eval=TRUE,warning=FALSE,message=FALSE,results='markup'}
+result.adjusted <- runPathwaySplice(gene.based.table,genome='hg19',
                         id='ensGene',
                         test.cats=c('GO:BP'),
                         go.size.limit=c(5,30),method='Wallenius')
+head(result.adjusted)
 ```
 
-User can compare the output after adjutstment and the one before adjustment:
+To performe pathway analysis for other user defined databases, one needs to specify the pathway database in [.gmt format](http://software.broadinstitute.org/cancer/software/gsea/wiki/index.php/Data_formats) first and then use the `gmtGene2Cat` function before calling `pathwaySplice` function. 
 
-```{r eval=FALSE,warning=FALSE,message=FALSE,results='hide'}
-
-res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
-                          id='ensGene',test.cats =c('GO:BP'),
-                          go.size.limit = c(5, 30),
-                          method='Hypergeometric')
-
-compareResults(20, res.adj, res.unadj, 
-               gene.based.table, 
-               type.boxplot='Only3',
-               output.dir="~/PathwaySplice_output")
-
+```{r eval=TRUE,warning=FALSE,message=FALSE, results = 'hide'}
+dir.name <- system.file('extdata', package='PathwaySplice')
+hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
+hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
+result.hallmark <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                gene2cat=hlp, go.size.limit=c(5,200), method='Wallenius', binsize=20)
 ```
 
-Users can build up the enrichment network from the output of runPathwaySplice function by the following commands:
+For example, the results for the [MSigDB Hallmark gene sets](http://software.broadinstitute.org/gsea/msigdb/collections.jsp) are
+```{r eval=TRUE,warning=FALSE,message=FALSE,results = 'markup'}
+head(result.hallmark)
+```
 
-```{r eval=FALSE,warning=FALSE,message=FALSE,results='hide'}
+Lastly, to visualize pathway analysis results in an enrichment network, we use the **enrichmentMap** function:
+
+```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup'}
 output.file.dir <- file.path("~/PathwaySplice_output")
-enmap <- enrichmentMap(res.adj,n=3,
+enmap <- enrichmentMap(result.adjusted,n=5,
                        output.file.dir=output.file.dir,
-                       similarity.threshold=0)
+                       similarity.threshold=0.3, scaling.factor = 2)
 ```
 
-In the enrichment map, the size of the nodes indicates the number of significant genes within the pathway, which is also indicated by the number after “:”. The color of the nodes indicates pathway significance, where smaller p-values correspond to dark red color. The thickness of the edges corresponds to JC similarity coefficient between the two pathways.
-
-User can find several output files under "~/PathwaySplice_output" directory. These files include:
-
-"boxplot.html": To show the distributions of gene features associated with genes in significant gene sets before and after bias "adjustment".
-
-"adjusted_unadjusted_overlap_venn.tiff": To visualize the overalp of genes in significant pathways before and after adjustment.
-
-"adjustedOnly.csv": To list gene sets only in adjusted results. 
-
-"unadjustedOnly.csv": To list gene sets only in unadjusted results. 
-
-"results4venn.csv": To list 3 columns that corresponds to gene set names in adjustedOnly, unadjustedOnly and common area in venn plot.    
-
-"network.layout.for.cytoscape.gml": The file can be used as an input in cytoscape software[@Shannon2003] to let users manipulate the networks. 
-
-# Conclusion
-
-In this tutorial, we go through basic steps in PathwaySplicing to process input from the outputs from DEXSeq or JunctionSeq, and to identify bias, and to perform gene set and pathway analysis, and to make enrichment network. Users can follow these steps to apply this Package on their RNA-Seq data as well. 
+In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[@Shannon2003], which allows users to further maually adjust appearance of the generated network. 
 
 # Reference
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
