@@ -2,32 +2,8 @@
 [![codecov](https://codecov.io/github/SCCC-BBC/PathwaySplice/coverage.svg?branch=master)](https://codecov.io/github/SCCC-BBC/PathwaySplice)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)]
 
-title: "PathwaySplice: pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features"
-author: "Aimin Yan, Xi Chen, Lily Wang"
-date: '`r Sys.Date()`'
-
-output:
-  html_document:
-   theme: default
-   fig_caption: yes
-   toc: no
-   highlight: null
-  pdf_document:
-    highlight: null
-    number_sections: yes
-bibliography: vignettes/Splicing-network.bib
-pandoc_args: --natbib
-biblio-style: plain
-vignette: > 
-  %\VignetteIndexEntry{PathwaySplice} 
-  %\VignetteEngine{knitr::rmarkdown}
-   \usepackage[utf8]{inputenc}
-   
----
-
-```{r,echo=FALSE}
-knitr::opts_chunk$set(collapse = FALSE,comment = "#>")
-```
+# PathwaySplice
+Pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features
 
 # Introduction
 
