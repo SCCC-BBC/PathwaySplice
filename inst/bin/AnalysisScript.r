@@ -636,3 +636,22 @@ compareTwoCountFiles <- function(input.with.multiplemapped.dir, input.without.mu
   head(count.1.2.dd)
   
 }
+
+useKeepMultiMappedData <- function()
+{
+  load("~/Dropbox (BBSR)/Aimin_project/Research/PathwaySplice/data/reCountKeepMultiMapped/jscsKeepMutiMapped.RData")
+  res1 <- PathwaySplice:::makeFeatureTable(res, use.multigene.aggregates = TRUE)
+  res2 <- makeGeneTable(res1)
+  res3 <- PathwaySplice:::splitGeneCluster(res2)
+  gene.and.its.cluster <- PathwaySplice:::identifyGeneAndItsCluster(res2)
+  gene.and.its.cluster.2 <- as.data.frame(gene.and.its.cluster)
+  row.names(gene.and.its.cluster.2) <- gene.and.its.cluster.2$gene
+  
+  pwf <- getPwf(res3)
+  pwf.1 <- merge(pwf,gene.and.its.cluster.2,by=0,sort = FALSE)
+  
+  row.names(pwf.1) <-pwf.1$Row.names
+  
+  pwf.2 <- pwf.1[,which(colnames(pwf.1) %in%c("DEgenes","bias.data","pwf","geneCluster"))]
+  
+}
