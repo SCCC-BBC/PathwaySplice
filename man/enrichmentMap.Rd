@@ -4,45 +4,66 @@
 \alias{enrichmentMap}
 \title{enrichmentMap}
 \usage{
-enrichmentMap(goseqres, n = 50, fixed = TRUE, vertex.label.font = 1,
-  similarity.threshold, output.file.dir, label.vertex.by.index = FALSE, ...)
+enrichmentMap(pathway.res, n = 50, fixed = TRUE, node.label.font = 1,
+  similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(),
+  label.node.by.index = FALSE, add.numSIGInCat = FALSE, ...)
 }
 \arguments{
-\item{goseqres}{Object returned from runPathwaySplice}
+\item{pathway.res}{Pathway analysis results, an object returned by \code{runPathwaySplice}}
 
-\item{n}{Maximum number of category to be shown}
+\item{n}{The top \emph{n} most significant gene sets are shown on enrichment map}
 
-\item{fixed}{If set to FALSE, will invoke tkplot}
+\item{fixed}{If set to FALSE, will invoke tkplot (an interactive graphing facility in R) that allows one
+to draw an interactive enrichment map. Users can then manually adjust the layout of the enrichment map. 
+Note: on OS X system, users need to have \href{https://www.xquartz.org/index.html}{XQuartz} installed 
+to run this function . tcltk R package is also required, but in most distributions of R tcltk is already included}
 
-\item{vertex.label.font}{Font size of vertex label}
+\item{node.label.font}{Font size of node label}
 
-\item{similarity.threshold}{Threshold for defining Jaccard Coefficient(JC)
+\item{similarity.threshold}{Gene sets with Jaccard Coefficient > \code{similarity.threshold} 
+will be connected on the enrichment map}
 
-JC ranges from 0 to 1:
+\item{scaling.factor}{Scaling factor that users can use to adjust the edge thickness of the network, 
+which is based on value of sqrt(JC coefficient * 5) * scaling.factor}
 
-JC=0, indicates there are no overlap on genes between
-       two gene sets
+\item{output.file.dir}{Output files directory, see \code{Details} section below.}
 
-JC=1, indicates two gene sets are identical  
+\item{label.node.by.index}{Options for labeling nodes on network. 
 
-similarity.threshold=0, indicates the enrichment map includes
-all gene sets with their mutual JC greater than 0}
+FALSE indicates to label nodes by gene set names
 
-\item{output.file.dir}{Output dir for the gene set information file on network}
+TRUE indicates to label nodes by the index of gene sets}
 
-\item{label.vertex.by.index}{Which way to be used for labeling vertex on network
-
-FALSE indicates to label vertex by the name of gene sets
-
-TRUE indicates to label vertex by the index of gene sets}
+\item{add.numSIGInCat}{Option for users to decide whether to add number of signficant genes of each gene set to the nodes in enrichment map or not}
 
 \item{...}{Additional parameter}
 }
 \value{
-A list for giving edge and vertex information of enrichment map
+A list with edge and node information used to plot enrichment map
 }
 \description{
-enrichmentMap is used to draw Enrichment Map based on similarities defined using Jaccard Coefficient between GOs or gene sets
+This function draws an enrichment map based on the overlap of gene sets 
+as measured by the Jaccard Coefficient(JC)
+}
+\details{
+In the enrichment map,
+\itemize{
+  \item the \emph{node colors} are controlled by gene set p-values, 
+    where smaller p-values correspond to dark red color.
+  \item \emph{node sizes} are controlled by the number of significant genes in gene set.
+  \item \emph{thickness of the edges} correspond to Jaccard similarity coefficient between two gene sets.
+  \item the numbers after ':' indicates the nubmer of significant genes in the gene set. 
+}
+
+The Jaccard similarity coefficient ranges from 0 to 1. JC=0 indicates 
+there are no overlapping genes between two gene sets, 
+JC=1 indicates two gene sets are identical. 
+
+The output directory will include the following files: 
+
+(1) a network file (in GML format) that can be used as an input for \href{http://www.cytoscape.org/}{Cytoscape} software
+(2) when label.node.by.index=TRUE, also a gene set information file that includes full names of the gene sets 
+and the gene set indices shown on the network.
 }
 \examples{
 
@@ -50,16 +71,23 @@ gene.based.table <- makeGeneTable(featureBasedData)
 
 res <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',test.cats=c('GO:BP'),
-                         go.size.cut=c(5,30),
-                         method='Wallenius')
+                         go.size.limit=c(5,30),method='Wallenius')
+                         
+# labeling each node by gene set name
+enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+label.node.by.index = FALSE)
 
-dir.name <- tempdir()
-output.file.dir <- file.path(dir.name,'OutputEnmapEx')
+# labeling each node by gene set index
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+label.node.by.index = FALSE)
 
-enmap <- enrichmentMap(res,n=3,similarity.threshold=0,
-                       output.file.dir = output.file.dir,
-                       label.vertex.by.index = TRUE)
-                       
+\dontrun{
+# illustrates specification of output file directory 
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+                      label.node.by.index = TRUE, output.file.dir='C:/temp')
+                      
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+                      label.node.by.index = FALSE, output.file.dir='C:/temp')}
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package

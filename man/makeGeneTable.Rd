@@ -4,21 +4,23 @@
 \alias{makeGeneTable}
 \title{makeGeneTable}
 \usage{
-makeGeneTable(feature.table, sig.threshold = 0.05)
+makeGeneTable(feature.table, sig.threshold = 0.05, stat = "pvalue")
 }
 \arguments{
 \item{feature.table}{An \code{featureBasedData} object.}
 
 \item{sig.threshold}{Significance threshold used to determine whether the gene is significant 
 or not}
+
+\item{stat}{The statistic used to select significant genes. Options are 'pvalue' or 'fdr'}
 }
 \value{
-Returns a dataframe with several variables (columns) 
-\item{geneID}{Gene ID}
+Returns a genewised table with several variables (columns) 
+\item{geneID}{Gene identifiers in ensembl gene IDs}
 \item{geneWisePvalue}{each gene is represented by the smallest p-value among its features}
-\item{sig.gene}{a gene is significant (1) or not (0)} 
-\item{mostSigDeFeature}{the most significant gene feature}
 \item{numFeature}{number of gene features within the gene}
+\item{fdr}{false discovery rate for genewisePvalue}
+\item{sig.gene}{a gene is significant (1) or not (0)}
 }
 \description{
 This function obtains genewise p-values,
@@ -27,6 +29,5 @@ and then determines genes status as significant or not.
 }
 \examples{
 data(featureBasedData)
-res <- makeGeneTable(featureBasedData)
-  
+gene.based.table <- makeGeneTable(featureBasedData)
 }

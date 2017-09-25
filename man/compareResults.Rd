@@ -4,62 +4,71 @@
 \alias{compareResults}
 \title{compareResults}
 \usage{
-compareResults(n.go, adjusted, unadjuasted, venn.dir, boxplot.dir,
-  type.boxplot = c("All", "Only3"), In.ad.not.un.file, In.un.not.ad.file)
+compareResults(n.go, adjusted, unadjusted, gene.based.table,
+  output.dir = tempdir(), type.boxplot = c("All", "Only3"))
 }
 \arguments{
-\item{n.go}{Number of gene sets}
+\item{n.go}{Distributions of bias factor in genes associated with the most significant 
+\code{n.go} gene sets will be compared}
 
-\item{adjusted}{Adjusted result}
+\item{adjusted}{An object returned by \code{runPathwaySplice}, should correspond to
+gene set anlaysis results adjusting for biases in splicing analysis}
 
-\item{unadjuasted}{Unadjusted result}
+\item{unadjusted}{An object returned by \code{runPathwaySplice}, should correspond to 
+gene set analysis results NOT adjusting for biases}
 
-\item{venn.dir}{Path for outputing venn}
+\item{gene.based.table}{An object returned by \code{makeGeneTable}, should correspond to 
+a table with one p-value for each gene}
 
-\item{boxplot.dir}{Path for outputing boxplot}
+\item{output.dir}{Directory for output files}
 
-\item{type.boxplot}{Get boxplot for 5 categories or 3 categories
+\item{type.boxplot}{Options are 'All' and 'Only3', corresponding to drawing 5 boxplots or 3 boxplots. 
 
-       6 categories: 'All.adjusted','All.unadjusted',
-                     'Top25.adjusted','Top25.unadjusted',
-                     'In_ad_not_un','In_un_not_ad'
+       5 boxplots:  \code{all genesets}, \code{sig.adjusted} (sig gene sets in adjusted analysis),
+        \code{sig.unadjusted} (sig gene sets in unadjusted analysis),
+        \code{sig.adjusted.only} (sig gene sets in adjusted analysis only), 
+        \code{sig.unadjusted.only} (sig gene sets in unadjusted analysis only)
                      
-       3 categories: 'All','Top25.adjusted','Top25.unadjusted}
-
-\item{In.ad.not.un.file}{File name for outputing adjused but not
-in unadjusted when using the selected gene sets}
-
-\item{In.un.not.ad.file}{File name for outputing unadjused but not
-in adjusted when using the selected gene sets}
+       3 boxplots: \code{all genesets}, \code{adjusted.sig}, \code{unadjusted.sig}}
 }
 \value{
-Nothing to be returned
+The output include 3 files in \code{output.dir}: 
+(1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
+(2) a .csv file with gene set names belonging to different sections of the venn diagram    
+(3) a box plot showing the distributions of number of features within all genes 
+in significant gene sets, with and without adjusting for bias factors
 }
 \description{
-compareResults
+This function helps with visualizing the effects of bias adjustment in pathway analysis, 
+by comparing the distributions of bias factors (e.g. number of exon bins) 
+in genes associated with the most significant gene sets, before and after adjusting for bias factors 
+in splicing pathway analysis.
 }
 \examples{
 
 dir.name <- system.file('extdata', package='PathwaySplice')
-canonical.pathway.file <- '10.cp.gmt.txt'
-res <- gmtGene2Cat(dir.name,canonical.pathway.file,
-                   'local',genomeID='hg19')
+hallmark.pathway.file <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
+
+hallmark <- gmtGene2Cat(hallmark.pathway.file,genomeID='hg19')
+                   
 gene.based.table <- makeGeneTable(featureBasedData)
 
-res1 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=res,
-                         method='Wallenius')
+res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
+                         id='ensGene',gene2cat=hallmark,  
+                         go.size.limit = c(5, 200),
+                         method='Wallenius', output.file=tempfile())
 
-res2 <- runPathwaySplice(gene.based.table,genome='hg19',
-                         id='ensGene',gene2cat=res,
-                         method='Hypergeometric')
+res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
+                         id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
+                         method='Hypergeometric',output.file=tempfile())
 
-dir.name <- tempdir()
-output.dir <- file.path(dir.name,'OutputPostAnalysis')
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 
-output.file.name.1 <- 'In_ad_not_un.xls'
-output.file.name.2 <- 'In_un_not_ad.xls'
-compareResults(4,res1,res2,output.dir,output.dir,
-                      type.boxplot='Only3',
-                      output.file.name.1,output.file.name.2)
+\dontrun{
+# illustrate specification of output directory
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
+output.file.dir <- '~/OutputTestPathwaySplice'
+compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')
+}
+
 }

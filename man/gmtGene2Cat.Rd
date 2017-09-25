@@ -4,32 +4,44 @@
 \alias{gmtGene2Cat}
 \title{gmtGene2Cat}
 \usage{
-gmtGene2Cat(dir.name, pathway.file, file.type, gene.anno.file = NULL,
-  genomeID = c("mm10", "hg19", "hg38"))
+gmtGene2Cat(pathway.file, gene.anno.file = NULL, genomeID = c("mm10",
+  "hg19", "hg38"))
 }
 \arguments{
-\item{dir.name}{Directory for the gene sets in GMT format that is located in}
+\item{pathway.file}{Input file for the gene sets in GMT format, must be in \emph{gene symbols}}
 
-\item{pathway.file}{Input file for the gene sets in GMT format}
+\item{gene.anno.file}{Gene annotation file that facilitate gene id conversions when 
+gene ids in RNA-Seq data and \code{pathway.file} differ. If not specified, \code{gmtGene2cat} 
+relies on gene annotations provided by R package \code{AnnotationHub}.}
 
-\item{file.type}{Indicates the gene set file in GMT format is in local or url}
-
-\item{gene.anno.file}{Gene annotation file supplied as a file}
-
-\item{genomeID}{Genome ('mm10','hg19' or 'hg38') to be used}
+\item{genomeID}{Genome to be used. Options are 'mm10','hg19' or 'hg38'.}
 }
 \value{
-A list with its names being geneID, its elements being the pathways
+A list where each entry is named by a gene and contains a vector of all
+        the pathways associated with the gene
 }
 \description{
-Read a gene set file in GMT format, and return a list with its name
-being a gene id, and each element of this list
-being the pathways that this gene corresponds to
+Obtains all pathways associated with a set of genes
+}
+\details{
+This function reads a gene set file in \href{https://software.broadinstitute.org/cancer/
+software/gsea/wiki/index.php/Data_formats#GMT:_Gene_Matrix_Transposed_file_format_.28.2A.gmt.29}{GMT format},
+and returns a list with its name being a gene id, and each element of 
+the list being the pathways associated with the gene. When gene ids in RNA-Seq data differ from those in pathway database,
+\code{gene.anno.file} facilitate gene id conversions. Users can prepare this file based on the format of the example gene annotation file at 
+             \href{https://raw.githubusercontent.com/aiminy/GOSJ/master/data/gene_annotation.txt}{this link.}
 }
 \examples{
-
+#using local file for pathways database
 dir.name <- system.file('extdata', package='PathwaySplice')
-canonical.pathway.file <- '10.cp.gmt.txt'
-res <- gmtGene2Cat(dir.name,canonical.pathway.file,'local',genomeID='hg19')
+hallmark.local.pathways <- file.path(dir.name,'h.all.v6.0.symbols.gmt.txt')
+hlp <- gmtGene2Cat(hallmark.local.pathways, genomeID='hg19')
+
+\dontrun{
+#using url for pathways database linked to a website
+hallmark.url.pathways <- paste0('https://raw.githubusercontent.com/SCCC-BBC',
+                   '/PathwaySplice/development/inst/extdata',
+                     '/h.all.v6.0.symbols.gmt.txt')
+hup <- gmtGene2Cat(hallmark.url.pathways, genomeID='hg19')}
 
 }

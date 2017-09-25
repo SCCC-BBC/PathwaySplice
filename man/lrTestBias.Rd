@@ -4,17 +4,10 @@
 \alias{lrTestBias}
 \title{lrTestBias}
 \usage{
-lrTestBias(genewise.table, loc.x = 2, loc.y = 70, y.lim = 80,
-  boxplot.width = 0.3)
+lrTestBias(genewise.table, boxplot.width = 0.1)
 }
 \arguments{
 \item{genewise.table}{A dataframe with genewise p-value for each gene, returned from \code{makeGeneTable()}}
-
-\item{loc.x}{x coordinate for position of logistic regression p-value in figure}
-
-\item{loc.y}{y coordinate for position of logistic regression p-value in figure}
-
-\item{y.lim}{The largest number of gene features on the y axis in boxplot}
 
 \item{boxplot.width}{width of boxplot}
 }
@@ -26,15 +19,14 @@ This function tests presence of selection bias using logistic regression, and pr
 that compares distributions of bias factors (e.g. number of exons) for significant genes and non-significant genes.
 }
 \details{
-To determine presentce of selection bias, we fit the logistic regression model 
-\code{Pr(a gene is significant) ~ number of features within the gene}. 
+To determine presentce of selection bias, we fit the following logistic regression model:
+ 
+\code{Pr(a gene is significant) ~ number of features within the gene} 
+
 Here features refer to exon bins or splicing junction bins, depending on 
-how genewise pvalues were obtained
+how genewise pvalues were obtained in the \code{genewise.table}
 }
 \examples{
-
 gene.based.table <- makeGeneTable(featureBasedData)
-lrTestBias(gene.based.table,loc.x=2,loc.y=150,y.lim=200,boxplot.width=0.3)
-
-
+lrTestBias(gene.based.table)
 }
