@@ -1316,7 +1316,7 @@ getGeneSetBySize <- function(user2cat, go.size.limit)
     return(gene2go.select.2)
 }
 
-makeFeatureTable <- function(jscs, use.multigene.aggregates = FALSE)
+makeFeatureTable <- function(jscs, use.multigene.aggregates = TRUE)
 {
     temp <- fData(jscs)
     temp2 <- temp[which(temp$testable == TRUE), ]
