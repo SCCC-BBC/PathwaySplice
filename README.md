@@ -2,7 +2,6 @@
 [![codecov](https://codecov.io/github/SCCC-BBC/PathwaySplice/coverage.svg?branch=master)](https://codecov.io/github/SCCC-BBC/PathwaySplice)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)]
 
----
 title: "PathwaySplice: pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features"
 author: "Aimin Yan, Xi Chen, Lily Wang"
 date: '`r Sys.Date()`'
