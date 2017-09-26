@@ -250,7 +250,7 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' label.node.by.index = FALSE)
 #' 
 #' # labeling each node by gene set index
-#' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+#' enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
 #' label.node.by.index = FALSE)
 #' 
 #' \dontrun{
