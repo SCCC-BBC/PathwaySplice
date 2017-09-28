@@ -4,7 +4,7 @@ author: "Aimin Yan, Xi Chen, Lily Wang"
 date: '`r Sys.Date()`'
 
 output:
-  rmakdown::html_vignette:
+  rmarkdown::html_document:
    theme: default
    fig_caption: yes
    toc: no
