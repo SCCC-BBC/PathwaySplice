@@ -74,16 +74,17 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',
                          go.size.limit=c(5,30),method='Wallenius')
                          
 # labeling each node by gene set name
-enmap <- enrichmentMap(res,n=10,fixed = FALSE,similarity.threshold=0.3,
+enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
 label.node.by.index = FALSE)
 
 # labeling each node by gene set index
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-label.node.by.index = FALSE)
+label.node.by.index = TRUE)
 
 \dontrun{
-# illustrates specification of output file directory 
-enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
+# illustrates specification of output file directory
+# Enable interactive map and label each node by gene set index
+enmap <- enrichmentMap(res,n=10,fixed=FALSE, similarity.threshold=0.3,
                       label.node.by.index = TRUE, output.file.dir='C:/temp')
                       
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
