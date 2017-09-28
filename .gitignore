@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 vignettes/tutorial.R
+vignettes/tutorial.html
+vignettes/tutorial.pdf
