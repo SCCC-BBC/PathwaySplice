@@ -42,7 +42,9 @@ install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 
 ### Reference
 Yan A, Ban Y, Gao Z, Chen X, Wang L (2017) PathwaySplice: An R package for unbiased pathway analysis of alternative splicing in RNA-Seq data. _Submitted_
+
 Anders, S., Reyes, A. and Huber, W. (2012) Detecting differential usage of exons from RNA-seq data, Genome research, 22, 2008-2017.
+
 Hartley, S.W. and Mullikin, J.C. (2016) Detection and visualization of differential splicing in RNA-Seq data with JunctionSeq, Nucleic acids research, 44, e127
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all",encoding="utf8")(on windows) -->
