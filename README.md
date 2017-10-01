@@ -5,7 +5,7 @@
 # PathwaySplice
 Pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features
 
-# Introduction
+## Introduction
 
 In alternative splicing ananlysis of RNASeq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [Anders2012] or JunctionSeq [Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. 
 
@@ -22,7 +22,7 @@ PathwaySplice is an R package that falicitate the folowing analysis:
 5. Organizing significant pathways with an enrichment map, where pathways with large number of overlapping genes are grouped together in a network graph.
 
 
-# Quick start on using PathwaySplice
+### Installation
 
 After installation, the PathwaySplice package can be loaded into R using:
 ```{r eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
@@ -34,6 +34,10 @@ The latest version can also be installed by
 library(devtools)
 install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 ```
+
+### Vignette
+
+![alt text](https://github.com/SCCC-BBC/PathwaySplice/blob/master/tutorial.pdf)
 
 The input file of PathwaySplice are p-values for multiple gene features associated with each gene. This information can be obtained from DEXSeq [Anders2012] or JunctionSeq [Hartley2016] output files. As an example, PathwaySplice includes a feature based dataset within the package, based on a RNASeq study of CD34+ cells from myelodysplastic syndrome (MDS) patients with SF3B1 mutations (Dolatshad, et al., 2015). This dataset was downloaded from GEO database (GSE63569), we selected a random subset of 5000 genes here for demonstration. 
 
