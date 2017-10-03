@@ -37,8 +37,10 @@ install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 
 ### Vignette
 
-![pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/tutorial.pdf) (Please use google chrome or download the file to view)
+![vignette in pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/tutorial.pdf) (Please use google chrome or download the file to view)
 
+### Reference Manual
+![manual in pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/PathwaySplice-manual_9-19-2017.pdf) (Please use google chrome or download the file to view)
 
 ### Reference
 Yan A, Ban Y, Gao Z, Chen X, Wang L (2017) PathwaySplice: An R package for unbiased pathway analysis of alternative splicing in RNA-Seq data. _Submitted_
