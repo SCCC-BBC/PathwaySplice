@@ -37,7 +37,7 @@ install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 
 ### Vignette
 
-![pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/tutorial.pdf)
+![pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/tutorial.pdf) (Please use google chrome or download the file to view)
 
 
 ### Reference
