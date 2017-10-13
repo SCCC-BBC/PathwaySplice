@@ -16,7 +16,7 @@ bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
 vignette: >
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{PathwaySplice} 
   %\usepackage[utf8]{inputenc}
    
@@ -115,4 +115,6 @@ enmap <- enrichmentMap(result.adjusted,n=5,
 In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[@Shannon2003], which allows users to further maually adjust appearance of the generated network. 
 
 # Reference
-<!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
+<!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") -->
+<!-- To build vignettes: devtools::install(build_vignettes = TRUE) -->
+<!-- To have a look at vignettes: browseVignettes("PathwaySplice") or start R and open the vignette with vignette("tutorial", package="PathwaySplice") -->
