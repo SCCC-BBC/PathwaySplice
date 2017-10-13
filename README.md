@@ -21,7 +21,6 @@ PathwaySplice is an R package that falicitate the folowing analysis:
 4. Identifing the significant genes driving pathway significance and 
 5. Organizing significant pathways with an enrichment map, where pathways with large number of overlapping genes are grouped together in a network graph.
 
-
 ### Installation
 
 After installation, the PathwaySplice package can be loaded into R using:
