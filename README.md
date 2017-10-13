@@ -35,18 +35,16 @@ library(devtools)
 install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 ```
 
-### Vignette
-
-![vignette in pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/tutorial.pdf) (Please use google chrome or download the file to view)
-
-### Reference Manual
-![manual in pdf version](https://github.com/SCCC-BBC/PathwaySplice/blob/master/PathwaySplice-manual_9-19-2017.pdf) (Please use google chrome or download the file to view)
-
 ### Reference
-Yan A, Ban Y, Gao Z, Chen X, Wang L (2017) PathwaySplice: An R package for unbiased pathway analysis of alternative splicing in RNA-Seq data. _Submitted_
+Yan A, Ban Y, Gao Z, Chen X, Wang L. 2017. PathwaySplice: An R package for unbiased pathway analysis of alternative splicing in RNA-Seq data. _Submitted_
 
-Anders, S., Reyes, A. and Huber, W. (2012) Detecting differential usage of exons from RNA-seq data, Genome research, 22, 2008-2017.
+Anders, Simon, Alejandro Reyes, and Wolfgang Huber. 2012. “Detecting differential usage of exons from RNA-seq data.” Genome Research 22 (10): 2008–17. doi:10.1101/gr.133744.111.
 
-Hartley, S.W. and Mullikin, J.C. (2016) Detection and visualization of differential splicing in RNA-Seq data with JunctionSeq, Nucleic acids research, 44, e127
+Hartley, Stephen W., and James C. Mullikin. 2016. “Detection and visualization of differential splicing in RNA-Seq data with JunctionSeq.” Nucleic Acids Research, June. Oxford University Press, gkw501. doi:10.1093/nar/gkw501.
+
+Shannon, P., Andrew Markiel, Owen Ozier, Nitin S Baliga, Jonathan T Wang, Daniel Ramage, Nada Amin, Benno Schwikowski, and Trey Ideker. 2003. “Cytoscape: A Software Environment for Integrated Models of Biomolecular Interaction Networks.” Genome Research 13 (11): 2498–2504. doi:10.1101/gr.1239303.
+
+Young, Matthew D., Matthew J. Wakefield, Gordon K. Smyth, and Alicia Oshlack. 2010. “Gene Ontology Analysis for Rna-Seq: Accounting for Selection Bias.” Genome Biology 11 (2): R14. doi:10.1186/gb-2010-11-2-r14.
+
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") --> 
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all",encoding="utf8")(on windows) -->
