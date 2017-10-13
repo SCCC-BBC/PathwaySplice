@@ -2,5 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-vignettes/tutorial.html
 vignettes/tutorial.R
+vignettes/tutorial.html
+vignettes/tutorial.pdf

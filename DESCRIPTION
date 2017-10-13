@@ -1,10 +1,10 @@
 Package: PathwaySplice
 Type: Package
 Title: An R Package for Unbiased Splicing Pathway Analysis 
-Version: 0.99.20
+Version: 0.99.27
 Author: Aimin Yan, Xi Chen, Lily Wang
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
-Depends: R (>= 3.4.0), knitr
+Depends: R (>= 3.4.0)
 Imports: goseq, Biobase, DOSE, reshape2, igraph, org.Hs.eg.db, org.Mm.eg.db, BiocGenerics, 
          AnnotationDbi, JunctionSeq, BiasedUrn, GO.db,gdata, geneLenDataBase, 
          grDevices, graphics, stats, utils, VennDiagram, RColorBrewer, 
