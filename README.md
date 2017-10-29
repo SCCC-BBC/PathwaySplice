@@ -23,18 +23,18 @@ PathwaySplice is an R package that falicitate the folowing analysis:
 
 
 ### Installation
+The latest version installed 
+by visiting Bioconductor website http://bioconductor.org/packages/devel/bioc/html/PathwaySplice.html
 
-After installation, the PathwaySplice package can be loaded into R using:
-```{r eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
-library(PathwaySplice)
-```
-
-The latest version can also be installed by 
+or by 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(devtools)
 install_github("SCCC-BBC/PathwaySplice",ref = 'development')
 ```
-
+After installation, the PathwaySplice package can be loaded into R using:
+```{r eval=TRUE, message=FALSE, warning=FALSE, results='hide'}
+library(PathwaySplice)
+```
 ### Reference
 Yan A, Ban Y, Gao Z, Chen X, Wang L. 2017. PathwaySplice: An R package for unbiased pathway analysis of alternative splicing in RNA-Seq data. _Submitted_
 
