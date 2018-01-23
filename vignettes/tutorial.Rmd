@@ -102,7 +102,38 @@ For example, the results for the MSigDB Hallmark gene sets are
 head(result.hallmark)
 ```
 
+To handle other pathway annotations (such as KEGG, Reactome), one can download the [.gmt format](http://software.broadinstitute.org/gsea/msigdb/collections.jsp) of these annotations to somewhere, then perform analysis as the following:
+```{r eval=FALSE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
+kegg.gmt.file <- "/path/to/somewhere/c2.cp.kegg.v6.1.symbols.gmt.txt"
+kegg.path <- gmtGene2Cat(kegg.gmt.file, genomeID='hg19')
+result.kegg <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                 gene2cat=kegg.path, go.size.limit=c(5,200), method='Wallenius', binsize=20)
 
+reactome.gmt.file <- "/path/to/somewhere/c2.cp.reactome.v6.1.symbols.gmt.txt"
+reactome.path <- gmtGene2Cat(reactome.gmt.file, genomeID='hg19')
+result.reactome <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                 gene2cat=reactome.path, go.size.limit=c(5,200), method='Wallenius')
+
+```
+
+To handle Reactome pathway annotationsReactome, one can download the [.gmt format](https://reactome.org/download-data) of these annotations to somewhere, then perform analysis as the following:
+```{r eval=FALSE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
+reactome.gmt.1.file <- "/path/to/somewhere/ReactomePathways.gmt.txt"
+reactome.path.1 <- gmtGene2Cat(reactome.gmt.1.file, genomeID='hg19')
+result.reactome.1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                 gene2cat=reactome.path.1, go.size.limit=c(5,200), method='Wallenius')
+```
+
+To handle KEGG pathway annotations, one can perform analysis as the following steps: 
+```{r eval=FALSE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
+PathwaySplice:::outKegg2Gmt("hsa","/OutPath2SomeWhere/kegg.gmt.txt")
+kegg.path1 <- "/OutPath2SomeWhere/kegg.gmt.txt"
+kegg.path2 <- gmtGene2Cat(kegg.path1, genomeID='hg19')
+result.kegg2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                gene2cat=kegg.path2, go.size.limit=c(5,200), method='Wallenius')
+
+```                 
+                 
 Lastly, to visualize pathway analysis results in an enrichment network, we use the **enrichmentMap** function:
 
 ```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='center', fig.height=6, fig.width=6}
