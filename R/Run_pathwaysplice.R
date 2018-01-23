@@ -79,10 +79,11 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
         p.value <- formatC(pvalue, format = "e", digits = 2)
         print (paste0("P-value from logistic regression is ", p.value))
         
-        boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, ylab = "Number of features", 
+        a <- boxplot(mydata.2$numFeature ~ mydata.2$DE, boxwex = boxplot.width, ylab = "Number of features", 
             col = "lightgray", ylim = c(min(mydata.2$numFeature), max(mydata.2$numFeature)), 
             names = c("non-significant genes", "significant genes"))
         
+        text(length(a$names)-1, max(mydata.2$numFeature)-5 , paste("P Value =",p.value,sep=" "))
     } else
     
     {
@@ -147,6 +148,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                          go.size.limit=c(5,30),
 #'                          method='Wallenius',binsize=20)
 #' \dontrun{
+#' 
 #' # demonstrate how output file can be specified                 
 #' res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 #'                        test.cats=c('GO:BP'),
@@ -164,6 +166,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                        go.size.limit=c(5,200),
 #'                        method='Wallenius',binsize=20, 
 #'                        output.file='C:/temp/test.csv')
+#'                        
 #' }
 #' 
 #' @export
@@ -1161,9 +1164,9 @@ outputGoBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 
 outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
 {
-    index.select <- which(Re.Go.adjusted.by.exon.SJ[[1]]$numInCat >= 10 & Re.Go.adjusted.by.exon.SJ[[1]]$numInCat <= 
+    index.select <- which(Re.Go.adjusted.by.exon.SJ$numInCat >= 10 & Re.Go.adjusted.by.exon.SJ$numInCat <= 
         300)
-    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ[[1]][index.select, 
+    Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ[index.select, 
         ]
     Re.Go.adjusted.by.exon.SJ.select <- Re.Go.adjusted.by.exon.SJ.select[, -3]
     temp <- format(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue, scientific = TRUE, 
@@ -1171,7 +1174,7 @@ outputCatBasedSelection <- function(Re.Go.adjusted.by.exon.SJ)
     Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue <- temp
     rank.value.by.over_represented_pvalue <- rank(as.numeric(Re.Go.adjusted.by.exon.SJ.select$over_represented_pvalue), 
         ties.method = "min")
-    Re.Go.adjusted.by.exon.SJ.select <- cbind(Re.Go.adjusted.by.exon.SJ.select, rank.value.by.over_represented_pvalue)
+    Re.Go.adjusted.by.exon.SJ.select <- as_tibble(cbind(Re.Go.adjusted.by.exon.SJ.select, rank.value.by.over_represented_pvalue))
     return(Re.Go.adjusted.by.exon.SJ.select)
 }
 
@@ -1456,3 +1459,122 @@ splitGeneCluster <- function(re.gene.based)
   return(re5)
   
 }
+
+# res1 <- generateRankFeatureCount(res.unadj,res.adj)
+#  
+# res.go.unadj <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+# test.cats=c('GO:BP'),
+# go.size.limit=c(5,30),
+# method='Hypergeometric',binsize=20)
+# 
+# res.go.adj <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+# test.cats=c('GO:BP'),
+# go.size.limit=c(5,30),
+# method='Wallenius',binsize=20)
+# 
+# res2 <- generateRankFeatureCount(res.go.unadj,res.go.adj)
+
+generateRankFeatureCount <- function(res.unadj,res.adj)
+{
+  
+   res.unadj.rank <- outputCatBasedSelection(res.unadj)
+   res.adj.rank <- outputCatBasedSelection(res.adj)
+   
+   res.unadj.rank.reorder <- res.unadj.rank[match(res.adj.rank$gene_set,res.unadj.rank$gene_set),]
+   
+   res <- as_tibble(cbind.data.frame(res.adj.rank$gene_set,res.unadj.rank.reorder$gene_set,
+   res.adj.rank$Ave_value_all_gene,res.unadj.rank.reorder$Ave_value_all_gene,res.adj.rank$rank.value.by.over_represented_pvalue,
+   res.unadj.rank.reorder$rank.value.by.over_represented_pvalue,stringsAsFactors = FALSE))
+   
+   colnames(res) <- c("gene_set_adj","gene_set_unadj","Ave_value_all_gene_adj","Ave_value_all_gene_unadj","rank_adj","rank_unadj")
+   
+   plot(log10(res$Ave_value_all_gene_adj),res$rank_unadj-res$rank_adj,ylab="Increase in rank in PathwaySplice",xlab="log10(Average gene set feature number)")
+   abline(h=0,col="red",lty=3)
+   
+   res
+}
+
+# res.cor <- tuningRepcnt(gene.based.table,n=25,repcnt.start = 1000,repcnt.end=50000)
+
+tuningRepcnt <- function(gene.based.table,n=25,repcnt.start = 1000,repcnt.end = 30000)
+{
+  
+  res.start <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                       test.cats=c('GO:BP'),
+                       go.size.limit=c(5,30),
+                       method='Sampling',repcnt=repcnt.start, binsize=800)
+
+  g.start = res.start[1:n,]$gene_set
+
+  vp.start =  res.start$over_represented_pvalue
+
+  temp <- data.frame(repcnt=1000,cor.coeff=0,J.index=0)
+
+  J.index = 0
+  repcnt = 5000
+
+  while(repcnt <= repcnt.end){
+  
+  res.end <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
+                               test.cats=c('GO:BP'),
+                               go.size.limit=c(5,30),
+                               method='Sampling',repcnt= repcnt, binsize=800)
+  
+  g.end = res.end[1:n,]$gene_set
+  
+  J.index <- overlap_ratio(g.start,g.end)
+  
+  vp.end <- res.end[match(res.start$gene_set,res.end$gene_set),]$over_represented_pvalue
+  cor.coeff = cor(vp.start , vp.end , method = "spearman")
+  
+  temp <- rbind.data.frame(temp,cbind.data.frame(repcnt,cor.coeff,J.index))
+  
+  res.start = res.end
+  vp.start = vp.end
+  g.start = g.end
+  repcnt = repcnt + 5000 
+  }
+  
+  par(mfrow=c(1,2))
+  plot(temp[-1,1],temp[-1,2],type="b",xlab="Number of random samples",
+       ylab="Rank correlation ")
+  plot(temp[-1,1],temp[-1,3],type="b",xlab="Number of random samples",
+       ylab="Jaccard index")
+  
+  temp
+}
+
+gmtlist2file <- function(gmtlist, filename)
+{
+  gsname=names(gmtlist) 
+  for (i in seq_along(gmtlist) ){ 
+    cat(gsname[i], length(gmtlist[[i]]), gmtlist[[i]], file=filename, append=TRUE, sep = "\t")
+    cat("\n", append=TRUE, file=filename)
+  }
+}
+
+# outKegg2Gmt("hsa","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.txt")
+# outKegg2Gmt("mmu","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.mmu.txt")
+# 
+outKegg2Gmt <- function(organism.id,out.gmt.file) 
+{
+  gs <- get.kegg.genesets(organism.id)
+  
+  switch(organism.id, hsa = {
+    
+    meta.data <- 'org.Hs.eg'
+  
+    }, mmu = {
+    
+    meta.data <- 'org.Mm.eg'
+  })
+  
+  gs.n <- lapply(gs,function(u){
+    x <- as.character(getSYMBOL(na.omit(u), data = meta.data))
+  } 
+  )
+  
+  gmtlist2file(gs.n,out.gmt.file)
+}
+
+
