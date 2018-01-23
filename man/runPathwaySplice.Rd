@@ -72,6 +72,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                          go.size.limit=c(5,30),
                          method='Wallenius',binsize=20)
 \dontrun{
+
 # demonstrate how output file can be specified                 
 res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        test.cats=c('GO:BP'),
@@ -89,6 +90,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        go.size.limit=c(5,200),
                        method='Wallenius',binsize=20, 
                        output.file='C:/temp/test.csv')
+                       
 }
 
 }
