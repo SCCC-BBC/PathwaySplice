@@ -116,7 +116,7 @@ result.reactome <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 
 ```
 
-To handle Reactome pathway annotationsReactome, one can download the [.gmt format](https://reactome.org/download-data) of these annotations to somewhere, then perform analysis as the following:
+one can also download Reactome pathway annotations from [reactome.org](https://reactome.org/download-data) to somewhere, then perform analysis as the following:
 ```{r eval=FALSE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
 reactome.gmt.1.file <- "/path/to/somewhere/ReactomePathways.gmt.txt"
 reactome.path.1 <- gmtGene2Cat(reactome.gmt.1.file, genomeID='hg19')
@@ -124,7 +124,8 @@ result.reactome.1 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene
                  gene2cat=reactome.path.1, go.size.limit=c(5,200), method='Wallenius')
 ```
 
-To handle KEGG pathway annotations, one can perform analysis as the following steps: 
+For KEGG pathway, one can use the outKegg2Gmt function in this package to 
+output a gmt format file, and to perform analysis as the following steps: 
 ```{r eval=FALSE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
 PathwaySplice:::outKegg2Gmt("hsa","/OutPath2SomeWhere/kegg.gmt.txt")
 kegg.path1 <- "/OutPath2SomeWhere/kegg.gmt.txt"
@@ -133,7 +134,7 @@ result.kegg2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                 gene2cat=kegg.path2, go.size.limit=c(5,200), method='Wallenius')
 
 ```                 
-                 
+
 Lastly, to visualize pathway analysis results in an enrichment network, we use the **enrichmentMap** function:
 
 ```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='center', fig.height=6, fig.width=6}
