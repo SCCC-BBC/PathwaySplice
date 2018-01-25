@@ -135,6 +135,66 @@ result.kegg2 <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
 
 ```                 
 
+In **runPathwangSplice**, we use hypergeometric test to calcualte the unadjusted pathway enrichment p value, and use  either Wallenius approximation or sampling merthod to obtain the adjusted pathway enrichment p value. For sampling method, we supply a function **tuningRepcnt** to let use tune number of random samples to get the converged results. users can perform the tuning step as the following:   
+
+```{r eval=FALSE, message=FALSE, warning=FALSE,results='hide',fig.show='hide'}
+res.cor <- PathwaySplice:::tuningRepcnt(gene.based.table,n=25,repcnt.start = 1000,repcnt.end=50000)
+
+```
+
+User will get a figure to show how results are converged as number of random samples is increased:
+
+![parameterTuning](parameterTuning.png)
+The figure in left panel shows rank correlation on overrepresented p values of gene categories between two random samples, and the figure in right panel shows the similarity of top 25 gene categories 
+measured Jaccard index between two random samples. The above figure shows using more than 30000 random samples
+will get the converged results. Since sampling method is computationally intensive, so we also implementated a  Wallenius approximation method to make computation to be finished in a reasonable time.
+
+```{r eval=FALSE,warning=FALSE,message=FALSE,results='markup'}
+result.hyper <- runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Hypergeometric')
+
+result.Wall <- runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Wallenius')
+
+result.Sampling <- runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Sampling',repcnt = 30000)
+
+result.Sampling <- runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Sampling',repcnt = 30000)
+
+start_time <- Sys.time()
+result.Sampling.200k <- runPathwaySplice(gene.based.table,genome='hg19',
+                        id='ensGene',
+                        test.cats=c('GO:BP'),
+                        go.size.limit=c(5,30),method='Sampling',repcnt = 200000)
+end_time <- Sys.time()
+
+time.used <- end_time-start_time
+> time.used
+Time difference of 1.33757 hours
+```
+
+To compare 4 different analysis procedures of using Hypergeometric test, Wallenius approximation, 30k random sampling and 200k random sampling, we use the **compareResults2** function:
+```{r eval=FALSE,warning=FALSE,message=FALSE,results='markup'}
+PathwaySplice:::compareResults2(result.hyper,result.Wall,result.Sampling,result.Sampling.200k)
+
+```
+
+200k random sampling takes more than 1 hours to get resutls for this test data set. 
+
+![comparision](comparison.png)
+In the above Figure, Wallenius approximation, 30k random sampling and 200k random sampling are 
+labeled by green, blue and red color; and hypergeometric test are labeled by black color. it is obvious that
+adjusting feature number bias has effects on results, and the results of 30k random sampling and 200k random sampling are close, which suggests that 30k random sampling can get accurate results in a reasonable computational time, and Wallenius approximation is a faster computational precedure to get adjusted results also.  
+
 Lastly, to visualize pathway analysis results in an enrichment network, we use the **enrichmentMap** function:
 
 ```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='center', fig.height=6, fig.width=6}

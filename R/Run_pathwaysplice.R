@@ -1577,4 +1577,53 @@ outKegg2Gmt <- function(organism.id,out.gmt.file)
   gmtlist2file(gs.n,out.gmt.file)
 }
 
+# compareResults2(result.hyper,result.Wall,result.Sampling,result.Sampling.200k)
+# 
+compareResults2 <- function(result.hyper,result.Wall,result.Sampling,result.Sampling.200k){
+  
+  res.Wall.reorder <- result.Wall[match(result.hyper$gene_set,result.Wall$gene_set),]
+  
+  res.Sampling.reorder <- result.Sampling[match(result.hyper$gene_set,result.Sampling$gene_set),]
+  
+  result.Sampling.200k.reorder <- result.Sampling.200k[match(result.hyper$gene_set,result.Sampling.200k$gene_set),]
+  
+  res.hyper.Wall.Sampling <- as_tibble(cbind.data.frame(result.hyper$gene_set, result.hyper$over_represented_pvalue,res.Wall.reorder$over_represented_pvalue,res.Sampling.reorder$over_represented_pvalue,result.Sampling.200k.reorder$over_represented_pvalue,stringsAsFactors = FALSE))
 
+  colnames(res.hyper.Wall.Sampling) = c("gene_set","hyper","wall","sampling","sampling_200k")
+  cor(res.hyper.Wall.Sampling[,2:5])
+  save(res.hyper.Wall.Sampling,file="vignettes/res.hyper.Wall.Sampling.RData")
+  
+  temp.1 <- cbind.data.frame(res.hyper.Wall.Sampling$sampling_200k,
+                             rep("Sampling_200k",length(res.hyper.Wall.Sampling$sampling_200k)),res.hyper.Wall.Sampling$sampling_200k)
+  colnames(temp.1) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp.2 <- cbind.data.frame(res.hyper.Wall.Sampling$sampling,
+                             rep("Sampling_30k",length(res.hyper.Wall.Sampling$sampling)),
+                             res.hyper.Wall.Sampling$sampling_200k)
+  colnames(temp.2) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp.3 <- cbind.data.frame(res.hyper.Wall.Sampling$wall,
+                             rep("Wall",length(res.hyper.Wall.Sampling$wall)),
+                             res.hyper.Wall.Sampling$sampling_200k)
+  colnames(temp.3) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp.4 <- cbind.data.frame(res.hyper.Wall.Sampling$hyper,
+                             rep("Hyper",length(res.hyper.Wall.Sampling$hyper)),
+                             res.hyper.Wall.Sampling$sampling_200k)
+  
+  colnames(temp.4) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp <- as_tibble(rbind.data.frame(temp.1,temp.2,temp.3,temp.4))
+  
+  ggplot(temp, aes(x=random_sampling_200k, y=PValue, colour=PathwaySplice, shape=PathwaySplice)) + 
+    geom_point(size=1, alpha=0.6) + geom_smooth(data=subset(temp,PathwaySplice=="Sampling_200k"),
+                                                aes(x=random_sampling_200k, y=PValue),
+                                                method=lm,se=FALSE,colour="red") + 
+    labs(color= "Methods", x="P value of random sampling(200k)",y="P value of alternative methods")+
+    scale_colour_manual(name = "Alternative methods",
+                        labels = c("Sampling_200k", "Sampling_30k", "Wall", "Hyper"),
+                        values = c("red", "blue", "green", "black")) +   
+    scale_shape_manual(name = "Alternative methods",
+                       labels = c("Sampling_200k", "Sampling_30k", "Wall", "Hyper"),
+                       values = c(2, 3, 4, 20))
+}
