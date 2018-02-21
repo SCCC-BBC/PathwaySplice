@@ -90,6 +90,8 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
     {
         cat("There are no variations on the number of features\n")
     }
+    
+    
 }
 
 #' runPathwaySplice
