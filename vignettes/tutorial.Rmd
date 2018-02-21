@@ -2,7 +2,6 @@
 title: "PathwaySplice: pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features"
 author: "Aimin Yan, Xi Chen, Lily Wang"
 date: '`r Sys.Date()`'
-
 output:
   rmarkdown::html_document:
    theme: default
@@ -16,9 +15,9 @@ bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
 vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{PathwaySplice} 
   %\usepackage[utf8]{inputenc}
+  %\VignetteEngine{knitr::rmarkdown}
    
 ---
 
