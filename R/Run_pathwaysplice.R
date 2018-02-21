@@ -1502,6 +1502,7 @@ generateRankFeatureCount <- function(res.unadj,res.adj)
 tuningRepcnt <- function(gene.based.table,n=25,repcnt.start = 1000,repcnt.end = 30000)
 {
   
+  set.seed(1000)
   res.start <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        test.cats=c('GO:BP'),
                        go.size.limit=c(5,30),
@@ -1518,6 +1519,7 @@ tuningRepcnt <- function(gene.based.table,n=25,repcnt.start = 1000,repcnt.end = 
 
   while(repcnt <= repcnt.end){
   
+  set.seed(1000)
   res.end <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                                test.cats=c('GO:BP'),
                                go.size.limit=c(5,30),
