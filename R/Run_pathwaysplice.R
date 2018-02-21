@@ -83,7 +83,8 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
             col = "lightgray", ylim = c(min(mydata.2$numFeature), max(mydata.2$numFeature)), 
             names = c("non-significant genes", "significant genes"))
         
-        text(length(a$names)-1, max(mydata.2$numFeature)-5 , paste("P Value =",p.value,sep=" "))
+        print(text(length(a$names)-1, max(mydata.2$numFeature)-5 , paste("P Value =",p.value,sep=" ")))
+
     } else
     
     {
