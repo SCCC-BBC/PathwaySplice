@@ -83,7 +83,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
             col = "lightgray", ylim = c(min(mydata.2$numFeature), max(mydata.2$numFeature)), 
             names = c("non-significant genes", "significant genes"))
         
-        print(text(length(a$names)-1, max(mydata.2$numFeature)-5 , paste("P Value =",p.value,sep=" ")))
+        text(length(a$names)-1, max(mydata.2$numFeature)-5 , paste("P Value =",p.value,sep=" "))
 
     } else
     
@@ -109,8 +109,10 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'        Options are 'Wallenius', 'Sampling', and 'Hypergeometric' 
 #' @param repcnt Number of random samples to be calculated when 'Sampling' is used, this argument
 #'        ignored unless \code{method='Sampling'}
-#' @param use.genes.without.cat Whether genes not mapped to any gene_set tested are included in analysis.
-#'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.
+#' @param use.genes.without.cat Whether genes not mapped to any gene_set tested are included in the analysis.
+#'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis. 
+#'        Set this option to TRUE if it's desired that all genes in \code{genewise.table} to be counted towards  
+#'        the  total  number  of  genes outside  the  category. 
 #' @param binsize The number of genes in each gene bin in the bias plot
 #' @param output.file File name for the analysis result in .csv format.  
 #'  
@@ -526,10 +528,11 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 #' 
 #' \dontrun{
-#' # illustrate specification of output directory
-#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
-#' output.file.dir <- '~/OutputTestPathwaySplice'
-#' compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')
+#' # illustrate specification of output directory on windows systems
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/TEMP')
+#' 
+#' output.dir <- '~/OutputTestPathwaySplice' #linux system
+#' compareResults(20,res.adj, res.unadj,gene.based.table, output.dir, type.boxplot='Only3')
 #'}
 #'
 #' @export
