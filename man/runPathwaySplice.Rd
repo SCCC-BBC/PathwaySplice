@@ -28,8 +28,10 @@ Options are 'Wallenius', 'Sampling', and 'Hypergeometric'}
 \item{repcnt}{Number of random samples to be calculated when 'Sampling' is used, this argument
 ignored unless \code{method='Sampling'}}
 
-\item{use.genes.without.cat}{Whether genes not mapped to any gene_set tested are included in analysis.
-Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.}
+\item{use.genes.without.cat}{Whether genes not mapped to any gene_set tested are included in the analysis.
+Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis. 
+Set this option to TRUE if it's desired that all genes in \code{genewise.table} to be counted towards  
+the  total  number  of  genes outside  the  category.}
 
 \item{binsize}{The number of genes in each gene bin in the bias plot}
 
