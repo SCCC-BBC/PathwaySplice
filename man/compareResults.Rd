@@ -65,10 +65,11 @@ res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 
 \dontrun{
-# illustrate specification of output directory
-compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
-output.file.dir <- '~/OutputTestPathwaySplice'
-compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')
+# illustrate specification of output directory on windows systems
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/TEMP')
+
+output.dir <- '~/OutputTestPathwaySplice' #linux system
+compareResults(20,res.adj, res.unadj,gene.based.table, output.dir, type.boxplot='Only3')
 }
 
 }
