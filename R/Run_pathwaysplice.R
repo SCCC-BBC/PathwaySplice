@@ -1564,7 +1564,7 @@ gmtlist2file <- function(gmtlist, filename)
 # outKegg2Gmt("hsa","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.txt")
 # outKegg2Gmt("mmu","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.mmu.txt")
 # 
-outKegg2Gmt <- function(organism.id,out.gmt.file) 
+outKegg2Gmt <- function(organism.id, out.gmt.file) 
 {
   gs <- get.kegg.genesets(organism.id)
   
