@@ -1561,9 +1561,26 @@ gmtlist2file <- function(gmtlist, filename)
   }
 }
 
-# outKegg2Gmt("hsa","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.txt")
-# outKegg2Gmt("mmu","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.mmu.txt")
-# 
+#' outKegg2gmt
+#' 
+#' This function obtains a .gmt file for KEGG pathways.  
+#'  
+#' @param organism.id an identifier for the organism being studied, for example, "hsa" for "Homo sapiens"
+#' @param out.gmt.file name of the output .gmt file  
+#' 
+#' @return Returns a .gmt file for KEGG pathways  
+#' 
+#' @details The function calls the \code{get.kegg.genesets} function in \code{EnrichmentBrowser} R package 
+#' and modifies the resulting output into a .gmt file.
+#' 
+#' @examples \dontrun{
+#' 
+#' data.dir <- system.file ("extdata", package = "PathwaySplice")
+#' outKegg2Gmt ("hsa",file.path(data.dir,"kegg.gmt.txt"))
+#' }
+#' 
+#' @export
+
 outKegg2Gmt <- function(organism.id, out.gmt.file) 
 {
   gs <- get.kegg.genesets(organism.id)
