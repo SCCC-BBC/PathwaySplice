@@ -505,7 +505,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
 #' (2) a .csv file with gene set names belonging to different sections of the venn diagram    
 #' (3) a box plot showing the distributions of number of features within all genes 
-#' in significant gene sets, with and without adjusting for bias factors
+#' in significant gene sets, with or without adjusting for bias factors
 #' 
 #' @examples
 #' 
@@ -519,11 +519,11 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=hallmark,  
 #'                          go.size.limit = c(5, 200),
-#'                          method='Wallenius', output.file=tempfile())
+#'                          method='Wallenius')
 #' 
 #' res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
-#'                          method='Hypergeometric',output.file=tempfile())
+#'                          method='Hypergeometric')
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 #' 
@@ -653,6 +653,8 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table, output.
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
                   p <- plot_ly(yy, x = ~numFeature, color = ~category, type = "box") %>% 
                     layout(margin = m)
+                  
+                  print (p)
                   
                   htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
                 })
@@ -1580,7 +1582,6 @@ gmtlist2file <- function(gmtlist, filename)
 #' }
 #' 
 #' @export
-
 outKegg2Gmt <- function(organism.id, out.gmt.file) 
 {
   gs <- get.kegg.genesets(organism.id)
