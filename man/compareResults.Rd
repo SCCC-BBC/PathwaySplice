@@ -36,7 +36,7 @@ The output include 3 files in \code{output.dir}:
 (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
 (2) a .csv file with gene set names belonging to different sections of the venn diagram    
 (3) a box plot showing the distributions of number of features within all genes 
-in significant gene sets, with and without adjusting for bias factors
+in significant gene sets, with or without adjusting for bias factors
 }
 \description{
 This function helps with visualizing the effects of bias adjustment in pathway analysis, 
@@ -56,11 +56,11 @@ gene.based.table <- makeGeneTable(featureBasedData)
 res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=hallmark,  
                          go.size.limit = c(5, 200),
-                         method='Wallenius', output.file=tempfile())
+                         method='Wallenius')
 
 res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
-                         method='Hypergeometric',output.file=tempfile())
+                         method='Hypergeometric')
 
 compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 
