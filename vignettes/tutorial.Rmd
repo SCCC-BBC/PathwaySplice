@@ -9,12 +9,8 @@ output:
     toc: yes
   pdf_document:
     highlight: null
-    number_sections: yes
-  rmarkdown::html_document:
-    fig_caption: yes
-    highlight: null
-    theme: default
-    toc: yes
+    toc: no
+    number_sections: no
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
@@ -23,7 +19,7 @@ vignette: "%\\VignetteIndexEntry{PathwaySplice}  %\\usepackage[utf8]{inputenc} %
 ---
 
 ```{r,echo=FALSE}
-knitr::opts_chunk$set(collapse = FALSE,comment = "#>")
+knitr::opts_chunk$set(collapse = FALSE,comment = "#>",fig.pos='H')
 ```
 
 # 1. Introduction
@@ -173,8 +169,21 @@ Initial analysis was conducted using `JunctionSeq` R package to obtain p-values 
 dir <- system.file("extdata", package="PathwaySplice")
 
 all.gene.table <- readRDS(file.path(dir, "AllGeneTable.rds"))
-
-head (all.gene.table)
+res.adj <- runPathwaySplice(all.gene.table,
+                            genome='hg19',
+                            id='ensGene',
+                            test.cats = "GO:BP", 
+                            go.size.limit = c(5, 200),
+                            method='Wallenius')
+ 
+res.unadj <- runPathwaySplice(all.gene.table,
+                              genome='hg19',
+                              id='ensGene',
+                              test.cats = "GO:BP",
+                              go.size.limit = c(5, 200),
+                              method='Hypergeometric')
+ 
+compareResults(20, res.adj, res.unadj, all.gene.table, type.boxplot='Only3', output.dir = "~/OutputTestPathwaySplice_all_gene_GO_BP/")
 
 ```
 
@@ -212,15 +221,12 @@ The above code produces several files in the output directory specified by `outp
 * a boxplot that compares distributions of number of features within all genes in significant gene sets, with or without adjusting for bias factors
 * a .csv file with gene set names belonging to different sections of the venn diagram 
 
-The venn diagram below shows that among the top 20 most significant GO categories identified in adjusted and unadjusted analysis, there were 8 common GO categories. 
-
-
-< insert venn diagram here> 
-
-In the boxplot below, the first box shows distribution of bias factors (i.e. numer of exon counting bins) for genes belonging to the 8 most significant GO categories identified only in unadjusted analysis (blue color in the venn diagram). The second box shows distribution of bias factors (i.e. number of exon counting bins) for genes belonging to the 8 most significant GO categories identified only in adjusted analysis (pink color in the venn diagram). The third box shows distribution of bias factors (i.e. number of exon counting bins) for genes belonging to all 20 most significant GO categories. This plot shows that genes in GO categories that are unique to unadjusted analysis tend to have larger number of exon counting bins. 
-
-< insert boxplot here >
-
+The venn diagram below shows that among the top 20 most significant GO categories identified in adjusted and unadjusted analysis, there were 12 common GO categories.
+<center>
+![venn](venn.png){width=70%}
+</center>
+In the boxplot below, the first box shows distribution of bias factors (i.e. numer of exon counting bins) for genes belonging to the 8 most significant GO categories identified only in unadjusted analysis (blue color in the venn diagram). The second box shows distribution of bias factors (i.e. number of exon counting bins) for genes belonging to the 8 most significant GO categories identified only in adjusted analysis (pink color in the venn diagram). The third box shows distribution of bias factors (i.e. number of exon counting bins) for genes belonging to all 20 most significant GO categories. This plot shows that genes in GO categories that are unique to unadjusted analysis tend to have larger number of exon counting bins.
+![boxplot](boxplot.png)
 
 # 5. Comparison of results under different paramter settings
 

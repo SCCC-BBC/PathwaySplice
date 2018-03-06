@@ -655,3 +655,24 @@ useKeepMultiMappedData <- function()
   pwf.2 <- pwf.1[,which(colnames(pwf.1) %in%c("DEgenes","bias.data","pwf","geneCluster"))]
   
 }
+
+# test PathwaySplice using all gene table(all.gene.table)
+# 
+dir <- system.file("extdata", package="PathwaySplice")
+all.gene.table <- readRDS(file.path(dir, "AllGeneTable.rds"))
+
+res.adj <- runPathwaySplice(all.gene.table,
+                            genome='hg19',
+                            id='ensGene',
+                            test.cats = "GO:BP", 
+                            go.size.limit = c(5, 30),
+                            method='Wallenius')
+
+res.unadj <- runPathwaySplice(all.gene.table,
+                              genome='hg19',
+                              id='ensGene',
+                              test.cats = "GO:BP",
+                              go.size.limit = c(5, 30),
+                              method='Hypergeometric')
+
+compareResults(20, res.adj, res.unadj, all.gene.table, type.boxplot='Only3', output.dir = "~/OutputTestPathwaySplice_all_gene_GO_BP_2/")
