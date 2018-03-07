@@ -237,14 +237,11 @@ In **runPathwaySplice** function, the choices for argument `method` include
 * `Sampling` which uses random sampling to approximate the true distribution. It takes `gene.based.table` as input and then calculates weights for each gene, which is the probability a gene being significant given the number of gene features (e.g. exons) associated with it. Next, random subsets of genes are sampled from the experiment. Each sub-set contains the same number of genes as the observed number of significant genes. For genes in each subset, the probability of selecting a gene is equal to the weights calculated above, and the number of genes belonging to a GO category is then calculated. Many random subsets of genes are generated to produce the null distribution for estimating p-value of a GO category.
 
 The figure below plots pathway analysis p-values for the MDS dataset obtained using Hypergeometric test (Hyper), Wallenius approximation (Wall), 30k random sampling (Sampling_30k) and 200k random sampling (Sampling_200k) vs. p-values based on 200k random sampling (Sampling_200k). This was accomplished using the **compareResults2** function
-
 ```{r eval=FALSE,warning=FALSE,message=FALSE,results='markup'}
 PathwaySplice:::compareResults2(result.hyper,result.Wall,result.Sampling,result.Sampling.200k)
 
 ```
-
 ![**comparision of p-values obtained under different parameter settings**](comparison.png)
-
 In the figure above, each dot represents a GO category. The results show that GO category p-values for 30k random sampling and 200k random sampling are virtually indistinguishable (blue crosses and red triangles are almost exactly the same), p-values based on Wallenius approximation are also highly congruent with sampling results. On the other hand, unadjusted results using Hypergenometric distribution are markedly different from both sampling and Wallenius p-values. In terms of time, 200k random sampling took more than 1 hour, while Wallenius approximation took less than a minute. Therefore, we recommend using Wallenius approximation (default for **runPathwaySplice** function), unless the number of gene sets tested is small (e.g. less than 100 gene sets).    
 
 
