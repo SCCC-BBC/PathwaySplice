@@ -676,3 +676,67 @@ res.unadj <- runPathwaySplice(all.gene.table,
                               method='Hypergeometric')
 
 compareResults(20, res.adj, res.unadj, all.gene.table, type.boxplot='Only3', output.dir = "~/OutputTestPathwaySplice_all_gene_GO_BP_2/")
+
+
+perGeneQValueExact = function(pGene, theta, geneSplit) {
+  stopifnot(length(pGene)==length(geneSplit))
+  
+  ## Compute the numerator \sum_{i=1}^M 1-(1-theta)^{n_i}
+  ## Below we first identify the summands which are the same
+  ## (because they have the same n_i), then do the sum via the
+  ## mapply
+  numExons     = listLen(geneSplit)
+  tab          = tabulate(numExons)
+  notZero      = (tab>0)
+  numerator    = mapply(function(m, n) m * (1 - (1-theta)^n),
+                        m = tab[notZero],
+                        n = which(notZero))
+  numerator    = rowSums(numerator)
+  
+  ## Compute the denominator: for each value of theta, the number
+  ## of genes with pGene <= theta[i].
+  ## Note that in cut(..., right=TRUE), the intervals are
+  ## right-closed (left open) intervals.
+  bins   = cut(pGene, breaks=c(-Inf, as.vector(theta)), right = TRUE, include.lowest = TRUE)
+  counts = tabulate(bins, nbins = nlevels(bins))
+  denom  = cumsum(counts)
+  stopifnot(denom[length(denom)]==length(pGene))
+  
+  return(numerator/denom)
+}
+
+
+perGeneQValue <- function (object, p = "pvalue", method = perGeneQValueExact) 
+{
+  #stopifnot(is(object, "DEXSeqResults"))
+  wTest <- which(!is.na(object$padj))
+  pvals = object[[p]][wTest]
+  geneID = factor(object[["groupID"]][wTest])
+  geneSplit = split(seq(along = geneID), geneID)
+  # identify min  feature p value for each gene
+  pGene = sapply(geneSplit, function(i) min(pvals[i]))
+  stopifnot(all(is.finite(pGene)))
+  theta = unique(sort(pGene))
+  
+  #pGene: smallest p value among features within one gene 
+  #theta: unique and sorted smallest p value
+  #geneSplit: gene with feature index  
+  q = method(pGene, theta, geneSplit)
+  res = rep(NA_real_, length(pGene))
+  res = q[match(pGene, theta)]
+  # note res > 1, so select the value between 0 and 1 
+  res = pmin(1, res)
+  names(res) = names(geneSplit)
+  stopifnot(!any(is.na(res)))
+  return(res)
+}
+
+object=dxr.2
+wTest <- which(!is.na(object$padj))
+pvals = object[["pvalue"]][wTest]
+geneID = factor(object[["groupID"]][wTest])
+geneSplit = split(seq(along = geneID), geneID)
+
+
+perGeneQValueExact(pGene, theta, geneSplit)
+
