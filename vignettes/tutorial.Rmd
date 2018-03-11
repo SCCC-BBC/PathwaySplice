@@ -50,7 +50,7 @@ The latest version can also be installed by
 ```{r eval=FALSE, message=FALSE, warning=FALSE, results='hide'}
 library(devtools)
 
-install_github("SCCC-BBC/PathwaySplice")
+install_github("SCCC-BBC/PathwaySplice", ref = "development")
 ```
 
 The input file of PathwaySplice are p-values for multiple gene features associated with each gene. This information can be obtained from DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016] output files. As an example, PathwaySplice includes a feature based dataset within the package, based on a RNASeq study of bone marrow CD34+ cells from eight myelodysplastic syndrome (MDS) patients with SF3B1 mutations [@Dolatshad2015] and four patients without the mutation (Dolatshad, et al., 2015). This dataset was downloaded from GEO database (GSE63569). 
@@ -80,8 +80,7 @@ lrTestBias(gene.based.table,boxplot.width=0.3)
 
 To perform pathway analysis that adjusts for the number of gene features, we use the **runPathwangSplice** function, which implements the methodology described in [@Young2010]. **runPathwangSplice** returns a   [tibble](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) dataset  with statistical significance of the pathway (`over_represented_pvalue`), as well as the significant genes that drives pathway significance (`SIGgene_ensembl` and `SIGgene_symbol`). An additional bias plot that visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins is also generated.
 
-Note that the default option for `use.genes.without.cat` was set to `FALSE`, this means that genes not mapped to any tested categories are ignored in analysis. This would not be a problem when a large number of gene sets (such as `GO:BP`here) are tested. However, when testing a small number of gene sets, for example, limiting to a subset of `GO:BP` categories with certain size limits as we are doing here, users should set this option to `TRUE`, so that all genes in `genewise.table` are counted towards the  total  number  of  genes outside the category. 
-
+Note that the default option for `use.genes.without.cat` was set to `FALSE`, this means that genes not mapped to any tested categories are ignored in analysis. In order for all genes in `genewise.table` to be counted towards the total number of genes outside the category (i.e. genes in the background), this option should be set to `TRUE`.  
 
 ```{r eval=TRUE,warning=FALSE,message=FALSE,results='markup'}
 result.adjusted <- runPathwaySplice(gene.based.table,genome='hg19',
@@ -94,7 +93,7 @@ head(result.adjusted)
 
 To visualize pathway analysis results in an enrichment network, we use the **enrichmentMap** function:
 
-```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='right', fig.height=6, fig.width=14}
+```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='right', fig.height=10, fig.width=14}
 output.file.dir <- file.path("~/PathwaySplice_output")
 
 enmap <- enrichmentMap(result.adjusted,n=7,
@@ -223,7 +222,7 @@ The above code produces several files in the output directory specified by `outp
 
 The venn diagram below shows that among the top 20 most significant GO categories identified in adjusted and unadjusted analysis, there were 12 common GO categories.
 <center>
-![venn](venn.png){width=70%}
+![venn](venn.png){width=50%}
 </center>
 In the boxplot below, the first box shows distribution of bias factors (i.e. numer of exon counting bins) for genes belonging to the 8 most significant GO categories identified only in unadjusted analysis (blue color in the venn diagram). The second box shows distribution of bias factors (i.e. number of exon counting bins) for genes belonging to the 8 most significant GO categories identified only in adjusted analysis (pink color in the venn diagram). The third box shows distribution of bias factors (i.e. number of exon counting bins) for genes belonging to all 20 most significant GO categories. This plot shows that genes in GO categories that are unique to unadjusted analysis tend to have larger number of exon counting bins.
 ![boxplot](boxplot.png)
@@ -234,7 +233,7 @@ In **runPathwaySplice** function, the choices for argument `method` include
 
 * `Hypergeometric` which does not adjust for bias
 * `Wallenius` which adjust bias based on the  Wallenius  non-central  hypergeometric  distribution
-* `Sampling` which uses random sampling to approximate the true distribution. It takes `gene.based.table` as input and then calculates weights for each gene, which is the probability a gene being significant given the number of gene features (e.g. exons) associated with it. Next, random subsets of genes are sampled from the experiment. Each sub-set contains the same number of genes as the observed number of significant genes. For genes in each subset, the probability of selecting a gene is equal to the weights calculated above, and the number of genes belonging to a GO category is then calculated. Many random subsets of genes are generated to produce the null distribution for estimating p-value of a GO category.
+* `Sampling` which uses random sampling to approximate the true distribution. It takes `gene.based.table` as input and then calculates weights for each gene using a spline regression model, which is the probability a gene being significant given the number of gene features (e.g. exons) associated with it. Next, random subsets of genes are sampled from the experiment. Each sub?set contains the same number of genes as the observed number of significant genes. For genes in each subset, the probability of selecting a gene is equal to the weights calculated above, and the number of genes belonging to a GO category is then calculated. Many random subsets of genes are generated to produce the null distribution for estimating p-value of a GO category.
 
 The figure below plots pathway analysis p-values for the MDS dataset obtained using Hypergeometric test (Hyper), Wallenius approximation (Wall), 30k random sampling (Sampling_30k) and 200k random sampling (Sampling_200k) vs. p-values based on 200k random sampling (Sampling_200k). This was accomplished using the **compareResults2** function
 ```{r eval=FALSE,warning=FALSE,message=FALSE,results='markup'}
