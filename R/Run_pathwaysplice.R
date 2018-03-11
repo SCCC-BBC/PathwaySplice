@@ -84,11 +84,14 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
             names = c("non-significant genes", "significant genes"))
         
         text(length(a$names)-1, max(mydata.2$numFeature)-5 , paste("P Value =",p.value,sep=" "))
+
     } else
     
     {
         cat("There are no variations on the number of features\n")
     }
+    
+    
 }
 
 #' runPathwaySplice
@@ -106,8 +109,10 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'        Options are 'Wallenius', 'Sampling', and 'Hypergeometric' 
 #' @param repcnt Number of random samples to be calculated when 'Sampling' is used, this argument
 #'        ignored unless \code{method='Sampling'}
-#' @param use.genes.without.cat Whether genes not mapped to any gene_set tested are included in analysis.
-#'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis.
+#' @param use.genes.without.cat Whether genes not mapped to any gene_set tested are included in the analysis.
+#'        Default is set to FALSE, where genes not mapped to any tested categories are ignored in analysis. 
+#'        Set this option to TRUE if it's desired that all genes in \code{genewise.table} to be counted towards  
+#'        the  total  number  of  genes outside  the  category. 
 #' @param binsize The number of genes in each gene bin in the bias plot
 #' @param output.file File name for the analysis result in .csv format.  
 #'  
@@ -500,7 +505,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' (1) a venn diagram comparing significant gene sets before and after adjusting for bias factors
 #' (2) a .csv file with gene set names belonging to different sections of the venn diagram    
 #' (3) a box plot showing the distributions of number of features within all genes 
-#' in significant gene sets, with and without adjusting for bias factors
+#' in significant gene sets, with or without adjusting for bias factors
 #' 
 #' @examples
 #' 
@@ -514,19 +519,20 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' res.adj <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=hallmark,  
 #'                          go.size.limit = c(5, 200),
-#'                          method='Wallenius', output.file=tempfile())
+#'                          method='Wallenius')
 #' 
 #' res.unadj <- runPathwaySplice(gene.based.table,genome='hg19',
 #'                          id='ensGene',gene2cat=hallmark,go.size.limit = c(5, 200),
-#'                          method='Hypergeometric',output.file=tempfile())
+#'                          method='Hypergeometric')
 #' 
 #' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 #' 
 #' \dontrun{
-#' # illustrate specification of output directory
-#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/Temp')
-#' output.file.dir <- '~/OutputTestPathwaySplice'
-#' compareResults(20,res.adj, res.unadj,gene.based.table,output.file.dir,type.boxplot='Only3')
+#' # illustrate specification of output directory on windows systems
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/TEMP')
+#' 
+#' output.dir <- '~/OutputTestPathwaySplice' #linux system
+#' compareResults(20,res.adj, res.unadj,gene.based.table, output.dir, type.boxplot='Only3')
 #'}
 #'
 #' @export
@@ -647,6 +653,8 @@ compareResults <- function(n.go, adjusted, unadjusted, gene.based.table, output.
                   m = list(l = 200, r = 5, b = 5, t = 5, pad = 4)
                   p <- plot_ly(yy, x = ~numFeature, color = ~category, type = "box") %>% 
                     layout(margin = m)
+                  
+                  print (p)
                   
                   htmlwidgets::saveWidget(p, file.path(output.dir, "boxplot.html"))
                 })
@@ -1499,6 +1507,7 @@ generateRankFeatureCount <- function(res.unadj,res.adj)
 tuningRepcnt <- function(gene.based.table,n=25,repcnt.start = 1000,repcnt.end = 30000)
 {
   
+  set.seed(1000)
   res.start <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        test.cats=c('GO:BP'),
                        go.size.limit=c(5,30),
@@ -1515,6 +1524,7 @@ tuningRepcnt <- function(gene.based.table,n=25,repcnt.start = 1000,repcnt.end = 
 
   while(repcnt <= repcnt.end){
   
+  set.seed(1000)
   res.end <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                                test.cats=c('GO:BP'),
                                go.size.limit=c(5,30),
@@ -1553,10 +1563,26 @@ gmtlist2file <- function(gmtlist, filename)
   }
 }
 
-# outKegg2Gmt("hsa","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.txt")
-# outKegg2Gmt("mmu","~/Dropbox/Aimin_project/Research/PathwaySplice/REVISION/kegg.gmt.mmu.txt")
-# 
-outKegg2Gmt <- function(organism.id,out.gmt.file) 
+#' outKegg2gmt
+#' 
+#' This function obtains a .gmt file for KEGG pathways.  
+#'  
+#' @param organism.id an identifier for the organism being studied, for example, "hsa" for "Homo sapiens"
+#' @param out.gmt.file name of the output .gmt file  
+#' 
+#' @return Returns a .gmt file for KEGG pathways  
+#' 
+#' @details The function calls the \code{get.kegg.genesets} function in \code{EnrichmentBrowser} R package 
+#' and modifies the resulting output into a .gmt file.
+#' 
+#' @examples \dontrun{
+#' 
+#' data.dir <- system.file ("extdata", package = "PathwaySplice")
+#' outKegg2Gmt ("hsa",file.path(data.dir,"kegg.gmt.txt"))
+#' }
+#' 
+#' @export
+outKegg2Gmt <- function(organism.id, out.gmt.file) 
 {
   gs <- get.kegg.genesets(organism.id)
   
@@ -1577,4 +1603,53 @@ outKegg2Gmt <- function(organism.id,out.gmt.file)
   gmtlist2file(gs.n,out.gmt.file)
 }
 
+# compareResults2(result.hyper,result.Wall,result.Sampling,result.Sampling.200k)
+# 
+compareResults2 <- function(result.hyper,result.Wall,result.Sampling,result.Sampling.200k){
+  
+  res.Wall.reorder <- result.Wall[match(result.hyper$gene_set,result.Wall$gene_set),]
+  
+  res.Sampling.reorder <- result.Sampling[match(result.hyper$gene_set,result.Sampling$gene_set),]
+  
+  result.Sampling.200k.reorder <- result.Sampling.200k[match(result.hyper$gene_set,result.Sampling.200k$gene_set),]
+  
+  res.hyper.Wall.Sampling <- as_tibble(cbind.data.frame(result.hyper$gene_set, result.hyper$over_represented_pvalue,res.Wall.reorder$over_represented_pvalue,res.Sampling.reorder$over_represented_pvalue,result.Sampling.200k.reorder$over_represented_pvalue,stringsAsFactors = FALSE))
 
+  colnames(res.hyper.Wall.Sampling) = c("gene_set","hyper","wall","sampling","sampling_200k")
+  cor(res.hyper.Wall.Sampling[,2:5])
+  save(res.hyper.Wall.Sampling,file="vignettes/res.hyper.Wall.Sampling.RData")
+  
+  temp.1 <- cbind.data.frame(res.hyper.Wall.Sampling$sampling_200k,
+                             rep("Sampling_200k",length(res.hyper.Wall.Sampling$sampling_200k)),res.hyper.Wall.Sampling$sampling_200k)
+  colnames(temp.1) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp.2 <- cbind.data.frame(res.hyper.Wall.Sampling$sampling,
+                             rep("Sampling_30k",length(res.hyper.Wall.Sampling$sampling)),
+                             res.hyper.Wall.Sampling$sampling_200k)
+  colnames(temp.2) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp.3 <- cbind.data.frame(res.hyper.Wall.Sampling$wall,
+                             rep("Wall",length(res.hyper.Wall.Sampling$wall)),
+                             res.hyper.Wall.Sampling$sampling_200k)
+  colnames(temp.3) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp.4 <- cbind.data.frame(res.hyper.Wall.Sampling$hyper,
+                             rep("Hyper",length(res.hyper.Wall.Sampling$hyper)),
+                             res.hyper.Wall.Sampling$sampling_200k)
+  
+  colnames(temp.4) <- c("PValue","PathwaySplice","random_sampling_200k")
+  
+  temp <- as_tibble(rbind.data.frame(temp.1,temp.2,temp.3,temp.4))
+  
+  ggplot(temp, aes(x=random_sampling_200k, y=PValue, colour=PathwaySplice, shape=PathwaySplice)) + 
+    geom_point(size=1, alpha=0.6) + geom_smooth(data=subset(temp,PathwaySplice=="Sampling_200k"),
+                                                aes(x=random_sampling_200k, y=PValue),
+                                                method=lm,se=FALSE,colour="red") + 
+    labs(color= "Methods", x="P value of random sampling(200k)",y="P value of alternative methods")+
+    scale_colour_manual(name = "Alternative methods",
+                        labels = c("Sampling_200k", "Sampling_30k", "Wall", "Hyper"),
+                        values = c("red", "blue", "green", "black")) +   
+    scale_shape_manual(name = "Alternative methods",
+                       labels = c("Sampling_200k", "Sampling_30k", "Wall", "Hyper"),
+                       values = c(2, 3, 4, 20))
+}
