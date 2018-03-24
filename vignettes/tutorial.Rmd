@@ -9,8 +9,10 @@ output:
     toc: yes
   pdf_document:
     highlight: null
-    toc: no
     number_sections: no
+    toc: no
+  word_document:
+    toc: no
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
@@ -74,8 +76,18 @@ Here `geneWisePvalue` is simply the lowest feature based p-value for the gene, `
 
 To assess selection bias, i.e. whether gene with more features are more likely to be selected as significant genes, **lrTestBias** function fits a logistic regression with `logit (sig.gene) ~ numFeature`
 
-```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup', fig.height=5, fig.width=5}
+```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup'}
 lrTestBias(gene.based.table,boxplot.width=0.3)
+```
+
+Note that typically selection bias remains when "fdr" instead of "pvalue" (default option) is used to select significant genes in `makeGeneTable`, becasue FDR has a monotonic relationship with p-values. For example, in our `featureBasedData`, if we had selected significant genes using "fdr" option, the boxplot below shows substantial selection bias remains. 
+
+```{r eval=TRUE, message=FALSE, warning=FALSE, results='markup'}
+gene.based.table <- makeGeneTable(featureBasedData, stat = "fdr")
+
+lrTestBias(gene.based.table,boxplot.width=0.3)
+
+head(gene.based.table)
 ```
 
 To perform pathway analysis that adjusts for the number of gene features, we use the **runPathwangSplice** function, which implements the methodology described in [@Young2010]. **runPathwangSplice** returns a   [tibble](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html) dataset  with statistical significance of the pathway (`over_represented_pvalue`), as well as the significant genes that drives pathway significance (`SIGgene_ensembl` and `SIGgene_symbol`). An additional bias plot that visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins is also generated.
@@ -103,6 +115,8 @@ enmap <- enrichmentMap(result.adjusted,n=7,
 ```
 
 In the enrichment map, the `size of the nodes` indicates the number of significant genes within the pathway. The `color of the nodes` indicates pathway significance, where smaller p-values correspond to dark red color. Pathways with Jaccard coefficient > `similarity.thereshold` will be connected on the network. The `thickness of the edges` corresponds to Jaccard similarity coefficient between the two pathways, scaled by `scaling.factor`. A file named "network.layout.for.cytoscape.gml" is generated in the "~/PathwaySplice_output" directory. This file can be used as an input file for cytoscape software[@Shannon2003], which allows users to further maually adjust appearance of the generated network. 
+
+Note that the input of `enrichmentMap` function is an object returned from `runPathwaySplice` function, so `enrichmentMap` function supports both GO annotation as well as customized genesets. 
 
 # 3. Testing customized gene sets
 
