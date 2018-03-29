@@ -180,26 +180,8 @@ Initial analysis was conducted using `JunctionSeq` R package to obtain p-values 
 
 ````{r eval=FALSE}
 dir <- system.file("extdata", package="PathwaySplice")
-
 all.gene.table <- readRDS(file.path(dir, "AllGeneTable.rds"))
-res.adj <- runPathwaySplice(all.gene.table,
-                            genome='hg19',
-                            id='ensGene',
-                            test.cats = "GO:BP", 
-                            go.size.limit = c(5, 200),
-                            method='Wallenius')
- 
-res.unadj <- runPathwaySplice(all.gene.table,
-                              genome='hg19',
-                              id='ensGene',
-                              test.cats = "GO:BP",
-                              go.size.limit = c(5, 200),
-                              method='Hypergeometric')
- 
-compareResults(20, res.adj, res.unadj, all.gene.table, type.boxplot='Only3', output.dir = "~/OutputTestPathwaySplice_all_gene_GO_BP/")
-
 ```
-
 We next compared splicing pathway analysis results before and after adjusting for the number of exon counting bins associated with each gene. This can be accomplished using the `compareResults` function: 
 
 ```{r eval=FALSE, warning=FALSE, message=FALSE, results='markup', fig.show='hide'}
