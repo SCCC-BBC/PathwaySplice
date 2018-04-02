@@ -31,9 +31,9 @@ knitr::opts_chunk$set(collapse = FALSE,comment = "#>",fig.pos='H')
 
 # 1. Introduction
 
-In alternative splicing analysis of RNASeq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. For results from the [`DEXSeq`](https://bioconductor.org/packages/release/bioc/html/DEXSeq.html) package, **gene features** represent non-overlapping exon counting bins (@Anders2012; Figure 1), while for results from the [`JunctionSeq`](https://bioconductor.org/packages/release/bioc/html/JunctionSeq.html) package, they represent non-overlapping exon *or* splicing-junction counting bins. 
+In alternative splicing analysis of RNA-seq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. For results from the [`DEXSeq`](https://bioconductor.org/packages/release/bioc/html/DEXSeq.html) package, **gene features** represent non-overlapping exon counting bins (@Anders2012; Figure 1), while for results from the [`JunctionSeq`](https://bioconductor.org/packages/release/bioc/html/JunctionSeq.html) package, they represent non-overlapping exon *or* splicing-junction counting bins. 
 
-Pathway analysis---without explicit adjustment---can be biased toward pathways that include genes with a large number of gene features; this is because these genes are more likely to be selected as "significant genes" in pathway analysis. This is a major challenge in RNASeq data analysis, and this package offers a solution. The main features of the `PathwaySplice` package include: 
+Pathway analysis---without explicit adjustment---can be biased toward pathways that include genes with a large number of gene features; this is because these genes are more likely to be selected as "significant genes" in pathway analysis. This is a major challenge in RNA-seq data analysis, and this package offers a solution. The main features of the `PathwaySplice` package include: 
 
 1. Visualize selection bias due to larger number of exons or junctions across different genes.
 3. Formally test for bias using logistic regression.
@@ -58,7 +58,7 @@ library(devtools)
 install_github("SCCC-BBC/PathwaySplice", ref = "development")
 ```
 
-The input file of the `PathwaySplice` functions are a vector of $p$-values associated with gene features and a mapping between gene features and genes. This information can be obtained from `DEXSeq` or `JunctionSeq` output files. As an example, `PathwaySplice` includes a gene-feature annotated dataset, based on an RNASeq study of bone marrow CD34+ cells from eight myelodysplastic syndrome (MDS) patients with SF3B1 mutations and four patients without the mutation [@Dolatshad2015]. This dataset was downloaded from the GEO database with accession key [GSE63569](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE63569).
+The input file of the `PathwaySplice` functions are a vector of $p$-values associated with gene features and a mapping between gene features and genes. This information can be obtained from `DEXSeq` or `JunctionSeq` output files. As an example, `PathwaySplice` includes a gene-feature annotated dataset, based on an RNA-seq study of bone marrow CD34+ cells from eight myelodysplastic syndrome (MDS) patients with SF3B1 mutations and four patients without the mutation [@Dolatshad2015]. This dataset was downloaded from the GEO database with accession key [GSE63569](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE63569).
 
 First, we use the `JunctionSeq` package to perform differential exon usage analysis. For demonstration, we selected gene features mapped to a random subset of 5,000 genes. The example dataset can be loaded directly:
 ```{r eval=TRUE, warning=FALSE, message=FALSE, results='markup'}
@@ -238,7 +238,7 @@ In the figure above, each dot represents a GO category. The results show that GO
 
 # 6. Conclusion
 
-Performing pathway analysis without adjusting for the number of gene features can be biased toward pathways that include genes with a large number of gene features. Without adjustment, genes with more features are more likely to be selected as "significant genes" in pathway analysis. The `PathwaySplice` package is a potential solution to combat this major challenge in RNASeq data analysis. To this end, this package assists end users in the following: perform pathway analysis while adjusting for the number features associated with each gene and allowing for a variety of potential types of gene sets; visualize and formally test for potential selection bias; identify specific genes which may drive pathway significance; and organize significant pathways within an enrichment map.
+Performing pathway analysis without adjusting for the number of gene features can be biased toward pathways that include genes with a large number of gene features. Without adjustment, genes with more features are more likely to be selected as "significant genes" in pathway analysis. The `PathwaySplice` package is a potential solution to combat this major challenge in RNA-seq data analysis. To this end, this package assists end users in the following: perform pathway analysis while adjusting for the number features associated with each gene and allowing for a variety of potential types of gene sets; visualize and formally test for potential selection bias; identify specific genes which may drive pathway significance; and organize significant pathways within an enrichment map.
 
 </br>
 
