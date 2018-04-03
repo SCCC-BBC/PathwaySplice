@@ -31,7 +31,7 @@ knitr::opts_chunk$set(collapse = FALSE,comment = "#>",fig.pos='H')
 
 # 1. Introduction
 
-In alternative splicing analysis of RNA-seq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. For results from the [`DEXSeq`](https://bioconductor.org/packages/release/bioc/html/DEXSeq.html) package, **gene features** represent non-overlapping exon counting bins (@Anders2012; Figure 1), while for results from the [`JunctionSeq`](https://bioconductor.org/packages/release/bioc/html/JunctionSeq.html) package, they represent non-overlapping exon *or* splicing-junction counting bins. 
+In alternative splicing analysis of RNA-seq data, one popular approach is to first identify gene features (e.g. exons or junctions) significantly associated with splicing using methods such as DEXSeq [@Anders2012] or JunctionSeq [@Hartley2016], and then perform pathway analysis based on the list of genes associated with the significant gene features. For results from the [DEXSeq](https://bioconductor.org/packages/release/bioc/html/DEXSeq.html) package, **gene features** represent non-overlapping exon counting bins (@Anders2012; Figure 1), while for results from the [JunctionSeq](https://bioconductor.org/packages/release/bioc/html/JunctionSeq.html) package, they represent non-overlapping exon *or* splicing-junction counting bins. 
 
 Pathway analysis---without explicit adjustment---can be biased toward pathways that include genes with a large number of gene features; this is because these genes are more likely to be selected as "significant genes" in pathway analysis. This is a major challenge in RNA-seq data analysis, and this package offers a solution. The main features of the `PathwaySplice` package include: 
 
@@ -142,9 +142,10 @@ result.hallmark <- runPathwaySplice(genewise.table = gene.based.table.fdr,
 
 ### KEGG pathways
 
-The KEGG pathways in `.gmt` format can be obtained by calling the `outKegg2gmt` function, which creates a `.gmt` file based on the organism specified. This is a wrapper for the `get.kegg.genesets` function from the [`EnrichmentBrowser` package](https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html) and modifies the output into a `.gmt` file [@Geistlinger2016]. This function takes in an organism id (`"hsa"` is for *homo sapiens* or `"mmu"` for *Mus musculus* (mouse)) and a file path where the `.gmt` file created by the `outKegg2Gmt` function should be stored. The following code can be used to perform pathway analysis on KEGG pathways. The first command (`outKegg2Gmt`) writes a `.gmt` file for homo sapiens in the directory specified; the second command reads this `.gmt` file, transforms these gene sets, and saves them as the `kegg.pathways` object; then the last command performs the pathway splice analysis.
+The KEGG pathways in `.gmt` format can be obtained by calling the `outKegg2gmt` function, which creates a `.gmt` file based on the organism specified. This is a wrapper for the `get.kegg.genesets` function from the [EnrichmentBrowser package](https://bioconductor.org/packages/release/bioc/html/EnrichmentBrowser.html) and modifies the output into a `.gmt` file [@Geistlinger2016]. This function takes in an organism id (`"hsa"` is for *homo sapiens* or `"mmu"` for *Mus musculus* (mouse)) and a file path where the `.gmt` file created by the `outKegg2Gmt` function should be stored. The following code can be used to perform pathway analysis on KEGG pathways. The first command (`outKegg2Gmt`) writes a `.gmt` file for homo sapiens in the directory specified; the second command reads this `.gmt` file, transforms these gene sets, and saves them as the `kegg.pathways` object; then the last command performs the pathway splice analysis.
 
 ```{r eval=FALSE, message=FALSE, warning=FALSE,results='markup',fig.show='hide'}
+
 outKegg2Gmt("hsa", file.path(dir.name, "kegg.gmt.txt"))
 
 kegg.pathways <- gmtGene2Cat(file.path(dir.name, "kegg.gmt.txt"),
@@ -186,18 +187,6 @@ res.unadj <- runPathwaySplice(genewise.table = all.gene.table,
                               test.cats = "GO:BP",
                               go.size.limit = c(5, 30),
                               method = "Hypergeometric")
-```
-
-We next compared pathway-splicing analysis results before and after adjusting for the number of gene features. This can be accomplished using the `compareResults` function. This function produces several files in the output directory specified by `output.dir`, including:  
-
-* A Venn diagram that compares the overlap of the most significant `n.go` gene sets using adjusted and unadjusted analysis.
-* A boxplot that compares the distribution of the numbers of
-    * gene features belonging to all genes in the top `n.go` significant pathways identified by both adjusted and unadjusted analysis (`All`),
-    * genes within the significant gene sets uniquely identified using adjusted analysis (`Adjusted`), and
-    * genes within the significant gene sets uniquely identified using unadjusted analysis (`Unadjusted`).
-* A `.csv` file with gene set names corresponding to different sections of the Venn diagram.
-
-```{r eval=FALSE, warning=FALSE, message=FALSE, results='markup', fig.show='hide'}
 compareResults(n.go = 20,
                adjusted = res.adj,
                unadjusted = res.unadj,
@@ -206,15 +195,24 @@ compareResults(n.go = 20,
                type.boxplot = "Only3")
 ```
 
+This function produces several files in the output directory specified by `output.dir`, including:  
+
+* A Venn diagram that compares the overlap of the most significant `n.go` gene sets using adjusted and unadjusted analysis.
+* A boxplot that compares the distribution of the numbers of
+    * gene features belonging to all genes in the top `n.go` significant pathways identified by both adjusted and unadjusted analysis (`All`),
+    * genes within the significant gene sets uniquely identified using adjusted analysis (`Adjusted`), and
+    * genes within the significant gene sets uniquely identified using unadjusted analysis (`Unadjusted`).
+* A `.csv` file with gene set names corresponding to different sections of the Venn diagram.
+
 The Venn diagram below shows that among the top 20 most significant GO categories identified using adjusted and unadjusted analysis, there were 12 common GO categories.
 <center>
 ![](venn.png){width=50%}
 </center>
+
 In the boxplot below, the `Unadjusted_20` boxplot shows the distribution of bias factors (i.e. numer of exon counting bins or gene features) for genes belonging to the 8 most significant GO categories identified only in unadjusted analysis (top row, corresponding to the blue color in the Venn diagram). The `Adjusted_20` boxplot shows the distribution of bias factors for genes belonging to the 8 most significant GO categories identified only in adjusted analysis (middle row, corresponding to the pink/orange color in the Venn diagram). The `All` boxplot shows distribution of bias factors for genes belonging to all 20 most significant GO categories. This plot shows that genes in GO categories which are unique to unadjusted analysis tend to have larger numbers of exon counting bins.
 <center>
 ![](boxplot.png)
-
-</br>
+</center>
 
 # 5. Comparison of results under different parameter settings
 
@@ -226,7 +224,7 @@ In the `runPathwaySplice` function, the choices for the `method` argument are:
 
 The `"Sampling"` option takes `gene.based.table.fdr` as input to the `genewise.table` argument and then calculates weights for each gene using a spline regression model, which is the probability a gene being significant given the number of gene features (e.g. exons) associated with it. Next, random subsets of genes are sampled from the experiment. Each subset contains the same number of genes as the observed number of significant genes. For genes in each subset, the probability of selecting a gene is equal to the weights calculated above, and the number of genes belonging to a GO category is then calculated. Many random subsets of genes are generated to produce the null distribution necessary to estimate the $p$-value of a GO category (the number of random subsets is controlled by the `repcnt` argument to the `runPathwaySplice` function, and it defaults to 2000).
 
-The figure below plots pathway analysis $p$-values for the MDS dataset obtained using the Hypergeometric test, Wallenius approximation, and `repcnt = 30000` random samples. These values are plotted against $p$-values obtained using `repcnt = 200000` random samples. This plot was constructed via the `compareResults2` function (currently only available in the development version), which takes in output data frames from the `runPathwaySplice` function after providing different values to `methods`.
+The figure below plots pathway analysis $p$-values for the MDS dataset obtained using the Hypergeometric test, Wallenius approximation, and `repcnt = 30000` random samples. These values are plotted against $p$-values obtained using `repcnt = 200000` random samples. This plot was constructed via the `compareResults2` function, which takes in output data frames from the `runPathwaySplice` function after providing different values to `methods`.
 ```{r eval=FALSE,warning=FALSE,message=FALSE,results='markup'}
 compareResults2(result.hyper,
                 result.Wall,
@@ -235,10 +233,8 @@ compareResults2(result.hyper,
 
 ```
 ![](comparison.png)
-
 In the figure above, each dot represents a GO category. The results show that GO category $p$-values for `repcnt = 30000` random samples and `repcnt = 200000` random samples are virtually indistinguishable (blue crosses and red triangles are almost exactly the same). Also, $p$-values based on the Wallenius approximation (green circles) are highly correlated with the results from the 200,000 random samples. On the other hand, unadjusted results using the Hypergeometric distribution (solid black dots) are markedly different from both random sampling and Wallenius $p$-values. In terms of computational cost, generating and analyzing 200,000 random samples took more than one hour, while $p$-values from the Wallenius approximation took less than one minute to compute. Therefore, we recommend using the Wallenius approximation (which we made the default for `runPathwaySplice` function), unless the number of gene sets tested is small---less than 100, for instance.
 
-</br>
 
 # 6. Conclusion
 
