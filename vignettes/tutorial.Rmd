@@ -4,15 +4,15 @@ title: 'PathwaySplice: pathway analysis for alternative splicing in RNA-seq data
 author: "Aimin Yan, Xi Chen, Lily Wang"
 date: "`r Sys.Date()`"
 output:
-  html_document:
-    df_print: paged
-    toc: yes
+  word_document:
+    toc: no
   pdf_document:
     highlight: null
     number_sections: no
     toc: no
-  word_document:
-    toc: no
+  html_document:
+    df_print: paged
+    toc: yes
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
