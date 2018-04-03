@@ -19,7 +19,8 @@
 #' @examples
 #' data(featureBasedData)
 #' gene.based.table <- makeGeneTable(featureBasedData)
-#' @export
+#' @export  
+#' 
 #' 
 makeGeneTable <- function(feature.table, sig.threshold = 0.05, stat = "pvalue")
 {
