@@ -80,7 +80,7 @@ To assess selection bias, i.e. whether genes with more features are more likely 
 lrTestBias(gene.based.table, boxplot.width = 0.3)
 ```
 
-Note that typically selection bias remains even when the `stat = "fdr"` option is used to select significant genes in `makeGeneTable` instead of `stat = "pvalue"` (the default option). This is becasue the FDR has a monotonic relationship with $p$-values. For example, in our `featureBasedData` example data set, when  selecting significant genes using the `"fdr"` option, substantial selection bias remained (as shown in the boxplot below). 
+Note that typically selection bias remains even when the `stat = "fdr"` option is used to select significant genes in `makeGeneTable` instead of `stat = "pvalue"` (the default option). This is because FDR has a monotonic relationship with $p$-values. For example, in our `featureBasedData` example data set, when  selecting significant genes using the `"fdr"` option, substantial selection bias remained (as shown in the boxplot below). 
 ```{r eval=TRUE, message=FALSE, warning=FALSE, results='markup'}
 gene.based.table.fdr <- makeGeneTable(featureBasedData, stat = "fdr")
 lrTestBias(gene.based.table.fdr, boxplot.width = 0.3)
@@ -111,7 +111,7 @@ enmap <- enrichmentMap(pathway.res = result.adjusted,
                        scaling.factor = 2)
 ```
 
-In the enrichment map, the **node size** indicates the number of significant genes within the pathway. The **node hue** indicates pathway significance, where smaller $p$-values correspond to dark red color. Pathways with [Jaccard coefficient](https://en.wikipedia.org/wiki/Jaccard_index) greater than the value of `similarity.thereshold` will be connected on the network, indicating that these connected pathways contain common set of genes. The **edge thickness** corresponds to Jaccard similarity coefficient between the two pathways, scaled by the value supplied to `scaling.factor`. Note that the input of enrichmentMap function is an object returned from runPathwaySplice function, so enrichmentMap function supports both GO annotation as well as customized genesets.
+In the enrichment map, the **node size** indicates the number of significant genes within the pathway. The **node hue** indicates pathway significance, where smaller $p$-values correspond to dark red color. Pathways with [Jaccard coefficient](https://en.wikipedia.org/wiki/Jaccard_index) greater than the value of `similarity.thereshold` will be connected on the network, indicating that these connected pathways contain common set of genes. The **edge thickness** corresponds to Jaccard similarity coefficient between the two pathways, scaled by the value supplied to `scaling.factor`. Note that the input of enrichmentMap function is an object returned from `runPathwaySplice` function, so enrichmentMap function supports both GO annotation as well as customized genesets.
 
 </br>
 
