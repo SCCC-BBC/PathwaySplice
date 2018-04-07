@@ -16,13 +16,9 @@ output:
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
-vignette: >
-<<<<<<< HEAD
-  %\VignetteIndexEntry{PathwaySplice_Vignette2}
-=======
+vignette: 
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{PathwaySplice}
->>>>>>> e41fbc32cdd87e2373f6134e5fd599e588091cf6
   %\usepackage[UTF-8]{inputenc}
   %\VignetteEngine{knitr::knitr}
 ---
