@@ -4,22 +4,22 @@ title: 'PathwaySplice: Pathway analysis for alternative splicing in RNA-seq data
 author: "Aimin Yan, Gabriel J. Odom, Xi Chen, and Lily Wang"
 date: "`r Sys.Date()`"
 output:
-  word_document:
-    toc: no
+  html_document:
+    df_print: paged
+    toc: yes
   pdf_document:
     highlight: null
     number_sections: no
     toc: no
-  html_document:
-    df_print: paged
-    toc: yes
+  word_document:
+    toc: no
 bibliography: Splicing-network.bib
 pandoc_args: --natbib
 biblio-style: plain
 vignette: >
-  %\VignetteEngine{knitr::knitr}
   %\VignetteIndexEntry{PathwaySplice_Vignette2}
   %\usepackage[UTF-8]{inputenc}
+  %\VignetteEngine{knitr::knitr}
 ---
 
 
