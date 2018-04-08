@@ -223,14 +223,13 @@ The `"Sampling"` option takes `gene.based.table.fdr` as input to the `genewise.t
 
 The figure below plots pathway analysis $p$-values for the MDS dataset obtained using the Hypergeometric test, Wallenius approximation, and `repcnt = 30000` random samples. These values are plotted against $p$-values obtained using `repcnt = 200000` random samples. This plot was constructed via the `compareResults2` function, which takes in output data frames from the `runPathwaySplice` function after providing different values to `methods`.
 ```{r eval=FALSE,warning=FALSE,message=FALSE,results='markup'}
-compareResults2(result.hyper,
+PathwaySplice:::compareResults2(result.hyper,
                 result.Wall,
                 result.Sampling,
                 result.Sampling.200k)
 
 ```
 ![](comparison.png)
-
 In the figure above, each dot represents a GO category. The results show that GO category $p$-values for `repcnt = 30000` random samples and `repcnt = 200000` random samples are virtually indistinguishable (blue pluses and red triangles are almost exactly the same). Also, $p$-values based on the Wallenius approximation (green crosses) are highly correlated with the results from the 200,000 random samples. On the other hand, unadjusted results using the Hypergeometric distribution (solid black dots) are markedly different from both random sampling and Wallenius $p$-values. In terms of computational cost, generating and analyzing 200,000 random samples took more than one hour, while $p$-values from the Wallenius approximation took less than one minute to compute. Therefore, we recommend using the Wallenius approximation (which we made the default for `runPathwaySplice` function), unless the number of gene sets tested is small (e.g less than 100).
 
 
@@ -238,7 +237,7 @@ In the figure above, each dot represents a GO category. The results show that GO
 
 Performing pathway analysis without adjusting for the number of gene features can be biased toward pathways that include genes with a large number of gene features. Without adjustment, genes with more features are more likely to be selected as "significant genes" in pathway analysis. The `PathwaySplice` package is a potential solution to combat this major challenge in RNA-seq data analysis. To this end, this package assists end users in the following: perform pathway analysis while adjusting for the number features associated with each gene and allowing for a variety of potential types of gene sets; visualize and formally test for potential selection bias; identify specific genes which may drive pathway significance; and organize significant pathways within an enrichment map.
 
-</br>
+
 
 # References
 <!-- Usage: rmarkdown::render("vignettes/tutorial.Rmd", output_format="all") -->
