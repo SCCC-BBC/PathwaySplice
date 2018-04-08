@@ -24,8 +24,18 @@ and modifies the resulting output into a .gmt file.
 \examples{
 \dontrun{
 
-data.dir <- system.file ("extdata", package = "PathwaySplice")
+data.dir <-  tempdir()
 outKegg2Gmt ("hsa",file.path(data.dir,"kegg.gmt.txt"))
+
+kegg.pathways <- gmtGene2Cat(file.path(data.dir, "kegg.gmt.txt"),genomeID = "hg19")
+
+result.kegg <- runPathwaySplice(genewise.table = gene.based.table.fdr,
+                               genome = "hg19",
+                               id = "ensGene",
+                               gene2cat = kegg.pathways, 
+                               go.size.limit = c(5, 100), 
+                               method = "Wallenius", 
+                               use.genes.without.cat = TRUE)
 }
 
 }
