@@ -1664,3 +1664,55 @@ compareResults2 <- function(result.hyper,result.Wall,result.Sampling,result.Samp
                        labels = c("Sampling_200k", "Sampling_30k", "Wall", "Hyper"),
                        values = c(2, 3, 4, 20))
 }
+
+netplot <- function(g,
+                    vertex.label.font=2,
+                    vertex.label.color='#666666',
+                    vertex.label.cex=1.5,
+                    layout=layout.fruchterman.reingold,
+                    foldChange=NULL,
+                    fixed=TRUE,
+                    col.bin=10,
+                    legend.x=1,
+                    legend.y=1, ...) {
+    if (fixed){
+        plot.igraph(g,
+                    vertex.label.font=vertex.label.font,
+                    vertex.label.color=vertex.label.color,
+                    vertex.label.cex=vertex.label.cex,
+                    vertex.frame.color=V(g)$color,
+                    layout=layout, ...)
+        ## add legend
+        if (!is.null(foldChange)) {
+            ## gn <- V(g)$name
+            ## fc <- foldChange[gn]
+            ## fc <- fc[!is.na(fc)]
+            fc <- foldChange
+            lbs <- hist(fc, breaks=col.bin-1, plot=FALSE)$breaks
+            col.legend <- get.col.scale(lbs)
+
+            x <- seq(from=legend.x, by=0.03, length.out=length(col.legend))
+            y <- rep(legend.y, length(col.legend))
+            points(x, y, pch=15, col=col.legend, cex=2)
+
+            idx <- c(1, seq(4, length(col.legend)-1, by=3), length(col.legend))
+            text(x=x[idx],
+                 y=rep(legend.y-0.05, length(idx)),
+                 label=lbs[idx],
+                 cex = 0.8)
+
+            text(x=mean(x),
+                 y=legend.y+0.05,
+                 labels="Fold Change",
+                 cex=0.8, font=2)
+        }
+    } else {
+        tkplot(g,
+               vertex.label.font=vertex.label.font,
+               vertex.label.color=vertex.label.color,
+               vertex.label.cex=vertex.label.cex,
+               vertex.frame.color=V(g)$color,
+               layout=layout)
+    }
+    invisible(g)
+}
