@@ -20,7 +20,6 @@ vignette: <
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{PathwaySplice}
   %\usepackage[UTF-8]{inputenc}
-  %\VignetteEngine{knitr::knitr}
 ---
 
 
@@ -102,11 +101,11 @@ head(result.adjusted)
 
 The returned `result.adjusted` tibble has the statistical significance of each pathway shown in the `over_represented_pvalue` column, significant genes which drive pathway significance are given in the `SIGgene_ensembl` column (not shown), and the corresponding gene symbols is returned in the `SIGgene_symbol` column (also not shown). An additional bias plot is also generated; this visualizes the relationship between the proportion of significant genes and the mean number of gene features within gene bins. Note that the default option for `use.genes.without.cat` is `FALSE`, meaning that genes not mapped to any tested categories are ignored in the analysis. In order for all genes in `genewise.table` to be counted towards the total number of genes outside the category (i.e. genes in the background), we set this option to `TRUE`.  
 
-To visualize pathway analysis results in a pathway enrichment network, we use the `enrichmentMap` function. The `pathway.res` input of this function is the output of `runPathwaySplice` function shown above. The `n = 7` argument means that the produced figure will show the 7 most significant pathways in an enrichment map. A file named `network.layout.for.cytoscape.gml` is generated in the `~/PathwaySplice_output` directory (a subdirectory of your working directory, but you have the ability to specify another output directory). This file can be used as an input file for Cytoscape software [@Shannon2003], which allows users to further manually adjust the appearance of the generated network.
+To visualize pathway analysis results in a pathway enrichment network, we use the `enrichmentMap` function. The `pathway.res` input of this function is the output of `runPathwaySplice` function shown above. The `n = 7` argument means that the produced figure will show the 7 most significant pathways in an enrichment map. A file named `network.layout.for.cytoscape.gml` is generated in the `output.file.dir` directory specified by users. This file can be used as an input file for Cytoscape software [@Shannon2003], which allows users to further manually adjust the appearance of the generated network.
 ```{r eval=TRUE, warning=FALSE,message=FALSE,results ='markup', fig.align='right', fig.height=13, fig.width=15}
 enmap <- enrichmentMap(pathway.res = result.adjusted,
                        n = 7,
-                       output.file.dir = file.path("~/PathwaySplice_output"),
+                       output.file.dir = tempdir(),
                        similarity.threshold = 0.5, 
                        scaling.factor = 2)
 ```
@@ -188,7 +187,7 @@ compareResults(n.go = 20,
                adjusted = res.adj,
                unadjusted = res.unadj,
                gene.based.table = all.gene.table,
-               output.dir = "~/Test_Output_Directory/",
+               output.dir = tempdir(),
                type.boxplot = "Only3")
 ```
 
