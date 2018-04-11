@@ -160,7 +160,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
 #'                        method='Wallenius',binsize=800, 
-#'                        output.file='C:/temp/test.csv')    
+#'                        output.file=tempfile())    
 #'
 #'# demonstrate using customized gene sets
 #' dir.name <- system.file('extdata', package='PathwaySplice')
@@ -171,7 +171,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                        gene2cat=hlp,
 #'                        go.size.limit=c(5,200),
 #'                        method='Wallenius',binsize=20, 
-#'                        output.file='C:/temp/test.csv')
+#'                        output.file=tempfile())
 #'                        
 #' }
 #' 
@@ -266,10 +266,10 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' # illustrates specification of output file directory
 #' # Enable interactive map and label each node by gene set index
 #' enmap <- enrichmentMap(res,n=10,fixed=FALSE, similarity.threshold=0.3,
-#'                       label.node.by.index = TRUE, output.file.dir='C:/temp')
+#'                       label.node.by.index = TRUE, output.file.dir=tempdir())
 #'                       
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#'                       label.node.by.index = FALSE, output.file.dir='C:/temp')}
+#'                       label.node.by.index = FALSE, output.file.dir=tempdir())}
 #' @export                      
 enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), label.node.by.index = FALSE,add.numSIGInCat=FALSE, 
@@ -530,7 +530,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' 
 #' \dontrun{
 #' # illustrate specification of output directory on windows systems
-#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/TEMP')
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir=tempdir())
 #' 
 #' output.dir <- '~/OutputTestPathwaySplice' #linux system
 #' compareResults(20,res.adj, res.unadj,gene.based.table, output.dir, type.boxplot='Only3')
