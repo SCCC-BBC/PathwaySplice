@@ -160,7 +160,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                        test.cats=c('GO:BP'),
 #'                        go.size.limit=c(5,30),
 #'                        method='Wallenius',binsize=800, 
-#'                        output.file='C:/temp/test.csv')    
+#'                        output.file=tempfile())    
 #'
 #'# demonstrate using customized gene sets
 #' dir.name <- system.file('extdata', package='PathwaySplice')
@@ -171,7 +171,7 @@ lrTestBias <- function(genewise.table, boxplot.width = 0.1)
 #'                        gene2cat=hlp,
 #'                        go.size.limit=c(5,200),
 #'                        method='Wallenius',binsize=20, 
-#'                        output.file='C:/temp/test.csv')
+#'                        output.file=tempfile())
 #'                        
 #' }
 #' 
@@ -266,10 +266,10 @@ runPathwaySplice <- function(genewise.table, genome, id, gene2cat = NULL, test.c
 #' # illustrates specification of output file directory
 #' # Enable interactive map and label each node by gene set index
 #' enmap <- enrichmentMap(res,n=10,fixed=FALSE, similarity.threshold=0.3,
-#'                       label.node.by.index = TRUE, output.file.dir='C:/temp')
+#'                       label.node.by.index = TRUE, output.file.dir=tempdir())
 #'                       
 #' enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-#'                       label.node.by.index = FALSE, output.file.dir='C:/temp')}
+#'                       label.node.by.index = FALSE, output.file.dir=tempdir())}
 #' @export                      
 enrichmentMap <- function(pathway.res, n = 50, fixed = TRUE, node.label.font = 1, 
     similarity.threshold, scaling.factor = 1, output.file.dir = tempdir(), label.node.by.index = FALSE,add.numSIGInCat=FALSE, 
@@ -530,7 +530,7 @@ names(.ORG_GOMAP_FUNCTION) = c("default", "org.At.tair", "org.Pf.plasmo", "org.S
 #' 
 #' \dontrun{
 #' # illustrate specification of output directory on windows systems
-#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/TEMP')
+#' compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir=tempdir())
 #' 
 #' output.dir <- '~/OutputTestPathwaySplice' #linux system
 #' compareResults(20,res.adj, res.unadj,gene.based.table, output.dir, type.boxplot='Only3')
@@ -1663,4 +1663,56 @@ compareResults2 <- function(result.hyper,result.Wall,result.Sampling,result.Samp
     scale_shape_manual(name = "Alternative methods",
                        labels = c("Sampling_200k", "Sampling_30k", "Wall", "Hyper"),
                        values = c(2, 3, 4, 20))
+}
+
+netplot <- function(g,
+                    vertex.label.font=2,
+                    vertex.label.color='#666666',
+                    vertex.label.cex=1.5,
+                    layout=layout.fruchterman.reingold,
+                    foldChange=NULL,
+                    fixed=TRUE,
+                    col.bin=10,
+                    legend.x=1,
+                    legend.y=1, ...) {
+    if (fixed){
+        plot.igraph(g,
+                    vertex.label.font=vertex.label.font,
+                    vertex.label.color=vertex.label.color,
+                    vertex.label.cex=vertex.label.cex,
+                    vertex.frame.color=V(g)$color,
+                    layout=layout, ...)
+        ## add legend
+        if (!is.null(foldChange)) {
+            ## gn <- V(g)$name
+            ## fc <- foldChange[gn]
+            ## fc <- fc[!is.na(fc)]
+            fc <- foldChange
+            lbs <- hist(fc, breaks=col.bin-1, plot=FALSE)$breaks
+            col.legend <- get.col.scale(lbs)
+
+            x <- seq(from=legend.x, by=0.03, length.out=length(col.legend))
+            y <- rep(legend.y, length(col.legend))
+            points(x, y, pch=15, col=col.legend, cex=2)
+
+            idx <- c(1, seq(4, length(col.legend)-1, by=3), length(col.legend))
+            text(x=x[idx],
+                 y=rep(legend.y-0.05, length(idx)),
+                 label=lbs[idx],
+                 cex = 0.8)
+
+            text(x=mean(x),
+                 y=legend.y+0.05,
+                 labels="Fold Change",
+                 cex=0.8, font=2)
+        }
+    } else {
+        tkplot(g,
+               vertex.label.font=vertex.label.font,
+               vertex.label.color=vertex.label.color,
+               vertex.label.cex=vertex.label.cex,
+               vertex.frame.color=V(g)$color,
+               layout=layout)
+    }
+    invisible(g)
 }
