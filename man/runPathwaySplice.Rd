@@ -80,7 +80,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        test.cats=c('GO:BP'),
                        go.size.limit=c(5,30),
                        method='Wallenius',binsize=800, 
-                       output.file='C:/temp/test.csv')    
+                       output.file=tempfile())    
 
 # demonstrate using customized gene sets
 dir.name <- system.file('extdata', package='PathwaySplice')
@@ -91,7 +91,7 @@ res <- runPathwaySplice(gene.based.table,genome='hg19',id='ensGene',
                        gene2cat=hlp,
                        go.size.limit=c(5,200),
                        method='Wallenius',binsize=20, 
-                       output.file='C:/temp/test.csv')
+                       output.file=tempfile())
                        
 }
 
