@@ -66,7 +66,7 @@ compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3')
 
 \dontrun{
 # illustrate specification of output directory on windows systems
-compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir='C:/TEMP')
+compareResults(20, res.adj, res.unadj, gene.based.table, type.boxplot='Only3',output.dir=tempdir())
 
 output.dir <- '~/OutputTestPathwaySplice' #linux system
 compareResults(20,res.adj, res.unadj,gene.based.table, output.dir, type.boxplot='Only3')

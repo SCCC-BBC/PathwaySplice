@@ -85,10 +85,10 @@ label.node.by.index = TRUE)
 # illustrates specification of output file directory
 # Enable interactive map and label each node by gene set index
 enmap <- enrichmentMap(res,n=10,fixed=FALSE, similarity.threshold=0.3,
-                      label.node.by.index = TRUE, output.file.dir='C:/temp')
+                      label.node.by.index = TRUE, output.file.dir=tempdir())
                       
 enmap <- enrichmentMap(res,n=10,similarity.threshold=0.3,
-                      label.node.by.index = FALSE, output.file.dir='C:/temp')}
+                      label.node.by.index = FALSE, output.file.dir=tempdir())}
 }
 \author{
 Aimin created this funciton based on enrichMap function in G Yu's DOSE R package
