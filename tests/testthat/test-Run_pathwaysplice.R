@@ -27,7 +27,7 @@ test_that("test compareResults",
                                     id='ensGene',test.cats=c('GO:BP'),
                                     go.size.limit = c(10,300),method='Hypergeometric')
             
-            output.file.dir <- "~/TestNew"
+            output.file.dir <- tempdir()
             
             res3 <- compareResults(25,res1,res2,gene.based.table,output.file.dir,
                                   type.boxplot='Only3')
