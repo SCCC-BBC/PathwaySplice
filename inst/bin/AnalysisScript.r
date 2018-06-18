@@ -1,15 +1,22 @@
-# getResultsFromJunctionSeq This function is used to get analysis
+# getResultsFromJunctionSeq 
+# This function is used to get analysis
 # results from using JunctionSeq @param dir.name Path name for sample
-# information file @param sample.file Sample information file @param
-# count.file Count file @param gff.file Annotation file @param ...
-# Additional parameters(Define them based on runJunctionSeqAnalyses
-# function in JuntionSeq) @return The analysis result from JunctionSeq
-# R package @export @examples dir.name <- system.file('extdata',
-# package='PathwaySplice') sample.file <- 'Sample_info.txt' count.file
-# <- 'Counts.10.genes.txt' gff.file <- 'flat.chr22.10.genes.gff' res
-# <-PathwaySplice:::getResultsFromJunctionSeq(dir.name, sample.file,
-# count.file,gff.file, method.dispFinal = 'shrink',analysis.type =
-# 'exonsOnly')
+# information file 
+# @param sample.file Sample information file 
+# @param count.file Count file @param gff.file Annotation file 
+# @param ...Additional parameters(Define them based on runJunctionSeqAnalyses
+# function in JuntionSeq) 
+# @return The analysis result from JunctionSeq R package 
+
+# @export
+# @examples 
+# 
+# dir.name <- system.file('extdata',package='PathwaySplice') 
+# sample.file <- 'Sample_info.txt' 
+# count.file <- 'Counts.10.genes.txt' 
+# gff.file <- 'flat.chr22.10.genes.gff' 
+# 
+res <- getResultsFromJunctionSeq(dir.name, sample.file,count.file,gff.file, method.dispFinal = 'shrink',analysis.type = 'exonsOnly')
 
 getResultsFromJunctionSeq <- function(dir.name, sample.file, count.file, 
                                       gff.file, ...)
