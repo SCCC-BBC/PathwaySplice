@@ -4,6 +4,22 @@
  
 #Rscript  Rscript ~/PathwaySplice/inst/bin/R_manager.r
 
+cat("Do you want to build the manual of this package?\n")
+
+input<-file('stdin', 'r')
+row <- readLines(input, n=1)
+print(row)
+
+if(row=="Yes") {
+  
+  cat("Starting build...\n")
+  pack <- "PathwaySplice"
+  path <- find.package(pack)
+  system(paste(shQuote(file.path(R.home("bin"), "R")),
+               "CMD", "Rd2pdf", shQuote(path)))
+  cat("Finished build ...\n")
+}
+
 cat("Do you want to build this package?\n")
 
 input<-file('stdin', 'r')
