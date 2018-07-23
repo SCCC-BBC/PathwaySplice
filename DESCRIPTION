@@ -1,6 +1,6 @@
 Package: PathwaySplice
 Type: Package
-Title: An R Package for Unbiased Splicing Pathway Analysis 
+Title: An R Package for Unbiased Splicing Pathway Analysis in RNAseq data
 Version: 1.5.0
 Author: Aimin Yan, Xi Chen, Lily Wang
 Maintainer: Aimin Yan <aimin.at.work@gmail.com>
