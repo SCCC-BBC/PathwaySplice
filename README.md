@@ -1,7 +1,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/SCCC-BBC/PathwaySplice.svg?branch=master)](https://travis-ci.org/SCCC-BBC/PathwaySplice)
 [![codecov](https://codecov.io/github/SCCC-BBC/PathwaySplice/coverage.svg?branch=master)](https://codecov.io/github/SCCC-BBC/PathwaySplice)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/PathwaySplice)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1411901.svg)](https://doi.org/10.5281/zenodo.1411901)
+[![DOI](https://zenodo.org/badge/78048200.svg)](https://zenodo.org/badge/latestdoi/78048200)
 
 # PathwaySplice
 Pathway analysis for alternative splicing in RNA-seq datasets that accounts for different number of gene features
